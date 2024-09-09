@@ -1,10 +1,12 @@
 import {SavedData} from "./ClassesInterfacesEnums";
+import {environment} from "../../environments/environment";
 
 export class FileEngine {
 
   fileName: string = 'savedText.txt';
   useTestData = 0;
   download: boolean;
+  isInProduction = environment;
 
   constructor(useTestData: number, download: boolean) {
     this.useTestData = useTestData;
@@ -12,19 +14,24 @@ export class FileEngine {
   }
 
   save(savedData: SavedData) {
-    const blob = new Blob([JSON.stringify(savedData)], {type: 'text/plain'});
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = this.fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    if(!this.isInProduction.production) {
+      const blob = new Blob([JSON.stringify(savedData)], {type: 'text/plain'});
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
 
-    try {
-      localStorage.setItem('savedText', JSON.stringify(savedData));
-    } catch (e) {
-      console.error('Fehler beim Speichern in localStorage:', e);
+      try {
+        localStorage.setItem('savedText', JSON.stringify(savedData));
+      } catch (e) {
+        console.error('Fehler beim Speichern in localStorage:', e);
+      }
+    } else {
+      localStorage.setItem('savedValue', JSON.stringify(savedData) ?? 'lol');
     }
+
   }
 
   load(): SavedData {
@@ -47,14 +54,19 @@ export class FileEngine {
 
   private loadTextFromLocalStorage(): string {
     try {
-      const savedText = localStorage.getItem('savedText');
+      let savedText: string | null;
+      if(!this.isInProduction.production){
+        savedText = localStorage.getItem('savedText');
+      } else {
+        savedText = localStorage.getItem('savedValue');
+      }
       if (savedText) {
         return savedText;
       }
     } catch (e) {
       console.error('Fehler beim laden aus localStorage:', e);
     }
-    return '{"buchungen":[],"savedMonths":[]}';
+    return '{"buchungen":[],"savedMonths":[],"fixkosten":[]}';
   }
 
   private getTestData(): SavedData {
