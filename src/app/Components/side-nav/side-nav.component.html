@@ -1,1 +1,13 @@
-<p>side-nav works!</p>
+<div class="side-nav slide-div" [class.slide-in]="topbarService.isSlidIn()" >
+  <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.home" (click)="onHomeClicked()">
+    Home
+  </div>
+  <hr class="side-nav__hr">
+  <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.budget"  (click)="onBudgetClicked()">
+    Budget
+  </div>
+  <hr class="side-nav__hr">
+  <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.fixkosten"  (click)="onFixKostenClicked()">
+    Fix Kosten
+  </div>
+</div>

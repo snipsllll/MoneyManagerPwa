@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './buchungen-list-day.component.css'
 })
 export class BuchungenListDayComponent {
-
+  @Input() day!: Day;
 }
