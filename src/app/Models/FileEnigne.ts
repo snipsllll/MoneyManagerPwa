@@ -35,7 +35,7 @@ export class FileEngine {
   }
 
   load(): SavedData {
-    if (this.useTestData !== 3) {
+    if (this.useTestData !== 4) {
       return this.getTestData();
     } else {
       return this.getSavedData();
@@ -275,6 +275,12 @@ export class FileEngine {
             }
           ]
         }
+      case 3:
+        return {
+          buchungen: [],
+          savedMonths: [],
+          fixKosten: []
+        };
     }
     return {
       buchungen: [],
