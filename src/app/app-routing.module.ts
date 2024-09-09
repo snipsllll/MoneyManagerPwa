@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {TestComponentComponent} from "./test-component/test-component.component";
+import {TestComponentComponent} from "./Components/test-component/test-component.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // Default route

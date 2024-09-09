@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FileServiceService} from "./services/fileService/file-service.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {FileServiceService} from "./fileService/file-service.service";
 
 @Component({
   selector: 'app-root',

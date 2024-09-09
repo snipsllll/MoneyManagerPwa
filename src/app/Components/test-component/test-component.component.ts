@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {environment} from "../../environments/environment";
+import {environment} from "../../../environments/environment";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-test-component',
@@ -9,7 +10,11 @@ import {environment} from "../../environments/environment";
 export class TestComponentComponent {
   isDevelopment!: boolean;
 
-  constructor() {}
+  x= '';
+
+  constructor(private dataService: DataService) {
+    this.x = dataService.x;
+  }
 
   ngOnInit(): void {
     // Use the environment variable to set the boolean
