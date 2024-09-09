@@ -3,7 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DialogService {
 
-  constructor() { }
+  isConfirmDialogVisible = false;
+  confirmDialogViewModel?: ConfirmDialogViewModel;
+
+  constructor() {
+  }
+
+  showConfirmDialog(confirmDialogViewModel: ConfirmDialogViewModel) {
+    this.isConfirmDialogVisible = true;
+    this.confirmDialogViewModel = confirmDialogViewModel;
+  }
 }
+
