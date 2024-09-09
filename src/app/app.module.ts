@@ -5,10 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {FormsModule} from "@angular/forms";
-import {TestComponentComponent} from "./Components/test-component/test-component.component";
 import {HomeComponent} from "./Components/home/home.component";
 import {BuchungenListDayComponent} from "./Components/buchungen-list-day/buchungen-list-day.component";
-import {DayComponent} from "./Components/day/day.component";
 import {BudgetComponent} from "./Components/budget/budget.component";
 import {ConfirmDialogComponent} from "./Components/confirm-dialog/confirm-dialog.component";
 import {CreateBuchungComponent} from "./Components/create-buchung/create-buchung.component";
@@ -26,10 +24,8 @@ import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-deta
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponentComponent,
     HomeComponent,
     BuchungenListDayComponent,
-    DayComponent,
     BudgetComponent,
     ConfirmDialogComponent,
     CreateBuchungComponent,

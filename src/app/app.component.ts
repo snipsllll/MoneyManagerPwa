@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {FileServiceService} from "./fileService/file-service.service";
-import {DataService} from "./Services/DataService/data.service";
+import {Router} from "@angular/router";
 import {DialogService} from "./Services/DialogService/dialog.service";
 
 @Component({
@@ -12,7 +10,7 @@ import {DialogService} from "./Services/DialogService/dialog.service";
 export class AppComponent implements OnInit{
   title = 'MoneyManagerPwa';
 
-  constructor(private dataService: DataService, private router: Router, public dialogService: DialogService) {
+  constructor(private router: Router, public dialogService: DialogService) {
   }
 
   ngOnInit() {
