@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {TestComponentComponent} from "./Components/test-component/test-component.component";
+import {HomeComponent} from "./Components/home/home.component";
+import {EditBuchungComponent} from "./Components/edit-buchung/edit-buchung.component";
+import {CreateBuchungComponent} from "./Components/create-buchung/create-buchung.component";
+import {BudgetComponent} from "./Components/budget/budget.component";
+import {FixKostenComponent} from "./Components/fix-kosten/fix-kosten.component";
+import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, // Default route
-  { path: 'test', component: TestComponentComponent },           // Home route
-  { path: '**', redirectTo: '/home' }                   // Wildcard route for 404 page
+  {path: '', component: HomeComponent},
+  {path: 'buchungDetails/:buchungsId', component: BuchungDetailsComponent},
+  {path: 'editBuchung/:buchungsId', component: EditBuchungComponent},
+  {path: 'createBuchung', component: CreateBuchungComponent},
+  {path: 'budget', component: BudgetComponent},
+  {path: 'fixKosten', component: FixKostenComponent}
 ];
 
 @NgModule({

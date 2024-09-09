@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
+import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
+import {FixKostenEintrag} from "../../Models/ClassesInterfacesEnums";
+import {DialogService} from "../../Services/DialogService/dialog.service";
+import {TopbarService} from "../../Services/TopBarService/topbar.service";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-fix-kosten',
   templateUrl: './fix-kosten.component.html',
   styleUrl: './fix-kosten.component.css'
 })
-export class FixKostenComponent {
+export class FixKostenComponent  implements OnInit{
   elements = signal<FixKostenEintrag[]>([]);
   selectedElement = signal<number>(-1);
   showCreateDialog = signal<boolean>(false);

@@ -1,0 +1,180 @@
+.create-eintrag {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__back-button-wrapper {
+  padding: 10px;
+}
+
+.create-eintrag__back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background-color: #070e2e;
+  border-radius: 100px;
+}
+
+.create-eintrag__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__top-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #91bada;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 20px 10px;
+  box-shadow: rgba(78, 78, 78, 0.75) 2px 2px 4px;
+}
+
+.create-eintrag__title {
+  width: calc(100% - 4px);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+  border: none;
+}
+
+.create-eintrag__title-unbenannt {
+  width: calc(100% - 4px);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+  border: none;
+  color: #404040;
+}
+
+.create-eintrag__title-input {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  padding: 0;
+  font-size: 30px;
+}
+
+.create-eintrag__id-wrapper {
+  display: flex;
+  font-size: 15px;
+  color: #454545;
+  height: 15px;
+}
+
+.create-eintrag__id-data {
+  margin-left: 10px;
+}
+
+.create-eintrag__betrag-wrapper, .create-eintrag__datum-wrapper, .create-eintrag__uhrzeit-wrapper {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.create-eintrag__label {
+  font-size: 21px;
+  color: #323232;
+}
+
+.create-eintrag__data {
+  height: 23px;
+  border: none;
+  width: 130px;
+  text-align: end;
+  padding: 0;
+}
+
+.create-eintrag__beschreibung-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__beschreibung-data {
+  flex-grow: 1;
+  width: calc(100% - 22px);
+  font-size: 18px;
+  text-align: start;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: Tahoma;
+  background-color: #e5efff;
+}
+
+.create-eintrag__beschreibung-label {
+  margin-bottom: 10px;
+}
+
+.create-eintrag__data-input {
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+.create-eintrag__spacer-bottom {
+  height: 30px;
+}
+
+.create-eintrag__buttons-wrapper {
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  padding: 20px;
+  width: calc(100% - 40px);
+  background-color: #636363;
+}
+
+.create-eintrag__button {
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 40%;
+  border-radius: 10px;
+  background-color: #cccccc;
+}
+
+hr {
+  width: 100%;
+  margin: 5px 0 10px 0;
+  padding: 0;
+  border: none;
+  height: 2px;
+  background-color: #676767;
+}
+
+.hr-title {
+  width: 100%;
+  padding: 0;
+  border: none;
+  height: 2px;
+  background-color: black;
+  margin: 5px 0 10px 0;
+}
+
+.create-eintrag__betrag-warnung {
+  color: red;
+}
+
+.eintrag-details__id-wrapper {
+  display: flex;
+  font-size: 15px;
+  color: #454545;
+  height: 15px;
+}
+
+.eintrag-details__id-data {
+  margin-left: 10px;
+}

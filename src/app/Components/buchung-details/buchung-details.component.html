@@ -1,0 +1,81 @@
+<div class="create-eintrag">
+  <div class="create-eintrag__back-button-wrapper">
+    <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
+  </div>
+  <div class="create-eintrag__content" *ngIf="buchung !== undefined; else noEintrag">
+    <div class="create-eintrag__top-content">
+      <div class="create-eintrag__title" *ngIf="titelVorhanden">
+        {{buchung()?.title}}
+      </div>
+      <div class="create-eintrag__title-unbenannt" *ngIf="!titelVorhanden">
+        Unbenannt
+      </div>
+      <div class="eintrag-details__id-wrapper">
+        <div>
+          (ID:
+        </div>
+        <div class="eintrag-details__data eintrag-details__id-data">
+          {{ buchung()?.id }})
+        </div>
+      </div>
+      <hr class="hr-title">
+      <div class="create-eintrag__betrag">
+        <div class="create-eintrag__betrag-wrapper">
+          <div class="create-eintrag__label">
+            Betrag:
+          </div>
+          <div class="create-eintrag__data">
+            {{buchung()?.betrag}}€
+          </div>
+        </div>
+      </div>
+
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label">
+          Datum:
+        </div>
+        <div class="create-eintrag__data">
+          {{buchung()!.date.toLocaleDateString()}}
+        </div>
+      </div>
+      <div class="create-eintrag__uhrzeit-wrapper">
+        <div class="create-eintrag__label">
+          Uhrzeit:
+        </div>
+        <div class="create-eintrag__data">
+          {{buchung()?.time}}
+        </div>
+      </div>
+      <hr class="hr">
+      <div class="create-eintrag__beschreibung-wrapper">
+        <div class="create-eintrag__label create-eintrag__beschreibung-label">
+          Beschreibung:
+        </div>
+        <div class="create-eintrag__data create-eintrag__beschreibung-data">
+          {{ buchung()?.beschreibung }}
+        </div>
+      </div>
+    </div>
+    <div class="create-eintrag__spacer-bottom">
+
+    </div>
+
+    <div class="create-eintrag__buttons-wrapper">
+      <div class="create-eintrag__button" (click)="onDeleteButtonClicked()">
+        löschen
+      </div>
+      <div class="create-eintrag__button" (click)="onEditClicked()">
+        bearbeiten
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template #noEintrag>
+  <div class="eintrag-details__no-eintrag">
+    Error: No Eintrag provided!
+  </div>
+</ng-template>

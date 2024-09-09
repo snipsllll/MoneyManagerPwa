@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FileServiceService} from "./fileService/file-service.service";
+import {DataService} from "./Services/DataService/data.service";
+import {DialogService} from "./Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-root',
@@ -9,33 +11,12 @@ import {FileServiceService} from "./fileService/file-service.service";
 })
 export class AppComponent implements OnInit{
   title = 'MoneyManagerPwa';
-  savedValue: string | null = null;  // Variable to hold the saved value
 
-  x = ''
-
-  constructor(private router: Router, private fileService: FileServiceService) {
-
+  constructor(private dataService: DataService, private router: Router, public dialogService: DialogService) {
   }
 
-  ngOnInit(): void {
-    // Check if the value exists in localStorage
-    const valueFromStorage = this.fileService.load();
-
-    if (valueFromStorage) {
-      // If the value exists, assign it to the variable
-      this.savedValue = valueFromStorage;
-    } else {
-      // If the value doesn't exist, set a default value and save it to localStorage
-      this.fileService.save(this.savedValue ?? '');
-    }
-  }
-
-  toTest(){
-    this.router.navigate(['/test']);
-  }
-
-  onSaveValueChanged() {
-    this.fileService.save(this.savedValue ?? '')
+  ngOnInit() {
+    this.router.navigate(['/'])
   }
 
 }

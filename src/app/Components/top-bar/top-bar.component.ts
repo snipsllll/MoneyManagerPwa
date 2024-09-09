@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import {Component, computed, OnInit} from '@angular/core';
+import {DayIstBudgetViewModel} from "../../Models/DayIstBudgetViewModel";
+import {DataService} from "../../Services/DataService/data.service";
+import {TopbarService} from "../../Services/TopBarService/topbar.service";
+import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.css'
 })
-export class TopBarComponent {
+export class TopBarComponent  implements OnInit{
   title?: string;
   monthIstBudget = computed(() => {
     this.dataService.updated();

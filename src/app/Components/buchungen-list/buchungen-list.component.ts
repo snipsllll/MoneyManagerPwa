@@ -1,48 +1,43 @@
-import { Component } from '@angular/core';
+import {Component, computed, OnInit} from '@angular/core';
+import {DataService} from "../../Services/DataService/data.service";
+import {Day} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-buchungen-list',
   templateUrl: './buchungen-list.component.html',
   styleUrl: './buchungen-list.component.css'
 })
-export class BuchungenListComponent {
-  @Input() buchung!: Buchung;
-  showMenu = signal<boolean>(false);
+export class BuchungenListComponent  implements OnInit{
+  date = new Date();
+  days = computed(() => {
+    const months = this.dataService.userData.months();
+    const days: Day[] = []
+    months.forEach(month => {
+      month.weeks?.forEach(week => {
+        week.days.forEach(day => {
+          if(day.buchungen!.length > 0){
+            days.push(day);
+          }
+        })
+      })
+    });
+    return this.orderByDateDesc(days);
+  })
 
-  constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
+  constructor(private dataService: DataService){
 
   }
 
   ngOnInit() {
-    this.topbarService.isDropDownDisabled = false;
+
   }
 
-  onMenuButtonClicked() {
-    this.showMenu.set(!this.showMenu())
-  }
-
-  onBuchungClicked(buchungsId: number) {
-    this.router.navigate(['/buchungDetails', buchungsId]);
-    //this.navigationService.previousRoute = Sites.home;
-  }
-
-  onEditButtonClicked(buchungsId: number) {
-    this.router.navigate(['/editBuchung', buchungsId]);
-  }
-
-  onDeleteButtonClicked() {
-    this.showMenu.set(false);
-    const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Buchung löschen?',
-      message: 'Willst du die Buchung wirklich löschen? Sie kann nicht wieder hergestellt werden!',
-      onConfirmClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-        this.dataService.deleteBuchung(this.buchung.id!);
-      },
-      onCancelClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-      }
-    };
-    this.dialogService.showConfirmDialog(confirmDialogViewModel);
+  orderByDateDesc(array: Day[]) {
+    const rArray: Day[] = [];
+    array.forEach(day => {
+      day.buchungen?.sort((a, b) => b.date.getTime() - a.date.getTime())
+      rArray.push(day);
+    })
+    return rArray.sort((a, b) => b.date.getTime() - a.date.getTime())
   }
 }

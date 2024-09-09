@@ -13,7 +13,7 @@ export class TestComponentComponent {
   x= '';
 
   constructor(private dataService: DataService) {
-    this.x = dataService.x;
+    ;
   }
 
   ngOnInit(): void {

@@ -1,3 +1,7 @@
+import {Buchungen} from "./Buchungen";
+import {Buchung, FixKostenEintrag, Month} from "./ClassesInterfacesEnums";
+import {signal} from "@angular/core";
+
 export class UserData {
 
   public buchungen: Buchungen = new Buchungen();

@@ -21,6 +21,7 @@ import {BuchungListelemComponent} from "./Components/buchung-listelem/buchung-li
 import {BuchungenListComponent} from "./Components/buchungen-list/buchungen-list.component";
 import {SideNavComponent} from "./Components/side-nav/side-nav.component";
 import {TopBarComponent} from "./Components/top-bar/top-bar.component";
+import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {TopBarComponent} from "./Components/top-bar/top-bar.component";
     BuchungListelemComponent,
     BuchungenListComponent,
     SideNavComponent,
-    TopBarComponent
+    TopBarComponent,
+    BuchungDetailsComponent
   ],
     imports: [
         BrowserModule,

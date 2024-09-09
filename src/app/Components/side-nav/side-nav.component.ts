@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import {SideNavElements} from "../../Models/ClassesInterfacesEnums";
+import {TopbarService} from "../../Services/TopBarService/topbar.service";
+import {Router} from "@angular/router";
+import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 
 @Component({
   selector: 'app-side-nav',
@@ -27,4 +31,6 @@ export class SideNavComponent {
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.fixkosten;
   }
+
+  protected readonly SideNavElements = SideNavElements;
 }

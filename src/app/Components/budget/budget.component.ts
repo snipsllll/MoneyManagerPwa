@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
+import {TopbarService} from "../../Services/TopBarService/topbar.service";
+import {DataService} from "../../Services/DataService/data.service";
+import {BudgetInfosForMonth} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-budget',
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.css'
 })
-export class BudgetComponent {
+export class BudgetComponent  implements OnInit{
   selectedMonthIndex = signal<number>(new Date().getMonth());
 
   selectedYear = signal<number>(new Date().getFullYear());

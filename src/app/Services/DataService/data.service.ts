@@ -1,4 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable, signal} from '@angular/core';
+import {UserData} from "../../Models/UserData";
+import {FileEngine} from "../../Models/FileEnigne";
+import {
+  Buchung,
+  BudgetInfosForMonth, Day,
+  DayIstBudgets,
+  FixKostenEintrag, Month, SavedData,
+  UpdateValues, Week
+} from "../../Models/ClassesInterfacesEnums";
 
 @Injectable({
   providedIn: 'root'

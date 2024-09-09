@@ -1,3 +1,5 @@
+import {SavedData} from "./ClassesInterfacesEnums";
+
 export class FileEngine {
 
   fileName: string = 'savedText.txt';

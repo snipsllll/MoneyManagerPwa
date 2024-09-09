@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, signal} from '@angular/core';
+import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
+import {DataService} from "../../Services/DataService/data.service";
+import {DialogService} from "../../Services/DialogService/dialog.service";
+import {Router} from "@angular/router";
+import {Buchung, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-create-buchung',

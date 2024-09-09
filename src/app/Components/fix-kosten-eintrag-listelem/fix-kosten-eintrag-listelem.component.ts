@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import {Component, computed, EventEmitter, Input, OnInit, Output, signal, WritableSignal} from '@angular/core';
+import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
+import {DataService} from "../../Services/DataService/data.service";
+import {FixKostenEintrag} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-fix-kosten-eintrag-listelem',
   templateUrl: './fix-kosten-eintrag-listelem.component.html',
   styleUrl: './fix-kosten-eintrag-listelem.component.css'
 })
-export class FixKostenEintragListelemComponent {
+export class FixKostenEintragListelemComponent  implements OnInit{
   @Input() fixKostenEintrag!: FixKostenEintrag;
   @Input() selectedElementId!: WritableSignal<number>;
 

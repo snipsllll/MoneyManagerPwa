@@ -1,11 +1,17 @@
-import { Component } from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
+import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
+import {Buchung, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
+import {NavigationService} from "../../Services/NavigationService/navigation.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {DataService} from "../../Services/DataService/data.service";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-edit-buchung',
   templateUrl: './edit-buchung.component.html',
   styleUrl: './edit-buchung.component.css'
 })
-export class EditBuchungComponent {
+export class EditBuchungComponent implements OnInit {
   buchung = signal<Buchung | undefined>(undefined);
   oldBuchung?: Buchung;
   date?: string;

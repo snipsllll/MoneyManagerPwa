@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 100vw;
+  margin: 0;
+  overflow: hidden;
+  font-family: Tahoma;
+  user-select: none;
+  background-color: #e7f2ff;
+}
+
+html {
+  height: 100%;
+}
+
+all-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.floating-box {
+  background-color: #91bada;
+  border-radius: 20px;
+  padding: 20px 10px;
+  box-shadow: rgba(78, 78, 78, 0.75) 2px 2px 4px;
+  margin: 10px;
+  font-size: 18px;
+  color: #292929;
+}
+
+.fb-input {
+  height: 23px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  width: 130px;
+  text-align: end;
+  padding: 0;
+}
+
+.green {
+  color: green !important;
+}
+
+.red {
+  color: red;
+}
