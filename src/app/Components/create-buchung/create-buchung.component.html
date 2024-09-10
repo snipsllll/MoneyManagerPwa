@@ -1,17 +1,30 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget">
+    <div class="create-eintrag__budget" *ngIf="dayBudget().weekIstBudget && dayBudget().monthIstBudget && dayBudget().dayIstBudget; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="this.dayBudget().monthIstBudget !== undefined && dayBudget()?.monthIstBudget! < 0">{{ dayBudget().monthIstBudget ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="dayBudget()?.monthIstBudget! < 0">{{ dayBudget().monthIstBudget ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="this.dayBudget().weekIstBudget !== undefined && dayBudget()?.weekIstBudget! < 0">{{ dayBudget().weekIstBudget ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="dayBudget()?.weekIstBudget! < 0">{{ dayBudget().weekIstBudget ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="this.dayBudget().dayIstBudget !== undefined && dayBudget()?.dayIstBudget! < 0">{{dayBudget().dayIstBudget ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="dayBudget()?.dayIstBudget! < 0">{{dayBudget().dayIstBudget ?? '???' }}€</b>
       </div>
     </div>
+    <ng-template #noDayBudgetTop>
+      <div class="create-eintrag__budget">
+        <div class="ce__budget-eintrag">
+          monat: <b>???</b>
+        </div>
+        <div class="ce__budget-eintrag">
+          woche: <b>???</b>
+        </div>
+        <div class="ce__budget-eintrag">
+          tag: <b>???</b>
+        </div>
+      </div>
+    </ng-template>
     <div class="create-eintrag__top-spacer" (click)="onBackClicked()">
 
     </div>
