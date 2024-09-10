@@ -106,7 +106,9 @@ export class BudgetComponent  implements OnInit{
       istBudget: 0,
       totalBudget: 0,
       sparen: 0,
-      fixKosten: this.dataService.getFixKostenSumme()
+      fixKosten: this.dataService.getFixKostenSummeForMonth({
+        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
+      })
     });
   }
 }

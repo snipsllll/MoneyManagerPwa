@@ -95,6 +95,9 @@ export interface UpdateValuesForMonth {
   newSparen?: number;
   newTotalBudget?: number;
   newMaxDayBudget?: number;
+  newFixkostenEintraege?: FixKostenEintrag[];
+  deletedFixkostenEintreageIds?: number[];
+  editedFixKostenEintraege?: FixKostenEintrag[];
 }
 
 export enum Months {

@@ -59,7 +59,7 @@ export class DataService {
   }
 
   deleteFixKostenEintrag(fixkostenEintragsId: number) {
-    this.update( {
+    this.update({
       deletedFixkostenEintreageIds: [fixkostenEintragsId]
     })
   }
@@ -89,13 +89,13 @@ export class DataService {
   update(updateValues?: UpdateValues, safeAfterUpdate?: boolean) {
 
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
-    if(!this.checkIfMonthExistsForDay(new Date())){
+    if (!this.checkIfMonthExistsForDay(new Date())) {
       this.createNewMonth(new Date());
     }
 
-    if(updateValues) {
+    if (updateValues) {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
-      if(updateValues.newFixkostenEintraege !== undefined) {
+      if (updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
           fixKostenEintrag.id = this.getNextFreeFixKostenId();
           this.userData.fixKosten.push(fixKostenEintrag);
@@ -103,64 +103,91 @@ export class DataService {
       }
 
       //Wenn FixkostenEinträge gelöscht wurden, dann aus userData.fixKosten entfernen
-      if(updateValues.deletedFixkostenEintreageIds !== undefined) {
+      if (updateValues.deletedFixkostenEintreageIds !== undefined) {
         updateValues.deletedFixkostenEintreageIds.forEach(fixKostenEintragsId => {
-          this.userData.fixKosten.splice(this.getFixKostenIndex(fixKostenEintragsId!),1);
+          this.userData.fixKosten.splice(this.getFixKostenIndex(fixKostenEintragsId!), 1);
         })
       }
 
       //Wenn Fixkosteneinträge verändert wurden, dann in userData.fixKosten anpassen
-      if(updateValues.newFixkostenEintraege !== undefined) {
+      if (updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
           this.userData.fixKosten[this.getFixKostenIndex(fixKostenEintrag.id!)] = fixKostenEintrag;
         })
       }
 
       //Wenn neue Buchungen angelegt wurden, dann neue Buchungen zu userData.buchungen.allebuchungen hinzufügen
-      if(updateValues.newBuchungen !== undefined) {
+      if (updateValues.newBuchungen !== undefined) {
         updateValues.newBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen.push(buchung);
-          if(!this.checkIfMonthExistsForDay(buchung.date)){
+          if (!this.checkIfMonthExistsForDay(buchung.date)) {
             this.createNewMonth(buchung.date);
           }
         })
       }
 
       //Wenn Buchungen gelöscht wurden, dann Buchungen aus userData.buchungen.alleBuchungen entfernen
-      if(updateValues.deletedBuchungsIds !== undefined){
+      if (updateValues.deletedBuchungsIds !== undefined) {
         updateValues.deletedBuchungsIds.forEach(buchungsId => {
           this.userData.buchungen.alleBuchungen.splice(this.getIndexOfBuchungById(buchungsId), 1);
         })
       }
 
       //Wenns bearbeitete Buchungen gibt, dann Buchungen in userData.buchungen.alleBuchungen anpassen
-      if(updateValues.editedBuchungen !== undefined) {
+      if (updateValues.editedBuchungen !== undefined) {
         updateValues.editedBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen[this.getIndexOfBuchungById(buchung.id)] = buchung;
-          if(!this.checkIfMonthExistsForDay(buchung.date)){
+          if (!this.checkIfMonthExistsForDay(buchung.date)) {
             this.createNewMonth(buchung.date);
           }
         })
       }
 
-      if(updateValues.months){
+      if (updateValues.months) {
         updateValues.months.forEach(month => {
-          if(!this.checkIfMonthExistsForDay(month.date)){
+          if (!this.checkIfMonthExistsForDay(month.date)) {
             this.createNewMonth(month.date);
           }
 
+          //Wenn für einen abgeschlossenen Monat neue Fixkosten eingetragen wurden
+          if (month.newFixkostenEintraege !== undefined) {
+            if (this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten === undefined) {
+              this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten = [];
+            }
+            month.newFixkostenEintraege.forEach(eintrag => {
+              this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten!.push(eintrag);
+            })
+          }
+
+          //Wenn für einen abgeschlossenen Monat Fixkosten verändert wurden
+          if (month.newFixkostenEintraege !== undefined) {
+            month.newFixkostenEintraege.forEach(eintrag => {
+              this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten![this.getFixKostenEintragIndex(eintrag, month.date)] = eintrag;
+            })
+          }
+
+          //Wenn für einen abgeschlossenen Monat Fixkosten gelöscht wurden
+          if (month.newFixkostenEintraege !== undefined) {
+            if (this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten === undefined) {
+              this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten = [];
+            }
+            month.newFixkostenEintraege.forEach(eintrag => {
+              this.userData.months()[this.getIndexOfMonth(month.date)].gesperrteFixKosten!.splice(this.getFixKostenEintragIndex(eintrag, month.date), 1);
+            })
+          }
+
           //Wenn sparen geändert wurde
-          if(month.newSparen !== undefined) {
+          if (month.newSparen !== undefined) {
             this.userData.months()[this.getIndexOfMonth(month.date)].sparen = month.newSparen;
           }
 
           //Wenn totalBudget geändert wurde
-          if(month.newTotalBudget !== undefined) {
+          if (month.newTotalBudget !== undefined) {
             this.userData.months()[this.getIndexOfMonth(month.date)].totalBudget = month.newTotalBudget;
           }
 
           //Wenn maxDayBudget geändert wurde
-          if(month.newMaxDayBudget !== undefined) {
+          if (month.newMaxDayBudget !== undefined) {
             //TODO
           }
         })
@@ -192,7 +219,7 @@ export class DataService {
 
       this.calcLeftOversForMonth(month.startDate);
     });
-    if(safeAfterUpdate === undefined || safeAfterUpdate === true){
+    if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
       this.save();
     }
     this.sendUpdateToComponents();
@@ -249,7 +276,7 @@ export class DataService {
       totalBudget: month.totalBudget ?? 0,
       istBudget: month.istBudget,
       dayBudget: month.dailyBudget ?? 0,
-      fixKosten: this.getFixKostenSumme()
+      fixKosten: this.getFixKostenSummeForMonth(month)
     }
   }
 
@@ -257,14 +284,22 @@ export class DataService {
     return this.userData.buchungen.alleBuchungen.find(buchung => buchung.id === buchungsId);
   }
 
-  getFixKostenSumme() {
+  getFixKostenSummeForMonth(month: Month) {
     let summe = 0;
-    if(this.userData.fixKosten === undefined) {
-      this.userData.fixKosten = [];
+    if (month.monatAbgeschlossen) {
+      if (month.gesperrteFixKosten) {
+        month.gesperrteFixKosten.forEach(eintrag => {
+          summe += eintrag.betrag;
+        })
+      }
+    } else {
+      if (this.userData.fixKosten === undefined) {
+        this.userData.fixKosten = [];
+      }
+      this.userData.fixKosten.forEach(eintrag => {
+        summe += eintrag.betrag;
+      })
     }
-    this.userData.fixKosten.forEach(eintrag => {
-      summe += eintrag.betrag;
-    })
     return summe;
   }
 
@@ -340,7 +375,7 @@ export class DataService {
     this.userData.fixKosten = savedData.fixKosten;
 
     savedData.savedMonths?.forEach(month => {
-      if(!this.checkIfMonthExistsForDay(month.date)){
+      if (!this.checkIfMonthExistsForDay(month.date)) {
         this.createNewMonth(month.date);
       }
       this.changeSparenForMonth(month.date, month.sparen, false);
@@ -416,7 +451,7 @@ export class DataService {
     const month = this.userData.months()[this.getIndexOfMonth(date)];
 
     /*Algorithm start*/
-    if(month.budget === undefined) {
+    if (month.budget === undefined) {
       console.error('undefined at month.budget is not allowed! (dataService: calcIstBudgetForMonth)');
       return;
     }
@@ -433,7 +468,7 @@ export class DataService {
     month.weeks?.forEach(week => {
       let weekIstBudget = 0;
       week.days.forEach(day => {
-        if(day.istBudget === undefined) {
+        if (day.istBudget === undefined) {
           this.logUndefinedError('day.istBudget', 'calcIstBudgetForAllWekksInMonth()');
           return;
         }
@@ -441,7 +476,7 @@ export class DataService {
       });
 
       //stellt sicher, dass ein istBudget nur dann exestiert, wenn es auch ein budget gibt
-      if(week.budget){
+      if (week.budget) {
         week.istBudget = +weekIstBudget.toFixed(2);
       }
     })
@@ -456,7 +491,7 @@ export class DataService {
     /*Algorithm start*/
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        if(day.budget === undefined) {
+        if (day.budget === undefined) {
           this.logUndefinedError('day.budget', 'calcIstBudgetsForAllDaysInMonth()');
           return;
         }
@@ -476,13 +511,13 @@ export class DataService {
     const month = this.getMonthByDate(date);
 
     /*Algorithm start*/
-    if(month.dailyBudget === undefined) {
+    if (month.dailyBudget === undefined) {
       this.logUndefinedError('month.dailyBudget', 'calcBudgetsForAllWeeksInMonth()');
       return;
     }
 
     month.weeks?.forEach(week => {
-      if(month.dailyBudget === undefined) {
+      if (month.dailyBudget === undefined) {
         this.logUndefinedError('week.daysInWeek', 'calcBudgetsForAllWeeksInMonth()');
         return;
       }
@@ -497,7 +532,7 @@ export class DataService {
     const month = this.getMonthByDate(date);
 
     /*Algorithm start*/
-    if(month.dailyBudget === undefined) {
+    if (month.dailyBudget === undefined) {
       this.logUndefinedError('month.dailyBudget', 'calcBudgetsForAllDaysInMonth()');
       return;
     }
@@ -516,17 +551,17 @@ export class DataService {
     const month = this.getMonthByDate(date);
 
     /*Algorithm start*/
-    if(month.daysInMonth === undefined) {
+    if (month.daysInMonth === undefined) {
       this.logUndefinedError('month.daysInMonth', 'calcDailyBudgetForMonth()');
       return;
     }
 
-    if(month.totalBudget === undefined) {
+    if (month.totalBudget === undefined) {
       this.logUndefinedError('month.totalBudget', 'calcDailyBudgetForMonth');
       return;
     }
 
-    month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSumme() ?? 0)) / month.daysInMonth).toFixed(2);
+    month.dailyBudget = toFixedDown(+((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)) / month.daysInMonth), 2);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -559,10 +594,10 @@ export class DataService {
 
     let weekStartDate = startDate;
 
-    while(weekStartDate.getDate() <= endDate.getDate() && weekStartDate.getMonth() <= endDate.getMonth()) {
+    while (weekStartDate.getDate() <= endDate.getDate() && weekStartDate.getMonth() <= endDate.getMonth()) {
       let weekEndDate: Date = this.getSunday(weekStartDate);
 
-      if(weekEndDate.getMonth() > endDate.getMonth()){
+      if (weekEndDate.getMonth() > endDate.getMonth()) {
         weekEndDate = endDate;
       }
 
@@ -590,6 +625,8 @@ export class DataService {
       daysInMonth: daysInMonth,
       weeks: weeks
     }
+
+    month.monatAbgeschlossen = this.isDayBeforeMonth(new Date(), month);
 
     this.userData.months().push(month);
   }
@@ -630,13 +667,13 @@ export class DataService {
   private calcBudgetForMonth(date: Date) {
     const month = this.getMonthByDate(date);
 
-    if(month.daysInMonth === undefined || month.totalBudget === undefined || month.dailyBudget === undefined) {
+    if (month.daysInMonth === undefined || month.totalBudget === undefined || month.dailyBudget === undefined) {
       this.logUndefinedError('something', 'calcBubdgetForMonth()');
       return;
     }
 
     /*Algorithm start*/
-    month.budget = +(month.dailyBudget * month.daysInMonth).toFixed(2);
+    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)).toFixed(2);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -663,7 +700,7 @@ export class DataService {
     month.weeks?.forEach(week => {
       let leftovers = 0;
       week.days.forEach(day => {
-        if(day.date.getDate() < new Date().getDate()){
+        if (day.date.getDate() < new Date().getDate()) {
           leftovers += day.leftOvers ?? 0;
         }
       })
@@ -681,7 +718,7 @@ export class DataService {
     let leftovers = 0;
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        if(day.date.getDate() < new Date().getDate()){
+        if (day.date.getDate() < new Date().getDate()) {
           leftovers += day.leftOvers ?? 0;
         }
       })
@@ -690,6 +727,30 @@ export class DataService {
     /*Algorithm end*/
 
     this.setMonth(month);
+  }
+
+  private isDayBeforeMonth(dayDate: Date, month: Month) {
+    console.log(dayDate.getFullYear())
+    console.log(month.startDate.getFullYear())
+    if (dayDate.getFullYear() > month.startDate.getFullYear()) {
+      console.log(99909)
+      return true;
+    }
+    console.log(dayDate.getMonth());
+    console.log(month.startDate.getMonth())
+    return dayDate.getMonth() > month.startDate.getMonth();
+  }
+
+  private getFixKostenEintragIndex(pEintrag: FixKostenEintrag, monthDate?: Date) {
+    if (monthDate) {
+      if (this.userData.months()[this.getIndexOfMonth(monthDate)].gesperrteFixKosten === undefined) {
+        this.logUndefinedError(`this.userdata.months()[${this.getIndexOfMonth(monthDate)}].gesperrteFixKosten`, 'getFixKostenEintragIndex()');
+        return -1;
+      }
+      return this.userData.months()[this.getIndexOfMonth(monthDate)].gesperrteFixKosten!.findIndex(eintrag => eintrag.id === pEintrag.id);
+    }
+
+    return this.userData.fixKosten.findIndex(eintrag => eintrag.id === pEintrag.id);
   }
 }
 
@@ -701,3 +762,7 @@ enum DB {
   noTD
 }
 
+function toFixedDown(number: number, decimals: number) {
+  const factor = Math.pow(10, decimals);  // Factor to move the decimal point
+  return Math.floor(number * factor) / factor;
+}
