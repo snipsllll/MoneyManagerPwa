@@ -13,6 +13,8 @@ export class BudgetComponent  implements OnInit{
 
   selectedYear = signal<number>(new Date().getFullYear());
 
+  isFixkostenDetailsVisible = signal<boolean>(false);
+
   data = signal<BudgetInfosForMonth>({
     budget: 0,
     dayBudget: 0,
@@ -93,6 +95,10 @@ export class BudgetComponent  implements OnInit{
   onTotalBudgetChanged() {
     this.dataService.changeTotalBudgetForMonth(this.getDateForSelectedMonth(), this.data().totalBudget);
     this.update();
+  }
+
+  onFixKostenClicked() {
+    this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
   }
 
   private getDateForSelectedMonth() {

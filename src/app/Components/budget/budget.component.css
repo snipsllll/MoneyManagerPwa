@@ -48,3 +48,29 @@
   margin-bottom: -2px;
 }
 
+.budget__fixkosten-chevron {
+  height: 17px;
+  width: 17px;
+  margin-bottom: -2px;
+  margin-left: -3px;
+  margin-right: -3px;
+}
+
+.budget__element-label-fixkosten {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.budget__element-label-fixkosten-text {
+  margin-left: 4px;
+}
+
+.budget__element-wrapper-fixkosten {
+  display: flex;
+  width: calc(100% - 6px);
+  justify-content: space-between;
+  padding: 10px 10px 10px 0;
+  margin-left: -4px;
+}

@@ -5,7 +5,7 @@
       <
     </div>
     <div class="budget__month-center">
-      {{selectedMonth()}} {{' ' + selectedYear()}}
+      {{ selectedMonth() }} {{ ' ' + selectedYear() }}
     </div>
     <div class="budget__month-right" (click)="onMonthNextClicked()">
       >
@@ -17,20 +17,25 @@
         <div class="budget__element-label">
           total Budget:
         </div>
-        <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()" [(ngModel)]="data().totalBudget">
+        <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
+               [(ngModel)]="data().totalBudget">
       </div>
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
           Sparen:
         </div>
-        <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()" [(ngModel)]="data().sparen">
+        <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
+               [(ngModel)]="data().sparen">
       </div>
-      <div class="budget__element-wrapper">
-        <div class="budget__element-label">
-          mntl. Fix-Kosten:
+      <div class="budget__element-wrapper-fixkosten">
+        <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
+          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" *ngIf="!isFixkostenDetailsVisible(); else chevronDown">
+          <div class="budget__element-label-fixkosten-text">
+            mntl. Fix-Kosten:
+          </div>
         </div>
         <div class="budget__element-data">
-          {{data().fixKosten}}€ <img src="assets/lock-closed.png" class="lock-image" *ngIf="data().fixKostenGesperrt">
+          {{ data().fixKosten }}€ <img src="assets/lock-closed.png" class="lock-image" *ngIf="data().fixKostenGesperrt">
         </div>
       </div>
     </div>
@@ -41,7 +46,7 @@
           verfügbar für diesen Monat:
         </div>
         <div class="budget__element-data">
-          {{data().budget}}€
+          {{ data().budget }}€
         </div>
       </div>
       <div class="budget__element-wrapper">
@@ -49,10 +54,14 @@
           tägl. Budget:
         </div>
         <div class="budget__element-data">
-          {{data().dayBudget}}€
+          {{ data().dayBudget }}€
         </div>
       </div>
     </div>
   </div>
 
 </div>
+
+<ng-template #chevronDown>
+  <img class="budget__fixkosten-chevron" src="assets/chevron-down.png">
+</ng-template>
