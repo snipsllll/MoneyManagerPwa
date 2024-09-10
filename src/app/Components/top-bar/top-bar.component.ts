@@ -11,7 +11,7 @@ import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 })
 export class TopBarComponent  implements OnInit{
   title?: string;
-  monthIstBudget = computed(() => {
+  dayBudget = computed(() => {
     this.dataService.updated();
     const x = this.dataService.getDayIstBudgets(new Date());
     const y: DayIstBudgetViewModel = {
