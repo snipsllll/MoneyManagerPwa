@@ -21,7 +21,7 @@ import {SideNavComponent} from "./Components/side-nav/side-nav.component";
 import {TopBarComponent} from "./Components/top-bar/top-bar.component";
 import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
 import {SparschweinComponent} from "./Components/sparschwein/sparschwein.component";
-import { SparschweinListelemComponent } from './sparschwein-listelem/sparschwein-listelem.component';
+import {SparschweinListelemComponent} from "./Components/sparschwein-listelem/sparschwein-listelem.component";
 
 @NgModule({
   declarations: [

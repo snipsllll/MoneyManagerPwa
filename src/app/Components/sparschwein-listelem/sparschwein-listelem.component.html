@@ -1,0 +1,74 @@
+<div class="sparschwein-listelem floating-box" [class.darker]="eintrag.monat !== undefined">
+  <div class="sparschwein-listelem__left">
+    <div class="sparschwein-listelem__betrag">
+      <b>{{eintrag.betrag}}€</b>
+    </div>
+    <div class="sparschwein-listelem__text-wrapper">
+      <div class="sparschwein-listelem__title">
+        <b>{{ getTitle() }}</b>
+      </div>
+    </div>
+  </div>
+  <div class="sparschwein-listelem__right">
+    <div class="sparschwein-listelem__beschreibung" *ngIf="eintrag.monat === undefined" (click)="onMenuClicked()">
+      ...
+    </div>
+  </div>
+  <div class="fix-kosten__eintrag-menu" *ngIf="showMenu()">
+    <div class="fix-kosten__eintrag-menu-element" (click)="onBearbeitenClicked()">
+      bearbeiten
+    </div>
+    <hr class="hr">
+    <div class="fix-kosten__eintrag-menu-element" (click)="onLoeschenClicked()">
+      löschen
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showEditDialog()">
+  <div class="edit-dialog-wrapper">
+    <div class="edit-dialog floating-box">
+      <div class="create-eintrag__top-content">
+        <input type="text" class="create-eintrag__title" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (change)="onTitelChanged()">
+        <hr class="hr-title">
+        <div class="create-eintrag__betrag">
+          <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarnung()">
+            der Betrag darf nicht 0 betragen!
+          </div>
+          <div class="create-eintrag__betrag-wrapper">
+            <div class="create-eintrag__label">
+              Betrag:
+            </div>
+            <input type="number" class="create-eintrag__data" placeholder="0.00€" [(ngModel)]="eintrag.betrag" (change)="onBetragChanged()">
+          </div>
+        </div>
+        <div class="create-eintrag__beschreibung-wrapper">
+          <div class="create-eintrag__label create-eintrag__beschreibung-label" [(ngModel)]="eintrag.zusatz" (change)="onZusatzChanged()">
+            Zusatz:
+          </div>
+          <textarea
+            class="create-eintrag__data create-eintrag__beschreibung-data">
+
+          </textarea>
+        </div>
+      </div>
+      <div class="create-eintrag__spacer-bottom">
+
+      </div>
+
+      <div class="create-eintrag__buttons-wrapper">
+        <div class="create-eintrag__button" (click)="onEditAbbrechenClicked()">
+          abbrechen
+        </div>
+        <div class="create-eintrag__button" (click)="onEditSpeichernClicked()">
+          speichern
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="edit-dialog__background">
+
+  </div>
+</div>

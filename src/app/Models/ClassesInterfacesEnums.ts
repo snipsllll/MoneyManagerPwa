@@ -1,3 +1,5 @@
+import {SparschweinComponent} from "../Components/sparschwein/sparschwein.component";
+
 export interface Month {
   totalBudget?: number;
   sparen?: number;
@@ -103,6 +105,20 @@ export interface UpdateValuesForMonth {
   newFixkostenEintraege?: FixKostenEintrag[];
   deletedFixkostenEintreageIds?: number[];
   editedFixKostenEintraege?: FixKostenEintrag[];
+}
+
+export interface SparschweinData {
+  erspartes: number;
+  eintraege: SparschweinEintrag[];
+}
+
+export interface SparschweinEintrag {
+  betrag: number;
+  date: Date;
+  id: number;
+  monat?: Month;
+  title?: string;
+  zusatz?: string;
 }
 
 export enum Months {

@@ -1,134 +1,32 @@
-.sparschwein {
-  height: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.sparschwein__add-button {
-  border-radius: 20px;
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70px;
-  width: 70px;
-  background-color: #29508a;
-  box-shadow: #474747 1px 1px 2px;
-  font-size: 30px;
-  cursor: pointer;
-  color: white;
-}
-
-.sparschwein__add-button:hover {
-  font-size: 40px;
-}
-
-.sparschwein__top {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #e4f1ff;
-}
-
-.sparschwein__sparschwein {
-  height: 200px;
-  width: 200px;
-}
-
-.sparschwein__betrag {
-  font-size: 40px;
-  margin-top: -20px;
-}
-
-.sparschwein__bottom {
-  width: calc(100% - 20px);
-  flex-grow: 1;
-  overflow-y: scroll;
-  padding: 10px;
-}
-
-.hr {
-  border: none;
-  height: 5px;
-  background-color: #111922;
-  width: 100%;
-  margin: 0;
-}
-
-.green {
-  color: green;
-}
-
-.fix-kosten__add-button {
-  border-radius: 20px;
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70px;
-  width: 70px;
-  background-color: #29508a;
-  box-shadow: #474747 1px 1px 2px;
-  font-size: 30px;
-  cursor: pointer;
-  color: white;
-}
-
-.fix-kosten__add-button:hover {
-  font-size: 40px;
-}
-
-.fix-kosten__eintrag {
-}
-
-.floating-box {
-  padding: 0;
-  min-height: 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.fix-kosten__eintrag-top {
+.sparschwein-listelem {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px !important;
+  height: 42px;
   position: relative;
-  width: 100%;
 }
 
-.fix-kosten__eintrag-left {
+.darker {
+  background-color: #98aec1;
+}
+
+.sparschwein-listelem__left, .sparschwein-listelem__right {
   display: flex;
   align-items: center;
-  flex-grow: 1;
-  padding: 23px;
 }
 
-.fix-kosten__eintrag-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.sparschwein-listelem__text-wrapper {
+  margin-left: 20px;
 }
 
-.fix-kosten__eintrag-title {
-  margin-left: 10px;
-}
+.sparschwein-listelem__title {
 
-.fix-kosten__eintrag-betrag {
-  font-size: 20px;
-  width: 70px;
 }
-
-.fix-kosten__eintrag-menu-button {
-  margin-right: 10px;
+.sparschwein-listelem__menu-button {
   padding: 10px;
 }
+
 
 .fix-kosten__eintrag-menu {
   position: absolute;
@@ -232,6 +130,65 @@
   }
 }
 
+.create-eintrag {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.red {
+  color: red !important;
+}
+
+.green {
+  color: green;
+}
+
+.create-eintrag__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__back-button-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.create-eintrag__budget {
+  background-color: #a6a6a6;
+  height: 10px;
+  width: 270px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.create-eintrag__back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background-color: #070e2e;
+  border-radius: 100px;
+  margin: 10px;
+}
+
+.create-eintrag__top-spacer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+}
+
 .create-eintrag__content {
   flex-grow: 1;
   display: flex;
@@ -288,7 +245,7 @@
   margin-left: 10px;
 }
 
-.create-eintrag__betrag-wrapper, .create-eintrag__datum-wrapper, .create-eintrag__uhrzeit-wrapper {
+.create-eintrag__betrag-wrapper {
   display: flex;
   justify-content: space-between;
   font-size: 20px;
@@ -307,7 +264,7 @@
   border-bottom: black solid 1px;
   width: 130px;
   text-align: end;
-  padding: 0 5px 0 0;
+  padding: 0;
 }
 
 .create-eintrag__beschreibung-wrapper {
@@ -319,7 +276,7 @@
 .create-eintrag__beschreibung-data {
   flex-grow: 1;
   width: calc(100% - 22px);
-  font-size: 18px;
+  font-size: 25px;
   text-align: start;
   border: 1px solid black;
   padding: 10px;
@@ -386,5 +343,3 @@ hr {
 .create-eintrag__betrag-warnung {
   color: red;
 }
-
-
