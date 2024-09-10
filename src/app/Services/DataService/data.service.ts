@@ -199,6 +199,8 @@ export class DataService {
       //Buchungen in Monat zu den jeweiligen Tagen hinzufügen/updaten
       this.updateBuchungenForMonth(month.startDate);
 
+      this.updateFixKostenForMonth(month.startDate);
+
       this.calcDailyBudgetForMonth(month.startDate);
 
       this.calcBudgetForMonth(month.startDate);
@@ -370,7 +372,8 @@ export class DataService {
       savedData.savedMonths.push({
         date: month.startDate,
         totalBudget: month.totalBudget ?? 0,
-        sparen: month.sparen ?? 0
+        sparen: month.sparen ?? 0,
+        fixkosten: month.gesperrteFixKosten
       })
     })
 
@@ -769,6 +772,13 @@ export class DataService {
     }
 
     return this.userData.fixKosten.findIndex(eintrag => eintrag.id === pEintrag.id);
+  }
+
+  private updateFixKostenForMonth(startDate: Date) {
+    const month = this.getMonthByDate(startDate);
+    if(!month.monatAbgeschlossen){
+      month.gesperrteFixKosten = this.userData.fixKosten;
+    }
   }
 }
 

@@ -74,6 +74,7 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
+  fixkosten?: FixKostenEintrag[];
 }
 
 export interface FixKostenEintrag {

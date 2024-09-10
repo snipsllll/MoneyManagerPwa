@@ -13,8 +13,8 @@
 
     </div>
     <div class="top-bar__right">
-      <div class="top-bar__budget" *ngIf="dayBudget()!.month" (click)="toggleDropdown()">
-        {{ dayBudget()!.leftOvers! + dayBudget()!.day! + dayBudget().gespartes!}}€
+      <div class="top-bar__budget" *ngIf="dayBudget()!.verfuegbar !== undefined" (click)="toggleDropdown()">
+        <b class="darkgreen" [class.darkred]="dayBudget()!.verfuegbar! < 0">{{ dayBudget().verfuegbar }}€</b>
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()" (click)="toggleDropdown()">

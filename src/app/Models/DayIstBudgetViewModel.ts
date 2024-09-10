@@ -4,4 +4,5 @@ export interface DayIstBudgetViewModel {
   day?: number;
   leftOvers?: number;
   gespartes?: number;
+  verfuegbar?: number;
 }
