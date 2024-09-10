@@ -13,7 +13,7 @@
 
     </div>
     <div class="top-bar__right">
-      <div class="top-bar__budget" (click)="toggleDropdown()">
+      <div class="top-bar__budget" *ngIf="dayBudget().month !== '???'" (click)="toggleDropdown()">
         {{ dayBudget()!.month }}€
       </div>
     </div>
