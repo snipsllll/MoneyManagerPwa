@@ -3,13 +3,13 @@
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
     <div class="create-eintrag__budget">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="this.dayBudget().monthIstBudget !== undefined && dayBudget().monthIstBudget! < 0">{{ dayBudget().monthIstBudget ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="this.dayBudget().monthIstBudget !== undefined && dayBudget()?.monthIstBudget! < 0">{{ dayBudget().monthIstBudget ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="this.dayBudget().weekIstBudget !== undefined && dayBudget().weekIstBudget! < 0">{{ dayBudget().weekIstBudget ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="this.dayBudget().weekIstBudget !== undefined && dayBudget()?.weekIstBudget! < 0">{{ dayBudget().weekIstBudget ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="this.dayBudget().dayIstBudget !== undefined && dayBudget().dayIstBudget! < 0">{{dayBudget().dayIstBudget ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="this.dayBudget().dayIstBudget !== undefined && dayBudget()?.dayIstBudget! < 0">{{dayBudget().dayIstBudget ?? '???' }}€</b>
       </div>
     </div>
     <div class="create-eintrag__top-spacer" (click)="onBackClicked()">
@@ -28,7 +28,7 @@
           <div class="create-eintrag__label">
             Betrag:
           </div>
-          <input type="number" [(ngModel)]="buchung.betrag" class="create-eintrag__data" placeholder="0.00€" (change)="onBetragChanged()">
+          <input type="number" [(ngModel)]="buchung.betrag" class="create-eintrag__data" placeholder="0.00€" (ngModelChange)="onBetragChanged()">
         </div>
       </div>
 

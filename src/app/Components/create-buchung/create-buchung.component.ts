@@ -1,9 +1,9 @@
-import {Component, signal} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
-import {Buchung, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
+import {Buchung, Day, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-create-buchung',
@@ -39,10 +39,20 @@ export class CreateBuchungComponent {
     this.date = this.buchung.date.toISOString().slice(0, 10);
   }
 
+  ngOnInit() {
+    if(this.dayBudget() === null) {
+      this.dayBudget.set({
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      });
+    }
+  }
+
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
-        if (this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag) {
+        if (this.dayBudget() !== null && this.dayBudget()?.dayIstBudget !== undefined && this.dayBudget()?.dayIstBudget! < this.buchung.betrag) {
           const confirmDialogViewModel: ConfirmDialogViewModel = {
             title: 'Betrag ist zu hoch',
             message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,

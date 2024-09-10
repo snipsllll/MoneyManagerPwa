@@ -87,6 +87,12 @@ export class DataService {
   }
 
   update(updateValues?: UpdateValues, safeAfterUpdate?: boolean) {
+
+    //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
+    if(!this.checkIfMonthExistsForDay(new Date())){
+      this.createNewMonth(new Date());
+    }
+
     if(updateValues) {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
       if(updateValues.newFixkostenEintraege !== undefined) {
@@ -113,6 +119,9 @@ export class DataService {
       if(updateValues.newBuchungen !== undefined) {
         updateValues.newBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen.push(buchung);
+          if(!this.checkIfMonthExistsForDay(buchung.date)){
+            this.createNewMonth(buchung.date);
+          }
         })
       }
 
@@ -127,6 +136,9 @@ export class DataService {
       if(updateValues.editedBuchungen !== undefined) {
         updateValues.editedBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen[this.getIndexOfBuchungById(buchung.id)] = buchung;
+          if(!this.checkIfMonthExistsForDay(buchung.date)){
+            this.createNewMonth(buchung.date);
+          }
         })
       }
 
