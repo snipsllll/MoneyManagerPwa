@@ -119,7 +119,7 @@
   border-bottom: black solid 1px;
   width: 130px;
   text-align: end;
-  padding: 0;
+  padding: 0 5px 0 0;
 }
 
 .create-eintrag__beschreibung-wrapper {

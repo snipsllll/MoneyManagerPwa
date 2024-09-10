@@ -13,19 +13,19 @@
 
     </div>
     <div class="top-bar__right">
-      <div class="top-bar__budget" (click)="toggleDropdown()">
-        {{ monthIstBudget()!.month }}€
+      <div class="top-bar__budget" *ngIf="dayBudget().month !== '???'" (click)="toggleDropdown()">
+        {{ dayBudget()!.month }}€
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()" (click)="toggleDropdown()">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="monthIstBudget()!.month !== undefined && +(monthIstBudget()!.month!) < 0">{{ monthIstBudget()!.month }}€</b>
+        monat: <b class="green" *ngIf="dayBudget().month !== '???'; else blackContent" [class.red]="dayBudget()!.month !== undefined && +(dayBudget()!.month!) < 0">{{ dayBudget()!.month }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="monthIstBudget()!.week !== undefined && +(monthIstBudget()!.week!) < 0">{{ monthIstBudget()!.week }}€</b>
+        woche: <b class="green" *ngIf="dayBudget().week !== '???'; else blackContent" [class.red]="dayBudget()!.week !== undefined && +(dayBudget()!.week!) < 0">{{ dayBudget()!.week }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        heute: <b class="green" [class.red]="monthIstBudget()!.day !== undefined && +(monthIstBudget()!.day!) < 0">{{monthIstBudget()!.day}}€</b>
+        heute: <b class="green" *ngIf="dayBudget().day !== '???'; else blackContent" [class.red]="dayBudget()!.day !== undefined && +(dayBudget()!.day!) < 0">{{dayBudget()!.day}}€</b>
       </div>
     </div>
   </div>
@@ -37,4 +37,6 @@
   </div>
 </div>
 
-
+<ng-template #blackContent>
+  ???
+</ng-template>

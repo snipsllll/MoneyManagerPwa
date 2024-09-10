@@ -42,7 +42,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
-        if (this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag) {
+        if (this.dayBudget() !== null && this.dayBudget()?.dayIstBudget !== undefined && this.dayBudget()?.dayIstBudget! < this.buchung.betrag) {
           const confirmDialogViewModel: ConfirmDialogViewModel = {
             title: 'Betrag ist zu hoch',
             message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,

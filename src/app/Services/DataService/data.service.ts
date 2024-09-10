@@ -87,10 +87,17 @@ export class DataService {
   }
 
   update(updateValues?: UpdateValues, safeAfterUpdate?: boolean) {
+
+    //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
+    if(!this.checkIfMonthExistsForDay(new Date())){
+      this.createNewMonth(new Date());
+    }
+
     if(updateValues) {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
       if(updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
+          fixKostenEintrag.id = this.getNextFreeFixKostenId();
           this.userData.fixKosten.push(fixKostenEintrag);
         })
       }
@@ -113,6 +120,9 @@ export class DataService {
       if(updateValues.newBuchungen !== undefined) {
         updateValues.newBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen.push(buchung);
+          if(!this.checkIfMonthExistsForDay(buchung.date)){
+            this.createNewMonth(buchung.date);
+          }
         })
       }
 
@@ -127,6 +137,9 @@ export class DataService {
       if(updateValues.editedBuchungen !== undefined) {
         updateValues.editedBuchungen.forEach(buchung => {
           this.userData.buchungen.alleBuchungen[this.getIndexOfBuchungById(buchung.id)] = buchung;
+          if(!this.checkIfMonthExistsForDay(buchung.date)){
+            this.createNewMonth(buchung.date);
+          }
         })
       }
 
@@ -185,22 +198,34 @@ export class DataService {
     this.sendUpdateToComponents();
   }
 
-  getDayIstBudgets(date: Date): DayIstBudgets | null {
+  getDayIstBudgets(date: Date): DayIstBudgets {
     const monthIndex = this.getIndexOfMonth(date);
     if (monthIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const month = this.userData.months()[monthIndex];
 
     const weekIndex = this.getIndexOfWeekInMonth(date);
     if (weekIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const week = this.userData.months()[monthIndex].weeks![this.getIndexOfWeekInMonth(date)];
 
     const dayIndex = this.getIndexOfDayInWeek(date);
     if (dayIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
 
@@ -336,22 +361,6 @@ export class DataService {
     }
     return freeId;
   }
-  private getMonday(inputDate: Date): Date {
-    // Clone the input date to avoid mutating the original date
-    const date = new Date(inputDate);
-
-    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-    const dayOfWeek = date.getDay();
-
-    // Calculate the difference between the current day and Monday (day 1)
-    const diff = (dayOfWeek + 6) % 7; // This ensures Sunday goes back 6 days, Monday stays at 0
-
-    // Set the date to the Monday of the current week
-    date.setDate(date.getDate() - diff);
-
-    // Return the Monday date
-    return date;
-  }
 
   private getSunday(inputDate: Date): Date {
     // Clone the input date to avoid mutating the original date
@@ -430,7 +439,11 @@ export class DataService {
         }
         weekIstBudget += day.istBudget;
       });
-      week.istBudget = +weekIstBudget.toFixed(2);
+
+      //stellt sicher, dass ein istBudget nur dann exestiert, wenn es auch ein budget gibt
+      if(week.budget){
+        week.istBudget = +weekIstBudget.toFixed(2);
+      }
     })
     /*Algorithm end*/
 
@@ -514,16 +527,6 @@ export class DataService {
     }
 
     month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSumme() ?? 0)) / month.daysInMonth).toFixed(2);
-    /*Algorithm end*/
-
-    this.setMonth(month);
-  }
-
-  private calcDaysInMonthForMonth(date: Date) { //TODO testen
-    const month = this.getMonthByDate(date);
-
-    /*Algorithm start*/
-    month.daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     /*Algorithm end*/
 
     this.setMonth(month);
