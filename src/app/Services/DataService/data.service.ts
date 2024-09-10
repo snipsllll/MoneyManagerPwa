@@ -707,7 +707,7 @@ export class DataService {
           leftovers += day.leftOvers ?? 0;
         }
       })
-      week.leftOvers = leftovers;
+      week.leftOvers = +(leftovers).toFixed(2);
     })
     /*Algorithm end*/
 
@@ -741,7 +741,7 @@ export class DataService {
         }
       })
     })
-    month.leftOvers = (month.budget ?? 0) - ausgaben - budgetOfFutureDays;
+    month.leftOvers = +((month.budget ?? 0) - ausgaben - budgetOfFutureDays).toFixed(2);
     /*Algorithm end*/
 
     this.setMonth(month);
