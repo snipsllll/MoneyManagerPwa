@@ -57,7 +57,8 @@ export interface BudgetInfosForMonth {
   budget: number;
   dayBudget: number;
   istBudget?: number;
-  fixKosten?: number;
+  fixKostenSumme?: number;
+  fixKostenEintraege?: FixKostenEintrag[];
   fixKostenGesperrt?: boolean;
 }
 

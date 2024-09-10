@@ -21,7 +21,7 @@ export class BudgetComponent  implements OnInit{
     istBudget: 0,
     totalBudget: 0,
     sparen: 0,
-    fixKosten: 0
+    fixKostenSumme: 0
   });
 
   selectedMonth = computed(() =>{
@@ -112,9 +112,10 @@ export class BudgetComponent  implements OnInit{
       istBudget: 0,
       totalBudget: 0,
       sparen: 0,
-      fixKosten: this.dataService.getFixKostenSummeForMonth({
+      fixKostenSumme: this.dataService.getFixKostenSummeForMonth({
         startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
       })
     });
+    console.log(this.data())
   }
 }

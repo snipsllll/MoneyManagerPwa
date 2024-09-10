@@ -74,3 +74,24 @@
   padding: 10px 10px 10px 0;
   margin-left: -4px;
 }
+
+.budget__fixkosten-details-hidden {
+  height: 0;
+  width: 100%;
+}
+
+.budget__fixkosten-details {
+  height: fit-content;
+  width: 100%;
+}
+
+.budget__fixkosten-detail-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.grayed-out-text {
+  color: #636363 !important;
+}

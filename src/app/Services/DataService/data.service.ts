@@ -276,8 +276,9 @@ export class DataService {
       totalBudget: month.totalBudget ?? 0,
       istBudget: month.istBudget,
       dayBudget: month.dailyBudget ?? 0,
-      fixKosten: this.getFixKostenSummeForMonth(month),
-      fixKostenGesperrt: month.monatAbgeschlossen ?? false
+      fixKostenSumme: this.getFixKostenSummeForMonth(month),
+      fixKostenGesperrt: month.monatAbgeschlossen ?? false,
+      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.userData.fixKosten
     }
   }
 
