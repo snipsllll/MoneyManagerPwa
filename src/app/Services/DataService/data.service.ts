@@ -97,6 +97,7 @@ export class DataService {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
       if(updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
+          fixKostenEintrag.id = this.getNextFreeFixKostenId();
           this.userData.fixKosten.push(fixKostenEintrag);
         })
       }
@@ -360,22 +361,6 @@ export class DataService {
     }
     return freeId;
   }
-  private getMonday(inputDate: Date): Date {
-    // Clone the input date to avoid mutating the original date
-    const date = new Date(inputDate);
-
-    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-    const dayOfWeek = date.getDay();
-
-    // Calculate the difference between the current day and Monday (day 1)
-    const diff = (dayOfWeek + 6) % 7; // This ensures Sunday goes back 6 days, Monday stays at 0
-
-    // Set the date to the Monday of the current week
-    date.setDate(date.getDate() - diff);
-
-    // Return the Monday date
-    return date;
-  }
 
   private getSunday(inputDate: Date): Date {
     // Clone the input date to avoid mutating the original date
@@ -542,16 +527,6 @@ export class DataService {
     }
 
     month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSumme() ?? 0)) / month.daysInMonth).toFixed(2);
-    /*Algorithm end*/
-
-    this.setMonth(month);
-  }
-
-  private calcDaysInMonthForMonth(date: Date) { //TODO testen
-    const month = this.getMonthByDate(date);
-
-    /*Algorithm start*/
-    month.daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     /*Algorithm end*/
 
     this.setMonth(month);

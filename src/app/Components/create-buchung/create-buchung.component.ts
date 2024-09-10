@@ -1,4 +1,4 @@
-import {Component, signal, WritableSignal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
