@@ -9,6 +9,8 @@ export interface Month {
   dailyBudget?: number;
   weeks?: Week[];
   leftOvers?: number;
+  gesperrteFixKosten?: FixKostenEintrag[];
+  monatAbgeschlossen?: boolean;
 }
 
 export interface Week {
