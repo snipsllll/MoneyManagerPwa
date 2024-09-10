@@ -58,6 +58,7 @@ export interface BudgetInfosForMonth {
   dayBudget: number;
   istBudget?: number;
   fixKosten?: number;
+  fixKostenGesperrt?: boolean;
 }
 
 export interface SavedData {

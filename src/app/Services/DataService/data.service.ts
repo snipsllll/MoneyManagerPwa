@@ -276,7 +276,8 @@ export class DataService {
       totalBudget: month.totalBudget ?? 0,
       istBudget: month.istBudget,
       dayBudget: month.dailyBudget ?? 0,
-      fixKosten: this.getFixKostenSummeForMonth(month)
+      fixKosten: this.getFixKostenSummeForMonth(month),
+      fixKostenGesperrt: month.monatAbgeschlossen ?? false
     }
   }
 
@@ -452,7 +453,6 @@ export class DataService {
 
     /*Algorithm start*/
     if (month.budget === undefined) {
-      console.error('undefined at month.budget is not allowed! (dataService: calcIstBudgetForMonth)');
       return;
     }
     month.istBudget = +(month.budget - this.getAusgabenSummeForMonth(date)).toFixed(2);
@@ -469,7 +469,6 @@ export class DataService {
       let weekIstBudget = 0;
       week.days.forEach(day => {
         if (day.istBudget === undefined) {
-          this.logUndefinedError('day.istBudget', 'calcIstBudgetForAllWekksInMonth()');
           return;
         }
         weekIstBudget += day.istBudget;
@@ -492,7 +491,6 @@ export class DataService {
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         if (day.budget === undefined) {
-          this.logUndefinedError('day.budget', 'calcIstBudgetsForAllDaysInMonth()');
           return;
         }
         let dayAusgaben = 0;
@@ -512,13 +510,11 @@ export class DataService {
 
     /*Algorithm start*/
     if (month.dailyBudget === undefined) {
-      this.logUndefinedError('month.dailyBudget', 'calcBudgetsForAllWeeksInMonth()');
       return;
     }
 
     month.weeks?.forEach(week => {
       if (month.dailyBudget === undefined) {
-        this.logUndefinedError('week.daysInWeek', 'calcBudgetsForAllWeeksInMonth()');
         return;
       }
       week.budget = +(week.daysInWeek * month.dailyBudget!).toFixed(2);
@@ -533,7 +529,6 @@ export class DataService {
 
     /*Algorithm start*/
     if (month.dailyBudget === undefined) {
-      this.logUndefinedError('month.dailyBudget', 'calcBudgetsForAllDaysInMonth()');
       return;
     }
 
@@ -552,12 +547,10 @@ export class DataService {
 
     /*Algorithm start*/
     if (month.daysInMonth === undefined) {
-      this.logUndefinedError('month.daysInMonth', 'calcDailyBudgetForMonth()');
       return;
     }
 
     if (month.totalBudget === undefined) {
-      this.logUndefinedError('month.totalBudget', 'calcDailyBudgetForMonth');
       return;
     }
 
@@ -668,7 +661,6 @@ export class DataService {
     const month = this.getMonthByDate(date);
 
     if (month.daysInMonth === undefined || month.totalBudget === undefined || month.dailyBudget === undefined) {
-      this.logUndefinedError('something', 'calcBubdgetForMonth()');
       return;
     }
 
@@ -739,7 +731,6 @@ export class DataService {
   private getFixKostenEintragIndex(pEintrag: FixKostenEintrag, monthDate?: Date) {
     if (monthDate) {
       if (this.userData.months()[this.getIndexOfMonth(monthDate)].gesperrteFixKosten === undefined) {
-        this.logUndefinedError(`this.userdata.months()[${this.getIndexOfMonth(monthDate)}].gesperrteFixKosten`, 'getFixKostenEintragIndex()');
         return -1;
       }
       return this.userData.months()[this.getIndexOfMonth(monthDate)].gesperrteFixKosten!.findIndex(eintrag => eintrag.id === pEintrag.id);

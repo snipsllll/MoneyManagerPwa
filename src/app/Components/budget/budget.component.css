@@ -42,3 +42,9 @@
   border-left: 1px solid black;
 }
 
+.lock-image {
+  height: 17px;
+  width: 17px;
+  margin-bottom: -2px;
+}
+
