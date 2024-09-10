@@ -16,7 +16,7 @@ import {
 export class DataService {
 
   userData!: UserData;
-  testData: DB = DB.none;
+  testData: DB = DB.noTD;
   download: boolean = true;
 
   updated = signal<number>(0);
@@ -231,7 +231,9 @@ export class DataService {
       return {
         dayIstBudget: undefined,
         weekIstBudget: undefined,
-        monthIstBudget: undefined
+        monthIstBudget: undefined,
+        leftOvers: undefined,
+        gespartes: undefined
       }
     }
     const month = this.userData.months()[monthIndex];
@@ -241,7 +243,9 @@ export class DataService {
       return {
         dayIstBudget: undefined,
         weekIstBudget: undefined,
-        monthIstBudget: undefined
+        monthIstBudget: undefined,
+        leftOvers: undefined,
+        gespartes: undefined
       }
     }
     const week = this.userData.months()[monthIndex].weeks![this.getIndexOfWeekInMonth(date)];
@@ -251,15 +255,21 @@ export class DataService {
       return {
         dayIstBudget: undefined,
         weekIstBudget: undefined,
-        monthIstBudget: undefined
+        monthIstBudget: undefined,
+        leftOvers: undefined,
+        gespartes: undefined
       }
     }
     const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
+    const gespartes = this.getGespartes();
+    console.log(gespartes)
 
     return {
       dayIstBudget: day.istBudget ?? undefined,
       weekIstBudget: week.istBudget ?? undefined,
-      monthIstBudget: month.istBudget ?? undefined
+      monthIstBudget: month.istBudget ?? undefined,
+      leftOvers: month.leftOvers ?? undefined,
+      gespartes: gespartes
     }
   }
 
@@ -678,7 +688,7 @@ export class DataService {
     /*Algorithm start*/
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        day.leftOvers = day.istBudget;
+        day.leftOvers = (day.budget ?? 0) - this.getAusgabenForDay(day);
       })
     })
     /*Algorithm end*/
@@ -704,29 +714,56 @@ export class DataService {
     this.setMonth(month);
   }
 
+  private isDayBeforeMonth(dayDate: Date, month: Month) {
+    console.log(dayDate.getFullYear())
+    console.log(month.startDate.getFullYear())
+    if (dayDate.getFullYear() > month.startDate.getFullYear()) {
+      console.log(99909)
+      return true;
+    }
+    console.log(dayDate.getMonth());
+    console.log(month.startDate.getMonth())
+    return dayDate.getMonth() > month.startDate.getMonth();
+  }
+
   private calcLeftOversForMonth(date: Date) {
     const month = this.getMonthByDate(date);
 
     /*Algorithm start*/
-    let leftovers = 0;
+    let ausgaben = 0;
+    let budgetOfFutureDays = 0
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        if (day.date.getDate() < new Date().getDate()) {
-          leftovers += day.leftOvers ?? 0;
+        if ((day.date.getDate() < new Date().getDate() && day.date.getMonth() === new Date().getMonth()) || (day.date.getMonth() < new Date().getMonth() && day.date.getFullYear() <= new Date().getFullYear())) {
+          ausgaben += this.getAusgabenForDay(day);
+        } else {
+          budgetOfFutureDays += day.budget ?? 0;
         }
       })
     })
-    month.leftOvers = leftovers;
+    month.leftOvers = (month.budget ?? 0) - ausgaben - budgetOfFutureDays;
     /*Algorithm end*/
 
     this.setMonth(month);
   }
 
-  private isDayBeforeMonth(dayDate: Date, month: Month) {
-    if (dayDate.getFullYear() > month.startDate.getFullYear()) {
-      return true;
-    }
-    return dayDate.getMonth() > month.startDate.getMonth();
+  private getGespartes() {
+    let gespartes = 0;
+    this.userData.months().forEach(month => {
+      if(month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()){
+        gespartes += month.leftOvers ?? 0;
+      }
+
+    })
+    return gespartes;
+  }
+
+  private getAusgabenForDay(day: Day) {
+    let gesAusgaben = 0;
+    day.buchungen?.forEach(buchung => {
+      gesAusgaben += buchung.betrag!;
+    })
+    return gesAusgaben;
   }
 
   private getFixKostenEintragIndex(pEintrag: FixKostenEintrag, monthDate?: Date) {

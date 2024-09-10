@@ -49,6 +49,8 @@ export interface DayIstBudgets {
   monthIstBudget?: number;
   weekIstBudget?: number;
   dayIstBudget?: number;
+  leftOvers?: number,
+  gespartes?: number
 }
 
 export interface BudgetInfosForMonth {

@@ -15,10 +15,13 @@ export class TopBarComponent  implements OnInit{
     this.dataService.updated();
     const x = this.dataService.getDayIstBudgets(new Date());
     const y: DayIstBudgetViewModel = {
-      month: x?.monthIstBudget?.toString() ?? '???',
-      week: x?.weekIstBudget?.toString() ?? '???',
-      day: x?.dayIstBudget?.toString() ?? '???',
+      month: x?.monthIstBudget,
+      week: x?.weekIstBudget,
+      day: x?.dayIstBudget,
+      leftOvers: x?.leftOvers,
+      gespartes: x?.gespartes,
     };
+    console.log(y)
     return y;
   })
 

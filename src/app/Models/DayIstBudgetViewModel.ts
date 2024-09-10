@@ -1,5 +1,7 @@
 export interface DayIstBudgetViewModel {
-  month: string;
-  week: string;
-  day: string;
+  month?: number;
+  week?: number;
+  day?: number;
+  leftOvers?: number;
+  gespartes?: number;
 }
