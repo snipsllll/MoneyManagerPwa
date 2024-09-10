@@ -262,7 +262,6 @@ export class DataService {
     }
     const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
     const gespartes = this.getGespartes();
-    console.log(gespartes)
 
     return {
       dayIstBudget: day.istBudget ?? undefined,
@@ -715,14 +714,9 @@ export class DataService {
   }
 
   private isDayBeforeMonth(dayDate: Date, month: Month) {
-    console.log(dayDate.getFullYear())
-    console.log(month.startDate.getFullYear())
     if (dayDate.getFullYear() > month.startDate.getFullYear()) {
-      console.log(99909)
       return true;
     }
-    console.log(dayDate.getMonth());
-    console.log(month.startDate.getMonth())
     return dayDate.getMonth() > month.startDate.getMonth();
   }
 

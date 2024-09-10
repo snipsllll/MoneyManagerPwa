@@ -21,7 +21,6 @@ export class TopBarComponent  implements OnInit{
       leftOvers: x?.leftOvers,
       gespartes: x?.gespartes,
     };
-    console.log(y)
     return y;
   })
 
