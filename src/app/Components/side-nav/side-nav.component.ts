@@ -10,6 +10,9 @@ import {SideNavService} from "../../Services/SideNavService/side-nav.service";
   styleUrl: './side-nav.component.css'
 })
 export class SideNavComponent {
+
+  protected readonly SideNavElements = SideNavElements;
+
   constructor(private router: Router, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
@@ -32,5 +35,9 @@ export class SideNavComponent {
     this.sideNavService.selectedElement = SideNavElements.fixkosten;
   }
 
-  protected readonly SideNavElements = SideNavElements;
+  onSparscheinClicked() {
+    this.router.navigate(['sparschwein']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.sparschwein;
+  }
 }

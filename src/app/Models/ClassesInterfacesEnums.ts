@@ -123,7 +123,8 @@ export enum Months {
 export enum SideNavElements {
   home,
   budget,
-  fixkosten
+  fixkosten,
+  sparschwein
 }
 
 export enum Sites {

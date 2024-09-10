@@ -20,6 +20,8 @@ import {BuchungenListComponent} from "./Components/buchungen-list/buchungen-list
 import {SideNavComponent} from "./Components/side-nav/side-nav.component";
 import {TopBarComponent} from "./Components/top-bar/top-bar.component";
 import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
+import {SparschweinComponent} from "./Components/sparschwein/sparschwein.component";
+import { SparschweinListelemComponent } from './sparschwein-listelem/sparschwein-listelem.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-deta
     BuchungenListComponent,
     SideNavComponent,
     TopBarComponent,
-    BuchungDetailsComponent
+    BuchungDetailsComponent,
+    SparschweinComponent,
+    SparschweinListelemComponent
   ],
     imports: [
         BrowserModule,
