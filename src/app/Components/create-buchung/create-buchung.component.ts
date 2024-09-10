@@ -1,9 +1,9 @@
-import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
-import {Buchung, Day, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
+import {Buchung, DayIstBudgets} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-create-buchung',
@@ -37,16 +37,6 @@ export class CreateBuchungComponent {
     };
     this.dayBudget.set(this.dataService.getDayIstBudgets(date)!);
     this.date = this.buchung.date.toISOString().slice(0, 10);
-  }
-
-  ngOnInit() {
-    if(this.dayBudget() === null) {
-      this.dayBudget.set({
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined
-      });
-    }
   }
 
   onSaveClicked() {

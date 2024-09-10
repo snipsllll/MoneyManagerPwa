@@ -197,22 +197,34 @@ export class DataService {
     this.sendUpdateToComponents();
   }
 
-  getDayIstBudgets(date: Date): DayIstBudgets | null {
+  getDayIstBudgets(date: Date): DayIstBudgets {
     const monthIndex = this.getIndexOfMonth(date);
     if (monthIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const month = this.userData.months()[monthIndex];
 
     const weekIndex = this.getIndexOfWeekInMonth(date);
     if (weekIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const week = this.userData.months()[monthIndex].weeks![this.getIndexOfWeekInMonth(date)];
 
     const dayIndex = this.getIndexOfDayInWeek(date);
     if (dayIndex === -1) {
-      return null;
+      return {
+        dayIstBudget: undefined,
+        weekIstBudget: undefined,
+        monthIstBudget: undefined
+      }
     }
     const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
 
@@ -442,7 +454,11 @@ export class DataService {
         }
         weekIstBudget += day.istBudget;
       });
-      week.istBudget = +weekIstBudget.toFixed(2);
+
+      //stellt sicher, dass ein istBudget nur dann exestiert, wenn es auch ein budget gibt
+      if(week.budget){
+        week.istBudget = +weekIstBudget.toFixed(2);
+      }
     })
     /*Algorithm end*/
 
