@@ -16,7 +16,7 @@ import {
 export class DataService {
 
   userData!: UserData;
-  testData: DB = DB.none;
+  testData: DB = DB.noTD;
   download: boolean = true;
 
   updated = signal<number>(0);
@@ -140,6 +140,27 @@ export class DataService {
           if (!this.checkIfMonthExistsForDay(buchung.date)) {
             this.createNewMonth(buchung.date);
           }
+        })
+      }
+
+      //Wenn neue Spareinträge angelegt wurden, dann neue Spareinträge zu userData.spareintraege hinzufügen
+      if (updateValues.newSpareintraege !== undefined) {
+        updateValues.newSpareintraege.forEach(eintrag => {
+          this.userData.sparEintraege.push(eintrag);
+        })
+      }
+
+      //Wenn Spareintraege gelöscht wurden, dann Buchungen aus userData.spareintraege entfernen
+      if (updateValues.deletedSpareintragIds !== undefined) {
+        updateValues.deletedSpareintragIds.forEach(eintragId => {
+          this.userData.sparEintraege.splice(this.getIndexOfSpareintragById(eintragId), 1);
+        })
+      }
+
+      //Wenns bearbeitete Spareinträge gibt, dann Spareinträge in userData.spareintraege anpassen
+      if (updateValues.editedSpareintraege !== undefined) {
+        updateValues.editedSpareintraege.forEach(eintrag => {
+          this.userData.sparEintraege[this.getIndexOfSpareintragById(eintrag.id)] = eintrag;
         })
       }
 
@@ -323,8 +344,27 @@ export class DataService {
   }
 
   addSparEintrag(eintrag: SparschweinEintrag) {
-    this.userData.sparEintraege.push(eintrag);
-    this.update()
+    this.update({
+      newSpareintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  editSparEintrag(eintrag: SparschweinEintrag) {
+    this.update({
+      editedSpareintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  deleteSparEintrag(eintragId: number) {
+    this.update({
+      deletedSpareintragIds: [
+        eintragId
+      ]
+    });
   }
 
   private getIndexOfMonth(date: Date) {
@@ -400,9 +440,9 @@ export class DataService {
 
     //Converting SavedData to UserData
     this.userData = new UserData();
-    this.userData.buchungen.alleBuchungen = savedData.buchungen;
-    this.userData.fixKosten = savedData.fixKosten;
-    this.userData.sparEintraege = savedData.sparEintraege;
+    this.userData.buchungen.alleBuchungen = savedData.buchungen ?? [];
+    this.userData.fixKosten = savedData.fixKosten ?? [];
+    this.userData.sparEintraege = savedData.sparEintraege ?? [];
 
     savedData.savedMonths?.forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {
@@ -847,7 +887,11 @@ export class DataService {
     this.userData.sparEintraege.forEach(eintrag => {
       erspartes += eintrag.betrag;
     })
-    return erspartes;
+    return +(erspartes).toFixed(2);
+  }
+
+  private getIndexOfSpareintragById(eintragId: number) {
+    return this.userData.sparEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
 }
 

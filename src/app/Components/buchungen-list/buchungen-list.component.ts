@@ -1,6 +1,6 @@
 import {Component, computed, OnInit} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
-import {Day, SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
+import {Day} from "../../Models/ClassesInterfacesEnums";
 
 @Component({
   selector: 'app-buchungen-list',

@@ -1,5 +1,3 @@
-import {SparschweinComponent} from "../Components/sparschwein/sparschwein.component";
-
 export interface Month {
   totalBudget?: number;
   sparen?: number;
@@ -96,6 +94,9 @@ export interface UpdateValues {
   newBuchungen?: Buchung[];
   deletedBuchungsIds?: number[];
   editedBuchungen?: Buchung[];
+  newSpareintraege?: SparschweinEintrag[];
+  editedSpareintraege?: SparschweinEintrag[];
+  deletedSpareintragIds?: number[];
 }
 
 export interface UpdateValuesForMonth {

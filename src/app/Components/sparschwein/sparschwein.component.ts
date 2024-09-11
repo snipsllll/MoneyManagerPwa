@@ -1,7 +1,7 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SparschweinService} from "../../Services/SparschweinService/sparschwein.service";
-import {FixKostenEintrag, SparschweinData, SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
+import {SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";

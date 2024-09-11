@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
-import {FixKostenEintrag, SparschweinData, SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
+import {SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {SparschweinService} from "../../Services/SparschweinService/sparschwein.service";

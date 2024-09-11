@@ -25,10 +25,10 @@ export class SparschweinService {
   }
 
   editEintrag(eintrag: SparschweinEintrag) {
-
+    this.dataService.editSparEintrag(eintrag);
   }
 
   deleteEintrag(eintragId: number) {
-
+    this.dataService.deleteSparEintrag(eintragId);
   }
 }
