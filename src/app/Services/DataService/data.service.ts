@@ -16,7 +16,7 @@ import {
 export class DataService {
 
   userData!: UserData;
-  testData: DB = DB.noTD;
+  testData: DB = DB.none;
   download: boolean = true;
 
   updated = signal<number>(0);
@@ -802,8 +802,13 @@ export class DataService {
 
     if(month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
       if(this.isMonthSpareintragVorhanden(date)){
-
-      } else {
+          this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
+            date: month.startDate,
+            betrag: month.leftOvers ?? 0,
+            id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
+            isMonatEintrag: true
+          }
+        } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
           betrag: month.leftOvers ?? 0,
@@ -812,6 +817,10 @@ export class DataService {
         })
       }
     }
+  }
+
+  private getIndexOfMonthSpareintrag(date: Date) {
+    return this.userData.sparEintraege.findIndex(eintrag =>  eintrag.isMonatEintrag && eintrag.date.toLocaleDateString() === date.toLocaleDateString());
   }
 
   private getNextFreeSparEintragId() {

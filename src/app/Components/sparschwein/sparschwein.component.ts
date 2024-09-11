@@ -1,9 +1,10 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SparschweinService} from "../../Services/SparschweinService/sparschwein.service";
 import {FixKostenEintrag, SparschweinData, SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
 import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-sparschwein',
@@ -22,12 +23,12 @@ export class SparschweinComponent implements OnInit{
     title: '',
   };
 
-  sparschweinData = signal<SparschweinData>({
-    eintraege: [],
-    erspartes: 0
+  sparschweinData = computed(() => {
+    this.dataService.updated();
+    return this.sparschweinService.getData();
   });
 
-  constructor(private dialogService: DialogService, private topbarService: TopbarService, private sparschweinService: SparschweinService) {
+  constructor(private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService, private sparschweinService: SparschweinService) {
 
   }
 
@@ -35,7 +36,6 @@ export class SparschweinComponent implements OnInit{
     this.topbarService.title.set('SPARSCHWEIN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.sparschweinData.set(this.sparschweinService.getData());
   }
 
   onPlusClicked() {
@@ -52,7 +52,6 @@ export class SparschweinComponent implements OnInit{
         id: -1,
         isMonatEintrag: false
       }
-      this.update();
     } else {
       this.showBetragWarnung.set(true);
     }
@@ -75,10 +74,6 @@ export class SparschweinComponent implements OnInit{
       }
     }
     this.dialogService.showConfirmDialog(dialogViewmodel);
-  }
-
-  update() {
-    this.sparschweinData.set(this.sparschweinService.getData());
   }
 
   darfSpeichern() {
