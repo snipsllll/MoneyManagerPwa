@@ -38,13 +38,8 @@ export class SparschweinComponent implements OnInit{
     this.sparschweinData.set(this.sparschweinService.getData());
   }
 
-
   onPlusClicked() {
     this.showCreateDialog.set(true);
-  }
-
-  update() {
-    this.sparschweinData.set(this.sparschweinService.getData());
   }
 
   onCreateSpeichernClicked() {
@@ -57,6 +52,7 @@ export class SparschweinComponent implements OnInit{
         id: -1,
         isMonatEintrag: false
       }
+      this.update();
     } else {
       this.showBetragWarnung.set(true);
     }
@@ -79,6 +75,10 @@ export class SparschweinComponent implements OnInit{
       }
     }
     this.dialogService.showConfirmDialog(dialogViewmodel);
+  }
+
+  update() {
+    this.sparschweinData.set(this.sparschweinService.getData());
   }
 
   darfSpeichern() {

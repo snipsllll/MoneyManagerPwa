@@ -319,11 +319,12 @@ export class DataService {
   }
 
   getSparEintraege() {
-    return this.userData.sparEintraege;
+    return this.userData.sparEintraege.sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 
   addSparEintrag(eintrag: SparschweinEintrag) {
     this.userData.sparEintraege.push(eintrag);
+    this.update()
   }
 
   private getIndexOfMonth(date: Date) {
@@ -388,6 +389,8 @@ export class DataService {
         fixkosten: month.gesperrteFixKosten
       })
     })
+
+    console.log(savedData)
 
     return savedData;
   }

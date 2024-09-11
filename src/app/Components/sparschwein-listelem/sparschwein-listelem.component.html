@@ -1,6 +1,6 @@
 <div class="sparschwein-listelem floating-box" [class.darker]="eintrag.isMonatEintrag">
   <div class="sparschwein-listelem__left">
-    <div class="sparschwein-listelem__betrag">
+    <div class="sparschwein-listelem__betrag green" [class.red]="eintrag.betrag < 0">
       <b>{{eintrag.betrag}}€</b>
     </div>
     <div class="sparschwein-listelem__text-wrapper">
