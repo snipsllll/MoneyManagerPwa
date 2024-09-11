@@ -20,7 +20,7 @@ export class TopBarComponent  implements OnInit{
       day: x?.dayIstBudget,
       leftOvers: x?.leftOvers,
       gespartes: x?.gespartes,
-      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0) + (x?.gespartes! ?? 0)).toFixed(2)
+      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0)).toFixed(2)
     };
     return y;
   })

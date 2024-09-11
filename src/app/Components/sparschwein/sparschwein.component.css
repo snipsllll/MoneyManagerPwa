@@ -387,4 +387,7 @@ hr {
   color: red;
 }
 
+.red {
+  color: red !important;
+}
 

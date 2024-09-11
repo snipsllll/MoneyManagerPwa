@@ -31,7 +31,7 @@ export class SparschweinListelemComponent {
   getTitle() {
     if(!this.eintrag.isMonatEintrag) {
       const art = this.eintrag.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
-      const title = this.eintrag.title ?? art;
+      const title = this.eintrag.title !== undefined && this.eintrag.title !== '' ? this.eintrag.title : art;
       return `${title} (${this.eintrag.date.toLocaleDateString()})`;
     }
     return `Restgeld: ${this.getMonthNameByIndex(this.eintrag.date.getMonth())} ${this.eintrag.date.getFullYear()}`

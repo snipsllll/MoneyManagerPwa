@@ -252,6 +252,10 @@
   margin-bottom: 10px;
 }
 
+.sparschwein-listelem__betrag {
+  min-width: 100px;
+}
+
 .create-eintrag__label {
   font-size: 21px;
   color: #323232;

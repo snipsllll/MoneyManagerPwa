@@ -3,7 +3,7 @@
   <div class="sparschwein__top">
     <img src="assets/sparschwein.png" class="sparschwein__sparschwein">
     <div class="sparschwein__betrag">
-      <b class="green">+{{ sparschweinData().erspartes }}€</b>
+      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ sparschweinData().erspartes }}€</b>
     </div>
   </div>
   <hr class="hr">
