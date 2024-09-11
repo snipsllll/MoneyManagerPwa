@@ -762,11 +762,8 @@ export class DataService {
 
   private getGespartes() {
     let gespartes = 0;
-    this.userData.months().forEach(month => {
-      if(month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()){
-        gespartes += month.leftOvers ?? 0;
-      }
-
+    this.userData.sparEintraege.forEach(eintrag => {
+      gespartes += eintrag.betrag;
     })
     return gespartes;
   }
