@@ -115,6 +115,13 @@ export class FileEngine {
               betrag: 60,
               id: 1
             }
+          ],
+          sparEintraege : [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 20
+            }
           ]
         }
       case 1:
@@ -173,6 +180,18 @@ export class FileEngine {
               title: 'Internet',
               betrag: 60,
               id: 1
+            }
+          ],
+          sparEintraege : [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 20
+            },
+            {
+              date: new Date(),
+              id: 2,
+              betrag: 10
             }
           ]
         }
@@ -273,19 +292,48 @@ export class FileEngine {
               id: 4,
               beschreibung: 'ztuioezfcuisonchofg'
             }
+          ],
+          sparEintraege : [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 10
+            },
+            {
+              date: new Date(),
+              id: 2,
+              betrag: 20
+            },
+            {
+              date: new Date(),
+              id: 3,
+              betrag: 30
+            },
+            {
+              date: new Date(),
+              id: 4,
+              betrag: 40
+            },
+            {
+              date: new Date(),
+              id: 5,
+              betrag: 50
+            }
           ]
         }
       case 3:
         return {
           buchungen: [],
           savedMonths: [],
-          fixKosten: []
+          fixKosten: [],
+          sparEintraege: []
         };
     }
     return {
       buchungen: [],
       savedMonths: [],
-      fixKosten: []
+      fixKosten: [],
+      sparEintraege: []
     }
   }
 }

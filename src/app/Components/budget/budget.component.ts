@@ -13,13 +13,15 @@ export class BudgetComponent  implements OnInit{
 
   selectedYear = signal<number>(new Date().getFullYear());
 
+  isFixkostenDetailsVisible = signal<boolean>(false);
+
   data = signal<BudgetInfosForMonth>({
     budget: 0,
     dayBudget: 0,
     istBudget: 0,
     totalBudget: 0,
     sparen: 0,
-    fixKosten: 0
+    fixKostenSumme: 0
   });
 
   selectedMonth = computed(() =>{
@@ -95,6 +97,10 @@ export class BudgetComponent  implements OnInit{
     this.update();
   }
 
+  onFixKostenClicked() {
+    this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
+  }
+
   private getDateForSelectedMonth() {
     return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
   }
@@ -106,7 +112,9 @@ export class BudgetComponent  implements OnInit{
       istBudget: 0,
       totalBudget: 0,
       sparen: 0,
-      fixKosten: this.dataService.getFixKostenSumme()
+      fixKostenSumme: this.dataService.getFixKostenSummeForMonth({
+        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
+      })
     });
   }
 }

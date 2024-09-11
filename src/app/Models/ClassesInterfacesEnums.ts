@@ -9,6 +9,8 @@ export interface Month {
   dailyBudget?: number;
   weeks?: Week[];
   leftOvers?: number;
+  gesperrteFixKosten?: FixKostenEintrag[];
+  monatAbgeschlossen?: boolean;
 }
 
 export interface Week {
@@ -47,6 +49,8 @@ export interface DayIstBudgets {
   monthIstBudget?: number;
   weekIstBudget?: number;
   dayIstBudget?: number;
+  leftOvers?: number,
+  gespartes?: number
 }
 
 export interface BudgetInfosForMonth {
@@ -55,19 +59,23 @@ export interface BudgetInfosForMonth {
   budget: number;
   dayBudget: number;
   istBudget?: number;
-  fixKosten?: number;
+  fixKostenSumme?: number;
+  fixKostenEintraege?: FixKostenEintrag[];
+  fixKostenGesperrt?: boolean;
 }
 
 export interface SavedData {
   buchungen: Buchung[];
   savedMonths: SavedMonth[];
   fixKosten: FixKostenEintrag[];
+  sparEintraege: SparschweinEintrag[];
 }
 
 export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
+  fixkosten?: FixKostenEintrag[];
 }
 
 export interface FixKostenEintrag {
@@ -86,6 +94,9 @@ export interface UpdateValues {
   newBuchungen?: Buchung[];
   deletedBuchungsIds?: number[];
   editedBuchungen?: Buchung[];
+  newSpareintraege?: SparschweinEintrag[];
+  editedSpareintraege?: SparschweinEintrag[];
+  deletedSpareintragIds?: number[];
 }
 
 export interface UpdateValuesForMonth {
@@ -93,6 +104,23 @@ export interface UpdateValuesForMonth {
   newSparen?: number;
   newTotalBudget?: number;
   newMaxDayBudget?: number;
+  newFixkostenEintraege?: FixKostenEintrag[];
+  deletedFixkostenEintreageIds?: number[];
+  editedFixKostenEintraege?: FixKostenEintrag[];
+}
+
+export interface SparschweinData {
+  erspartes: number;
+  eintraege: SparschweinEintrag[];
+}
+
+export interface SparschweinEintrag {
+  isMonatEintrag?: boolean;
+  betrag: number;
+  date: Date;
+  id: number;
+  title?: string;
+  zusatz?: string;
 }
 
 export enum Months {
@@ -113,7 +141,8 @@ export enum Months {
 export enum SideNavElements {
   home,
   budget,
-  fixkosten
+  fixkosten,
+  sparschwein
 }
 
 export enum Sites {
