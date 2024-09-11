@@ -5,7 +5,7 @@ import {
   Buchung,
   BudgetInfosForMonth, Day,
   DayIstBudgets,
-  FixKostenEintrag, Month, SavedData,
+  FixKostenEintrag, Month, SavedData, SparschweinEintrag,
   UpdateValues, Week
 } from "../../Models/ClassesInterfacesEnums";
 
@@ -220,6 +220,8 @@ export class DataService {
       this.calcLeftOversForAllWeeksInMonth(month.startDate);
 
       this.calcLeftOversForMonth(month.startDate);
+
+      this.calcSpareintragForMonth(month.startDate);
     });
     if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
       this.save();
@@ -316,6 +318,14 @@ export class DataService {
     return summe;
   }
 
+  getSparEintraege() {
+    return this.userData.sparEintraege;
+  }
+
+  addSparEintrag(eintrag: SparschweinEintrag) {
+    this.userData.sparEintraege.push(eintrag);
+  }
+
   private getIndexOfMonth(date: Date) {
     const year = new Date(date).getFullYear();
     const month = new Date(date).getMonth();
@@ -362,11 +372,13 @@ export class DataService {
     const savedData: SavedData = {
       buchungen: [],
       savedMonths: [],
-      fixKosten: []
+      fixKosten: [],
+      sparEintraege: [],
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
+    savedData.sparEintraege = this.userData.sparEintraege;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -387,6 +399,7 @@ export class DataService {
     this.userData = new UserData();
     this.userData.buchungen.alleBuchungen = savedData.buchungen;
     this.userData.fixKosten = savedData.fixKosten;
+    this.userData.sparEintraege = savedData.sparEintraege;
 
     savedData.savedMonths?.forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {
@@ -779,6 +792,53 @@ export class DataService {
     if(!month.monatAbgeschlossen){
       month.gesperrteFixKosten = this.userData.fixKosten;
     }
+  }
+
+  private calcSpareintragForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    if(month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
+      if(this.isMonthSpareintragVorhanden(date)){
+
+      } else {
+        this.userData.sparEintraege.push({
+          date: month.startDate,
+          betrag: month.leftOvers ?? 0,
+          id: this.getNextFreeSparEintragId(),
+          isMonatEintrag: true
+        })
+      }
+    }
+  }
+
+  private getNextFreeSparEintragId() {
+    let freeId = 1;
+    for (let i = 0; i < this.userData.sparEintraege.length; i++) {
+      if (this.userData.sparEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
+  private isMonthSpareintragVorhanden(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    if(this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined) {
+      return false
+    } else {
+      return true;
+    }
+  }
+
+  getErspartes() {
+    let erspartes = 0;
+    this.userData.sparEintraege.forEach(eintrag => {
+      erspartes += eintrag.betrag;
+    })
+    return erspartes;
   }
 }
 

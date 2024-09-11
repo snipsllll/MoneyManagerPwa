@@ -11,113 +11,9 @@ export class SparschweinService {
 
   getData(): SparschweinData {
     return {
-      erspartes: 1000,
-      eintraege: [
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1,
-          monat: {
-            startDate: new Date()
-          }
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        },
-        {
-          date: new Date(),
-          betrag: 10,
-          id: 1
-        }
-      ]
-    }
+      eintraege: this.dataService.getSparEintraege(),
+      erspartes: this.dataService.getErspartes()
+    };
   }
 
   getEintraege(): SparschweinEintrag[] {
@@ -125,7 +21,7 @@ export class SparschweinService {
   }
 
   addEintrag(eintrag: SparschweinEintrag) {
-
+    this.dataService.addSparEintrag(eintrag);
   }
 
   editEintrag(eintrag: SparschweinEintrag) {

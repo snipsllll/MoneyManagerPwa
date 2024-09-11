@@ -70,6 +70,7 @@ export interface SavedData {
   buchungen: Buchung[];
   savedMonths: SavedMonth[];
   fixKosten: FixKostenEintrag[];
+  sparEintraege: SparschweinEintrag[];
 }
 
 export interface SavedMonth {
@@ -113,10 +114,10 @@ export interface SparschweinData {
 }
 
 export interface SparschweinEintrag {
+  isMonatEintrag?: boolean;
   betrag: number;
   date: Date;
   id: number;
-  monat?: Month;
   title?: string;
   zusatz?: string;
 }

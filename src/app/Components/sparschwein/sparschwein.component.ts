@@ -51,6 +51,12 @@ export class SparschweinComponent implements OnInit{
     if(this.darfSpeichern()){
       this.showCreateDialog.set(false);
       this.sparschweinService.addEintrag(this.newSpareintrag);
+      this.newSpareintrag = {
+        date: new Date(),
+        betrag: 0,
+        id: -1,
+        isMonatEintrag: false
+      }
     } else {
       this.showBetragWarnung.set(true);
     }

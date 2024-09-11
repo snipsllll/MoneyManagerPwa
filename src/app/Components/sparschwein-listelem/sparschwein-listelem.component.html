@@ -1,4 +1,4 @@
-<div class="sparschwein-listelem floating-box" [class.darker]="eintrag.monat !== undefined">
+<div class="sparschwein-listelem floating-box" [class.darker]="eintrag.isMonatEintrag">
   <div class="sparschwein-listelem__left">
     <div class="sparschwein-listelem__betrag">
       <b>{{eintrag.betrag}}€</b>
@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="sparschwein-listelem__right">
-    <div class="sparschwein-listelem__beschreibung" *ngIf="eintrag.monat === undefined" (click)="onMenuClicked()">
+    <div class="sparschwein-listelem__beschreibung" *ngIf="!eintrag.isMonatEintrag" (click)="onMenuClicked()">
       ...
     </div>
   </div>
