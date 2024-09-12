@@ -1,0 +1,33 @@
+<div class="list-element floating-box">
+  <div class="list-element__main">
+    <div class="list-element__main-left">
+      <b class="green" [class.red]="viewModel.data.betrag < 0">{{ viewModel.data.betrag }}€</b>
+    </div>
+    <div class="list-element__main-center">
+      <div class="list-element__main-center-top">
+        <b>{{ viewModel.data.title }}</b>
+      </div>
+      <div *ngIf="viewModel.data.zusatz" class="list-element__main-center-bottom">
+        {{ viewModel.data.zusatz }}
+      </div>
+    </div>
+    <div class="list-element__main-right">
+      <div *ngIf="viewModel.settings.doMenuExist" class="list-element__menu-button" (click)="onMenuClicked()">
+        ...
+      </div>
+    </div>
+  </div>
+  <div *ngIf="viewModel.settings.doDetailsExist" class="list-element__details">
+  </div>
+
+  <!-- Das Menü wird hier direkt unter dem Haupt-Div eingefügt -->
+  <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
+    <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
+    <div *ngFor="let menuItem of viewModel.data.menuItems; let last = last">
+      <div class="list-element__menu-eintrag" (click)="onMenuEintragClicked(menuItem.onClick)">
+        {{ menuItem.label }}
+      </div>
+      <hr *ngIf="!last" class="list-element__menu-dividing-line">
+    </div>
+  </div>
+</div>
