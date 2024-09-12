@@ -1,7 +1,7 @@
 <div class="edit-dialog__wrapper">
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
-      <input type="text" class="edit-dialog__title" autofocus placeholder="Titel" [ngModel]="viewModel.data.title">
+      <input type="text" class="edit-dialog__title" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
       @if (viewModel.data.id !== undefined) {
         <div class="edit-dialog__id">
           ({{viewModel.data.id}})
@@ -16,14 +16,14 @@
           <div class="edit-dialog__label">
             Betrag:
           </div>
-          <input type="number" class="edit-dialog__data" placeholder="0.00€" [ngModel]="viewModel.data.betrag">
+          <input type="number" class="edit-dialog__data" placeholder="0.00€" [(ngModel)]="viewModel.data.betrag" (ngModelChange)="onValueChanged()">
         </div>
       </div>
       <div class="edit-dialog__beschreibung-wrapper">
         <div class="edit-dialog__label edit-dialog__beschreibung-label">
           Zusatz:
         </div>
-        <textarea class="edit-dialog__beschreibung-data" [ngModel]="viewModel.data.zusatz">
+        <textarea class="edit-dialog__beschreibung-data" [(ngModel)]="viewModel.data.zusatz" (ngModelChange)="onValueChanged()">
 
         </textarea>
       </div>
@@ -33,7 +33,7 @@
       <div class="edit-dialog__bottom-button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="edit-dialog__bottom-button" (click)="onSaveClicked()">
+      <div class="edit-dialog__bottom-button" [class.disabled]="!darfSpeichern()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>
