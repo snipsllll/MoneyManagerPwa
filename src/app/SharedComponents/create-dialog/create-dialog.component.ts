@@ -22,11 +22,17 @@ export class CreateDialogComponent implements OnInit {
   }
 
   onCancelClicked() {
-
+    this.viewModel.onCancelClick();
   }
 
   onSaveClicked() {
-
+    if(!this.checkBetragValid()) {
+      this.showBetragWarnung.set(true);
+      return;
+    }
+    if(this.checkDarfSpeichern()) {
+      this.viewModel.onSaveClick(this.eintrag);
+    }
   }
 
   onBackgroundClicked() {

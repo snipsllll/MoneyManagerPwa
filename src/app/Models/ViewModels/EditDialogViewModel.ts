@@ -1,5 +1,7 @@
 export interface EditDialogViewModel {
   data: EditDialogData;
+  onSaveClick: (editDialogData: EditDialogData) => void;
+  onCancelClick: () => void;
 }
 
 export interface EditDialogData {
@@ -7,6 +9,4 @@ export interface EditDialogData {
   betrag: number;
   zusatz?: string;
   id?: number;
-  onSaveClick: () => void;
-  onCancelClick: () => void;
 }

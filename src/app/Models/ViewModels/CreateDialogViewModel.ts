@@ -1,5 +1,5 @@
 export interface CreateDialogViewModel {
-  onSaveClick: () => void;
+  onSaveClick: (createDialogEintrag: CreateDialogEintrag) => void;
   onCancelClick: () => void;
 }
 

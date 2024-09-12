@@ -23,12 +23,12 @@ export class EditDialogComponent implements OnInit{
       return;
     }
     if(this.checkDarfSpeichern()) {
-      this.viewModel.data.onSaveClick;
+      this.viewModel.onSaveClick(this.viewModel.data);
     }
   }
 
   onCancelClicked() {
-    this.viewModel.data.onCancelClick;
+    this.viewModel.onCancelClick;
   }
 
   onBackgroundClicked() {
