@@ -72,25 +72,25 @@
   z-index: 1;
 }
 
-.hr {
+.hr-details {
   margin: 0;
   border: none;
   background-color: black;
   height: 2px;
 }
 
-.fix-kosten__eintrag-bottom {
+.list-element__details {
   height: 0;
   color: transparent;
   transition: height 0.2s ease-out;
-  .hr {
+  .hr-details {
     background-color: transparent;
   }
-  .fix-kosten__eintrag-beschreibung {
+  .list-element__details-content {
     color: transparent;
   }
 
-  .fix-kosten__eintrag-beschreibung-empty {
+  .list-element__details-content-empty {
     color: transparent;
   }
 }
@@ -133,15 +133,15 @@
   height: 100px;
   width: 90%;
   transition: height 0.2s ease-out;
-  .hr {
+  .hr-details {
     margin: -5px 0 10px 0;
     background-color: #5c5c5c;
   }
-  .fix-kosten__eintrag-beschreibung {
+  .list-element__details-content {
     color: black;
   }
 
-  .fix-kosten__eintrag-beschreibung-empty {
+  .list-element__details-content-empty {
     color: #636363;
   }
 }

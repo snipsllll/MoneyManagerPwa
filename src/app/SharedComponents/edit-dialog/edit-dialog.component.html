@@ -4,7 +4,7 @@
       <input type="text" class="edit-dialog__title" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
       @if (viewModel.data.id !== undefined) {
         <div class="edit-dialog__id">
-          ({{viewModel.data.id}})
+          (ID: {{viewModel.data.id}})
         </div>
       }
       <hr class="edit-dialog__hr-title">

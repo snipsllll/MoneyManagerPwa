@@ -11,6 +11,8 @@ export interface ListElementData {
   zusatz?: string,
   details?: string,
   menuItems?: MenuItem[];
+  detailsVisible?: boolean;
+  id?: number;
 }
 
 export interface ListElementSettings {

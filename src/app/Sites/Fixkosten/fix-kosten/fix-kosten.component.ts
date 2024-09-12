@@ -34,7 +34,7 @@ export class FixKostenComponent  implements OnInit{
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      zusatz: ''
     }
   }
 
@@ -55,7 +55,8 @@ export class FixKostenComponent  implements OnInit{
     const data: ListElementData = {
       betrag: eintrag.betrag,
       title: eintrag.title,
-      details: eintrag.beschreibung,
+      zusatz: eintrag.zusatz,
+      id: eintrag.id,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -74,25 +75,17 @@ export class FixKostenComponent  implements OnInit{
     }
   }
 
-  onElementClicked(eintragId: number) {
-    if(this.selectedElement() === eintragId){
-      this.selectedElement.set(-1)
-    } else {
-      this.selectedElement.set(eintragId);
-    }
-  }
-
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
     const newFixkostenEintrag: FixKostenEintrag = {
       betrag: eintrag.betrag,
       title: eintrag.title ?? 'kein Titel',
-      beschreibung: eintrag.zusatz
+      zusatz: eintrag.zusatz
     }
     this.dataService.addFixKostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      zusatz: ''
     }
   }
 
@@ -105,7 +98,7 @@ export class FixKostenComponent  implements OnInit{
       data: {
         betrag: eintrag.betrag,
         title: eintrag.title,
-        zusatz: eintrag.beschreibung,
+        zusatz: eintrag.zusatz,
         id: eintrag.id
       },
       onSaveClick: this.onEditSaveClicked,
@@ -119,10 +112,11 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {
+    console.log(eintrag)
     const newFixKostenEintrag: FixKostenEintrag = {
       betrag: eintrag.betrag,
       title: eintrag.title ?? 'ohne Titel',
-      beschreibung: eintrag.zusatz,
+      zusatz: eintrag.zusatz,
       id: eintrag.id
     }
 

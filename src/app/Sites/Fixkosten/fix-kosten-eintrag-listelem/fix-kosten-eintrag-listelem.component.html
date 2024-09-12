@@ -25,9 +25,9 @@
   </div>
   <div class="fix-kosten__eintrag-bottom" [class.bottom-visible]="isSelected()" (click)="onEintragClicked()">
     <hr class="hr">
-    @if (fixKostenEintrag.beschreibung && fixKostenEintrag.beschreibung !== '') {
+    @if (fixKostenEintrag.zusatz && fixKostenEintrag.zusatz !== '') {
       <div class="fix-kosten__eintrag-beschreibung">
-        {{ fixKostenEintrag.beschreibung }}
+        {{ fixKostenEintrag.zusatz }}
       </div>
     } @else {
       <div class="fix-kosten__eintrag-beschreibung-empty">
@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="create-eintrag__beschreibung-wrapper">
-          <div class="create-eintrag__label create-eintrag__beschreibung-label" [(ngModel)]="fixKostenEintrag.beschreibung" (change)="onBeschreibungChanged()">
+          <div class="create-eintrag__label create-eintrag__beschreibung-label" [(ngModel)]="fixKostenEintrag.zusatz" (change)="onBeschreibungChanged()">
             Beschreibung:
           </div>
           <textarea

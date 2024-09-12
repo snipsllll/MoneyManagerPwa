@@ -83,3 +83,27 @@
 .red {
   color: red;
 }
+
+.hr-details {
+  margin: 0;
+  border: none;
+  background-color: black;
+  height: 2px;
+}
+
+.list-element__details {
+  height: 0;
+  color: transparent;
+  transition: height 0.2s ease-out;
+  .hr-details {
+    background-color: transparent;
+  }
+
+  .list-element__details-content {
+    color: transparent;
+  }
+
+  .list-element__details-content-empty {
+    color: transparent;
+  }
+}

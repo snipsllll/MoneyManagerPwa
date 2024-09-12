@@ -31,7 +31,7 @@ export class FixKostenEintragListelemComponent  implements OnInit{
     this.oldEintrag = {
       betrag: this.fixKostenEintrag.betrag,
       title: this.fixKostenEintrag.title,
-      beschreibung: this.fixKostenEintrag.beschreibung
+      zusatz: this.fixKostenEintrag.zusatz
     }
   }
 
@@ -71,7 +71,7 @@ export class FixKostenEintragListelemComponent  implements OnInit{
     this.oldEintrag = {
       betrag: this.fixKostenEintrag.betrag,
       title: this.fixKostenEintrag.title,
-      beschreibung: this.fixKostenEintrag.beschreibung
+      zusatz: this.fixKostenEintrag.zusatz
     }
   }
 
@@ -109,6 +109,6 @@ export class FixKostenEintragListelemComponent  implements OnInit{
   }
 
   hasEintragChanged() {
-    return this.fixKostenEintrag.title !== this.oldEintrag.title || this.fixKostenEintrag.beschreibung !== this.oldEintrag.beschreibung || this.fixKostenEintrag.betrag !== this.oldEintrag.betrag;
+    return this.fixKostenEintrag.title !== this.oldEintrag.title || this.fixKostenEintrag.zusatz !== this.oldEintrag.zusatz || this.fixKostenEintrag.betrag !== this.oldEintrag.betrag;
   }
 }

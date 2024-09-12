@@ -85,8 +85,7 @@ export interface FixKostenEintrag {
   id?: number;
   betrag: number;
   title: string;
-  beschreibung?: string;
-  periode?: null; //TODO Noch machen
+  zusatz?: string;
 }
 
 export interface UpdateValues {
