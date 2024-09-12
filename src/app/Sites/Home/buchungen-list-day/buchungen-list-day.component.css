@@ -1,0 +1,35 @@
+.buchungen-list-day {
+  margin-bottom: 25px;
+  color: black;
+}
+
+.buchungen-list-day__date {
+  margin-bottom: 5px;
+  display: flex;
+  width: 100%;
+}
+
+.buchungen-list-day__day-budget {
+  margin-left: auto;
+  flex-grow: 1;
+  text-align: end;
+}
+
+.day-label {
+  display: flex;
+  width: 100%;
+}
+
+.bld__box {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #91bada;
+}
+
+.hr-details {
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  background-color: #636363;
+  border: none;
+  height: 1.5px;
+}

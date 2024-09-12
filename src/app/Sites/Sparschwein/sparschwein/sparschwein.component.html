@@ -1,0 +1,21 @@
+<div class="sparschwein">
+  <app-top-bar></app-top-bar>
+  <div class="sparschwein__top">
+    <img src="assets/sparschwein.png" class="sparschwein__sparschwein">
+    <div class="sparschwein__betrag">
+      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ sparschweinData().erspartes }}€</b>
+    </div>
+  </div>
+  <hr class="hr">
+  <div class="sparschwein__bottom">
+    <div class="sparschwein__list">
+      <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)">
+
+      </app-list-element>
+    </div>
+  </div>
+
+  <div class="sparschwein__add-button" (click)="onPlusClicked()">
+    +
+  </div>
+</div>

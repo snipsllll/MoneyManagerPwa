@@ -1,0 +1,84 @@
+<div class="budget-wrapper">
+  <app-top-bar></app-top-bar>
+  <div class="budget__month-select">
+    <div class="budget__month-left" (click)="onMonthPrevClicked()">
+      <
+    </div>
+    <div class="budget__month-center">
+      {{ selectedMonth() }} {{ ' ' + selectedYear() }}
+    </div>
+    <div class="budget__month-right" (click)="onMonthNextClicked()">
+      >
+    </div>
+  </div>
+  <div class="budget floating-box">
+    <div class="budget__top">
+      <div class="budget__element-wrapper">
+        <div class="budget__element-label">
+          total Budget:
+        </div>
+        <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
+               [(ngModel)]="data().totalBudget">
+      </div>
+      <div class="budget__element-wrapper">
+        <div class="budget__element-label">
+          Sparen:
+        </div>
+        <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
+               [(ngModel)]="data().sparen">
+      </div>
+      <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
+        <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
+          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png"
+               *ngIf="!isFixkostenDetailsVisible() && data().fixKostenEintraege; else chevronDown">
+          <div class="budget__element-label-fixkosten-text">
+            mntl. Fix-Kosten:
+          </div>
+        </div>
+        <div class="budget__element-data">
+          {{ data().fixKostenSumme }}€ <img src="assets/lock-closed.png" class="lock-image"
+                                            *ngIf="data().fixKostenGesperrt">
+        </div>
+      </div>
+      <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isFixkostenDetailsVisible()"
+           *ngIf="isFixkostenDetailsVisible()">
+        <div *ngFor="let eintrag of data().fixKostenEintraege" class="budget__fixkosten-detail-wrapper">
+          <div class="budget__fixkosten-details-title">
+            - {{ eintrag.title }}
+          </div>
+          <div class="budget__fixkosten-details-betrag">
+            {{ eintrag.betrag }}€
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="hr">
+    <div class="budget-bottom">
+      <div class="budget__element-wrapper">
+        <div class="budget__element-label">
+          verfügbar für diesen Monat:
+        </div>
+        <div class="budget__element-data">
+          {{ data().budget }}€
+        </div>
+      </div>
+      <div class="budget__element-wrapper">
+        <div class="budget__element-label">
+          tägl. Budget:
+        </div>
+        <div class="budget__element-data">
+          {{ data().dayBudget }}€
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #chevronDown>
+  <img class="budget__fixkosten-chevron" src="assets/chevron-down.png" *ngIf="data().fixKostenEintraege; else spacer">
+</ng-template>
+
+<ng-template #spacer>
+<div class="budget__fixkosten-chevron"></div>
+</ng-template>
