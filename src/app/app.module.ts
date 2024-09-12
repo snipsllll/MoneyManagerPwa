@@ -23,6 +23,8 @@ import {BuchungDetailsComponent} from "./SharedComponents/buchung-details/buchun
 import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
 import {SparschweinListelemComponent} from "./Sites/Sparschwein/sparschwein-listelem/sparschwein-listelem.component";
 import {ListElementComponent} from "./SharedComponents/list-element/list-element.component";
+import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.component";
+import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import {ListElementComponent} from "./SharedComponents/list-element/list-element
     BuchungDetailsComponent,
     SparschweinComponent,
     SparschweinListelemComponent,
-    ListElementComponent
+    ListElementComponent,
+    EditDialogComponent,
+    CreateDialogComponent
   ],
     imports: [
         BrowserModule,
