@@ -158,7 +158,6 @@ export class SparschweinComponent implements OnInit{
   }
 }
 
-
 function onEditClicked() {
   console.log('Edit was clicked')
 }

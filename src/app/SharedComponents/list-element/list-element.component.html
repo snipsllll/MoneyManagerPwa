@@ -20,7 +20,6 @@
   <div *ngIf="viewModel.settings.doDetailsExist" class="list-element__details">
   </div>
 
-  <!-- Das Menü wird hier direkt unter dem Haupt-Div eingefügt -->
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
     <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
     <div *ngFor="let menuItem of viewModel.data.menuItems; let last = last">
