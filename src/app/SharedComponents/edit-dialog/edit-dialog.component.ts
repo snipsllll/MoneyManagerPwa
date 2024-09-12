@@ -40,10 +40,14 @@ export class EditDialogComponent implements OnInit{
   }
 
   checkDarfSpeichern() {
-    return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz) && this.checkBetragValid()
+    return this.checkHasChanged() && this.checkBetragValid()
   }
 
   checkBetragValid() {
     return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null);
+  }
+
+  checkHasChanged() {
+    return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
   }
 }
