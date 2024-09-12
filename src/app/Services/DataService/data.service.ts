@@ -18,7 +18,7 @@ import {DB} from "../../Models/Enums";
 export class DataService {
 
   userData!: UserData;
-  testData: DB = DB.noTD;
+  testData: DB = DB.none;
   download: boolean = true;
 
   updated = signal<number>(0);
@@ -346,6 +346,7 @@ export class DataService {
   }
 
   addSparEintrag(eintrag: SparschweinEintrag) {
+    eintrag.id = this.getNextFreeSparEintragId();
     this.update({
       newSpareintraege: [
         eintrag

@@ -32,11 +32,10 @@ export class CreateDialogComponent implements OnInit {
         title: 'Abbrechen?',
         message: 'Willst du wirklich abbrechen? Alle nicht gespeicherten Änderungen werden verworfen!',
         onConfirmClicked: () => {
+          this.dialogService.isCreateDialogVisible = false;
           this.viewModel.onCancelClick();
         },
-        onCancelClicked() {
-
-        }
+        onCancelClicked() {}
       }
       this.dialogService.showConfirmDialog(confirmDialogViewModel);
     } else {
@@ -50,28 +49,28 @@ export class CreateDialogComponent implements OnInit {
       return;
     }
     if(this.checkDarfSpeichern()) {
+      this.dialogService.isCreateDialogVisible = false;
       this.viewModel.onSaveClick(this.eintrag);
     }
   }
 
   onBackgroundClicked() {
-    console.log(68736742634632872)
+
   }
 
   onValueChanged() {
     this.darfSpeichern.set(this.checkDarfSpeichern());
   }
 
-  checkDarfSpeichern() {
+  private checkDarfSpeichern() {
     return this.checkHasChanged() && this.checkBetragValid()
   }
 
-  checkHasChanged() {
+  private checkHasChanged() {
     return ((this.eintrag.title !== undefined && this.eintrag.title !== null) || (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null) || (this.eintrag.zusatz !== undefined && this.eintrag.zusatz !== null))
   }
 
-  checkBetragValid() {
+  private checkBetragValid() {
     return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null);
   }
-
 }

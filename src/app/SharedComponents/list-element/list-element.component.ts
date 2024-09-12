@@ -1,5 +1,8 @@
 import {Component, Input, signal} from '@angular/core';
-import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
+import {ListElementData, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
+import {MenuItem} from "../../Models/Interfaces";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-list-element',
@@ -11,12 +14,15 @@ export class ListElementComponent {
   @Input() viewModel!: ListElementViewModel;
   isMenuVisible = signal<boolean>(false);
 
+  constructor(private dialogService: DialogService) {
+  }
+
   onMenuClicked() {
     this.isMenuVisible.set(!this.isMenuVisible());
   }
 
-  onMenuEintragClicked(f: () => void) {
+  onMenuEintragClicked(menuItem: MenuItem) {
     this.isMenuVisible.set(false);
-    f();
+    menuItem.onClick(this.viewModel.data);
   }
 }

@@ -1,5 +1,7 @@
 import {Component, Input, OnInit, signal} from '@angular/core';
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
+import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-edit-dialog',
@@ -13,8 +15,17 @@ export class EditDialogComponent implements OnInit{
   darfSpeichern = signal<boolean>(false);
   oldEintrag!: EditDialogData;
 
+  constructor(private dialogService: DialogService) {
+  }
+
   ngOnInit() {
-    this.oldEintrag = this.viewModel.data
+    this.oldEintrag = {
+      betrag: this.viewModel.data.betrag,
+      title: this.viewModel.data.title,
+      zusatz: this.viewModel.data.zusatz,
+      date: this.viewModel.data.date,
+      id: this.viewModel.data.id
+    }
   }
 
   onSaveClicked() {
@@ -23,31 +34,48 @@ export class EditDialogComponent implements OnInit{
       return;
     }
     if(this.checkDarfSpeichern()) {
+      this.dialogService.isEditDialogVisible = false;
       this.viewModel.onSaveClick(this.viewModel.data);
     }
   }
 
   onCancelClicked() {
-    this.viewModel.onCancelClick;
+    if(this.checkHasChanged()) {
+      const confirmDialogViewModel: ConfirmDialogViewModel = {
+        title: 'Abbrechen?',
+        message: 'Willst du wirklich abbrechen? Alle nicht gespeicherten Änderungen werden verworfen!',
+        onConfirmClicked: () => {
+          this.dialogService.isEditDialogVisible = false;
+          this.viewModel.onCancelClick();
+        },
+        onCancelClicked() {}
+      }
+      this.dialogService.showConfirmDialog(confirmDialogViewModel);
+    } else {
+      this.dialogService.isEditDialogVisible = false;
+      this.viewModel.onCancelClick();
+    }
   }
 
   onBackgroundClicked() {
-    console.log(68736742634632872)
+
   }
 
   onValueChanged() {
     this.darfSpeichern.set(this.checkDarfSpeichern());
   }
 
-  checkDarfSpeichern() {
+  private checkDarfSpeichern() {
+    console.log(this.viewModel)
+    console.log(this.oldEintrag)
     return this.checkHasChanged() && this.checkBetragValid()
   }
 
-  checkBetragValid() {
+  private checkBetragValid() {
     return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null);
   }
 
-  checkHasChanged() {
+  private checkHasChanged() {
     return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
   }
 }

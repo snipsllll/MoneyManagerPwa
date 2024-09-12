@@ -1,3 +1,6 @@
+import {DataService} from "../Services/DataService/data.service";
+import {DialogService} from "../Services/DialogService/dialog.service";
+
 export interface Month {
   totalBudget?: number;
   sparen?: number;
@@ -125,5 +128,5 @@ export interface SparschweinEintrag {
 
 export interface MenuItem {
   label: string;
-  onClick: () => void;
+  onClick: (input?: any) => void;
 }

@@ -9,4 +9,5 @@ export interface EditDialogData {
   betrag: number;
   zusatz?: string;
   id?: number;
+  date?: Date;
 }

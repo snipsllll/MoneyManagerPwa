@@ -4,13 +4,14 @@ import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
-import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {
   ListElementData,
   ListElementSettings,
   ListElementViewModel
 } from "../../../Models/ViewModels/ListElementViewModel";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
+import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-sparschwein',
@@ -18,16 +19,6 @@ import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewMo
   styleUrl: './sparschwein.component.css'
 })
 export class SparschweinComponent implements OnInit{
-
-  showCreateDialog = signal<boolean>(false);
-  showBetragWarnung = signal<boolean>(false);
-  newSpareintrag: SparschweinEintrag = {
-    betrag: 0,
-    date: new Date(),
-    id: 1,
-    zusatz: '',
-    title: '',
-  };
 
   sparschweinData = computed(() => {
     this.dataService.updated();
@@ -45,28 +36,31 @@ export class SparschweinComponent implements OnInit{
   }
 
   onPlusClicked() {
-    console.log(2341231)
-    this.showCreateDialog.set(true);
+    this.dialogService.showCreateDialog(this.getCreateDialogViewModel())
   }
 
-  getCreateDialogViewModel(): CreateDialogViewModel {
-    return {
-      onSaveClick: (eintrag: CreateDialogEintrag) => {
-        const newSparschweinEintrag: SparschweinEintrag = {
-          betrag: eintrag.betrag,
-          title: eintrag.title,
-          zusatz: eintrag.zusatz,
-          isMonatEintrag: false,
-          date: new Date(),
-          id: -1
-        }
-        this.sparschweinService.addEintrag(newSparschweinEintrag);
-        this.showCreateDialog.set(false);
-      },
-      onCancelClick: () => {
-        this.showCreateDialog.set(false);
-      }
+  onEditClicked = (eintrag: EditDialogData) => {
+    const x: EditDialogData = {
+      title: eintrag.title,
+      zusatz: eintrag.zusatz,
+      date: eintrag.date,
+      id: eintrag.id,
+      betrag: eintrag.betrag
     }
+    this.dialogService.showEditDialog(this.getEditDialogViewModel(x))
+  }
+
+  onDeleteClicked = (eintrag: EditDialogData) => {
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Eintrag Löschen?',
+      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.sparschweinService.deleteEintrag(eintrag.id!);
+      },
+      onCancelClicked: () => {}
+    }
+
+    this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
   getEintragViewModel(eintrag: SparschweinEintrag): ListElementViewModel {
@@ -82,11 +76,11 @@ export class SparschweinComponent implements OnInit{
       menuItems: [
         {
           label: 'bearbeiten',
-          onClick: onEditClicked
+          onClick: this.onEditClicked
         },
         {
           label: 'löschen',
-          onClick: onDeleteClicked
+          onClick: this.onDeleteClicked
         }
       ]
     }
@@ -135,12 +129,42 @@ export class SparschweinComponent implements OnInit{
     }
     return '';
   }
+
+  private getCreateDialogViewModel(): CreateDialogViewModel {
+    return {
+      onSaveClick: (eintrag: CreateDialogEintrag) => {
+        const newSparschweinEintrag: SparschweinEintrag = {
+          betrag: eintrag.betrag,
+          title: eintrag.title,
+          zusatz: eintrag.zusatz,
+          isMonatEintrag: false,
+          date: new Date(),
+          id: -1
+        }
+        this.sparschweinService.addEintrag(newSparschweinEintrag);
+      },
+      onCancelClick: () => {}
+    }
+  }
+
+  getEditDialogViewModel = (eintrag: EditDialogData): EditDialogViewModel => {
+    return {
+      data: eintrag,
+      onSaveClick: (eintrag: EditDialogData) => {
+        this.sparschweinService.editEintrag({
+          betrag: eintrag.betrag,
+          id: eintrag.id!,
+          title: eintrag.title,
+          zusatz: eintrag.zusatz,
+          date: eintrag.date!
+        })
+      },
+      onCancelClick: () => {
+
+      }
+    }
+  }
+
 }
 
-function onEditClicked() {
-  console.log('Edit was clicked')
-}
 
-function onDeleteClicked() {
-  console.log('Delete was clicked')
-}
