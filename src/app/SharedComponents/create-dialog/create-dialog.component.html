@@ -1,7 +1,7 @@
 <div class="create-dialog__wrapper">
   <div class="create-dialog floating-box">
     <div class="create-dialog__content">
-      <input type="text" class="create-dialog__title" autofocus placeholder="Titel">
+      <input type="text" class="create-dialog__title" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
       <hr class="create-dialog__hr-title">
       <div class="create-dialog__betrag-wrapper">
         <div class="create-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
@@ -11,14 +11,14 @@
           <div class="create-dialog__label">
             Betrag:
           </div>
-          <input type="number" class="create-dialog__data" placeholder="0.00€">
+          <input type="number" class="create-dialog__data" placeholder="0.00€" [(ngModel)]="eintrag.betrag" (ngModelChange)="onValueChanged()">
         </div>
       </div>
       <div class="create-dialog__beschreibung-wrapper">
         <div class="create-dialog__label create-dialog__beschreibung-label">
           Zusatz:
         </div>
-        <textarea class="create-dialog__beschreibung-data">
+        <textarea class="create-dialog__beschreibung-data" [(ngModel)]="eintrag.zusatz" (ngModelChange)="onValueChanged()">
 
         </textarea>
       </div>
@@ -28,7 +28,7 @@
       <div class="create-dialog__bottom-button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="create-dialog__bottom-button" (click)="onSaveClicked()">
+      <div class="create-dialog__bottom-button" [class.disabled]="!darfSpeichern()"  (click)="onSaveClicked()">
         speichern
       </div>
     </div>

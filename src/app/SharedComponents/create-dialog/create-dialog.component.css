@@ -116,3 +116,8 @@ hr {
 .create-dialog__betrag-warnung {
   color: red;
 }
+
+.disabled {
+  background-color: #e3e3e3 !important;
+  color: #939393 !important;
+}
