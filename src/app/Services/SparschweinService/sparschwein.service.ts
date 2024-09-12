@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {SparschweinData, SparschweinEintrag} from "../../Models/ClassesInterfacesEnums";
 import {DataService} from "../DataService/data.service";
+import {SparschweinData, SparschweinEintrag} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'

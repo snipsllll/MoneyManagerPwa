@@ -1,13 +1,15 @@
 import {Injectable, signal} from '@angular/core';
-import {UserData} from "../../Models/UserData";
-import {FileEngine} from "../../Models/FileEnigne";
+import {UserData} from "../../Models/Classes/UserData";
+import {FileEngine} from "../FileEngine/FileEnigne";
 import {
   Buchung,
   BudgetInfosForMonth, Day,
   DayIstBudgets,
-  FixKostenEintrag, Month, SavedData, SparschweinEintrag,
+  FixKostenEintrag,
+  Month, SavedData, SparschweinEintrag,
   UpdateValues, Week
-} from "../../Models/ClassesInterfacesEnums";
+} from "../../Models/Interfaces";
+import {DB} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -893,14 +895,6 @@ export class DataService {
   private getIndexOfSpareintragById(eintragId: number) {
     return this.userData.sparEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
-}
-
-enum DB {
-  short,
-  mid,
-  long,
-  none,
-  noTD
 }
 
 function toFixedDown(number: number, decimals: number) {

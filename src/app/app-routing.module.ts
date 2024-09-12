@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {HomeComponent} from "./Components/home/home.component";
-import {EditBuchungComponent} from "./Components/edit-buchung/edit-buchung.component";
-import {CreateBuchungComponent} from "./Components/create-buchung/create-buchung.component";
-import {BudgetComponent} from "./Components/budget/budget.component";
-import {FixKostenComponent} from "./Components/fix-kosten/fix-kosten.component";
-import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
-import {SparschweinComponent} from "./Components/sparschwein/sparschwein.component";
+import {BuchungDetailsComponent} from "./SharedComponents/buchung-details/buchung-details.component";
+import {HomeComponent} from "./Sites/Home/home/home.component";
+import {EditBuchungComponent} from "./SharedComponents/edit-buchung/edit-buchung.component";
+import {CreateBuchungComponent} from "./SharedComponents/create-buchung/create-buchung.component";
+import {BudgetComponent} from "./Sites/Budget/budget/budget.component";
+import {FixKostenComponent} from "./Sites/Fixkosten/fix-kosten/fix-kosten.component";
+import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},

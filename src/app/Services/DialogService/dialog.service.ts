@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ConfirmDialogViewModel} from "../../Models/ConfirmDialogViewModel";
+import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
