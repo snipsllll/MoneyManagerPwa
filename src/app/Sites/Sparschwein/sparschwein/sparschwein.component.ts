@@ -10,6 +10,7 @@ import {
   ListElementSettings,
   ListElementViewModel
 } from "../../../Models/ViewModels/ListElementViewModel";
+import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 
 @Component({
   selector: 'app-sparschwein',
@@ -48,46 +49,24 @@ export class SparschweinComponent implements OnInit{
     this.showCreateDialog.set(true);
   }
 
-  onCreateSpeichernClicked() {
-    if(this.darfSpeichern()){
-      this.showCreateDialog.set(false);
-      this.sparschweinService.addEintrag(this.newSpareintrag);
-      this.newSpareintrag = {
-        date: new Date(),
-        betrag: 0,
-        id: -1,
-        isMonatEintrag: false
-      }
-    } else {
-      this.showBetragWarnung.set(true);
-    }
-  }
-
-  onCreateAbbrechenClicked() {
-    if (this.isEmpty()){
-      this.showCreateDialog.set(false);
-      return;
-    }
-    const dialogViewmodel: ConfirmDialogViewModel = {
-      title: 'Abbrechen?',
-      message: 'Willst du abbrechen? Alle Änderungen werden verworfen!',
-      onConfirmClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
+  getCreateDialogViewModel(): CreateDialogViewModel {
+    return {
+      onSaveClick: (eintrag: CreateDialogEintrag) => {
+        const newSparschweinEintrag: SparschweinEintrag = {
+          betrag: eintrag.betrag,
+          title: eintrag.title,
+          zusatz: eintrag.zusatz,
+          isMonatEintrag: false,
+          date: new Date(),
+          id: -1
+        }
+        this.sparschweinService.addEintrag(newSparschweinEintrag);
         this.showCreateDialog.set(false);
       },
-      onCancelClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
+      onCancelClick: () => {
+        this.showCreateDialog.set(false);
       }
     }
-    this.dialogService.showConfirmDialog(dialogViewmodel);
-  }
-
-  darfSpeichern() {
-    return this.newSpareintrag.betrag !== 0
-  }
-
-  isEmpty() {
-    return this.newSpareintrag.betrag === 0 && this.newSpareintrag.title === '' && this.newSpareintrag.zusatz === ''
   }
 
   getEintragViewModel(eintrag: SparschweinEintrag): ListElementViewModel {

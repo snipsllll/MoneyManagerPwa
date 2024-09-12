@@ -19,10 +19,12 @@ export class ConfirmDialogComponent  implements OnInit{
   }
 
   onConfirmButtonClicked() {
+    this.dialogService.isConfirmDialogVisible = false;
     this.viewModel?.onConfirmClicked();
   }
 
   onCanceluttonClicked() {
+    this.dialogService.isConfirmDialogVisible = false;
     this.viewModel?.onCancelClicked();
   }
 }

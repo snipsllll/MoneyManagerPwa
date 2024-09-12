@@ -1,5 +1,7 @@
 import {Component, Input, OnInit, signal} from '@angular/core';
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
+import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-create-dialog',
@@ -13,6 +15,9 @@ export class CreateDialogComponent implements OnInit {
   darfSpeichern = signal<boolean>(false);
   eintrag!: CreateDialogEintrag;
 
+  constructor(private dialogService: DialogService) {
+  }
+
   ngOnInit() {
     this.eintrag = {
       betrag: 0,
@@ -22,7 +27,21 @@ export class CreateDialogComponent implements OnInit {
   }
 
   onCancelClicked() {
-    this.viewModel.onCancelClick();
+    if(this.checkHasChanged()) {
+      const confirmDialogViewModel: ConfirmDialogViewModel = {
+        title: 'Abbrechen?',
+        message: 'Willst du wirklich abbrechen? Alle nicht gespeicherten Änderungen werden verworfen!',
+        onConfirmClicked: () => {
+          this.viewModel.onCancelClick();
+        },
+        onCancelClicked() {
+
+        }
+      }
+      this.dialogService.showConfirmDialog(confirmDialogViewModel);
+    } else {
+      this.viewModel.onCancelClick();
+    }
   }
 
   onSaveClicked() {

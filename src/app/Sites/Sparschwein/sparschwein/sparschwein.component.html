@@ -20,49 +20,6 @@
   </div>
 </div>
 
-<div *ngIf="showCreateDialog()">
-  <div class="edit-dialog-wrapper">
-    <div class="edit-dialog floating-box">
-      <div class="create-eintrag__top-content">
-        <input type="text" class="create-eintrag__title" autofocus placeholder="Titel" [(ngModel)]="newSpareintrag.title">
-        <hr class="hr-title">
-        <div class="create-eintrag__betrag">
-          <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarnung()">
-            der Betrag darf nicht 0 betragen!
-          </div>
-          <div class="create-eintrag__betrag-wrapper">
-            <div class="create-eintrag__label">
-              Betrag:
-            </div>
-            <input type="number" class="create-eintrag__data" placeholder="0.00€" [(ngModel)]="newSpareintrag.betrag">
-          </div>
-        </div>
-        <div class="create-eintrag__beschreibung-wrapper">
-          <div class="create-eintrag__label create-eintrag__beschreibung-label">
-            Zusatz:
-          </div>
-          <textarea
-            class="create-eintrag__data create-eintrag__beschreibung-data" [(ngModel)]="newSpareintrag.zusatz">
+<app-create-dialog *ngIf="showCreateDialog()" [viewModel]="getCreateDialogViewModel()">
 
-          </textarea>
-        </div>
-      </div>
-      <div class="create-eintrag__spacer-bottom">
-
-      </div>
-
-      <div class="create-eintrag__buttons-wrapper">
-        <div class="create-eintrag__button" (click)="onCreateAbbrechenClicked()">
-          abbrechen
-        </div>
-        <div class="create-eintrag__button" (click)="onCreateSpeichernClicked()">
-          speichern
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="edit-dialog__background">
-
-  </div>
-</div>
+</app-create-dialog>
