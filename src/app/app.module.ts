@@ -12,16 +12,12 @@ import {ConfirmDialogComponent} from "./SharedComponents/confirm-dialog/confirm-
 import {CreateBuchungComponent} from "./SharedComponents/create-buchung/create-buchung.component";
 import {EditBuchungComponent} from "./SharedComponents/edit-buchung/edit-buchung.component";
 import {FixKostenComponent} from "./Sites/Fixkosten/fix-kosten/fix-kosten.component";
-import {
-  FixKostenEintragListelemComponent
-} from "./Sites/Fixkosten/fix-kosten-eintrag-listelem/fix-kosten-eintrag-listelem.component";
 import {BuchungListelemComponent} from "./Sites/Home/buchung-listelem/buchung-listelem.component";
 import {BuchungenListComponent} from "./Sites/Home/buchungen-list/buchungen-list.component";
 import {SideNavComponent} from "./SharedComponents/side-nav/side-nav.component";
 import {TopBarComponent} from "./SharedComponents/top-bar/top-bar.component";
 import {BuchungDetailsComponent} from "./SharedComponents/buchung-details/buchung-details.component";
 import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
-import {SparschweinListelemComponent} from "./Sites/Sparschwein/sparschwein-listelem/sparschwein-listelem.component";
 import {ListElementComponent} from "./SharedComponents/list-element/list-element.component";
 import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.component";
 import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
@@ -36,14 +32,12 @@ import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dia
     CreateBuchungComponent,
     EditBuchungComponent,
     FixKostenComponent,
-    FixKostenEintragListelemComponent,
     BuchungListelemComponent,
     BuchungenListComponent,
     SideNavComponent,
     TopBarComponent,
     BuchungDetailsComponent,
     SparschweinComponent,
-    SparschweinListelemComponent,
     ListElementComponent,
     EditDialogComponent,
     CreateDialogComponent

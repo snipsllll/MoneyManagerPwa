@@ -1,6 +1,5 @@
-import {Component, computed, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
-import {DialogService} from "../../Services/DialogService/dialog.service";
 import {MenuItem} from "../../Models/Interfaces";
 
 @Component({
@@ -15,7 +14,7 @@ export class ListElementComponent implements OnInit{
   @Output() onElementClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
 
-  constructor(private dialogService: DialogService) {
+  constructor() {
   }
 
   ngOnInit() {

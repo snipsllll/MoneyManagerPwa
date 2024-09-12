@@ -1,6 +1,3 @@
-import {DataService} from "../Services/DataService/data.service";
-import {DialogService} from "../Services/DialogService/dialog.service";
-
 export interface Month {
   totalBudget?: number;
   sparen?: number;

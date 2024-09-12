@@ -874,13 +874,7 @@ export class DataService {
   }
 
   private isMonthSpareintragVorhanden(date: Date) {
-    const month = this.getMonthByDate(date);
-
-    if (this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined) {
-      return false
-    } else {
-      return true;
-    }
+    return !(this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined)
   }
 
   getErspartes() {
