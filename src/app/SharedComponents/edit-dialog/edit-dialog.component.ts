@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, signal} from '@angular/core';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -6,5 +6,20 @@ import { Component } from '@angular/core';
   styleUrl: './edit-dialog.component.css'
 })
 export class EditDialogComponent {
+
+  showBetragWarnung = signal<boolean>(false);
+
+
+  onCancelClicked() {
+
+  }
+
+  onSaveClicked() {
+
+  }
+
+  onBackgroundClicked() {
+    console.log(68736742634632872)
+  }
 
 }
