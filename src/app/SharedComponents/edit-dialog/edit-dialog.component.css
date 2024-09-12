@@ -42,6 +42,10 @@
   font-size: 22px;
 }
 
+.edit-dialog__data {
+  font-size: 18px;
+}
+
 .edit-dialog__title {
   width: calc(100% - 4px);
   height: 50px;
