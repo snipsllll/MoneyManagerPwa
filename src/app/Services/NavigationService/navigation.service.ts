@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Sites} from "../../Models/Enums";
+import {Sites} from "../../Models/ClassesInterfacesEnums";
 
 @Injectable({
   providedIn: 'root'

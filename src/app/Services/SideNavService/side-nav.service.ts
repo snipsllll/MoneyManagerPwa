@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {SideNavElements} from "../../Models/Enums";
+import {SideNavElements} from "../../Models/ClassesInterfacesEnums";
 
 @Injectable({
   providedIn: 'root'

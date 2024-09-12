@@ -1,0 +1,60 @@
+<app-top-bar></app-top-bar>
+<div *ngFor="let fixKostenEintrag of elements()">
+  <app-fix-kosten-eintrag-listelem
+    [selectedElementId]="selectedElement"
+    [fixKostenEintrag]="fixKostenEintrag"
+    (onElementClicked)="onElementClicked(fixKostenEintrag.id!)"
+    (update)="update()"
+  ></app-fix-kosten-eintrag-listelem>
+</div>
+
+<div class="fix-kosten__add-button" (click)="onPlusClicked()">
+  +
+</div>
+
+<div *ngIf="showCreateDialog()">
+  <div class="edit-dialog-wrapper">
+    <div class="edit-dialog floating-box">
+      <div class="create-eintrag__top-content">
+        <input type="text" class="create-eintrag__title" autofocus placeholder="Titel" [(ngModel)]="newFixKostenEintrag.title">
+        <hr class="hr-title">
+        <div class="create-eintrag__betrag">
+          <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarnung()">
+            der Betrag darf nicht 0 betragen!
+          </div>
+          <div class="create-eintrag__betrag-wrapper">
+            <div class="create-eintrag__label">
+              Betrag:
+            </div>
+            <input type="number" class="create-eintrag__data" placeholder="0.00€" [(ngModel)]="newFixKostenEintrag.betrag">
+          </div>
+        </div>
+        <div class="create-eintrag__beschreibung-wrapper">
+          <div class="create-eintrag__label create-eintrag__beschreibung-label">
+            Beschreibung:
+          </div>
+          <textarea
+            class="create-eintrag__data create-eintrag__beschreibung-data" [(ngModel)]="newFixKostenEintrag.beschreibung">
+
+          </textarea>
+        </div>
+      </div>
+      <div class="create-eintrag__spacer-bottom">
+
+      </div>
+
+      <div class="create-eintrag__buttons-wrapper">
+        <div class="create-eintrag__button" (click)="onCreateAbbrechenClicked()">
+          abbrechen
+        </div>
+        <div class="create-eintrag__button" (click)="onCreateSpeichernClicked()">
+          speichern
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="edit-dialog__background">
+
+  </div>
+</div>

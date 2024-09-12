@@ -1,0 +1,44 @@
+.budget__element-wrapper {
+  display: flex;
+  width: calc(100% - 20px);
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.hr {
+  border: none;
+  height: 2px;
+  background-color: #404040;
+}
+
+.budget__month-select {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  background-color: #c1c1c1;
+}
+
+.budget__month-left, .budget__month-right {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.budget__month-left {
+  border-right: 1px solid black;
+}
+
+.budget__month-center {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 25px;
+}
+
+.budget__month-right {
+  border-left: 1px solid black;
+}
+

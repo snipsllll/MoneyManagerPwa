@@ -1,0 +1,88 @@
+<div class="fix-kosten__eintrag floating-box">
+  <div class="fix-kosten__eintrag-top">
+    <div class="fix-kosten__eintrag-left" (click)="onEintragClicked()">
+      <div class="fix-kosten__eintrag-betrag">
+        <b>-{{ fixKostenEintrag.betrag }}€</b>
+      </div>
+      <div class="fix-kosten__eintrag-title">
+        {{ fixKostenEintrag.title }}
+      </div>
+    </div>
+    <div class="fix-kosten__eintrag-right">
+      <div class="fix-kosten__eintrag-menu-button" (click)="onMenuClicked()">
+        ...
+      </div>
+    </div>
+    <div class="fix-kosten__eintrag-menu" *ngIf="showMenu()">
+      <div class="fix-kosten__eintrag-menu-element" (click)="onBearbeitenClicked()">
+        bearbeiten
+      </div>
+      <hr class="hr">
+      <div class="fix-kosten__eintrag-menu-element" (click)="onLoeschenClicked()">
+        löschen
+      </div>
+    </div>
+  </div>
+  <div class="fix-kosten__eintrag-bottom" [class.bottom-visible]="isSelected()" (click)="onEintragClicked()">
+    <hr class="hr">
+    @if (fixKostenEintrag.beschreibung && fixKostenEintrag.beschreibung !== '') {
+      <div class="fix-kosten__eintrag-beschreibung">
+        {{ fixKostenEintrag.beschreibung }}
+      </div>
+    } @else {
+      <div class="fix-kosten__eintrag-beschreibung-empty">
+        keine Beschreibung
+      </div>
+    }
+  </div>
+</div>
+
+<div class="fix-kosten__eintrag-menu-background" *ngIf="showMenu()" (click)="onMenuClicked()"></div>
+
+<div *ngIf="showEditDialog()">
+  <div class="edit-dialog-wrapper">
+    <div class="edit-dialog floating-box">
+      <div class="create-eintrag__top-content">
+        <input type="text" class="create-eintrag__title" autofocus placeholder="Titel" [(ngModel)]="fixKostenEintrag.title" (change)="onTitelChanged()">
+        <hr class="hr-title">
+        <div class="create-eintrag__betrag">
+          <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarnung()">
+            der Betrag darf nicht 0 betragen!
+          </div>
+          <div class="create-eintrag__betrag-wrapper">
+            <div class="create-eintrag__label">
+              Betrag:
+            </div>
+            <input type="number" class="create-eintrag__data" placeholder="0.00€" [(ngModel)]="fixKostenEintrag.betrag" (change)="onBetragChanged()">
+          </div>
+        </div>
+        <div class="create-eintrag__beschreibung-wrapper">
+          <div class="create-eintrag__label create-eintrag__beschreibung-label" [(ngModel)]="fixKostenEintrag.beschreibung" (change)="onBeschreibungChanged()">
+            Beschreibung:
+          </div>
+          <textarea
+            class="create-eintrag__data create-eintrag__beschreibung-data">
+
+          </textarea>
+        </div>
+      </div>
+      <div class="create-eintrag__spacer-bottom">
+
+      </div>
+
+      <div class="create-eintrag__buttons-wrapper">
+        <div class="create-eintrag__button" (click)="onEditAbbrechenClicked()">
+          abbrechen
+        </div>
+        <div class="create-eintrag__button" (click)="onEditSpeichernClicked()">
+          speichern
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="edit-dialog__background">
+
+  </div>
+</div>

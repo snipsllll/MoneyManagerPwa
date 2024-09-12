@@ -5,22 +5,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {FormsModule} from "@angular/forms";
-import {HomeComponent} from "./Sites/Home/home/home.component";
-import {BuchungenListDayComponent} from "./Sites/Home/buchungen-list-day/buchungen-list-day.component";
-import {BudgetComponent} from "./Sites/Budget/budget/budget.component";
-import {ConfirmDialogComponent} from "./SharedComponents/confirm-dialog/confirm-dialog.component";
-import {CreateBuchungComponent} from "./SharedComponents/create-buchung/create-buchung.component";
-import {EditBuchungComponent} from "./SharedComponents/edit-buchung/edit-buchung.component";
-import {FixKostenComponent} from "./Sites/Fixkosten/fix-kosten/fix-kosten.component";
-import {BuchungListelemComponent} from "./Sites/Home/buchung-listelem/buchung-listelem.component";
-import {BuchungenListComponent} from "./Sites/Home/buchungen-list/buchungen-list.component";
-import {SideNavComponent} from "./SharedComponents/side-nav/side-nav.component";
-import {TopBarComponent} from "./SharedComponents/top-bar/top-bar.component";
-import {BuchungDetailsComponent} from "./SharedComponents/buchung-details/buchung-details.component";
-import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
-import {ListElementComponent} from "./SharedComponents/list-element/list-element.component";
-import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.component";
-import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
+import {HomeComponent} from "./Components/home/home.component";
+import {BuchungenListDayComponent} from "./Components/buchungen-list-day/buchungen-list-day.component";
+import {BudgetComponent} from "./Components/budget/budget.component";
+import {ConfirmDialogComponent} from "./Components/confirm-dialog/confirm-dialog.component";
+import {CreateBuchungComponent} from "./Components/create-buchung/create-buchung.component";
+import {EditBuchungComponent} from "./Components/edit-buchung/edit-buchung.component";
+import {FixKostenComponent} from "./Components/fix-kosten/fix-kosten.component";
+import {
+  FixKostenEintragListelemComponent
+} from "./Components/fix-kosten-eintrag-listelem/fix-kosten-eintrag-listelem.component";
+import {BuchungListelemComponent} from "./Components/buchung-listelem/buchung-listelem.component";
+import {BuchungenListComponent} from "./Components/buchungen-list/buchungen-list.component";
+import {SideNavComponent} from "./Components/side-nav/side-nav.component";
+import {TopBarComponent} from "./Components/top-bar/top-bar.component";
+import {BuchungDetailsComponent} from "./Components/buchung-details/buchung-details.component";
 
 @NgModule({
   declarations: [
@@ -32,15 +31,12 @@ import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dia
     CreateBuchungComponent,
     EditBuchungComponent,
     FixKostenComponent,
+    FixKostenEintragListelemComponent,
     BuchungListelemComponent,
     BuchungenListComponent,
     SideNavComponent,
     TopBarComponent,
-    BuchungDetailsComponent,
-    SparschweinComponent,
-    ListElementComponent,
-    EditDialogComponent,
-    CreateDialogComponent
+    BuchungDetailsComponent
   ],
     imports: [
         BrowserModule,

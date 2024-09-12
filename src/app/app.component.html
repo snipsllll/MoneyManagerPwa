@@ -6,16 +6,4 @@
 
     </app-confirm-dialog>
   }
-
-  @if (dialogService.isEditDialogVisible) {
-    <app-edit-dialog [viewModel]="dialogService.editDialogViewModel!">
-
-    </app-edit-dialog>
-  }
-
-  @if (dialogService.isCreateDialogVisible) {
-    <app-create-dialog [viewModel]="dialogService.createDialogViewModel!">
-
-    </app-create-dialog>
-  }
 </div>

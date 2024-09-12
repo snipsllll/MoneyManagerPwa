@@ -1,0 +1,324 @@
+.fix-kosten__add-button {
+  border-radius: 20px;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  width: 70px;
+  background-color: #29508a;
+  box-shadow: #474747 1px 1px 2px;
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.fix-kosten__add-button:hover {
+  font-size: 40px;
+}
+
+.fix-kosten__eintrag {
+}
+
+.floating-box {
+  padding: 0;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.fix-kosten__eintrag-top {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.fix-kosten__eintrag-left {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  padding: 23px;
+}
+
+.fix-kosten__eintrag-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fix-kosten__eintrag-title {
+  margin-left: 10px;
+}
+
+.fix-kosten__eintrag-betrag {
+  font-size: 20px;
+  width: 70px;
+}
+
+.fix-kosten__eintrag-menu-button {
+  margin-right: 10px;
+  padding: 10px;
+}
+
+.fix-kosten__eintrag-menu {
+  position: absolute;
+  z-index: 20;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: black 1px 1px 2px;
+  right: 0;
+  bottom: -70px;
+}
+
+.fix-kosten__eintrag-menu-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  z-index: 20;
+}
+
+.fix-kosten__eintrag-menu-background {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+}
+
+.hr {
+  margin: 0;
+  border: none;
+  background-color: black;
+  height: 2px;
+}
+
+.fix-kosten__eintrag-bottom {
+  height: 0;
+  color: transparent;
+  transition: height 0.2s ease-out;
+  .hr {
+    background-color: transparent;
+  }
+  .fix-kosten__eintrag-beschreibung {
+    color: transparent;
+  }
+
+  .fix-kosten__eintrag-beschreibung-empty {
+    color: transparent;
+  }
+}
+
+.edit-dialog-wrapper {
+  position: fixed;
+  width: calc(100% - 40px);
+  height: calc(100% - 100px);
+  display: flex;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 20px;
+  z-index: 1000;
+}
+
+.edit-dialog {
+  position: relative;
+  z-index: 1000;
+  height: 600px !important;
+  width: 90%;
+}
+
+.edit-dialog__background {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(193, 193, 193, 0.79);
+  z-index: 999;
+}
+
+.bottom-visible {
+  color: black;
+  height: 100px;
+  width: 90%;
+  transition: height 0.2s ease-out;
+  .hr {
+    margin: -5px 0 10px 0;
+    background-color: #5c5c5c;
+  }
+  .fix-kosten__eintrag-beschreibung {
+    color: black;
+  }
+
+  .fix-kosten__eintrag-beschreibung-empty {
+    color: #636363;
+  }
+}
+
+.create-eintrag__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background-color: #070e2e;
+  border-radius: 100px;
+}
+
+.create-eintrag__top-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  padding: 20px 10px;
+}
+
+.create-eintrag__title {
+  width: calc(100% - 4px);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.create-eintrag__title-input {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  padding: 0;
+  font-size: 30px;
+}
+
+.create-eintrag__id-wrapper {
+  display: flex;
+  font-size: 15px;
+  color: #454545;
+  height: 15px;
+}
+
+.create-eintrag__id-data {
+  margin-left: 10px;
+}
+
+.create-eintrag__betrag-wrapper, .create-eintrag__datum-wrapper, .create-eintrag__uhrzeit-wrapper {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.create-eintrag__label {
+  font-size: 21px;
+  color: #323232;
+}
+
+.create-eintrag__data {
+  height: 23px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  width: 130px;
+  text-align: end;
+  padding: 0;
+}
+
+.create-eintrag__beschreibung-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-eintrag__beschreibung-data {
+  flex-grow: 1;
+  width: calc(100% - 22px);
+  font-size: 18px;
+  text-align: start;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: Tahoma;
+}
+
+.disabled {
+  background-color: #e3e3e3 !important;
+  color: #939393 !important;
+}
+
+.create-eintrag__beschreibung-label {
+  margin-bottom: 10px;
+}
+
+.create-eintrag__data-input {
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+.create-eintrag__spacer-bottom {
+  height: 30px;
+}
+
+.create-eintrag__buttons-wrapper {
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  padding: 20px;
+  width: calc(100% - 40px);
+}
+
+.create-eintrag__button {
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 40%;
+  border-radius: 10px;
+  background-color: #cccccc;
+}
+
+hr {
+  width: 100%;
+  margin: 5px 0 10px 0;
+  padding: 0;
+  border: none;
+  height: 2px;
+  background-color: #676767;
+}
+
+.hr-title {
+  width: 100%;
+  padding: 0;
+  border: none;
+  height: 2px;
+  background-color: black;
+  margin: 0 0 10px 0;
+}
+
+.create-eintrag__betrag-warnung {
+  color: red;
+}
+
