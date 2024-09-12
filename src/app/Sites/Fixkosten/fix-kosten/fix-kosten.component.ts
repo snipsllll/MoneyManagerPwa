@@ -4,6 +4,11 @@ import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {
+  ListElementData,
+  ListElementSettings,
+  ListElementViewModel
+} from "../../../Models/ViewModels/ListElementViewModel";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -34,6 +39,34 @@ export class FixKostenComponent  implements OnInit{
 
   onPlusClicked() {
     this.showCreateDialog.set(true);
+  }
+
+  getViewModel(eintrag: FixKostenEintrag): ListElementViewModel {
+    const settings: ListElementSettings = {
+      doMenuExist: true,
+      doDetailsExist: true,
+    }
+
+    const data: ListElementData = {
+      betrag: eintrag.betrag,
+      title: eintrag.title,
+      details: eintrag.beschreibung,
+      menuItems: [
+        {
+          label: 'bearbeiten',
+          onClick: onEditClicked
+        },
+        {
+          label: 'delete',
+          onClick: onDeleteClicked
+        }
+      ]
+    }
+
+    return {
+      settings: settings,
+      data: data
+    }
   }
 
   onElementClicked(eintragId: number) {
@@ -88,4 +121,12 @@ export class FixKostenComponent  implements OnInit{
   isEmpty() {
     return this.newFixKostenEintrag.betrag === 0 && this.newFixKostenEintrag.title === '' && this.newFixKostenEintrag.beschreibung === ''
   }
+}
+
+function onEditClicked() {
+
+}
+
+function onDeleteClicked() {
+
 }

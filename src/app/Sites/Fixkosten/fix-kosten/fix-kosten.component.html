@@ -1,11 +1,6 @@
 <app-top-bar></app-top-bar>
 <div *ngFor="let fixKostenEintrag of elements()">
-  <app-fix-kosten-eintrag-listelem
-    [selectedElementId]="selectedElement"
-    [fixKostenEintrag]="fixKostenEintrag"
-    (onElementClicked)="onElementClicked(fixKostenEintrag.id!)"
-    (update)="update()"
-  ></app-fix-kosten-eintrag-listelem>
+  <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
 </div>
 
 <div class="fix-kosten__add-button" (click)="onPlusClicked()">
