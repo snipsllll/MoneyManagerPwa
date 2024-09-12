@@ -1,14 +1,15 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {FixKostenEintrag} from "../../../Models/Interfaces";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
-import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {
   ListElementData,
   ListElementSettings,
   ListElementViewModel
 } from "../../../Models/ViewModels/ListElementViewModel";
+import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
+import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -16,10 +17,11 @@ import {
   styleUrl: './fix-kosten.component.css'
 })
 export class FixKostenComponent  implements OnInit{
-  elements = signal<FixKostenEintrag[]>([]);
+  elements = computed(() => {
+    this.dataService.updated();
+    return this.dataService.userData.fixKosten;
+  })
   selectedElement = signal<number>(-1);
-  showCreateDialog = signal<boolean>(false);
-  showBetragWarnung = signal<boolean>(false);
   newFixKostenEintrag!: FixKostenEintrag;
 
   constructor(private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
@@ -29,7 +31,6 @@ export class FixKostenComponent  implements OnInit{
     this.topbarService.title.set('FIX KOSTEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.elements.set(this.dataService.userData.fixKosten);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
@@ -38,7 +39,11 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onPlusClicked() {
-    this.showCreateDialog.set(true);
+    const createDialogViewModel: CreateDialogViewModel = {
+      onSaveClick: this.onCreateSaveClicked,
+      onCancelClick: this.onCreateCancelClicked
+    }
+    this.dialogService.showCreateDialog(createDialogViewModel);
   }
 
   getViewModel(eintrag: FixKostenEintrag): ListElementViewModel {
@@ -54,11 +59,11 @@ export class FixKostenComponent  implements OnInit{
       menuItems: [
         {
           label: 'bearbeiten',
-          onClick: onEditClicked
+          onClick: this.onEditClicked
         },
         {
           label: 'delete',
-          onClick: onDeleteClicked
+          onClick: this.onDeleteClicked
         }
       ]
     }
@@ -77,56 +82,52 @@ export class FixKostenComponent  implements OnInit{
     }
   }
 
-  update() {
-    this.elements.set(this.dataService.userData.fixKosten);
-  }
-
-  onCreateSpeichernClicked() {
-    if(this.darfSpeichern()){
-      this.showCreateDialog.set(false);
-      this.dataService.addFixKostenEintrag(this.newFixKostenEintrag);
-      this.newFixKostenEintrag = {
-        title: '',
-        betrag: 0,
-        beschreibung: ''
-      }
-    } else {
-      this.showBetragWarnung.set(true);
+  onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
+    const newFixkostenEintrag: FixKostenEintrag = {
+      betrag: eintrag.betrag,
+      title: eintrag.title ?? 'kein Titel',
+      beschreibung: eintrag.zusatz
+    }
+    this.dataService.addFixKostenEintrag(newFixkostenEintrag);
+    this.newFixKostenEintrag = {
+      title: '',
+      betrag: 0,
+      beschreibung: ''
     }
   }
 
-  onCreateAbbrechenClicked() {
-    if (this.isEmpty()){
-      this.showCreateDialog.set(false);
-      return;
-    }
-    const dialogViewmodel: ConfirmDialogViewModel = {
-      title: 'Abbrechen?',
-      message: 'Willst du abbrechen? Alle Änderungen werden verworfen!',
-      onConfirmClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-        this.showCreateDialog.set(false);
+  onCreateCancelClicked = () => {
+
+  }
+
+  onEditClicked = (eintrag: FixKostenEintrag) => {
+    const editDialogViewModel: EditDialogViewModel = {
+      data: {
+        betrag: eintrag.betrag,
+        title: eintrag.title,
+        zusatz: eintrag.beschreibung,
+        id: eintrag.id
       },
-      onCancelClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-      }
+      onSaveClick: this.onEditSaveClicked,
+      onCancelClick: this.onEditCancelClicked
     }
-    this.dialogService.showConfirmDialog(dialogViewmodel);
+    this.dialogService.showEditDialog(editDialogViewModel);
   }
 
-  darfSpeichern() {
-    return this.newFixKostenEintrag.betrag !== 0
+  onDeleteClicked = (eintrag: EditDialogData) => {
+    this.dataService.deleteFixKostenEintrag(eintrag.id!);
   }
 
-  isEmpty() {
-    return this.newFixKostenEintrag.betrag === 0 && this.newFixKostenEintrag.title === '' && this.newFixKostenEintrag.beschreibung === ''
+  onEditSaveClicked = (eintrag: EditDialogData) => {
+    const newFixKostenEintrag: FixKostenEintrag = {
+      betrag: eintrag.betrag,
+      title: eintrag.title ?? 'ohne Titel',
+      beschreibung: eintrag.zusatz,
+      id: eintrag.id
+    }
+
+    this.dataService.editFixKostenEintrag(newFixKostenEintrag);
   }
-}
 
-function onEditClicked() {
-
-}
-
-function onDeleteClicked() {
-
+  onEditCancelClicked = () => {}
 }
