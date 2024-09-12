@@ -122,3 +122,8 @@ export interface SparschweinEintrag {
   title?: string;
   zusatz?: string;
 }
+
+export interface MenuItem {
+  label: string;
+  onClick: () => void;
+}

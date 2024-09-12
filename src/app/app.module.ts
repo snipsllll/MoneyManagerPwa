@@ -22,6 +22,7 @@ import {TopBarComponent} from "./SharedComponents/top-bar/top-bar.component";
 import {BuchungDetailsComponent} from "./SharedComponents/buchung-details/buchung-details.component";
 import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
 import {SparschweinListelemComponent} from "./Sites/Sparschwein/sparschwein-listelem/sparschwein-listelem.component";
+import {ListElementComponent} from "./SharedComponents/list-element/list-element.component";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {SparschweinListelemComponent} from "./Sites/Sparschwein/sparschwein-list
     TopBarComponent,
     BuchungDetailsComponent,
     SparschweinComponent,
-    SparschweinListelemComponent
+    SparschweinListelemComponent,
+    ListElementComponent
   ],
     imports: [
         BrowserModule,

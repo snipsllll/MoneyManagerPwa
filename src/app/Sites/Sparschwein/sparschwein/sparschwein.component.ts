@@ -5,6 +5,11 @@ import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {
+  ListElementData,
+  ListElementSettings,
+  ListElementViewModel
+} from "../../../Models/ViewModels/ListElementViewModel";
 
 @Component({
   selector: 'app-sparschwein',
@@ -39,6 +44,7 @@ export class SparschweinComponent implements OnInit{
   }
 
   onPlusClicked() {
+    console.log(2341231)
     this.showCreateDialog.set(true);
   }
 
@@ -83,4 +89,80 @@ export class SparschweinComponent implements OnInit{
   isEmpty() {
     return this.newSpareintrag.betrag === 0 && this.newSpareintrag.title === '' && this.newSpareintrag.zusatz === ''
   }
+
+  getEintragViewModel(eintrag: SparschweinEintrag): ListElementViewModel {
+    const settings: ListElementSettings = {
+      doDetailsExist: false,
+      doMenuExist: !eintrag.isMonatEintrag
+    }
+
+    const data: ListElementData = {
+      betrag: eintrag.betrag,
+      title: this.getTitle(eintrag),
+      zusatz: eintrag.zusatz,
+      menuItems: [
+        {
+          label: 'bearbeiten',
+          onClick: onEditClicked
+        },
+        {
+          label: 'löschen',
+          onClick: onDeleteClicked
+        }
+      ]
+    }
+
+    return {
+      data: data,
+      settings: settings
+    }
+  }
+
+  private getTitle(eintrag: SparschweinEintrag) {
+    if(!eintrag.isMonatEintrag) {
+      const art = eintrag.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
+      const title = eintrag.title !== undefined && eintrag.title !== '' ? eintrag.title : art;
+      return `${title} (${eintrag.date.toLocaleDateString()})`;
+    }
+    return `Restgeld: ${this.getMonthNameByIndex(eintrag.date.getMonth())} ${eintrag.date.getFullYear()}`
+  }
+
+  private getMonthNameByIndex(index: number) {
+    switch(index){
+      case 0:
+        return 'Januar';
+      case 1:
+        return 'Februar';
+      case 2:
+        return 'März';
+      case 3:
+        return 'April';
+      case 4:
+        return 'Mai';
+      case 5:
+        return 'Juni';
+      case 6:
+        return 'Juli';
+      case 7:
+        return 'August';
+      case 8:
+        return 'September';
+      case 9:
+        return 'Oktober';
+      case 10:
+        return 'November';
+      case 11:
+        return 'Dezember';
+    }
+    return '';
+  }
+}
+
+
+function onEditClicked() {
+  console.log('Edit was clicked')
+}
+
+function onDeleteClicked() {
+  console.log('Delete was clicked')
 }
