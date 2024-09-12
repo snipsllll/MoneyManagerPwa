@@ -39,6 +39,7 @@ export class CreateDialogComponent implements OnInit {
       }
       this.dialogService.showConfirmDialog(confirmDialogViewModel);
     } else {
+      this.dialogService.isCreateDialogVisible = false;
       this.viewModel.onCancelClick();
     }
   }

@@ -18,7 +18,7 @@ import {DB} from "../../Models/Enums";
 export class DataService {
 
   userData!: UserData;
-  testData: DB = DB.none;
+  testData: DB = DB.noTD;
   download: boolean = true;
 
   updated = signal<number>(0);
@@ -56,7 +56,7 @@ export class DataService {
 
   editFixKostenEintrag(fixkostenEintrag: FixKostenEintrag) {
     this.update({
-      editedFixKostenEintraege: [fixkostenEintrag]
+      editedFixkostenEintraege: [fixkostenEintrag]
     })
   }
 
@@ -112,8 +112,8 @@ export class DataService {
       }
 
       //Wenn Fixkosteneinträge verändert wurden, dann in userData.fixKosten anpassen
-      if (updateValues.newFixkostenEintraege !== undefined) {
-        updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
+      if (updateValues.editedFixkostenEintraege !== undefined) {
+        updateValues.editedFixkostenEintraege.forEach(fixKostenEintrag => {
           this.userData.fixKosten[this.getFixKostenIndex(fixKostenEintrag.id!)] = fixKostenEintrag;
         })
       }
@@ -432,8 +432,6 @@ export class DataService {
         fixkosten: month.gesperrteFixKosten
       })
     })
-
-    console.log(savedData)
 
     return savedData;
   }
@@ -832,7 +830,7 @@ export class DataService {
 
   private updateFixKostenForMonth(startDate: Date) {
     const month = this.getMonthByDate(startDate);
-    if(!month.monatAbgeschlossen){
+    if (!month.monatAbgeschlossen) {
       month.gesperrteFixKosten = this.userData.fixKosten;
     }
   }
@@ -840,15 +838,15 @@ export class DataService {
   private calcSpareintragForMonth(date: Date) {
     const month = this.getMonthByDate(date);
 
-    if(month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
-      if(this.isMonthSpareintragVorhanden(date)){
-          this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
-            date: month.startDate,
-            betrag: month.leftOvers ?? 0,
-            id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
-            isMonatEintrag: true
-          }
-        } else {
+    if (month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
+      if (this.isMonthSpareintragVorhanden(date)) {
+        this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
+          date: month.startDate,
+          betrag: month.leftOvers ?? 0,
+          id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
+          isMonatEintrag: true
+        }
+      } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
           betrag: month.leftOvers ?? 0,
@@ -860,7 +858,7 @@ export class DataService {
   }
 
   private getIndexOfMonthSpareintrag(date: Date) {
-    return this.userData.sparEintraege.findIndex(eintrag =>  eintrag.isMonatEintrag && eintrag.date.toLocaleDateString() === date.toLocaleDateString());
+    return this.userData.sparEintraege.findIndex(eintrag => eintrag.isMonatEintrag && eintrag.date.toLocaleDateString() === date.toLocaleDateString());
   }
 
   private getNextFreeSparEintragId() {
@@ -878,7 +876,7 @@ export class DataService {
   private isMonthSpareintragVorhanden(date: Date) {
     const month = this.getMonthByDate(date);
 
-    if(this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined) {
+    if (this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined) {
       return false
     } else {
       return true;

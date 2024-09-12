@@ -27,7 +27,6 @@ export class DialogService {
   }
 
   showEditDialog(editDialogViewModel: EditDialogViewModel) {
-    console.log(78239869326724398274982)
     this.isEditDialogVisible = true;
     this.editDialogViewModel = editDialogViewModel;
   }

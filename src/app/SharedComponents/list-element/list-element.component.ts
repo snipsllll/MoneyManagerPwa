@@ -19,8 +19,7 @@ export class ListElementComponent implements OnInit{
   }
 
   ngOnInit() {
-    console.log(123)
-    console.log(this.viewModel)
+
   }
 
   onMenuClicked() {

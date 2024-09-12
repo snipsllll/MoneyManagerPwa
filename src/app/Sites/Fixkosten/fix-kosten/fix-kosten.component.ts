@@ -112,7 +112,6 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {
-    console.log(eintrag)
     const newFixKostenEintrag: FixKostenEintrag = {
       betrag: eintrag.betrag,
       title: eintrag.title ?? 'ohne Titel',

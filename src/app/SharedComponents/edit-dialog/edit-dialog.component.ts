@@ -66,8 +66,6 @@ export class EditDialogComponent implements OnInit{
   }
 
   private checkDarfSpeichern() {
-    console.log(this.viewModel)
-    console.log(this.oldEintrag)
     return this.checkHasChanged() && this.checkBetragValid()
   }
 

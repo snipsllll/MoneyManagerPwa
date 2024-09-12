@@ -92,7 +92,7 @@ export interface UpdateValues {
   months?: UpdateValuesForMonth[];
   newFixkostenEintraege?: FixKostenEintrag[];
   deletedFixkostenEintreageIds?: number[];
-  editedFixKostenEintraege?: FixKostenEintrag[];
+  editedFixkostenEintraege?: FixKostenEintrag[];
   newBuchungen?: Buchung[];
   deletedBuchungsIds?: number[];
   editedBuchungen?: Buchung[];

@@ -10,7 +10,6 @@ export class SparschweinService {
   constructor(private dataService: DataService) { }
 
   getData(): SparschweinData {
-    console.log(999)
     return {
       eintraege: this.dataService.getSparEintraege(),
       erspartes: this.dataService.getErspartes()
