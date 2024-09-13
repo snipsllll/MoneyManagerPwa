@@ -7,7 +7,7 @@ import {
   DayIstBudgets,
   FixKostenEintrag,
   Month, SavedData, SparschweinEintrag,
-  UpdateValues, Week
+  UpdateValues, Week, WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
 
@@ -63,6 +63,24 @@ export class DataService {
   deleteFixKostenEintrag(fixkostenEintragsId: number) {
     this.update({
       deletedFixkostenEintreageIds: [fixkostenEintragsId]
+    })
+  }
+
+  addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    this.update({
+      newWunschlistenEintraege: [wunschlistenEintrag]
+    })
+  }
+
+  editWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    this.update({
+      editedWunschlistenEintraege: [wunschlistenEintrag]
+    })
+  }
+
+  deleteWunschlistenEintrag(wunschlistenEintragsId: number) {
+    this.update({
+      deletedWunschlistenEintragIds: [wunschlistenEintragsId]
     })
   }
 
@@ -146,22 +164,43 @@ export class DataService {
       }
 
       //Wenn neue Spareinträge angelegt wurden, dann neue Spareinträge zu userData.spareintraege hinzufügen
-      if (updateValues.newSpareintraege !== undefined) {
-        updateValues.newSpareintraege.forEach(eintrag => {
+      if (updateValues.newSparEintraege !== undefined) {
+        updateValues.newSparEintraege.forEach(eintrag => {
           this.userData.sparEintraege.push(eintrag);
         })
       }
 
-      //Wenn Spareintraege gelöscht wurden, dann Buchungen aus userData.spareintraege entfernen
-      if (updateValues.deletedSpareintragIds !== undefined) {
-        updateValues.deletedSpareintragIds.forEach(eintragId => {
+      //Wenn Spareintraege gelöscht wurden, dann Spareinträge aus userData.spareintraege entfernen
+      if (updateValues.deletedSparEintragIds !== undefined) {
+        updateValues.deletedSparEintragIds.forEach(eintragId => {
           this.userData.sparEintraege.splice(this.getIndexOfSpareintragById(eintragId), 1);
         })
       }
 
       //Wenns bearbeitete Spareinträge gibt, dann Spareinträge in userData.spareintraege anpassen
-      if (updateValues.editedSpareintraege !== undefined) {
-        updateValues.editedSpareintraege.forEach(eintrag => {
+      if (updateValues.editedSparEintraege !== undefined) {
+        updateValues.editedSparEintraege.forEach(eintrag => {
+          this.userData.sparEintraege[this.getIndexOfSpareintragById(eintrag.id)] = eintrag;
+        })
+      }
+
+      //Wenn neue Wunschlisteneinträge angelegt wurden, dann neue Wunschlisteneinträge zu userData.wunschlisteneintraege hinzufügen
+      if (updateValues.newWunschlistenEintraege !== undefined) {
+        updateValues.newWunschlistenEintraege.forEach(eintrag => {
+          this.userData.wunschlistenEintraege.push(eintrag);
+        })
+      }
+
+      //Wenn Wunschlisteneinträge gelöscht wurden, dann Wunschlisteneinträge aus userData.wunschlisteneintraege entfernen
+      if (updateValues.deletedWunschlistenEintragIds !== undefined) {
+        updateValues.deletedWunschlistenEintragIds.forEach(eintragId => {
+          this.userData.wunschlistenEintraege.splice(this.getIndexOfWunschlistenEintragById(eintragId), 1);
+        })
+      }
+
+      //Wenns bearbeitete Wunschlisteneinträge gibt, dann Wunschlisteneinträge in userData.wunschlisteneintraege anpassen
+      if (updateValues.editedSparEintraege !== undefined) {
+        updateValues.editedSparEintraege.forEach(eintrag => {
           this.userData.sparEintraege[this.getIndexOfSpareintragById(eintrag.id)] = eintrag;
         })
       }
@@ -348,7 +387,7 @@ export class DataService {
   addSparEintrag(eintrag: SparschweinEintrag) {
     eintrag.id = this.getNextFreeSparEintragId();
     this.update({
-      newSpareintraege: [
+      newSparEintraege: [
         eintrag
       ]
     });
@@ -356,7 +395,7 @@ export class DataService {
 
   editSparEintrag(eintrag: SparschweinEintrag) {
     this.update({
-      editedSpareintraege: [
+      editedSparEintraege: [
         eintrag
       ]
     });
@@ -364,7 +403,7 @@ export class DataService {
 
   deleteSparEintrag(eintragId: number) {
     this.update({
-      deletedSpareintragIds: [
+      deletedSparEintragIds: [
         eintragId
       ]
     });
@@ -922,6 +961,18 @@ export class DataService {
     return freeId;
   }
 
+  private getNextFreeWunschlistenEintragId() {
+    let freeId = 1;
+    for (let i = 0; i < this.userData.wunschlistenEintraege.length; i++) {
+      if (this.userData.wunschlistenEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private isMonthSpareintragVorhanden(date: Date) {
     return !(this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined)
   }
@@ -936,6 +987,10 @@ export class DataService {
 
   private getIndexOfSpareintragById(eintragId: number) {
     return this.userData.sparEintraege.findIndex(eintrag => eintrag.id === eintragId);
+  }
+
+  private getIndexOfWunschlistenEintragById(eintragId: number) {
+    return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
 }
 

@@ -105,9 +105,12 @@ export interface UpdateValues {
   newBuchungen?: Buchung[];
   deletedBuchungsIds?: number[];
   editedBuchungen?: Buchung[];
-  newSpareintraege?: SparschweinEintrag[];
-  editedSpareintraege?: SparschweinEintrag[];
-  deletedSpareintragIds?: number[];
+  newSparEintraege?: SparschweinEintrag[];
+  editedSparEintraege?: SparschweinEintrag[];
+  deletedSparEintragIds?: number[];
+  newWunschlistenEintraege?: WunschlistenEintrag[];
+  editedWunschlistenEintraege?: WunschlistenEintrag[];
+  deletedWunschlistenEintragIds?: number[];
 }
 
 export interface UpdateValuesForMonth {
