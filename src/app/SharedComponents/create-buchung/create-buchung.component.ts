@@ -26,14 +26,16 @@ export class CreateBuchungComponent {
       betrag: null,
       date: date,
       time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
-      beschreibung: ''
+      beschreibung: '',
+      apz: false
     };
     this.oldBuchung = {
       title: '',
       betrag: null,
       date: new Date(this.buchung.date),
       time: this.buchung.time,
-      beschreibung: ''
+      beschreibung: '',
+      apz: false
     };
     this.dayBudget.set(this.dataService.getDayIstBudgets(date)!);
     this.date = this.buchung.date.toISOString().slice(0, 10);
@@ -137,6 +139,10 @@ export class CreateBuchungComponent {
 
   onBeschreibungChanged() {
     this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
+  onApzClicked() {
+    this.buchung.apz = !this.buchung.apz;
   }
 
   private isBuchungEmpty() {
