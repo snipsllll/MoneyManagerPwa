@@ -1,8 +1,8 @@
-import {Component, computed, OnInit} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {SparschweinEintrag, WunschlistenEintrag} from "../../../Models/Interfaces";
+import {Day, SparschweinEintrag, WunschlistenEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {
   ListElementData,
@@ -23,8 +23,12 @@ export class WunschlisteComponent implements OnInit{
 
   elements = computed(() => {
     this.dataService.updated();
-    return this.dataService.userData.wunschlistenEintraege
+    this.wirdGekauftesAusgeblendet();
+    return this.getElements(this.selectedFilter());
   })
+
+  wirdGekauftesAusgeblendet = signal<boolean>(false);
+  selectedFilter = signal<string>('neuste zuerst');
 
   newWunschlistenEintrag!: WunschlistenEintrag;
 
@@ -42,6 +46,38 @@ export class WunschlisteComponent implements OnInit{
       date: new Date(),
       gekauft: false,
     }
+  }
+
+  getElements(selectedFilter?: string) {
+    let allElements = this.dataService.userData.wunschlistenEintraege;
+    if(this.wirdGekauftesAusgeblendet()){
+      allElements = allElements.filter(element => element.gekauft === false);
+    }
+
+    switch (selectedFilter) {
+      case 'neustes zuerst':
+        console.log(1)
+        allElements = this.sortByDateDesc(allElements);
+        break;
+      case 'ältestes zuerst':
+        console.log(2)
+        allElements = this.sortByDateAsc(allElements);
+        break;
+      case 'günstigstes zuerst':
+        console.log(3)
+        allElements = this.sortByBetragAsc(allElements);
+        break;
+      case 'teuerstes zuerst':
+        console.log(4)
+        allElements = this.sortByBetragDesc(allElements);
+        break;
+    }
+
+    return allElements;
+  }
+
+  onFilterChanged() {
+    console.log(this.selectedFilter)
   }
 
   onPlusClicked() {
@@ -181,5 +217,21 @@ export class WunschlisteComponent implements OnInit{
 
   private kannKaufen(eintrag: WunschlistenEintrag) {
     return (eintrag.betrag <= this.dataService.getErspartes())
+  }
+
+  private sortByDateDesc(allElements: WunschlistenEintrag[]) {
+    return allElements.sort((a, b) => b.date.getTime() - a.date.getTime());
+  }
+
+  private sortByDateAsc(allElements: WunschlistenEintrag[]) {
+    return allElements.sort((a, b) => a.date.getTime() - b.date.getTime());
+  }
+
+  private sortByBetragDesc(allElements: WunschlistenEintrag[]) {
+    return allElements.sort((a, b) => b.betrag - a.betrag);
+  }
+
+  private sortByBetragAsc(allElements: WunschlistenEintrag[]) {
+    return allElements.sort((a, b) => a.betrag - b.betrag);
   }
 }
