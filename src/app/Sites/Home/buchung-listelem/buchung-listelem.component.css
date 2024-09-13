@@ -5,6 +5,7 @@
   font-size: 20px;
   position: relative;
   flex-grow: 1;
+  padding: 10px;
 }
 
 .eintrag-listelem__betrag {
@@ -77,4 +78,18 @@ hr {
   white-space: nowrap;
   overflow: hidden;
   max-width: 100%;
+}
+
+.apz {
+  background-color: #6599c5;
+}
+
+.first {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.last {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }

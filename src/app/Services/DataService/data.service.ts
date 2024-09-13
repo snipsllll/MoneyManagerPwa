@@ -560,16 +560,37 @@ export class DataService {
     /*Algorithm start*/
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
+        let plannedAusgaben = 0;
+        day.buchungen?.forEach(buchung => {
+          if(!buchung.apz){
+            plannedAusgaben += buchung.betrag!
+          }
+        })
+        day.istBudget = day.budget! - plannedAusgaben;
+      })
+    })
+    /*
+    let daysLeft: number = month.daysInMonth!;
+    let apzSumme = 0;
+    let apzSummeForDay = 0;
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
         if (day.budget === undefined) {
           return;
         }
         let dayAusgaben = 0;
         day.buchungen?.forEach(buchung => {
-          dayAusgaben += (buchung.betrag ?? 0);
+          if(!buchung.apz){
+            dayAusgaben += (buchung.betrag ?? 0);
+          } else {
+            apzSumme += buchung.betrag ?? 0;
+          }
         })
-        day.istBudget = +(day.budget - dayAusgaben).toFixed(2);
+        apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
+        day.istBudget = +(day.budget - dayAusgaben - apzSummeForDay).toFixed(2);
+        daysLeft--;
       })
-    })
+    })*/
     /*Algorithm end*/
 
     this.setMonth(month)
@@ -584,10 +605,11 @@ export class DataService {
     }
 
     month.weeks?.forEach(week => {
-      if (month.dailyBudget === undefined) {
-        return;
-      }
-      week.budget = +(week.daysInWeek * month.dailyBudget!).toFixed(2);
+      let weekBudget = 0;
+      week.days.forEach(day => {
+        weekBudget += day.budget!;
+      })
+      week.budget = +weekBudget.toFixed(2);
     })
     /*Algorithm end*/
 
@@ -602,11 +624,29 @@ export class DataService {
       return;
     }
 
+    let daysLeft: number = month.daysInMonth!;
+    let apzSumme = 0;
+    let apzSummeForDay = 0;
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          if(buchung.apz) {
+            apzSumme += buchung.betrag ?? 0;
+            apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
+          }
+        })
+
+        day.budget = +(month.dailyBudget! - apzSummeForDay).toFixed(2);
+        daysLeft--;
+      })
+    })
+
+    /*
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         day.budget = month.dailyBudget;
       })
-    })
+    })*/
     /*Algorithm end*/
 
     this.setMonth(month)
@@ -747,7 +787,7 @@ export class DataService {
     /*Algorithm start*/
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        day.leftOvers = (day.budget ?? 0) - this.getAusgabenForDay(day);
+        day.leftOvers = (day.budget ?? 0) - this.getPlannedAusgabenForDay(day);
       })
     })
     /*Algorithm end*/
@@ -784,18 +824,15 @@ export class DataService {
     const month = this.getMonthByDate(date);
 
     /*Algorithm start*/
-    let ausgaben = 0;
-    let budgetOfFutureDays = 0
+    let leftovers = 0;
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         if ((day.date.getDate() < new Date().getDate() && day.date.getMonth() === new Date().getMonth()) || (day.date.getMonth() < new Date().getMonth() && day.date.getFullYear() <= new Date().getFullYear())) {
-          ausgaben += this.getAusgabenForDay(day);
-        } else {
-          budgetOfFutureDays += day.budget ?? 0;
+          leftovers += day.leftOvers ?? 0;
         }
       })
     })
-    month.leftOvers = +((month.budget ?? 0) - ausgaben - budgetOfFutureDays).toFixed(2);
+    month.leftOvers = leftovers;
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -813,6 +850,16 @@ export class DataService {
     let gesAusgaben = 0;
     day.buchungen?.forEach(buchung => {
       gesAusgaben += buchung.betrag!;
+    })
+    return gesAusgaben;
+  }
+
+  private getPlannedAusgabenForDay(day: Day) {
+    let gesAusgaben = 0;
+    day.buchungen?.forEach(buchung => {
+      if(!buchung.apz){
+        gesAusgaben += buchung.betrag!;
+      }
     })
     return gesAusgaben;
   }

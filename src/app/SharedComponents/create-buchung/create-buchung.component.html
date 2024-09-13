@@ -57,6 +57,12 @@
         </div>
         <input type="time" [(ngModel)]="buchung.time" (change)="onTimeChange($event)" class="create-eintrag__data">
       </div>
+      <div class="create-eintrag__apz-wrapper">
+        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz">
+        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
+          Außer planmäßige Zahlung
+        </div>
+      </div>
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
