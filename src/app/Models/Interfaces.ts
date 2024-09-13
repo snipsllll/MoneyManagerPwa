@@ -70,6 +70,7 @@ export interface SavedData {
   savedMonths: SavedMonth[];
   fixKosten: FixKostenEintrag[];
   sparEintraege: SparschweinEintrag[];
+  wunschlistenEintraege: WunschlistenEintrag[];
 }
 
 export interface SavedMonth {
@@ -84,6 +85,16 @@ export interface FixKostenEintrag {
   betrag: number;
   title: string;
   zusatz?: string;
+}
+
+export interface WunschlistenEintrag {
+  date: Date;
+  id?: number;
+  betrag: number;
+  title: string;
+  zusatz?: string;
+  gekauft: boolean;
+  gekauftAm?: Date;
 }
 
 export interface UpdateValues {

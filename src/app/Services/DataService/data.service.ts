@@ -418,11 +418,13 @@ export class DataService {
       savedMonths: [],
       fixKosten: [],
       sparEintraege: [],
+      wunschlistenEintraege: []
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
+    savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
