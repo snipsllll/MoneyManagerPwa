@@ -13,6 +13,7 @@ export interface ListElementData {
   menuItems?: MenuItem[];
   detailsVisible?: boolean;
   id?: number;
+  date?: Date;
 }
 
 export interface ListElementSettings {

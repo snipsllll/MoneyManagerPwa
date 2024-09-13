@@ -82,14 +82,19 @@ export class WunschlisteComponent implements OnInit{
       title: eintrag.title,
       zusatz: eintrag.zusatz,
       id: eintrag.id,
+      date: eintrag.date,
       menuItems: [
         {
           label: 'bearbeiten',
           onClick: this.onEditClicked
         },
         {
-          label: 'delete',
+          label: 'löschen',
           onClick: this.onDeleteClicked
+        },
+        {
+          label: eintrag.gekauft ? 'zurücknehmen' : 'holen',
+          onClick: eintrag.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked
         }
       ]
     }
@@ -132,4 +137,30 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onEditCancelClicked = () => {}
+
+  onHolenClicked = (eintrag: ListElementData) => {
+    const newWunschlistenEintrag: WunschlistenEintrag = {
+      betrag: eintrag.betrag,
+      title: eintrag.title,
+      gekauft: true,
+      gekauftAm: new Date(),
+      id: eintrag.id,
+      date: eintrag.date!,
+      zusatz: eintrag.zusatz
+    }
+    this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+  }
+
+  onZuruecknehmenClicked = (eintrag: ListElementData) => {
+    const newWunschlistenEintrag: WunschlistenEintrag = {
+      betrag: eintrag.betrag,
+      title: eintrag.title,
+      gekauft: false,
+      gekauftAm: undefined,
+      id: eintrag.id,
+      date: eintrag.date!,
+      zusatz: eintrag.zusatz
+    }
+    this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+  }
 }
