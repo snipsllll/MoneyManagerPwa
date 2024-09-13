@@ -44,7 +44,14 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.betrag !== 0 && this.buchung()!.betrag !== null) {
       if(!this.saveButtonDisabled()){
-        if (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!) {
+        let showConfDialog = false;
+        if(this.buchung()!.apz){
+          showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
+        } else {
+          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
+        }
+
+        if (showConfDialog) {
           const confirmDialogViewModel: ConfirmDialogViewModel = {
             title: 'Betrag ist zu hoch',
             message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.date.toLocaleDateString()}. Trotzdem fortfahren?`,

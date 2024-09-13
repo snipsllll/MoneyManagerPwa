@@ -44,5 +44,6 @@ export class TopBarComponent  implements OnInit{
 
   test() {
     console.log(this.dataService.userData)
+    console.log(this.dataService.userData.months())
   }
 }
