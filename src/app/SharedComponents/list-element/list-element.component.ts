@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {MenuItem} from "../../Models/Interfaces";
+import {Color} from "../../Models/Enums";
 
 @Component({
   selector: 'app-list-element',
@@ -35,4 +36,6 @@ export class ListElementComponent implements OnInit{
       this.onElementClicked.emit();
     }
   }
+
+  protected readonly Color = Color;
 }

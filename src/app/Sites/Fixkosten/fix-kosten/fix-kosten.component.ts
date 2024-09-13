@@ -10,6 +10,7 @@ import {
 } from "../../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -108,7 +109,16 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onDeleteClicked = (eintrag: EditDialogData) => {
-    this.dataService.deleteFixKostenEintrag(eintrag.id!);
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Eintrag Löschen?',
+      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.dataService.deleteFixKostenEintrag(eintrag.id!);
+      },
+      onCancelClicked: () => {}
+    }
+
+    this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {

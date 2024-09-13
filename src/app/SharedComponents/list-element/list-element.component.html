@@ -1,7 +1,18 @@
-<div class="list-element floating-box">
+<div class="list-element floating-box" [class.highlighted]="viewModel.settings.highlighted === true" [class.darker]="viewModel.settings.isDarker">
   <div class="list-element__main">
     <div class="list-element__main-left">
-      <b class="green" [class.red]="viewModel.data.betrag < 0">{{ viewModel.data.betrag }}€</b>
+      @if(viewModel.settings.isDarker) {
+        <b class="grayed-out-text">{{ viewModel.data.betrag }}€</b>
+      }
+      @else if(viewModel.settings.betragColor === Color.red){
+        <b class="red">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.betragColor === Color.green){
+        <b class="green">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.betragColor === Color.black){
+        <b>{{ viewModel.data.betrag }}€</b>
+      } @else {
+        <b class="green" [class.red]="viewModel.data.betrag < 0">{{ viewModel.data.betrag }}€</b>
+      }
     </div>
     <div class="list-element__main-center">
       <div class="list-element__main-center-top">

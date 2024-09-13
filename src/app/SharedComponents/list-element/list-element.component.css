@@ -107,3 +107,11 @@
     color: transparent;
   }
 }
+
+.highlighted {
+  border: 5px solid yellow;
+}
+
+.darker {
+  background-color: #777d95;
+}

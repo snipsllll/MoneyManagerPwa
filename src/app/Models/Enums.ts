@@ -37,3 +37,9 @@ export enum DB {
   none,
   noTD
 }
+
+export enum Color {
+  red,
+  green,
+  black
+}

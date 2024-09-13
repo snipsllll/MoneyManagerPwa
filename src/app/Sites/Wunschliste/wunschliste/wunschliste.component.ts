@@ -2,7 +2,7 @@ import {Component, computed, OnInit} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {WunschlistenEintrag} from "../../../Models/Interfaces";
+import {SparschweinEintrag, WunschlistenEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {
   ListElementData,
@@ -10,6 +10,9 @@ import {
   ListElementViewModel
 } from "../../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {Color} from "../../../Models/Enums";
+import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
 
 @Component({
   selector: 'app-wunschliste',
@@ -25,7 +28,7 @@ export class WunschlisteComponent implements OnInit{
 
   newWunschlistenEintrag!: WunschlistenEintrag;
 
-  constructor(private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
+  constructor(private sparschweinService: SparschweinService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
   }
 
   ngOnInit() {
@@ -75,6 +78,9 @@ export class WunschlisteComponent implements OnInit{
     const settings: ListElementSettings = {
       doMenuExist: true,
       doDetailsExist: true,
+      highlighted: this.kannKaufen(eintrag) && !eintrag.gekauft,
+      betragColor: this.kannKaufen(eintrag) ? Color.green : Color.red,
+      isDarker: eintrag.gekauft
     }
 
     const data: ListElementData = {
@@ -120,7 +126,16 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onDeleteClicked = (eintrag: EditDialogData) => {
-    this.dataService.deleteWunschlistenEintrag(eintrag.id!);
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Eintrag Löschen?',
+      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.dataService.deleteWunschlistenEintrag(eintrag.id!);
+      },
+      onCancelClicked: () => {}
+    }
+
+    this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {
@@ -162,5 +177,9 @@ export class WunschlisteComponent implements OnInit{
       zusatz: eintrag.zusatz
     }
     this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+  }
+
+  private kannKaufen(eintrag: WunschlistenEintrag) {
+    return (eintrag.betrag <= this.dataService.getErspartes())
   }
 }
