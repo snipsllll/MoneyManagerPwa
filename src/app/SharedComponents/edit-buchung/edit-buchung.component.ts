@@ -33,7 +33,8 @@ export class EditBuchungComponent implements OnInit {
         betrag: this.buchung()!.betrag,
         title: this.buchung()!.title,
         time: this.buchung()!.time,
-        id: this.buchung()!.id
+        id: this.buchung()!.id,
+        apz: this.buchung()!.apz
       };
       this.date = this.buchung()?.date.toISOString().slice(0, 10);
     })
@@ -135,8 +136,17 @@ export class EditBuchungComponent implements OnInit {
     this.saveButtonDisabled.set(this.isSaveAble());
   }
 
+  onApzClicked() {
+    this.buchung()!.apz = !this.buchung()?.apz;
+    this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
+  onValueChange() {
+    this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
   private hasBuchungChanged() {
-    return !(this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
+    return !(this.buchung()!.apz === this.oldBuchung?.apz && this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
   }
 
   private isSaveAble() {

@@ -38,6 +38,7 @@ export interface Buchung {
   beschreibung?: string
   date: Date;
   time: string;
+  apz?: boolean;
 }
 
 export interface ItfUserData {
