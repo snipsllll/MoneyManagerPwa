@@ -875,7 +875,7 @@ export class DataService {
         }
       })
     })
-    month.leftOvers = leftovers;
+    month.leftOvers = +(leftovers.toFixed(2));
     /*Algorithm end*/
 
     this.setMonth(month);
