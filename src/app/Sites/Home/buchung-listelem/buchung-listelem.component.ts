@@ -14,6 +14,8 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 })
 export class BuchungListelemComponent implements OnInit{
   @Input() buchung!: Buchung;
+  @Input() first?: boolean;
+  @Input() last?: boolean;
   showMenu = signal<boolean>(false);
 
   constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
