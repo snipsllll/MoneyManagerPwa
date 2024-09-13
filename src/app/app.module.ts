@@ -21,6 +21,7 @@ import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.
 import {ListElementComponent} from "./SharedComponents/list-element/list-element.component";
 import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.component";
 import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
+import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dia
     SparschweinComponent,
     ListElementComponent,
     EditDialogComponent,
-    CreateDialogComponent
+    CreateDialogComponent,
+    WunschlisteComponent
   ],
     imports: [
         BrowserModule,

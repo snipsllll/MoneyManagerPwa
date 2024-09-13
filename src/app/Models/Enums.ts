@@ -17,7 +17,8 @@ export enum SideNavElements {
   home,
   budget,
   fixkosten,
-  sparschwein
+  sparschwein,
+  wunschliste
 }
 
 export enum Sites {
