@@ -187,6 +187,7 @@ export class DataService {
       //Wenn neue Wunschlisteneinträge angelegt wurden, dann neue Wunschlisteneinträge zu userData.wunschlisteneintraege hinzufügen
       if (updateValues.newWunschlistenEintraege !== undefined) {
         updateValues.newWunschlistenEintraege.forEach(eintrag => {
+          eintrag.id = this.getNextFreeWunschlistenEintragId();
           this.userData.wunschlistenEintraege.push(eintrag);
         })
       }
@@ -199,9 +200,9 @@ export class DataService {
       }
 
       //Wenns bearbeitete Wunschlisteneinträge gibt, dann Wunschlisteneinträge in userData.wunschlisteneintraege anpassen
-      if (updateValues.editedSparEintraege !== undefined) {
-        updateValues.editedSparEintraege.forEach(eintrag => {
-          this.userData.sparEintraege[this.getIndexOfSpareintragById(eintrag.id)] = eintrag;
+      if (updateValues.editedWunschlistenEintraege !== undefined) {
+        updateValues.editedWunschlistenEintraege.forEach(eintrag => {
+          this.userData.wunschlistenEintraege[this.getIndexOfWunschlistenEintragById(eintrag.id!)] = eintrag;
         })
       }
 
@@ -485,6 +486,7 @@ export class DataService {
     this.userData.buchungen.alleBuchungen = savedData.buchungen ?? [];
     this.userData.fixKosten = savedData.fixKosten ?? [];
     this.userData.sparEintraege = savedData.sparEintraege ?? [];
+    this.userData.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
 
     savedData.savedMonths?.forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {

@@ -1,6 +1,8 @@
 <app-top-bar></app-top-bar>
-<div class="wunshliste">
-
+<div class="wunschliste">
+  <div *ngFor="let wunschlistenEintrag of elements()">
+    <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+  </div>
 </div>
 
 <div class="wunschliste__add-button" (click)="onPlusClicked()">
