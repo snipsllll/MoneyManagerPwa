@@ -12,7 +12,7 @@
       } @else if(viewModel.settings.betragColor === Color.black){
         <b>{{ viewModel.data.betrag }}€</b>
       } @else {
-        <b class="green" [class.red]="viewModel.data.betrag < 0">{{ viewModel.data.betrag }}€</b>
+        <b>{{ viewModel.data.betrag }}€</b>
       }
     </div>
     <div class="list-element__main-center">
