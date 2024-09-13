@@ -130,6 +130,7 @@ export interface SparschweinData {
 
 export interface SparschweinEintrag {
   isMonatEintrag?: boolean;
+  isWunschlistenEintrag?: boolean;
   betrag: number;
   date: Date;
   id: number;
@@ -140,4 +141,5 @@ export interface SparschweinEintrag {
 export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
+  grayedOut?: boolean;
 }

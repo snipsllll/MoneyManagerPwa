@@ -114,9 +114,8 @@ export class WunschlisteComponent implements OnInit{
     const settings: ListElementSettings = {
       doMenuExist: true,
       doDetailsExist: true,
-      highlighted: this.kannKaufen(eintrag) && !eintrag.gekauft,
       betragColor: this.kannKaufen(eintrag) ? Color.green : Color.red,
-      isDarker: eintrag.gekauft
+      isGrayedOut: eintrag.gekauft
     }
 
     const data: ListElementData = {
@@ -136,7 +135,8 @@ export class WunschlisteComponent implements OnInit{
         },
         {
           label: eintrag.gekauft ? 'zurücknehmen' : 'holen',
-          onClick: eintrag.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked
+          onClick: eintrag.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked,
+          grayedOut: eintrag.gekauft ? false : !this.kannKaufen(eintrag)
         }
       ]
     }
@@ -199,7 +199,9 @@ export class WunschlisteComponent implements OnInit{
       date: eintrag.date!,
       zusatz: eintrag.zusatz
     }
-    this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+    if(this.kannKaufen(newWunschlistenEintrag)){
+      this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+    }
   }
 
   onZuruecknehmenClicked = (eintrag: ListElementData) => {
@@ -213,6 +215,10 @@ export class WunschlisteComponent implements OnInit{
       zusatz: eintrag.zusatz
     }
     this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+  }
+
+  onGekaufteEintraegeAusblendenClicked() {
+    this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
   }
 
   private kannKaufen(eintrag: WunschlistenEintrag) {

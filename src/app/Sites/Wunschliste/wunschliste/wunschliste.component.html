@@ -3,7 +3,7 @@
   <div class="wunschliste__filter-bar">
     <div class="wunschliste__filter-bar-gekauftes-ausblenden-wrapper">
       <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet">
-      <div class="wunschliste__filter-bar-gekauftes-ausblenden-label">
+      <div class="wunschliste__filter-bar-gekauftes-ausblenden-label" (click)="onGekaufteEintraegeAusblendenClicked()">
         gekaufte Einträge ausblenden
       </div>
     </div>

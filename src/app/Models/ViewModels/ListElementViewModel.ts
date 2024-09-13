@@ -23,4 +23,5 @@ export interface ListElementSettings {
   highlighted?: boolean;
   betragColor?: Color;
   isDarker?: boolean;
+  isGrayedOut?: boolean;
 }

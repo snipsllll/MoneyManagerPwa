@@ -980,8 +980,27 @@ export class DataService {
   }
 
   getErspartes() {
+    let eintraege = this.userData.sparEintraege;
+    let allEintraege: SparschweinEintrag[] = [];
+
+    this.userData.wunschlistenEintraege.forEach(wEintrag => {
+      if(wEintrag.gekauft === true) {
+        const x: SparschweinEintrag = {
+          betrag: wEintrag.betrag * -1,
+          date: wEintrag.date,
+          id: -1,
+          zusatz: wEintrag.zusatz,
+          title: wEintrag.title
+        }
+        allEintraege.push(x);
+      }
+    })
+
+    eintraege.forEach(eintrag => {
+      allEintraege.push(eintrag);
+    })
     let erspartes = 0;
-    this.userData.sparEintraege.forEach(eintrag => {
+    allEintraege.forEach(eintrag => {
       erspartes += eintrag.betrag;
     })
     return +(erspartes).toFixed(2);

@@ -45,4 +45,7 @@
 .wunschliste__filter-bar-filter-select {
   margin: 0 10px;
   height: 25px;
+  border: #070e2e solid 1px;
+  border-radius: 5px;
+  background-color: transparent;
 }
