@@ -216,3 +216,17 @@ hr {
   color: #323232;
   margin-left: 7px;
 }
+
+.betrag-input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.betrag-euro-zeichen {
+  width: 10px;
+  margin-left: 5px;
+}
+
+.betrag-input {
+  width: 115px;
+}
