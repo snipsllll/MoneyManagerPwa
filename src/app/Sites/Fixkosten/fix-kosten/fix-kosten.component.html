@@ -3,8 +3,13 @@
   <div *ngFor="let fixKostenEintrag of elements()">
     <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
   </div>
-  <div class="spacer">
-
+</div>
+<div class="fixkosten__summe-wrapper">
+  <div class="fixkosten__summe-label">
+    Fixkosten Summe:
+  </div>
+  <div class="fixkosten__summe-data">
+    <b>{{summe()}}</b>
   </div>
 </div>
 <ng-template #keineEintraege>
