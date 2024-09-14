@@ -87,11 +87,12 @@
 }
 
 .top-bar__text-wrapper {
-  margin-top: 7px;
   margin-left: 7px;
+  margin-top: 7px;
 }
 
 .top-bar__title {
+  margin-top: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,6 +100,7 @@
 }
 
 .top-bar__version {
+  margin-top: -7px;
   font-size: 10px;
 }
 
