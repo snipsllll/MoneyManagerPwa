@@ -53,7 +53,6 @@
   padding: 0 3px 0 5px;
   border-left: 1px solid #717171;
   transition: height 0.2s ease-out;
-  justify-content: space-between;
 }
 
 .drop-down__eintrag {
