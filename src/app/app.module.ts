@@ -24,6 +24,7 @@ import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dia
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/einstellungen.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,9 @@ import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/eins
         }),
         FormsModule
     ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
