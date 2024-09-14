@@ -90,7 +90,7 @@ export class WunschlisteComponent implements OnInit{
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
     const newWunschlistenEintrag: WunschlistenEintrag = {
-      betrag: eintrag.betrag,
+      betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       zusatz: eintrag.zusatz,
       gekauft: false,

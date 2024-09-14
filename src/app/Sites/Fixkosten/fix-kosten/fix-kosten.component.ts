@@ -78,7 +78,7 @@ export class FixKostenComponent  implements OnInit{
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
     const newFixkostenEintrag: FixKostenEintrag = {
-      betrag: eintrag.betrag,
+      betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       zusatz: eintrag.zusatz
     }
