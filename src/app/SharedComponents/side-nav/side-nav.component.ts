@@ -46,4 +46,10 @@ export class SideNavComponent {
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.wunschliste;
   }
+
+  onEinstellungenClicked() {
+    this.router.navigate(['einstellungen']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.einstellungen;
+  }
 }

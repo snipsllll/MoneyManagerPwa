@@ -23,6 +23,7 @@ import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.co
 import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
+import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/einstellungen.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning
     EditDialogComponent,
     CreateDialogComponent,
     WunschlisteComponent,
-    SpinningFishComponent
+    SpinningFishComponent,
+    EinstellungenComponent
   ],
     imports: [
         BrowserModule,

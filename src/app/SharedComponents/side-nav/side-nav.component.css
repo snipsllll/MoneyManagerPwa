@@ -1,11 +1,14 @@
 .side-nav {
   background-color: rgba(174, 174, 174, 0.95);
   position: absolute;
-  bottom: -100vh;
+  bottom: calc(-100vh + 70px);
   left: 0;
-  height: 100vh;
+  height: calc(100vh - 70px);
   width: 200px;
   z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .side-nav__element {
@@ -35,4 +38,12 @@
 
 .selected {
   background-color: #989898;
+}
+
+.side-nav__top {
+
+}
+
+.side-nav__bottom {
+
 }
