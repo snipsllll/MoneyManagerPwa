@@ -9,6 +9,7 @@ import {FixKostenComponent} from "./Sites/Fixkosten/fix-kosten/fix-kosten.compon
 import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.component";
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
+import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einstellungen.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -19,7 +20,8 @@ const routes: Routes = [
   {path: 'fixKosten', component: FixKostenComponent},
   {path: 'sparschwein', component: SparschweinComponent},
   {path: 'wunschliste', component: WunschlisteComponent},
-  {path: 'spinning-fish', component: SpinningFishComponent}
+  {path: 'spinning-fish', component: SpinningFishComponent},
+  {path: 'einstellungen', component: EinstellungenComponent}
 ];
 
 @NgModule({
