@@ -6,7 +6,7 @@ import {
   BudgetInfosForMonth, Day,
   DayIstBudgets,
   FixKostenEintrag,
-  Month, SavedData, SparschweinEintrag,
+  Month, SavedData, Settings, SparschweinEintrag,
   UpdateValues, Week, WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
@@ -20,6 +20,7 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 export class DataService {
 
   userData!: UserData;
+  settings!: Settings;
   testData: DB = DB.noTD;
   download: boolean = true;
 
@@ -28,7 +29,7 @@ export class DataService {
   private _fileEngine = new FileEngine(this.testData, this.download);
 
   constructor(private dialogService: DialogService) {
-    this.initializeUserData();
+    this.initializeData();
   }
 
   addBuchung(buchung: Buchung) {
@@ -460,13 +461,15 @@ export class DataService {
       savedMonths: [],
       fixKosten: [],
       sparEintraege: [],
-      wunschlistenEintraege: []
+      wunschlistenEintraege: [],
+      settings: undefined
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
     savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
+    savedData.settings = this.settings;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -480,7 +483,7 @@ export class DataService {
     return savedData;
   }
 
-  private initializeUserData() {
+  private initializeData() {
     const savedData = this._fileEngine.load();
 
     //Converting SavedData to UserData
@@ -497,6 +500,13 @@ export class DataService {
       this.changeSparenForMonth(month.date, month.sparen, false);
       this.changeTotalBudgetForMonth(month.date, month.totalBudget, false);
     });
+
+    this.settings = savedData.settings ?? {
+      wunschllistenFilter: {
+        gekaufteEintraegeAusblenden: false,
+        selectedFilter: ''
+      }
+    };
 
     this.update({}, false);
   }
@@ -764,7 +774,7 @@ export class DataService {
         message: 'Bist du dicher dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
           this._fileEngine.save(savedData);
-          this.initializeUserData();
+          this.initializeData();
         },
         onCancelClicked: () => {}
       }

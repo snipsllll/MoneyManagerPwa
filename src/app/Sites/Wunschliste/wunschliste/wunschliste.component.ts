@@ -23,6 +23,9 @@ export class WunschlisteComponent implements OnInit{
 
   elements = computed(() => {
     this.dataService.updated();
+    this.onFilterChanged();
+    this.onGekaufteEintraegeAusblendenChanged();
+    this.dataService.save();
     this.wirdGekauftesAusgeblendet();
     return this.getElements(this.selectedFilter());
   })
@@ -46,6 +49,8 @@ export class WunschlisteComponent implements OnInit{
       date: new Date(),
       gekauft: false,
     }
+    this.selectedFilter.set(this.dataService.settings?.wunschllistenFilter.selectedFilter ?? '');
+    this.wirdGekauftesAusgeblendet.set(this.dataService.settings?.wunschllistenFilter.gekaufteEintraegeAusblenden ?? false);
   }
 
   getElements(selectedFilter?: string) {
@@ -56,19 +61,15 @@ export class WunschlisteComponent implements OnInit{
 
     switch (selectedFilter) {
       case 'neustes zuerst':
-        console.log(1)
         allElements = this.sortByDateDesc(allElements);
         break;
       case 'ältestes zuerst':
-        console.log(2)
         allElements = this.sortByDateAsc(allElements);
         break;
       case 'günstigstes zuerst':
-        console.log(3)
         allElements = this.sortByBetragAsc(allElements);
         break;
       case 'teuerstes zuerst':
-        console.log(4)
         allElements = this.sortByBetragDesc(allElements);
         break;
     }
@@ -77,7 +78,15 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onFilterChanged() {
-    console.log(this.selectedFilter)
+    if(this.dataService.settings) {
+      this.dataService.settings!.wunschllistenFilter.selectedFilter = this.selectedFilter();
+    }
+  }
+
+  onGekaufteEintraegeAusblendenChanged() {
+    if(this.dataService.settings) {
+      this.dataService.settings!.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+    }
   }
 
   onPlusClicked() {

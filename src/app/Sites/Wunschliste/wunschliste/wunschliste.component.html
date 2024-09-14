@@ -2,7 +2,7 @@
 <div class="wunschliste">
   <div class="wunschliste__filter-bar">
     <div class="wunschliste__filter-bar-gekauftes-ausblenden-wrapper">
-      <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet">
+      <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet" (change)="onGekaufteEintraegeAusblendenChanged()">
       <div class="wunschliste__filter-bar-gekauftes-ausblenden-label" (click)="onGekaufteEintraegeAusblendenClicked()">
         gekaufte Einträge ausblenden
       </div>
@@ -11,7 +11,7 @@
       <div class="wunschliste__filter-bar-filter-box-label">
         Filter:
       </div>
-      <select class="wunschliste__filter-bar-filter-select" [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChanged()">
+      <select class="wunschliste__filter-bar-filter-select" [(ngModel)]="selectedFilter" (change)="onFilterChanged()">
         <option>neustes zuerst</option>
         <option>ältestes zuerst</option>
         <option>teuerstes zuerst</option>
