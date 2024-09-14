@@ -10,6 +10,8 @@ import {
   UpdateValues, Week, WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
+import {DialogService} from "../DialogService/dialog.service";
+import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +27,7 @@ export class DataService {
 
   private _fileEngine = new FileEngine(this.testData, this.download);
 
-  constructor() {
+  constructor(private dialogService: DialogService) {
     this.initializeUserData();
   }
 
@@ -452,7 +454,7 @@ export class DataService {
     return this.userData.months().findIndex(month => month.startDate.getMonth() === date.getMonth()) !== -1;
   }
 
-  private getSavedData(): SavedData {
+  getSavedData(): SavedData {
     const savedData: SavedData = {
       buchungen: [],
       savedMonths: [],
@@ -755,8 +757,21 @@ export class DataService {
     this.userData.months().push(month);
   }
 
-  private save() { //TODO testen
-    this._fileEngine.save(this.getSavedData());
+  save(savedData?: SavedData) { //TODO testen
+    if(savedData !== undefined) {
+      const confirmDialogViewModel: ConfirmDialogViewModel = {
+        title: 'Daten importieren?',
+        message: 'Bist du dicher dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
+        onConfirmClicked: () => {
+          this._fileEngine.save(savedData);
+          this.initializeUserData();
+        },
+        onCancelClicked: () => {}
+      }
+      this.dialogService.showConfirmDialog(confirmDialogViewModel);
+    } else {
+      this._fileEngine.save(this.getSavedData());
+    }
   }
 
   private sendUpdateToComponents() { //TODO testen
