@@ -2,7 +2,7 @@ import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {Day, SparschweinEintrag, WunschlistenEintrag} from "../../../Models/Interfaces";
+import {WunschlistenEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {
   ListElementData,
