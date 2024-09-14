@@ -1,6 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
+import {DialogService} from "../../../Services/DialogService/dialog.service";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-einstellungen',
@@ -11,13 +13,17 @@ export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
 
-  constructor(private topbarService: TopbarService, private dataService: DataService) {
+  constructor(private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+  }
+
+  onAlleDatenLoeschenClicked() {
+    this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: []})
   }
 
   // Funktion, die den Dateiauswahldialog öffnet
