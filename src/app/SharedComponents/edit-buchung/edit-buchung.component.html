@@ -31,7 +31,7 @@
   </div>
   <div class="create-eintrag__content" *ngIf="buchung() !== undefined">
     <div class="create-eintrag__top-content">
-      <input type="text" [(ngModel)]="buchung()!.title" class="create-eintrag__title" autofocus placeholder="Titel"
+      <input type="text" [(ngModel)]="buchung()!.title" maxlength="12" class="create-eintrag__title" autofocus placeholder="Titel"
              (ngModelChange)="onTitleChanged()">
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
