@@ -1,3 +1,7 @@
+.wunschliste {
+  height: calc(100vh - 120px);
+}
+
 .wunschliste__add-button {
   border-radius: 20px;
   position: fixed;
@@ -48,4 +52,22 @@
   border: #070e2e solid 1px;
   border-radius: 5px;
   background-color: transparent;
+}
+
+.wunschliste__list {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.spacer {
+  height: 80px;
+}
+
+.keine-eintraege {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
 }

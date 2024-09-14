@@ -135,7 +135,7 @@ export class SparschweinComponent implements OnInit{
     return {
       onSaveClick: (eintrag: CreateDialogEintrag) => {
         const newSparschweinEintrag: SparschweinEintrag = {
-          betrag: eintrag.betrag,
+          betrag: eintrag.betrag ?? 0,
           title: eintrag.title,
           zusatz: eintrag.zusatz,
           isMonatEintrag: false,

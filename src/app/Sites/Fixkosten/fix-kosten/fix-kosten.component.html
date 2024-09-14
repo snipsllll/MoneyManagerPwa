@@ -1,7 +1,18 @@
 <app-top-bar></app-top-bar>
-<div *ngFor="let fixKostenEintrag of elements()">
-  <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+<div  class="fixkosten__list" *ngIf="elements().length > 0; else keineEintraege">
+  <div *ngFor="let fixKostenEintrag of elements()">
+    <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+  </div>
+  <div class="spacer">
+
+  </div>
 </div>
+<ng-template #keineEintraege>
+  <div class="keine-eintraege">
+    noch keine Einträge vorhanden
+  </div>
+</ng-template>
+
 
 <div class="fix-kosten__add-button" (click)="onPlusClicked()">
   +

@@ -19,9 +19,20 @@
       </select>
     </div>
   </div>
-  <div *ngFor="let wunschlistenEintrag of elements()">
-    <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+  <div class="wunschliste__list" *ngIf="elements().length > 0; else keineEintraege">
+    <div *ngFor="let wunschlistenEintrag of elements()">
+      <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+    </div>
+    <div class="spacer">
+
+    </div>
   </div>
+  <ng-template #keineEintraege>
+    <div class="keine-eintraege">
+      noch keine Einträge vorhanden
+    </div>
+  </ng-template>
+
 </div>
 
 <div class="wunschliste__add-button" (click)="onPlusClicked()">

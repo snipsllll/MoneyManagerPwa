@@ -20,7 +20,7 @@ export class CreateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.eintrag = {
-      betrag: 0,
+      betrag: undefined,
       title: undefined,
       zusatz: undefined
     }
