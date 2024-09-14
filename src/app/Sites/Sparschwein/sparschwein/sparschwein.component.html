@@ -8,12 +8,17 @@
   </div>
   <hr class="hr">
   <div class="sparschwein__bottom">
-    <div class="sparschwein__list">
+    <div class="sparschwein__list" *ngIf="sparschweinData().eintraege.length > 0; else keineEintraege">
       <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)">
 
       </app-list-element>
       <div class="spacer"></div>
     </div>
+    <ng-template #keineEintraege>
+      <div class="keine-eintraege">
+        noch keine Einträge vorhanden
+      </div>
+    </ng-template>
   </div>
 
   <div class="sparschwein__add-button" (click)="onPlusClicked()">

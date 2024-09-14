@@ -400,3 +400,12 @@ hr {
   height: 80px;
 }
 
+.keine-eintraege {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
+}
+
