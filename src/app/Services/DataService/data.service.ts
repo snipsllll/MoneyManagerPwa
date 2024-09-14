@@ -609,31 +609,9 @@ export class DataService {
             plannedAusgaben += buchung.betrag!
           }
         })
-        day.istBudget = day.budget! - plannedAusgaben;
+        day.istBudget = +(day.budget! - plannedAusgaben).toFixed(2);
       })
     })
-    /*
-    let daysLeft: number = month.daysInMonth!;
-    let apzSumme = 0;
-    let apzSummeForDay = 0;
-    month.weeks?.forEach(week => {
-      week.days.forEach(day => {
-        if (day.budget === undefined) {
-          return;
-        }
-        let dayAusgaben = 0;
-        day.buchungen?.forEach(buchung => {
-          if(!buchung.apz){
-            dayAusgaben += (buchung.betrag ?? 0);
-          } else {
-            apzSumme += buchung.betrag ?? 0;
-          }
-        })
-        apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
-        day.istBudget = +(day.budget - dayAusgaben - apzSummeForDay).toFixed(2);
-        daysLeft--;
-      })
-    })*/
     /*Algorithm end*/
 
     this.setMonth(month)

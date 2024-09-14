@@ -22,6 +22,7 @@ import {ListElementComponent} from "./SharedComponents/list-element/list-element
 import {EditDialogComponent} from "./SharedComponents/edit-dialog/edit-dialog.component";
 import {CreateDialogComponent} from "./SharedComponents/create-dialog/create-dialog.component";
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
+import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.
     ListElementComponent,
     EditDialogComponent,
     CreateDialogComponent,
-    WunschlisteComponent
+    WunschlisteComponent,
+    SpinningFishComponent
   ],
     imports: [
         BrowserModule,
