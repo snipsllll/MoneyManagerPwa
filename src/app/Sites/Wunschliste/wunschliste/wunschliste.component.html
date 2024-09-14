@@ -19,9 +19,15 @@
       </select>
     </div>
   </div>
-  <div *ngFor="let wunschlistenEintrag of elements()">
-    <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+  <div class="wunschliste__list">
+    <div *ngFor="let wunschlistenEintrag of elements()">
+      <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+    </div>
+    <div class="spacer">
+
+    </div>
   </div>
+
 </div>
 
 <div class="wunschliste__add-button" (click)="onPlusClicked()">
