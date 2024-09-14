@@ -14,4 +14,8 @@
   <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.sparschwein" (click)="onSparscheinClicked()">
     Sparschwein
   </div>
+  <hr class="side-nav__hr">
+  <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.wunschliste" (click)="onWunschlisteClicked()">
+    Wunschliste
+  </div>
 </div>

@@ -1,6 +1,6 @@
 import {Buchungen} from "./Buchungen";
 import {signal} from "@angular/core";
-import {Buchung, FixKostenEintrag, Month, SparschweinEintrag} from "../Interfaces";
+import {Buchung, FixKostenEintrag, Month, SparschweinEintrag, WunschlistenEintrag} from "../Interfaces";
 
 export class UserData {
 
@@ -8,6 +8,7 @@ export class UserData {
   public months= signal<Month[]>([]);
   public fixKosten: FixKostenEintrag[] = [];
   public sparEintraege: SparschweinEintrag[] = [];
+  public wunschlistenEintraege: WunschlistenEintrag[] = [];
 
   constructor(buchungen?: Buchung[]) {
     if(buchungen){

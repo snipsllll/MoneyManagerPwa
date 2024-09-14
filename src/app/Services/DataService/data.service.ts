@@ -7,7 +7,7 @@ import {
   DayIstBudgets,
   FixKostenEintrag,
   Month, SavedData, SparschweinEintrag,
-  UpdateValues, Week
+  UpdateValues, Week, WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
 
@@ -63,6 +63,24 @@ export class DataService {
   deleteFixKostenEintrag(fixkostenEintragsId: number) {
     this.update({
       deletedFixkostenEintreageIds: [fixkostenEintragsId]
+    })
+  }
+
+  addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    this.update({
+      newWunschlistenEintraege: [wunschlistenEintrag]
+    })
+  }
+
+  editWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    this.update({
+      editedWunschlistenEintraege: [wunschlistenEintrag]
+    })
+  }
+
+  deleteWunschlistenEintrag(wunschlistenEintragsId: number) {
+    this.update({
+      deletedWunschlistenEintragIds: [wunschlistenEintragsId]
     })
   }
 
@@ -146,23 +164,45 @@ export class DataService {
       }
 
       //Wenn neue Spareinträge angelegt wurden, dann neue Spareinträge zu userData.spareintraege hinzufügen
-      if (updateValues.newSpareintraege !== undefined) {
-        updateValues.newSpareintraege.forEach(eintrag => {
+      if (updateValues.newSparEintraege !== undefined) {
+        updateValues.newSparEintraege.forEach(eintrag => {
           this.userData.sparEintraege.push(eintrag);
         })
       }
 
-      //Wenn Spareintraege gelöscht wurden, dann Buchungen aus userData.spareintraege entfernen
-      if (updateValues.deletedSpareintragIds !== undefined) {
-        updateValues.deletedSpareintragIds.forEach(eintragId => {
+      //Wenn Spareintraege gelöscht wurden, dann Spareinträge aus userData.spareintraege entfernen
+      if (updateValues.deletedSparEintragIds !== undefined) {
+        updateValues.deletedSparEintragIds.forEach(eintragId => {
           this.userData.sparEintraege.splice(this.getIndexOfSpareintragById(eintragId), 1);
         })
       }
 
       //Wenns bearbeitete Spareinträge gibt, dann Spareinträge in userData.spareintraege anpassen
-      if (updateValues.editedSpareintraege !== undefined) {
-        updateValues.editedSpareintraege.forEach(eintrag => {
+      if (updateValues.editedSparEintraege !== undefined) {
+        updateValues.editedSparEintraege.forEach(eintrag => {
           this.userData.sparEintraege[this.getIndexOfSpareintragById(eintrag.id)] = eintrag;
+        })
+      }
+
+      //Wenn neue Wunschlisteneinträge angelegt wurden, dann neue Wunschlisteneinträge zu userData.wunschlisteneintraege hinzufügen
+      if (updateValues.newWunschlistenEintraege !== undefined) {
+        updateValues.newWunschlistenEintraege.forEach(eintrag => {
+          eintrag.id = this.getNextFreeWunschlistenEintragId();
+          this.userData.wunschlistenEintraege.push(eintrag);
+        })
+      }
+
+      //Wenn Wunschlisteneinträge gelöscht wurden, dann Wunschlisteneinträge aus userData.wunschlisteneintraege entfernen
+      if (updateValues.deletedWunschlistenEintragIds !== undefined) {
+        updateValues.deletedWunschlistenEintragIds.forEach(eintragId => {
+          this.userData.wunschlistenEintraege.splice(this.getIndexOfWunschlistenEintragById(eintragId), 1);
+        })
+      }
+
+      //Wenns bearbeitete Wunschlisteneinträge gibt, dann Wunschlisteneinträge in userData.wunschlisteneintraege anpassen
+      if (updateValues.editedWunschlistenEintraege !== undefined) {
+        updateValues.editedWunschlistenEintraege.forEach(eintrag => {
+          this.userData.wunschlistenEintraege[this.getIndexOfWunschlistenEintragById(eintrag.id!)] = eintrag;
         })
       }
 
@@ -348,7 +388,7 @@ export class DataService {
   addSparEintrag(eintrag: SparschweinEintrag) {
     eintrag.id = this.getNextFreeSparEintragId();
     this.update({
-      newSpareintraege: [
+      newSparEintraege: [
         eintrag
       ]
     });
@@ -356,7 +396,7 @@ export class DataService {
 
   editSparEintrag(eintrag: SparschweinEintrag) {
     this.update({
-      editedSpareintraege: [
+      editedSparEintraege: [
         eintrag
       ]
     });
@@ -364,7 +404,7 @@ export class DataService {
 
   deleteSparEintrag(eintragId: number) {
     this.update({
-      deletedSpareintragIds: [
+      deletedSparEintragIds: [
         eintragId
       ]
     });
@@ -418,11 +458,13 @@ export class DataService {
       savedMonths: [],
       fixKosten: [],
       sparEintraege: [],
+      wunschlistenEintraege: []
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
+    savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -444,6 +486,7 @@ export class DataService {
     this.userData.buchungen.alleBuchungen = savedData.buchungen ?? [];
     this.userData.fixKosten = savedData.fixKosten ?? [];
     this.userData.sparEintraege = savedData.sparEintraege ?? [];
+    this.userData.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
 
     savedData.savedMonths?.forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {
@@ -566,31 +609,9 @@ export class DataService {
             plannedAusgaben += buchung.betrag!
           }
         })
-        day.istBudget = day.budget! - plannedAusgaben;
+        day.istBudget = +(day.budget! - plannedAusgaben).toFixed(2);
       })
     })
-    /*
-    let daysLeft: number = month.daysInMonth!;
-    let apzSumme = 0;
-    let apzSummeForDay = 0;
-    month.weeks?.forEach(week => {
-      week.days.forEach(day => {
-        if (day.budget === undefined) {
-          return;
-        }
-        let dayAusgaben = 0;
-        day.buchungen?.forEach(buchung => {
-          if(!buchung.apz){
-            dayAusgaben += (buchung.betrag ?? 0);
-          } else {
-            apzSumme += buchung.betrag ?? 0;
-          }
-        })
-        apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
-        day.istBudget = +(day.budget - dayAusgaben - apzSummeForDay).toFixed(2);
-        daysLeft--;
-      })
-    })*/
     /*Algorithm end*/
 
     this.setMonth(month)
@@ -832,7 +853,7 @@ export class DataService {
         }
       })
     })
-    month.leftOvers = leftovers;
+    month.leftOvers = +(leftovers.toFixed(2));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -920,13 +941,44 @@ export class DataService {
     return freeId;
   }
 
+  private getNextFreeWunschlistenEintragId() {
+    let freeId = 1;
+    for (let i = 0; i < this.userData.wunschlistenEintraege.length; i++) {
+      if (this.userData.wunschlistenEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private isMonthSpareintragVorhanden(date: Date) {
     return !(this.userData.sparEintraege.find(eintrag => eintrag.date.toLocaleDateString() === date.toLocaleDateString()) == undefined)
   }
 
   getErspartes() {
+    let eintraege = this.userData.sparEintraege;
+    let allEintraege: SparschweinEintrag[] = [];
+
+    this.userData.wunschlistenEintraege.forEach(wEintrag => {
+      if(wEintrag.gekauft === true) {
+        const x: SparschweinEintrag = {
+          betrag: wEintrag.betrag * -1,
+          date: wEintrag.date,
+          id: -1,
+          zusatz: wEintrag.zusatz,
+          title: wEintrag.title
+        }
+        allEintraege.push(x);
+      }
+    })
+
+    eintraege.forEach(eintrag => {
+      allEintraege.push(eintrag);
+    })
     let erspartes = 0;
-    this.userData.sparEintraege.forEach(eintrag => {
+    allEintraege.forEach(eintrag => {
       erspartes += eintrag.betrag;
     })
     return +(erspartes).toFixed(2);
@@ -934,6 +986,10 @@ export class DataService {
 
   private getIndexOfSpareintragById(eintragId: number) {
     return this.userData.sparEintraege.findIndex(eintrag => eintrag.id === eintragId);
+  }
+
+  private getIndexOfWunschlistenEintragById(eintragId: number) {
+    return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
 }
 

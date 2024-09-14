@@ -70,6 +70,7 @@ export interface SavedData {
   savedMonths: SavedMonth[];
   fixKosten: FixKostenEintrag[];
   sparEintraege: SparschweinEintrag[];
+  wunschlistenEintraege: WunschlistenEintrag[];
 }
 
 export interface SavedMonth {
@@ -86,6 +87,16 @@ export interface FixKostenEintrag {
   zusatz?: string;
 }
 
+export interface WunschlistenEintrag {
+  date: Date;
+  id?: number;
+  betrag: number;
+  title: string;
+  zusatz?: string;
+  gekauft: boolean;
+  gekauftAm?: Date;
+}
+
 export interface UpdateValues {
   months?: UpdateValuesForMonth[];
   newFixkostenEintraege?: FixKostenEintrag[];
@@ -94,9 +105,12 @@ export interface UpdateValues {
   newBuchungen?: Buchung[];
   deletedBuchungsIds?: number[];
   editedBuchungen?: Buchung[];
-  newSpareintraege?: SparschweinEintrag[];
-  editedSpareintraege?: SparschweinEintrag[];
-  deletedSpareintragIds?: number[];
+  newSparEintraege?: SparschweinEintrag[];
+  editedSparEintraege?: SparschweinEintrag[];
+  deletedSparEintragIds?: number[];
+  newWunschlistenEintraege?: WunschlistenEintrag[];
+  editedWunschlistenEintraege?: WunschlistenEintrag[];
+  deletedWunschlistenEintragIds?: number[];
 }
 
 export interface UpdateValuesForMonth {
@@ -116,6 +130,7 @@ export interface SparschweinData {
 
 export interface SparschweinEintrag {
   isMonatEintrag?: boolean;
+  isWunschlistenEintrag?: boolean;
   betrag: number;
   date: Date;
   id: number;
@@ -126,4 +141,5 @@ export interface SparschweinEintrag {
 export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
+  grayedOut?: boolean;
 }

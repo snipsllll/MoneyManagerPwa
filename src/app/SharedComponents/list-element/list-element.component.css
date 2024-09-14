@@ -5,12 +5,12 @@
 .list-element__main {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 25px;
 }
 
 .list-element__main-left {
-  font-size: 23px;
-  width: 100px;
+  font-size: 18px;
+  width: 80px;
 }
 
 .list-element__main-center {
@@ -18,11 +18,11 @@
 }
 
 .list-element__main-center-top {
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .list-element__main-center-bottom {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .list-element__main-right {
@@ -106,4 +106,24 @@
   .list-element__details-content-empty {
     color: transparent;
   }
+}
+
+.highlighted {
+  border: 5px solid yellow;
+}
+
+.darker {
+  background-color: #777d95;
+}
+
+.grayed-out {
+  background-color: #e1e1e1;
+  color: #888888;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.grayed-out-element {
+  background-color: #b5b5b5;
+  color: #4c4c4c;
 }

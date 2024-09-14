@@ -3,6 +3,7 @@ import {DataService} from "../../Services/DataService/data.service";
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-top-bar',
@@ -10,6 +11,7 @@ import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewMod
   styleUrl: './top-bar.component.css'
 })
 export class TopBarComponent  implements OnInit{
+
   title?: string;
   dayBudget = computed(() => {
     this.dataService.updated();
@@ -25,7 +27,7 @@ export class TopBarComponent  implements OnInit{
     return y;
   })
 
-  constructor(private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
 
@@ -45,5 +47,24 @@ export class TopBarComponent  implements OnInit{
   test() {
     console.log(this.dataService.userData)
     console.log(this.dataService.userData.months())
+  }
+
+
+
+  private pressTimer: any;
+  private holdTime: number = 5000; // 5 Sekunden
+
+  // Funktion wird aufgerufen, wenn der Touch-Event startet
+  onTouchStart() {
+    // Starte den Timer für 5 Sekunden
+    this.pressTimer = setTimeout(() => {
+      this.router.navigate(['spinning-fish'])
+    }, this.holdTime);
+  }
+
+  // Funktion wird aufgerufen, wenn der Touch-Event endet
+  onTouchEnd() {
+    // Timer abbrechen, wenn der Button nicht 5 Sekunden lang gedrückt wurde
+    clearTimeout(this.pressTimer);
   }
 }

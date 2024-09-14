@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {MenuItem} from "../../Models/Interfaces";
+import {Color} from "../../Models/Enums";
 
 @Component({
   selector: 'app-list-element',
@@ -26,7 +27,9 @@ export class ListElementComponent implements OnInit{
   }
 
   onMenuEintragClicked(menuItem: MenuItem) {
-    this.isMenuVisible.set(false);
+    if(!menuItem.grayedOut){
+      this.isMenuVisible.set(false);
+    }
     menuItem.onClick(this.viewModel.data);
   }
 
@@ -35,4 +38,6 @@ export class ListElementComponent implements OnInit{
       this.onElementClicked.emit();
     }
   }
+
+  protected readonly Color = Color;
 }

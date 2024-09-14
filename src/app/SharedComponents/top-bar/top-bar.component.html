@@ -13,7 +13,7 @@
 
     </div>
     <div class="top-bar__right">
-      <div class="top-bar__budget" *ngIf="dayBudget()!.verfuegbar !== undefined" (click)="toggleDropdown()">
+      <div class="top-bar__budget" *ngIf="dayBudget()!.verfuegbar !== undefined" (click)="toggleDropdown()" (touchstart)="onTouchStart()" (touchend)="onTouchEnd()" (touchcancel)="onTouchEnd()">
         <b class="darkgreen" [class.darkred]="dayBudget()!.verfuegbar! < 0">{{ dayBudget().verfuegbar }}€</b>
       </div>
     </div>

@@ -40,4 +40,10 @@ export class SideNavComponent {
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.sparschwein;
   }
+
+  onWunschlisteClicked() {
+    this.router.navigate(['wunschliste']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.wunschliste;
+  }
 }

@@ -1,7 +1,19 @@
-<div class="list-element floating-box">
+<div class="list-element floating-box" [class.grayed-out-element]="viewModel.settings.isGrayedOut" [class.highlighted]="viewModel.settings.highlighted === true" [class.darker]="viewModel.settings.isDarker">
   <div class="list-element__main">
     <div class="list-element__main-left">
-      <b class="green" [class.red]="viewModel.data.betrag < 0">{{ viewModel.data.betrag }}€</b>
+      @if(viewModel.settings.isDarker) {
+        <b class="darker-text">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.isGrayedOut) {
+        <b class="grayed-out-element">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.betragColor === Color.red){
+        <b class="red">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.betragColor === Color.green){
+        <b class="green">{{ viewModel.data.betrag }}€</b>
+      } @else if(viewModel.settings.betragColor === Color.black){
+        <b>{{ viewModel.data.betrag }}€</b>
+      } @else {
+        <b>{{ viewModel.data.betrag }}€</b>
+      }
     </div>
     <div class="list-element__main-center">
       <div class="list-element__main-center-top">
@@ -21,7 +33,7 @@
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
     <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
     <div *ngFor="let menuItem of viewModel.data.menuItems; let last = last">
-      <div class="list-element__menu-eintrag" (click)="onMenuEintragClicked(menuItem)">
+      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut" (click)="onMenuEintragClicked(menuItem)">
         {{ menuItem.label }}
       </div>
       <hr *ngIf="!last" class="list-element__menu-dividing-line">
