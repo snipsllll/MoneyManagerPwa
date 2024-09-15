@@ -16,7 +16,6 @@ import {
   WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
-import {DialogService} from "../DialogService/dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +32,7 @@ export class DataService {
 
   private _fileEngine = new FileEngine(this.testData, this.download);
 
-  constructor(private dialogService: DialogService) {
+  constructor() {
     this.initializeData();
   }
 
