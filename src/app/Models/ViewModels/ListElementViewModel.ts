@@ -15,6 +15,7 @@ export interface ListElementData {
   detailsVisible?: boolean;
   id?: number;
   date?: Date;
+  erstelltAm?: Date;
 }
 
 export interface ListElementSettings {

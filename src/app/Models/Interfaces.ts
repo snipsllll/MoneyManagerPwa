@@ -105,6 +105,7 @@ export interface WunschlistenEintrag {
   zusatz?: string;
   gekauft: boolean;
   gekauftAm?: Date;
+  erstelltAm: Date;
 }
 
 export interface UpdateValues {

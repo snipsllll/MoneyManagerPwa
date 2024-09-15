@@ -131,7 +131,8 @@ export class FileEngine {
               betrag: 80,
               title: 'Lego Bagger',
               zusatz: 'Bei kaufland im Angebot',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             }
           ]
         }
@@ -212,7 +213,8 @@ export class FileEngine {
               betrag: 80,
               title: 'Lego Bagger',
               zusatz: 'Bei kaufland im Angebot',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             },
             {
               date: new Date(),
@@ -220,7 +222,8 @@ export class FileEngine {
               betrag: 120,
               title: 'Hängematte',
               zusatz: 'Amazon',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             }
           ]
         }
@@ -356,7 +359,8 @@ export class FileEngine {
               betrag: 80,
               title: 'Lego Bagger',
               zusatz: 'Bei kaufland im Angebot',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             },
             {
               date: new Date(),
@@ -364,14 +368,16 @@ export class FileEngine {
               betrag: 120,
               title: 'Hängematte',
               zusatz: 'Amazon',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             },{
               date: new Date(),
               id: 3,
               betrag: 20,
               title: 'Bowling',
               zusatz: 'In der Libori-Galerie',
-              gekauft: true
+              gekauft: true,
+              erstelltAm: new Date()
             },
             {
               date: new Date(),
@@ -380,13 +386,15 @@ export class FileEngine {
               title: 'Laptop',
               zusatz: 'Amazon',
               gekauft: true,
-              gekauftAm: new Date()
+              gekauftAm: new Date(),
+              erstelltAm: new Date()
             },{
               date: new Date(),
               id: 5,
               betrag: 300,
               title: 'E-Scooter',
-              gekauft: false
+              gekauft: false,
+              erstelltAm: new Date()
             }
           ]
         }
