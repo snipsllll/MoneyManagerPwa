@@ -935,14 +935,14 @@ export class DataService {
       if (this.isMonthSpareintragVorhanden(date)) {
         this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
           date: month.startDate,
-          betrag: month.leftOvers ?? 0,
+          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
           id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
           isMonatEintrag: true
         }
       } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
-          betrag: month.leftOvers ?? 0,
+          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
           id: this.getNextFreeSparEintragId(),
           isMonatEintrag: true
         })
