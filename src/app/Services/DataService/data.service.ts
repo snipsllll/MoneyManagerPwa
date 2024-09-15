@@ -457,8 +457,8 @@ export class DataService {
     return this.userData.months()[this.getIndexOfMonth(date)].weeks![weekIndex].days.findIndex(day => day.date.toLocaleDateString() === date.toLocaleDateString());
   }
 
-  private checkIfMonthExistsForDay(date: Date): boolean {
-    return this.userData.months().findIndex(month => month.startDate.getMonth() === date.getMonth()) !== -1;
+  checkIfMonthExistsForDay(date: Date): boolean {
+    return this.userData.months().findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
   }
 
   getSavedData(): SavedData {
@@ -769,7 +769,7 @@ export class DataService {
       weeks: weeks
     }
 
-    month.monatAbgeschlossen = this.isDayBeforeMonth(new Date(), month);
+    month.monatAbgeschlossen = !this.isDayBeforeMonth(new Date(), month);
 
     this.userData.months().push(month);
   }
@@ -800,7 +800,7 @@ export class DataService {
     return ausgabenSumme;
   }
 
-  private getMonthByDate(date: Date) {
+  getMonthByDate(date: Date) {
     return this.userData.months()[this.getIndexOfMonth(date)];
   }
 
@@ -858,11 +858,14 @@ export class DataService {
     this.setMonth(month);
   }
 
-  private isDayBeforeMonth(dayDate: Date, month: Month) {
+  isDayBeforeMonth(dayDate: Date, month: Month) {
     if (dayDate.getFullYear() > month.startDate.getFullYear()) {
-      return true;
+      return false;
     }
-    return dayDate.getMonth() > month.startDate.getMonth();
+    if(dayDate.getFullYear() < month.startDate.getFullYear()) {
+      return true
+    }
+    return dayDate.getMonth() < month.startDate.getMonth();
   }
 
   private calcLeftOversForMonth(date: Date) {

@@ -95,3 +95,12 @@
 .darker-text {
   color: #636363 !important;
 }
+
+.no-month {
+  height: calc(100vh - 120px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
+}

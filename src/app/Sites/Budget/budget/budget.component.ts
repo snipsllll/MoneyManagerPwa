@@ -54,7 +54,7 @@ export class BudgetComponent  implements OnInit{
     return '';
   });
 
-  constructor(public topbarService: TopbarService, private dataService: DataService) {
+  constructor(public topbarService: TopbarService, protected dataService: DataService) {
     this.update();
   }
 
@@ -109,6 +109,14 @@ export class BudgetComponent  implements OnInit{
     return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
+  getStartdateForSelectedMonth() {
+    return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
+  }
+
+  getTodayDate() {
+    return new Date();
+  }
+
   private getDateForSelectedMonth() {
     return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
   }
@@ -125,4 +133,6 @@ export class BudgetComponent  implements OnInit{
       })
     });
   }
+
+  protected readonly DataService = DataService;
 }
