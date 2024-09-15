@@ -2,7 +2,7 @@
 <div class="wunschliste">
   <div class="wunschliste__filter-bar">
     <div class="wunschliste__filter-bar-gekauftes-ausblenden-wrapper">
-      <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet" (change)="onGekaufteEintraegeAusblendenCheckboxClicked($event)">
+      <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet" (change)="onGekaufteEintraegeAusblendenCheckboxClicked()">
       <div class="wunschliste__filter-bar-gekauftes-ausblenden-label" (click)="onGekaufteEintraegeAusblendenLabelClicked()">
         gekaufte Einträge ausblenden
       </div>
