@@ -34,6 +34,9 @@
 
 .eintrag-listelem__menu-button {
   margin-left: 10px;
+  margin-right: -3px;
+  margin-bottom: 1px;
+  font-weight: bold;
   width: 30px;
   min-width: 30px;
   height: 30px;

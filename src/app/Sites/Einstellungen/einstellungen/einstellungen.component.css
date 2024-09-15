@@ -1,7 +1,22 @@
 .einstellungen {
   display: flex;
+  flex-direction: column;
+  height: calc(100% - 70px);
+}
+
+.einstellungen__import-export-wrapper {
+  display: flex;
   justify-content: space-between;
   padding: 10px;
+}
+
+.einstellungen__alles-loeschen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  margin-bottom: 10px;
+  font-size: 20px;
 }
 
 .button {
@@ -17,4 +32,10 @@
 
 .button:active {
   background-color: #6a9dc5;
+}
+
+.flex-spacer {
+  height: 10px;
+  width: 100px;
+  flex-grow: 1;
 }

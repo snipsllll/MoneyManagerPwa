@@ -3,15 +3,19 @@ import {UserData} from "../../Models/Classes/UserData";
 import {FileEngine} from "../FileEngine/FileEnigne";
 import {
   Buchung,
-  BudgetInfosForMonth, Day,
+  BudgetInfosForMonth,
+  Day,
   DayIstBudgets,
   FixKostenEintrag,
-  Month, SavedData, SparschweinEintrag,
-  UpdateValues, Week, WunschlistenEintrag
+  Month,
+  SavedData,
+  Settings,
+  SparschweinEintrag,
+  UpdateValues,
+  Week,
+  WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
-import {DialogService} from "../DialogService/dialog.service";
-import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +24,7 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 export class DataService {
 
   userData!: UserData;
+  settings!: Settings;
   testData: DB = DB.noTD;
   download: boolean = true;
 
@@ -27,8 +32,8 @@ export class DataService {
 
   private _fileEngine = new FileEngine(this.testData, this.download);
 
-  constructor(private dialogService: DialogService) {
-    this.initializeUserData();
+  constructor() {
+    this.initializeData();
   }
 
   addBuchung(buchung: Buchung) {
@@ -51,6 +56,7 @@ export class DataService {
   }
 
   addFixKostenEintrag(fixkostenEintrag: FixKostenEintrag) {
+    fixkostenEintrag.id = this.getNextFreeFixKostenId();
     this.update({
       newFixkostenEintraege: [fixkostenEintrag]
     })
@@ -68,7 +74,16 @@ export class DataService {
     })
   }
 
+  setFixKostenEintragForMonth(date: Date, fixkostenEintraege?: FixKostenEintrag[]) {
+    const month = this.getMonthByDate(date);
+
+    month.gesperrteFixKosten = fixkostenEintraege;
+
+    this.setMonth(month);
+  }
+
   addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    wunschlistenEintrag.id = this.getNextFreeWunschlistenEintragId();
     this.update({
       newWunschlistenEintraege: [wunschlistenEintrag]
     })
@@ -109,7 +124,6 @@ export class DataService {
   }
 
   update(updateValues?: UpdateValues, safeAfterUpdate?: boolean) {
-
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
     if (!this.checkIfMonthExistsForDay(new Date())) {
       this.createNewMonth(new Date());
@@ -119,7 +133,6 @@ export class DataService {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
       if (updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
-          fixKostenEintrag.id = this.getNextFreeFixKostenId();
           this.userData.fixKosten.push(fixKostenEintrag);
         })
       }
@@ -189,7 +202,6 @@ export class DataService {
       //Wenn neue Wunschlisteneinträge angelegt wurden, dann neue Wunschlisteneinträge zu userData.wunschlisteneintraege hinzufügen
       if (updateValues.newWunschlistenEintraege !== undefined) {
         updateValues.newWunschlistenEintraege.forEach(eintrag => {
-          eintrag.id = this.getNextFreeWunschlistenEintragId();
           this.userData.wunschlistenEintraege.push(eintrag);
         })
       }
@@ -450,8 +462,8 @@ export class DataService {
     return this.userData.months()[this.getIndexOfMonth(date)].weeks![weekIndex].days.findIndex(day => day.date.toLocaleDateString() === date.toLocaleDateString());
   }
 
-  private checkIfMonthExistsForDay(date: Date): boolean {
-    return this.userData.months().findIndex(month => month.startDate.getMonth() === date.getMonth()) !== -1;
+  checkIfMonthExistsForDay(date: Date): boolean {
+    return this.userData.months().findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
   }
 
   getSavedData(): SavedData {
@@ -460,13 +472,15 @@ export class DataService {
       savedMonths: [],
       fixKosten: [],
       sparEintraege: [],
-      wunschlistenEintraege: []
+      wunschlistenEintraege: [],
+      settings: undefined
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
     savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
+    savedData.settings = this.settings;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -480,7 +494,7 @@ export class DataService {
     return savedData;
   }
 
-  private initializeUserData() {
+  private initializeData() {
     const savedData = this._fileEngine.load();
 
     //Converting SavedData to UserData
@@ -496,7 +510,15 @@ export class DataService {
       }
       this.changeSparenForMonth(month.date, month.sparen, false);
       this.changeTotalBudgetForMonth(month.date, month.totalBudget, false);
+      this.setFixKostenEintragForMonth(month.date, month.fixkosten);
     });
+
+    this.settings = savedData.settings ?? {
+      wunschllistenFilter: {
+        gekaufteEintraegeAusblenden: false,
+        selectedFilter: ''
+      }
+    };
 
     this.update({}, false);
   }
@@ -570,7 +592,7 @@ export class DataService {
     if (month.budget === undefined) {
       return;
     }
-    month.istBudget = +(month.budget - this.getAusgabenSummeForMonth(date)).toFixed(2);
+    month.istBudget = +(month.budget - this.getAusgabenSummeForMonth(date));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -591,7 +613,7 @@ export class DataService {
 
       //stellt sicher, dass ein istBudget nur dann exestiert, wenn es auch ein budget gibt
       if (week.budget) {
-        week.istBudget = +weekIstBudget.toFixed(2);
+        week.istBudget = +weekIstBudget;
       }
     })
     /*Algorithm end*/
@@ -611,7 +633,7 @@ export class DataService {
             plannedAusgaben += buchung.betrag!
           }
         })
-        day.istBudget = +(day.budget! - plannedAusgaben).toFixed(2);
+        day.istBudget = +(day.budget! - plannedAusgaben);
       })
     })
     /*Algorithm end*/
@@ -632,7 +654,7 @@ export class DataService {
       week.days.forEach(day => {
         weekBudget += day.budget!;
       })
-      week.budget = +weekBudget.toFixed(2);
+      week.budget = +weekBudget;
     })
     /*Algorithm end*/
 
@@ -655,11 +677,11 @@ export class DataService {
         day.buchungen?.forEach(buchung => {
           if(buchung.apz) {
             apzSumme += buchung.betrag ?? 0;
-            apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
+            apzSummeForDay = +(apzSumme / daysLeft);
           }
         })
 
-        day.budget = +(month.dailyBudget! - apzSummeForDay).toFixed(2);
+        day.budget = +(month.dailyBudget! - apzSummeForDay);
         daysLeft--;
       })
     })
@@ -687,7 +709,7 @@ export class DataService {
       return;
     }
 
-    month.dailyBudget = toFixedDown(+((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)) / month.daysInMonth), 2);
+    month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)) / month.daysInMonth);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -752,23 +774,15 @@ export class DataService {
       weeks: weeks
     }
 
-    month.monatAbgeschlossen = this.isDayBeforeMonth(new Date(), month);
+    month.monatAbgeschlossen = !this.isDayBeforeMonth(new Date(), month);
 
     this.userData.months().push(month);
   }
 
   save(savedData?: SavedData) { //TODO testen
     if(savedData !== undefined) {
-      const confirmDialogViewModel: ConfirmDialogViewModel = {
-        title: 'Daten importieren?',
-        message: 'Bist du dicher dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
-        onConfirmClicked: () => {
-          this._fileEngine.save(savedData);
-          this.initializeUserData();
-        },
-        onCancelClicked: () => {}
-      }
-      this.dialogService.showConfirmDialog(confirmDialogViewModel);
+      this._fileEngine.save(savedData);
+      this.initializeData();
     } else {
       this._fileEngine.save(this.getSavedData());
     }
@@ -791,7 +805,7 @@ export class DataService {
     return ausgabenSumme;
   }
 
-  private getMonthByDate(date: Date) {
+  getMonthByDate(date: Date) {
     return this.userData.months()[this.getIndexOfMonth(date)];
   }
 
@@ -811,7 +825,7 @@ export class DataService {
     }
 
     /*Algorithm start*/
-    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)).toFixed(2);
+    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -842,18 +856,21 @@ export class DataService {
           leftovers += day.leftOvers ?? 0;
         }
       })
-      week.leftOvers = +(leftovers).toFixed(2);
+      week.leftOvers = +(leftovers);
     })
     /*Algorithm end*/
 
     this.setMonth(month);
   }
 
-  private isDayBeforeMonth(dayDate: Date, month: Month) {
+  isDayBeforeMonth(dayDate: Date, month: Month) {
     if (dayDate.getFullYear() > month.startDate.getFullYear()) {
-      return true;
+      return false;
     }
-    return dayDate.getMonth() > month.startDate.getMonth();
+    if(dayDate.getFullYear() < month.startDate.getFullYear()) {
+      return true
+    }
+    return dayDate.getMonth() < month.startDate.getMonth();
   }
 
   private calcLeftOversForMonth(date: Date) {
@@ -868,7 +885,7 @@ export class DataService {
         }
       })
     })
-    month.leftOvers = +(leftovers.toFixed(2));
+    month.leftOvers = +(leftovers);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -925,14 +942,14 @@ export class DataService {
       if (this.isMonthSpareintragVorhanden(date)) {
         this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
           date: month.startDate,
-          betrag: month.leftOvers ?? 0,
+          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
           id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
           isMonatEintrag: true
         }
       } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
-          betrag: month.leftOvers ?? 0,
+          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
           id: this.getNextFreeSparEintragId(),
           isMonatEintrag: true
         })
@@ -996,7 +1013,7 @@ export class DataService {
     allEintraege.forEach(eintrag => {
       erspartes += eintrag.betrag;
     })
-    return +(erspartes).toFixed(2);
+    return +(erspartes);
   }
 
   private getIndexOfSpareintragById(eintragId: number) {
@@ -1006,9 +1023,4 @@ export class DataService {
   private getIndexOfWunschlistenEintragById(eintragId: number) {
     return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
-}
-
-function toFixedDown(number: number, decimals: number) {
-  const factor = Math.pow(10, decimals);  // Factor to move the decimal point
-  return Math.floor(number * factor) / factor;
 }

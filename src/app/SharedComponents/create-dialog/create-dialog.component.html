@@ -1,7 +1,7 @@
 <div class="create-dialog__wrapper">
   <div class="create-dialog floating-box">
     <div class="create-dialog__content">
-      <input type="text" class="create-dialog__title" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="create-dialog__title" maxlength="12" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
       <hr class="create-dialog__hr-title">
       <div class="create-dialog__betrag-wrapper">
         <div class="create-dialog__betrag-warnung" *ngIf="showBetragWarnung()">

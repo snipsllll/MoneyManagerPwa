@@ -1,5 +1,6 @@
 .list-element {
   position: relative; /* Wichtig, damit das Menü relativ zum Container positioniert wird */
+  box-shadow: none !important;
 }
 
 .list-element__main {
@@ -31,6 +32,8 @@
 
 .list-element__menu-button {
   padding: 10px;
+  margin-bottom: 7px;
+  font-weight: bold;
 }
 
 .list-element__details {

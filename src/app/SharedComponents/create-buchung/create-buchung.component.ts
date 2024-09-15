@@ -44,7 +44,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
-        let showConfDialog = false;
+        let showConfDialog: boolean;
         if(this.buchung.apz === true){
           console.log(this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!)
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
@@ -136,7 +136,7 @@ export class CreateBuchungComponent {
 
   onBetragChanged() {
     if (this.buchung.betrag !== null) {
-      this.buchung.betrag = +(this.buchung.betrag!.toFixed(2));
+      this.buchung.betrag = +(this.buchung.betrag!);
     }
     this.saveButtonDisabled.set(this.isSaveAble());
   }
@@ -151,6 +151,25 @@ export class CreateBuchungComponent {
 
   onApzClicked() {
     this.buchung.apz = !this.buchung.apz;
+  }
+
+  toFixedDown(number?: number, decimals?: number): number | undefined {
+    if(number === undefined) {
+      return undefined;
+    }
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private isBuchungEmpty() {

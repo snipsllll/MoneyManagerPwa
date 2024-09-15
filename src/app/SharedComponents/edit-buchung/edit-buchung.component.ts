@@ -44,11 +44,11 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.betrag !== 0 && this.buchung()!.betrag !== null) {
       if(!this.saveButtonDisabled()){
-        let showConfDialog = false;
+        let showConfDialog: boolean;
         if(this.buchung()!.apz){
           showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
         } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
+          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
         }
 
         if (showConfDialog) {
@@ -130,7 +130,7 @@ export class EditBuchungComponent implements OnInit {
 
   onBetragChanged() {
     if(this.buchung()!.betrag !== null) {
-      this.buchung()!.betrag = +(this.buchung()!.betrag!.toFixed(2));
+      this.buchung()!.betrag = +(this.buchung()!.betrag!);
     }
     this.saveButtonDisabled.set(this.isSaveAble());
   }
@@ -150,6 +150,25 @@ export class EditBuchungComponent implements OnInit {
 
   onValueChange() {
     this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
+  toFixedDown(number?: number, decimals?: number): number | undefined {
+    if(number === undefined) {
+      return undefined;
+    }
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private hasBuchungChanged() {

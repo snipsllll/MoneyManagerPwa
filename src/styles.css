@@ -5,7 +5,7 @@ body {
   width: 100vw;
   margin: 0;
   overflow: hidden;
-  font-family: Tahoma;
+  font-family: Tahoma, serif;
   user-select: none;
   background-color: #e7f2ff;
 }
@@ -41,7 +41,7 @@ all-centered {
 }
 
 .green {
-  color: green !important;
+  color: #009500 !important;
 }
 
 .red {

@@ -22,7 +22,10 @@ export class SparschweinComponent implements OnInit{
 
   sparschweinData = computed(() => {
     this.dataService.updated();
-    return this.sparschweinService.getData();
+    const x = this.sparschweinService.getData();
+    x.eintraege = this.sortByDate(x.eintraege);
+    console.log(x);
+    return x;
   });
 
   constructor(private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService, private sparschweinService: SparschweinService) {
@@ -164,6 +167,26 @@ export class SparschweinComponent implements OnInit{
 
       }
     }
+  }
+
+  toFixedDown(number: number, decimals: number): number {
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  }
+
+  private sortByDate(eintraege: SparschweinEintrag[]) {
+    return eintraege.sort((a, b) => b.date.getTime() - a.date.getTime())
   }
 
 }

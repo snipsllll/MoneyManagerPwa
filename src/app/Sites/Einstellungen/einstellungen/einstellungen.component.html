@@ -1,12 +1,22 @@
 <app-top-bar></app-top-bar>
 
 <div class="einstellungen">
-  <div class="einstellungen__import-wrapper button" (click)="onFileButtonClick()">
-    Daten importieren
+  <div class="einstellungen__import-export-wrapper">
+    <div class="einstellungen__import-wrapper button" (click)="onFileButtonClick()">
+      Daten importieren
+    </div>
+    <div class="einstellungen__export-wrapper button" (click)="exportFileWithDirectorySelection()">
+      Daten exportieren
+    </div>
   </div>
-  <div class="einstellungen__export-wrapper button" (click)="exportFile()">
-    Daten exportieren
+  <div class="flex-spacer">
+
   </div>
+
+  <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">
+    alle Daten löschen
+  </div>
+
 </div>
 
 <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />

@@ -22,6 +22,14 @@ export class FixKostenComponent  implements OnInit{
     this.dataService.updated();
     return this.dataService.userData.fixKosten;
   })
+  summe = computed(() => {
+    this.dataService.updated();
+    let summe = 0;
+    this.elements().forEach(element => {
+      summe += element.betrag;
+    })
+    return summe;
+  })
   selectedElement = signal<number>(-1);
   newFixKostenEintrag!: FixKostenEintrag;
 
@@ -64,7 +72,7 @@ export class FixKostenComponent  implements OnInit{
           onClick: this.onEditClicked
         },
         {
-          label: 'delete',
+          label: 'löschen',
           onClick: this.onDeleteClicked
         }
       ]

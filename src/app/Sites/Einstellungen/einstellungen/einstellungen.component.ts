@@ -1,6 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
+import {DialogService} from "../../../Services/DialogService/dialog.service";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-einstellungen',
@@ -11,13 +13,28 @@ export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
 
-  constructor(private topbarService: TopbarService, private dataService: DataService) {
+  constructor(private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+  }
+
+  onAlleDatenLoeschenClicked() {
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+    title: 'Alle Daten löschen?',
+    message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
+    onConfirmClicked: () => {
+      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: []})
+      this.dialogService.isConfirmDialogVisible = false;
+    },
+    onCancelClicked: () => {
+      this.dialogService.isConfirmDialogVisible = false;
+    }
+  }
+    this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
   // Funktion, die den Dateiauswahldialog öffnet
@@ -38,7 +55,18 @@ export class EinstellungenComponent implements OnInit{
     // Dateiinhalt wird geladen und in der Konsole angezeigt
     reader.onload = (e: any) => {
       const fileContent = e.target.result;
-      this.dataService.save(JSON.parse(fileContent));
+      const confirmDialogViewModel: ConfirmDialogViewModel = {
+        title: 'Daten importieren?',
+        message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
+        onConfirmClicked: () => {
+          this.dataService.save(JSON.parse(fileContent));
+          this.dialogService.isConfirmDialogVisible = false;
+        },
+        onCancelClicked: () => {
+          this.dialogService.isConfirmDialogVisible = false;
+        }
+      }
+      this.dialogService.showConfirmDialog(confirmDialogViewModel);
     };
 
     // Datei als Text lesen
@@ -62,4 +90,25 @@ export class EinstellungenComponent implements OnInit{
     window.URL.revokeObjectURL(link.href); // Speicher freigeben
   }
 
+  async exportFileWithDirectorySelection(): Promise<void> {
+    try {
+      // Zeige einen Dialog an, in dem der Benutzer einen Ordner auswählen kann
+      const handle = await (window as any).showDirectoryPicker();
+
+      // Inhalt der Datei
+      const fileContent = JSON.stringify(this.dataService.getSavedData());
+
+      // Erstelle die Datei im ausgewählten Ordner
+      const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });
+      const writableStream = await fileHandle.createWritable();
+
+      // Schreibe den Inhalt in die Datei und schließe den Stream
+      await writableStream.write(fileContent);
+      await writableStream.close();
+
+      console.log('Datei erfolgreich gespeichert.');
+    } catch (error) {
+      console.error('Fehler beim Speichern der Datei:', error);
+    }
+  }
 }

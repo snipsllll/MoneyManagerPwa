@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.css'
 })
-export class TopBarComponent  implements OnInit{
+export class TopBarComponent implements OnInit {
 
   title?: string;
   dayBudget = computed(() => {
@@ -22,7 +22,7 @@ export class TopBarComponent  implements OnInit{
       day: x?.dayIstBudget,
       leftOvers: x?.leftOvers,
       gespartes: x?.gespartes,
-      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0)).toFixed(2)
+      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0))
     };
     return y;
   })
@@ -49,7 +49,13 @@ export class TopBarComponent  implements OnInit{
     console.log(this.dataService.userData.months())
   }
 
-
+  toFixedDown(number: number, decimals: number): number {
+    const numberString = number.toString();
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  }
 
   private pressTimer: any;
   private holdTime: number = 5000; // 5 Sekunden

@@ -11,7 +11,7 @@
       >
     </div>
   </div>
-  <div class="budget floating-box">
+  <div class="budget floating-box" *ngIf="dataService.checkIfMonthExistsForDay(getStartdateForSelectedMonth()) || !dataService.isDayBeforeMonth(getStartdateForSelectedMonth(), dataService.getMonthByDate(getTodayDate())); else noMonth">
     <div class="budget__top">
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
@@ -29,14 +29,14 @@
       </div>
       <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
         <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
-          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png"
+          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
                *ngIf="!isFixkostenDetailsVisible() && data().fixKostenEintraege; else chevronDown">
           <div class="budget__element-label-fixkosten-text">
             mntl. Fix-Kosten:
           </div>
         </div>
         <div class="budget__element-data">
-          {{ data().fixKostenSumme }}€ <img src="assets/lock-closed.png" class="lock-image"
+          {{ data().fixKostenSumme }}€ <img src="assets/lock-closed.png" class="lock-image" alt="locked"
                                             *ngIf="data().fixKostenGesperrt">
         </div>
       </div>
@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <hr class="hr">
+    <hr class="budget__hr">
     <div class="budget-bottom">
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
@@ -67,16 +67,22 @@
           tägl. Budget:
         </div>
         <div class="budget__element-data">
-          {{ data().dayBudget }}€
+          {{ toFixedDown(data().dayBudget!, 2) }}€
         </div>
       </div>
     </div>
   </div>
 
+  <ng-template #noMonth>
+    <div class="no-month">
+      Keine Daten für diesen Monat
+    </div>
+  </ng-template>
+
 </div>
 
 <ng-template #chevronDown>
-  <img class="budget__fixkosten-chevron" src="assets/chevron-down.png" *ngIf="data().fixKostenEintraege; else spacer">
+  <img class="budget__fixkosten-chevron" src="assets/chevron-down.png" alt="v" *ngIf="data().fixKostenEintraege; else spacer">
 </ng-template>
 
 <ng-template #spacer>

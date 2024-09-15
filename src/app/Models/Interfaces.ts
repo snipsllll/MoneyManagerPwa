@@ -71,6 +71,16 @@ export interface SavedData {
   fixKosten: FixKostenEintrag[];
   sparEintraege: SparschweinEintrag[];
   wunschlistenEintraege: WunschlistenEintrag[];
+  settings?: Settings;
+}
+
+export interface Settings {
+  wunschllistenFilter: WunschlistenFilter;
+}
+
+export interface WunschlistenFilter {
+  gekaufteEintraegeAusblenden: boolean;
+  selectedFilter: string;
 }
 
 export interface SavedMonth {
@@ -95,6 +105,7 @@ export interface WunschlistenEintrag {
   zusatz?: string;
   gekauft: boolean;
   gekauftAm?: Date;
+  erstelltAm: Date;
 }
 
 export interface UpdateValues {

@@ -68,7 +68,8 @@ export class CreateDialogComponent implements OnInit {
   }
 
   private checkHasChanged() {
-    return ((this.eintrag.title !== undefined && this.eintrag.title !== null) || (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null) || (this.eintrag.zusatz !== undefined && this.eintrag.zusatz !== null))
+    console.log(this.eintrag)
+    return !((this.eintrag.title === undefined || this.eintrag.title === '') && (this.eintrag.zusatz === undefined || this.eintrag.zusatz === '') && (this.eintrag.betrag === undefined || this.eintrag.betrag === 0));
   }
 
   private checkBetragValid() {

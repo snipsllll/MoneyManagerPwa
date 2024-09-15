@@ -11,7 +11,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  title = 'MoneyManagerPwa';
+  title = 'Moma';
   inProduction = environment.production
 
   constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService) {
