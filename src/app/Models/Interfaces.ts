@@ -39,6 +39,8 @@ export interface Buchung {
   date: Date;
   time: string;
   apz?: boolean;
+  spe?: boolean;
+  speId?: number;
 }
 
 export interface ItfUserData {

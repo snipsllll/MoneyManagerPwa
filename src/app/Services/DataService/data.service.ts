@@ -272,6 +272,8 @@ export class DataService {
     }
 
     /*Weird and crazy stuff beginns here*/
+    this.updateAllBuchungen();
+
     this.userData.months().forEach(month => {
       //Buchungen in Monat zu den jeweiligen Tagen hinzufügen/updaten
       this.updateBuchungenForMonth(month.startDate);
@@ -706,6 +708,40 @@ export class DataService {
     /*Algorithm end*/
 
     this.setMonth(month);
+  }
+
+  private updateAllBuchungen() {
+    this.userData.sparEintraege.forEach(eintrag => {
+      if(eintrag.vonDayBudgetAbziehen === true && this.userData.buchungen.alleBuchungen.find(buchung => buchung.speId === eintrag.id) === undefined) {
+        this.userData.buchungen.alleBuchungen.push({
+          date: eintrag.date,
+          betrag: eintrag.betrag,
+          id: this.getNextFreeBuchungsId(),
+          title: eintrag.title ?? '',
+          beschreibung: 'Spar-Eintrag',
+          time: eintrag.date.toLocaleTimeString(),
+          spe: true,
+          speId: eintrag.id
+        })
+      }
+    })
+
+    const alleBuchungen: Buchung[] = [];
+      this.userData.buchungen.alleBuchungen.forEach(buchung => {
+        let addBuchung = true;
+        if(buchung.spe) {
+          if(this.userData.sparEintraege.find(eintrag => eintrag.id === buchung.speId) === undefined){
+            addBuchung = false;
+          }
+        }
+
+        if(addBuchung) {
+          alleBuchungen.push(buchung);
+        }
+      })
+
+      this.userData.buchungen.alleBuchungen = alleBuchungen;
+
   }
 
   private updateBuchungenForMonth(date: Date) { //TODO testen
