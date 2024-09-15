@@ -233,10 +233,6 @@ export class WunschlisteComponent implements OnInit{
     }
     this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
   }
-  onCheckboxChange(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    console.log('Checkbox Zustand:', checkbox.checked);
-  }
 
   onGekaufteEintraegeAusblendenCheckboxClicked(event?: Event) {
     this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
