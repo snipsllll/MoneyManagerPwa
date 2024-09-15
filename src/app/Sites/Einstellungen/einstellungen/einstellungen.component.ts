@@ -90,4 +90,31 @@ export class EinstellungenComponent implements OnInit{
     window.URL.revokeObjectURL(link.href); // Speicher freigeben
   }
 
+  async exportFileWithDirectorySelection(): Promise<void> {
+    try {
+      // Zeige einen Dialog an, in dem der Benutzer einen Ordner auswählen kann
+      const handle = await (window as any).showDirectoryPicker();
+
+      // Inhalt der Datei
+      const fileContent = JSON.stringify(this.dataService.getSavedData());
+
+      // Erstelle die Datei im ausgewählten Ordner
+      const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });
+      const writableStream = await fileHandle.createWritable();
+
+      // Schreibe den Inhalt in die Datei und schließe den Stream
+      await writableStream.write(fileContent);
+      await writableStream.close();
+
+      console.log('Datei erfolgreich gespeichert.');
+    } catch (error) {
+      console.error('Fehler beim Speichern der Datei:', error);
+    }
+  }
+
+
+}
+
+interface Window {
+  showDirectoryPicker: () => Promise<any>;
 }
