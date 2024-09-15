@@ -72,7 +72,7 @@ export class FixKostenComponent  implements OnInit{
           onClick: this.onEditClicked
         },
         {
-          label: 'delete',
+          label: 'löschen',
           onClick: this.onDeleteClicked
         }
       ]
