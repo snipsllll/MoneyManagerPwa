@@ -121,7 +121,6 @@ export class DataService {
       //Wenn neue Fixkosteneinträge vorhanden, dann zu userData.fixKosten hinzufügen
       if (updateValues.newFixkostenEintraege !== undefined) {
         updateValues.newFixkostenEintraege.forEach(fixKostenEintrag => {
-          fixKostenEintrag.id = this.getNextFreeFixKostenId();
           this.userData.fixKosten.push(fixKostenEintrag);
         })
       }
@@ -191,7 +190,6 @@ export class DataService {
       //Wenn neue Wunschlisteneinträge angelegt wurden, dann neue Wunschlisteneinträge zu userData.wunschlisteneintraege hinzufügen
       if (updateValues.newWunschlistenEintraege !== undefined) {
         updateValues.newWunschlistenEintraege.forEach(eintrag => {
-          eintrag.id = this.getNextFreeWunschlistenEintragId();
           this.userData.wunschlistenEintraege.push(eintrag);
         })
       }
@@ -581,7 +579,7 @@ export class DataService {
     if (month.budget === undefined) {
       return;
     }
-    month.istBudget = +(month.budget - this.getAusgabenSummeForMonth(date)).toFixed(2);
+    month.istBudget = +(month.budget - this.getAusgabenSummeForMonth(date));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -602,7 +600,7 @@ export class DataService {
 
       //stellt sicher, dass ein istBudget nur dann exestiert, wenn es auch ein budget gibt
       if (week.budget) {
-        week.istBudget = +weekIstBudget.toFixed(2);
+        week.istBudget = +weekIstBudget;
       }
     })
     /*Algorithm end*/
@@ -622,7 +620,7 @@ export class DataService {
             plannedAusgaben += buchung.betrag!
           }
         })
-        day.istBudget = +(day.budget! - plannedAusgaben).toFixed(2);
+        day.istBudget = +(day.budget! - plannedAusgaben);
       })
     })
     /*Algorithm end*/
@@ -643,7 +641,7 @@ export class DataService {
       week.days.forEach(day => {
         weekBudget += day.budget!;
       })
-      week.budget = +weekBudget.toFixed(2);
+      week.budget = +weekBudget;
     })
     /*Algorithm end*/
 
@@ -666,11 +664,11 @@ export class DataService {
         day.buchungen?.forEach(buchung => {
           if(buchung.apz) {
             apzSumme += buchung.betrag ?? 0;
-            apzSummeForDay = +(apzSumme / daysLeft).toFixed(2);
+            apzSummeForDay = +(apzSumme / daysLeft);
           }
         })
 
-        day.budget = +(month.dailyBudget! - apzSummeForDay).toFixed(2);
+        day.budget = +(month.dailyBudget! - apzSummeForDay);
         daysLeft--;
       })
     })
@@ -698,7 +696,7 @@ export class DataService {
       return;
     }
 
-    month.dailyBudget = toFixedDown(+((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)) / month.daysInMonth), 2);
+    month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)) / month.daysInMonth);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -814,7 +812,7 @@ export class DataService {
     }
 
     /*Algorithm start*/
-    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0)).toFixed(2);
+    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixKostenSummeForMonth(month) ?? 0));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -845,7 +843,7 @@ export class DataService {
           leftovers += day.leftOvers ?? 0;
         }
       })
-      week.leftOvers = +(leftovers).toFixed(2);
+      week.leftOvers = +(leftovers);
     })
     /*Algorithm end*/
 
@@ -871,7 +869,7 @@ export class DataService {
         }
       })
     })
-    month.leftOvers = +(leftovers.toFixed(2));
+    month.leftOvers = +(leftovers);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -999,7 +997,7 @@ export class DataService {
     allEintraege.forEach(eintrag => {
       erspartes += eintrag.betrag;
     })
-    return +(erspartes).toFixed(2);
+    return +(erspartes);
   }
 
   private getIndexOfSpareintragById(eintragId: number) {
@@ -1011,7 +1009,3 @@ export class DataService {
   }
 }
 
-function toFixedDown(number: number, decimals: number) {
-  const factor = Math.pow(10, decimals);  // Factor to move the decimal point
-  return Math.floor(number * factor) / factor;
-}

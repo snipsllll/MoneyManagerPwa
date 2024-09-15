@@ -239,6 +239,22 @@ export class WunschlisteComponent implements OnInit{
     this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
   }
 
+  toFixedDown(number: number, decimals: number): number {
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  }
+
   private kannKaufen(eintrag: WunschlistenEintrag) {
     return (eintrag.betrag <= this.dataService.getErspartes())
   }
