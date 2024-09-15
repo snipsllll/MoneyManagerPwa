@@ -1,5 +1,5 @@
 import {Component, computed, OnInit} from '@angular/core';
-import {SparschweinEintrag} from "../../../Models/Interfaces";
+import {Day, SparschweinEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
@@ -22,7 +22,10 @@ export class SparschweinComponent implements OnInit{
 
   sparschweinData = computed(() => {
     this.dataService.updated();
-    return this.sparschweinService.getData();
+    const x = this.sparschweinService.getData();
+    x.eintraege = this.sortByDate(x.eintraege);
+    console.log(x);
+    return x;
   });
 
   constructor(private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService, private sparschweinService: SparschweinService) {
@@ -164,6 +167,10 @@ export class SparschweinComponent implements OnInit{
 
       }
     }
+  }
+
+  private sortByDate(eintraege: SparschweinEintrag[]) {
+    return eintraege.sort((a, b) => b.date.getTime() - a.date.getTime())
   }
 
 }
