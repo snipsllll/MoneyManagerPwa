@@ -1,4 +1,4 @@
-<div class="eintrag-listelem" [class.apz]="buchung.apz" [class.first]="first" [class.last]="last">
+<div class="eintrag-listelem" [class.apz]="buchung.apz || buchung.spe" [class.first]="first" [class.last]="last">
   <div class="eintrag-listelem__menu-button__left" (click)="onBuchungClicked(buchung.id!)">
     <div class="eintrag-listelem__betrag all-centered">
       <b>-{{ toFixedDown(buchung.betrag!, 2) }}€</b>
@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div class="eintrag-listelem__menu-button all-centered" (click)="onMenuButtonClicked()">
+  <div class="eintrag-listelem__menu-button all-centered" (click)="onMenuButtonClicked()" *ngIf="!buchung.spe">
     ...
   </div>
 

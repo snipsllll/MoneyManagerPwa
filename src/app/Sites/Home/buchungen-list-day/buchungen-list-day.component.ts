@@ -14,6 +14,7 @@ export class BuchungenListDayComponent {
     const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
     let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
     numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+    let x = +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+    return +x.toFixed(2);
   }
 }

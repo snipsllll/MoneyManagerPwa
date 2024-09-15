@@ -31,6 +31,7 @@ export class BuchungListelemComponent implements OnInit{
   }
 
   onBuchungClicked(buchungsId: number) {
+    if(!this.buchung.spe)
     this.router.navigate(['/buchungDetails', buchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
