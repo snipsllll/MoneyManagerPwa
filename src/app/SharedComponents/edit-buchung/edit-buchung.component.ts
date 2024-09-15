@@ -48,7 +48,7 @@ export class EditBuchungComponent implements OnInit {
         if(this.buchung()!.apz){
           showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
         } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
+          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
         }
 
         if (showConfDialog) {
