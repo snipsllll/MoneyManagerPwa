@@ -25,7 +25,6 @@ export class WunschlisteComponent implements OnInit{
     this.dataService.updated();
     this.onFilterChanged();
     this.onGekaufteEintraegeAusblendenChanged();
-    this.dataService.save();
     this.wirdGekauftesAusgeblendet();
     return this.getElements(this.selectedFilter());
   })
@@ -234,9 +233,20 @@ export class WunschlisteComponent implements OnInit{
     }
     this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
   }
+  onCheckboxChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    console.log('Checkbox Zustand:', checkbox.checked);
+  }
 
-  onGekaufteEintraegeAusblendenClicked() {
+  onGekaufteEintraegeAusblendenCheckboxClicked(event?: Event) {
+    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+    this.dataService.save();
+  }
+
+  onGekaufteEintraegeAusblendenLabelClicked(event?: Event) {
     this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
+    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+    this.dataService.save();
   }
 
   private kannKaufen(eintrag: WunschlistenEintrag) {
