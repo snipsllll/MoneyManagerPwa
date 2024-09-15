@@ -774,7 +774,7 @@ export class DataService {
       weeks: weeks
     }
 
-    month.monatAbgeschlossen = !this.isDayBeforeMonth(new Date(), month);
+    month.monatAbgeschlossen = !(this.isDayBeforeMonth(new Date(), month) || (month.startDate.getFullYear() === new Date().getFullYear() && month.startDate.getMonth() === new Date().getMonth()));
 
     this.userData.months().push(month);
   }

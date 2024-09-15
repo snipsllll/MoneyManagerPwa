@@ -13,11 +13,14 @@
   margin-left: auto;
   flex-grow: 1;
   text-align: end;
+  font-weight: bold;
 }
 
 .day-label {
   display: flex;
   width: 100%;
+  font-size: 13px;
+  margin-bottom: -7px;
 }
 
 .bld__box {
