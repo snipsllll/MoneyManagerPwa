@@ -143,11 +143,14 @@ export class SparschweinComponent implements OnInit{
           zusatz: eintrag.zusatz,
           isMonatEintrag: false,
           date: new Date(),
-          id: -1
+          id: -1,
+          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
         }
+        console.log(newSparschweinEintrag)
         this.sparschweinService.addEintrag(newSparschweinEintrag);
       },
-      onCancelClick: () => {}
+      onCancelClick: () => {},
+      istVonHeuteAbzeihenVisible: true
     }
   }
 

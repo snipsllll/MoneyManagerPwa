@@ -147,6 +147,7 @@ export interface SparschweinEintrag {
   id: number;
   title?: string;
   zusatz?: string;
+  vonDayBudgetAbziehen?: boolean;
 }
 
 export interface MenuItem {

@@ -22,7 +22,8 @@ export class CreateDialogComponent implements OnInit {
     this.eintrag = {
       betrag: undefined,
       title: undefined,
-      zusatz: undefined
+      zusatz: undefined,
+      vonHeuteAbziehen: false
     }
   }
 
@@ -61,6 +62,9 @@ export class CreateDialogComponent implements OnInit {
 
   onValueChanged() {
     this.darfSpeichern.set(this.checkDarfSpeichern());
+  }
+  onVonHeuteAbziehenClicked() {
+    this.eintrag.vonHeuteAbziehen = !this.eintrag.vonHeuteAbziehen;
   }
 
   private checkDarfSpeichern() {
