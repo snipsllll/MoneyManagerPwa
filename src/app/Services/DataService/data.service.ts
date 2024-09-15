@@ -51,6 +51,7 @@ export class DataService {
   }
 
   addFixKostenEintrag(fixkostenEintrag: FixKostenEintrag) {
+    fixkostenEintrag.id = this.getNextFreeFixKostenId();
     this.update({
       newFixkostenEintraege: [fixkostenEintrag]
     })
@@ -69,6 +70,7 @@ export class DataService {
   }
 
   addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
+    wunschlistenEintrag.id = this.getNextFreeWunschlistenEintragId();
     this.update({
       newWunschlistenEintraege: [wunschlistenEintrag]
     })
