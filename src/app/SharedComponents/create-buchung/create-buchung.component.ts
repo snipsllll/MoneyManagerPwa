@@ -44,7 +44,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
-        let showConfDialog = false;
+        let showConfDialog: boolean;
         if(this.buchung.apz === true){
           console.log(this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!)
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);

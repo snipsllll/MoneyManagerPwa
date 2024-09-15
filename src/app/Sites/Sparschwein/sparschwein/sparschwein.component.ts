@@ -1,5 +1,5 @@
 import {Component, computed, OnInit} from '@angular/core';
-import {Day, SparschweinEintrag} from "../../../Models/Interfaces";
+import {SparschweinEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";

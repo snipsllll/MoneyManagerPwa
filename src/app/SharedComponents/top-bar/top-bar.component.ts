@@ -4,7 +4,6 @@ import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
 import {Router} from "@angular/router";
-import {Utils} from "../../Utils";
 
 @Component({
   selector: 'app-top-bar',

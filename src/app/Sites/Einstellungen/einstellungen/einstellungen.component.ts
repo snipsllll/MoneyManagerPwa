@@ -111,10 +111,4 @@ export class EinstellungenComponent implements OnInit{
       console.error('Fehler beim Speichern der Datei:', error);
     }
   }
-
-
-}
-
-interface Window {
-  showDirectoryPicker: () => Promise<any>;
 }

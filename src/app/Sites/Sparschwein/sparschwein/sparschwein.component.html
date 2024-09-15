@@ -1,7 +1,7 @@
 <div class="sparschwein">
   <app-top-bar></app-top-bar>
   <div class="sparschwein__top">
-    <img src="../../../../assets/sparschwein.png" class="sparschwein__sparschwein">
+    <img src="../../../../assets/sparschwein.png" class="sparschwein__sparschwein" alt="sparschwein.png">
     <div class="sparschwein__betrag">
       <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ toFixedDown(sparschweinData().erspartes!, 2) }}€</b>
     </div>

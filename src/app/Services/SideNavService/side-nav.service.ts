@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {SideNavElements} from "../../Models/Enums";
 import {ActivatedRoute} from "@angular/router";
 
