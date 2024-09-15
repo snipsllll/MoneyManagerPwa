@@ -769,16 +769,8 @@ export class DataService {
 
   save(savedData?: SavedData) { //TODO testen
     if(savedData !== undefined) {
-      const confirmDialogViewModel: ConfirmDialogViewModel = {
-        title: 'Daten importieren?',
-        message: 'Bist du dicher dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
-        onConfirmClicked: () => {
-          this._fileEngine.save(savedData);
-          this.initializeData();
-        },
-        onCancelClicked: () => {}
-      }
-      this.dialogService.showConfirmDialog(confirmDialogViewModel);
+      this._fileEngine.save(savedData);
+      this.initializeData();
     } else {
       this._fileEngine.save(this.getSavedData());
     }
