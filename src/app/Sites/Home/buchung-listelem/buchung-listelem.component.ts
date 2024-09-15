@@ -14,6 +14,8 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 })
 export class BuchungListelemComponent implements OnInit{
   @Input() buchung!: Buchung;
+  @Input() first?: boolean;
+  @Input() last?: boolean;
   showMenu = signal<boolean>(false);
 
   constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
@@ -51,5 +53,21 @@ export class BuchungListelemComponent implements OnInit{
       }
     };
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
+  }
+
+  toFixedDown(number: number, decimals: number): number {
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 }

@@ -10,4 +10,5 @@ export interface EditDialogData {
   zusatz?: string;
   id?: number;
   date?: Date;
+  erstelltAm?: Date;
 }

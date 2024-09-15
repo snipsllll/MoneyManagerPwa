@@ -5,7 +5,7 @@ body {
   width: 100vw;
   margin: 0;
   overflow: hidden;
-  font-family: Tahoma;
+  font-family: Tahoma, serif;
   user-select: none;
   background-color: #e7f2ff;
 }
@@ -22,7 +22,7 @@ all-centered {
 
 .floating-box {
   background-color: #91bada;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 20px 10px;
   box-shadow: rgba(78, 78, 78, 0.75) 2px 2px 4px;
   margin: 10px;
@@ -41,9 +41,12 @@ all-centered {
 }
 
 .green {
-  color: green !important;
+  color: #009500 !important;
 }
 
 .red {
   color: red;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

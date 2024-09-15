@@ -54,7 +54,7 @@ export class BudgetComponent  implements OnInit{
     return '';
   });
 
-  constructor(public topbarService: TopbarService, private dataService: DataService) {
+  constructor(public topbarService: TopbarService, protected dataService: DataService) {
     this.update();
   }
 
@@ -101,6 +101,22 @@ export class BudgetComponent  implements OnInit{
     this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
   }
 
+  toFixedDown(number: number, decimals: number): number {
+    const numberString = number.toString();
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  }
+
+  getStartdateForSelectedMonth() {
+    return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
+  }
+
+  getTodayDate() {
+    return new Date();
+  }
+
   private getDateForSelectedMonth() {
     return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
   }
@@ -117,4 +133,6 @@ export class BudgetComponent  implements OnInit{
       })
     });
   }
+
+  protected readonly DataService = DataService;
 }

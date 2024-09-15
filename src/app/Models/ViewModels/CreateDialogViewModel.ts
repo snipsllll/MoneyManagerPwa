@@ -5,6 +5,6 @@ export interface CreateDialogViewModel {
 
 export interface CreateDialogEintrag {
   title?: string;
-  betrag: number;
+  betrag?: number;
   zusatz?: string;
 }

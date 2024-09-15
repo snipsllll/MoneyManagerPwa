@@ -10,6 +10,7 @@ import {
 } from "../../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
+import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -20,6 +21,14 @@ export class FixKostenComponent  implements OnInit{
   elements = computed(() => {
     this.dataService.updated();
     return this.dataService.userData.fixKosten;
+  })
+  summe = computed(() => {
+    this.dataService.updated();
+    let summe = 0;
+    this.elements().forEach(element => {
+      summe += element.betrag;
+    })
+    return summe;
   })
   selectedElement = signal<number>(-1);
   newFixKostenEintrag!: FixKostenEintrag;
@@ -63,7 +72,7 @@ export class FixKostenComponent  implements OnInit{
           onClick: this.onEditClicked
         },
         {
-          label: 'delete',
+          label: 'löschen',
           onClick: this.onDeleteClicked
         }
       ]
@@ -77,7 +86,7 @@ export class FixKostenComponent  implements OnInit{
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
     const newFixkostenEintrag: FixKostenEintrag = {
-      betrag: eintrag.betrag,
+      betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       zusatz: eintrag.zusatz
     }
@@ -108,7 +117,16 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onDeleteClicked = (eintrag: EditDialogData) => {
-    this.dataService.deleteFixKostenEintrag(eintrag.id!);
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Eintrag Löschen?',
+      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.dataService.deleteFixKostenEintrag(eintrag.id!);
+      },
+      onCancelClicked: () => {}
+    }
+
+    this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {

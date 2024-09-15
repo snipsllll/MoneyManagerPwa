@@ -10,8 +10,29 @@ export class SparschweinService {
   constructor(private dataService: DataService) { }
 
   getData(): SparschweinData {
+    let eintraege = this.dataService.userData.sparEintraege;
+    let allEintraege: SparschweinEintrag[] = [];
+
+    this.dataService.userData.wunschlistenEintraege.forEach(wEintrag => {
+      if(wEintrag.gekauft === true) {
+        const x: SparschweinEintrag = {
+          betrag: wEintrag.betrag * -1,
+          date: wEintrag.date,
+          id: -1,
+          zusatz: wEintrag.zusatz,
+          title: wEintrag.title,
+          isWunschlistenEintrag: true
+        }
+        allEintraege.push(x);
+      }
+    })
+
+    eintraege.forEach(eintrag => {
+      allEintraege.push(eintrag);
+    })
+
     return {
-      eintraege: this.dataService.getSparEintraege(),
+      eintraege: allEintraege,
       erspartes: this.dataService.getErspartes()
     };
   }

@@ -5,12 +5,13 @@
   font-size: 20px;
   position: relative;
   flex-grow: 1;
+  padding: 10px;
 }
 
 .eintrag-listelem__betrag {
   width: 100px;
   min-width: 80px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .eintrag-listelem__menu-button__left {
@@ -33,6 +34,9 @@
 
 .eintrag-listelem__menu-button {
   margin-left: 10px;
+  margin-right: -3px;
+  margin-bottom: 1px;
+  font-weight: bold;
   width: 30px;
   min-width: 30px;
   height: 30px;
@@ -77,4 +81,18 @@ hr {
   white-space: nowrap;
   overflow: hidden;
   max-width: 100%;
+}
+
+.apz {
+  background-color: #6599c5;
+}
+
+.first {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.last {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }

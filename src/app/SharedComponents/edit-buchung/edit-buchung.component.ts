@@ -33,7 +33,8 @@ export class EditBuchungComponent implements OnInit {
         betrag: this.buchung()!.betrag,
         title: this.buchung()!.title,
         time: this.buchung()!.time,
-        id: this.buchung()!.id
+        id: this.buchung()!.id,
+        apz: this.buchung()!.apz
       };
       this.date = this.buchung()?.date.toISOString().slice(0, 10);
     })
@@ -43,7 +44,14 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.betrag !== 0 && this.buchung()!.betrag !== null) {
       if(!this.saveButtonDisabled()){
-        if (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!) {
+        let showConfDialog: boolean;
+        if(this.buchung()!.apz){
+          showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
+        } else {
+          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
+        }
+
+        if (showConfDialog) {
           const confirmDialogViewModel: ConfirmDialogViewModel = {
             title: 'Betrag ist zu hoch',
             message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
@@ -122,7 +130,7 @@ export class EditBuchungComponent implements OnInit {
 
   onBetragChanged() {
     if(this.buchung()!.betrag !== null) {
-      this.buchung()!.betrag = +(this.buchung()!.betrag!.toFixed(2));
+      this.buchung()!.betrag = +(this.buchung()!.betrag!);
     }
     this.saveButtonDisabled.set(this.isSaveAble());
   }
@@ -135,8 +143,36 @@ export class EditBuchungComponent implements OnInit {
     this.saveButtonDisabled.set(this.isSaveAble());
   }
 
+  onApzClicked() {
+    this.buchung()!.apz = !this.buchung()?.apz;
+    this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
+  onValueChange() {
+    this.saveButtonDisabled.set(this.isSaveAble());
+  }
+
+  toFixedDown(number?: number, decimals?: number): number | undefined {
+    if(number === undefined) {
+      return undefined;
+    }
+    const numberString = number.toString();
+    if(numberString.indexOf(".") === -1) {
+      return number;
+    } else if(numberString.indexOf(".") === numberString.length - 2) {
+      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+      numberNachKomma = numberNachKomma.substring(0, decimals);
+      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
+    }
+    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
+    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
+    numberNachKomma = numberNachKomma.substring(0, decimals);
+    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  }
+
   private hasBuchungChanged() {
-    return !(this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
+    return !(this.buchung()!.apz === this.oldBuchung?.apz && this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
   }
 
   private isSaveAble() {

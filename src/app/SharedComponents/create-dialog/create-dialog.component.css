@@ -80,8 +80,8 @@
   display: flex;
   height: 50px;
   justify-content: space-between;
-  padding: 20px;
-  width: calc(100% - 40px);
+  width: 100%;
+  margin-top: 15px;
 }
 
 .create-dialog__bottom-button {
@@ -89,9 +89,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
   min-width: 40%;
   border-radius: 10px;
+  margin: 0 5px;
   background-color: #cccccc;
 }
 
@@ -120,4 +120,21 @@ hr {
 .disabled {
   background-color: #e3e3e3 !important;
   color: #939393 !important;
+}
+
+.create-dialog__betrag-input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.create-dialog__betrag-euro-zeichen {
+  width: 10px;
+  margin-left: 5px;
+}
+
+.create-dialog__betrag-input {
+  width: 115px;
+  text-align: end;
+  padding-right: 5px;
+  font-size: 18px;
 }

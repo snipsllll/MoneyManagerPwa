@@ -5,7 +5,7 @@
   padding: 10px;
 }
 
-.hr-details {
+.budget__hr {
   border: none;
   height: 2px;
   background-color: #404040;
@@ -92,6 +92,15 @@
   padding: 0 10px;
 }
 
-.grayed-out-text {
+.darker-text {
   color: #636363 !important;
+}
+
+.no-month {
+  height: calc(100vh - 120px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
 }

@@ -1,5 +1,5 @@
 .buchungen-list-day {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   color: black;
 }
 
@@ -13,16 +13,18 @@
   margin-left: auto;
   flex-grow: 1;
   text-align: end;
+  font-weight: bold;
 }
 
 .day-label {
   display: flex;
   width: 100%;
+  font-size: 13px;
+  margin-bottom: -7px;
 }
 
 .bld__box {
-  padding: 10px;
-  border-radius: 10px;
+  border-radius: 10px !important;
   background-color: #91bada;
 }
 
@@ -32,4 +34,12 @@
   background-color: #636363;
   border: none;
   height: 1.5px;
+}
+
+.hr {
+  margin: 0;
+  width: 100%;
+  background-color: #3a3a3a;
+  border: none;
+  height: 1px;
 }

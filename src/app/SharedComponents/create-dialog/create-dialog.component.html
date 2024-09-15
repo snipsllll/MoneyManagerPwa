@@ -1,7 +1,7 @@
 <div class="create-dialog__wrapper">
   <div class="create-dialog floating-box">
     <div class="create-dialog__content">
-      <input type="text" class="create-dialog__title" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="create-dialog__title" maxlength="12" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
       <hr class="create-dialog__hr-title">
       <div class="create-dialog__betrag-wrapper">
         <div class="create-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
@@ -11,7 +11,12 @@
           <div class="create-dialog__label">
             Betrag:
           </div>
-          <input type="number" class="create-dialog__data" placeholder="0.00€" [(ngModel)]="eintrag.betrag" (ngModelChange)="onValueChanged()">
+          <div class="create-dialog__betrag-input-wrapper">
+            <input type="number" [(ngModel)]="eintrag.betrag" class="create-dialog__data create-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()">
+            <div class="create-dialog__betrag-euro-zeichen">
+              €
+            </div>
+          </div>
         </div>
       </div>
       <div class="create-dialog__beschreibung-wrapper">

@@ -1,18 +1,24 @@
 <div class="sparschwein">
   <app-top-bar></app-top-bar>
   <div class="sparschwein__top">
-    <img src="assets/sparschwein.png" class="sparschwein__sparschwein">
+    <img src="../../../../assets/sparschwein.png" class="sparschwein__sparschwein" alt="sparschwein.png">
     <div class="sparschwein__betrag">
-      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ sparschweinData().erspartes }}€</b>
+      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ toFixedDown(sparschweinData().erspartes!, 2) }}€</b>
     </div>
   </div>
   <hr class="hr">
   <div class="sparschwein__bottom">
-    <div class="sparschwein__list">
+    <div class="sparschwein__list" *ngIf="sparschweinData().eintraege.length > 0; else keineEintraege">
       <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)">
 
       </app-list-element>
+      <div class="spacer"></div>
     </div>
+    <ng-template #keineEintraege>
+      <div class="keine-eintraege">
+        noch keine Einträge vorhanden
+      </div>
+    </ng-template>
   </div>
 
   <div class="sparschwein__add-button" (click)="onPlusClicked()">

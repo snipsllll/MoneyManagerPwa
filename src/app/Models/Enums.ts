@@ -17,7 +17,9 @@ export enum SideNavElements {
   home,
   budget,
   fixkosten,
-  sparschwein
+  sparschwein,
+  wunschliste,
+  einstellungen
 }
 
 export enum Sites {
@@ -35,4 +37,10 @@ export enum DB {
   long,
   none,
   noTD
+}
+
+export enum Color {
+  red,
+  green,
+  black
 }

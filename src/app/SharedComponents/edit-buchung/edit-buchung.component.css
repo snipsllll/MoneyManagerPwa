@@ -215,3 +215,34 @@ hr {
 .create-eintrag__betrag-warnung {
   color: red;
 }
+
+.create-eintrag__apz-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.create-eintrag__data-apz {
+  height: 20px;
+  width: fit-content;
+  scale: 1.3;
+}
+
+.create-eintrag__label-apz {
+  font-size: 18px;
+  color: #323232;
+  margin-left: 7px;
+}
+
+.betrag-input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.betrag-euro-zeichen {
+  width: 10px;
+  margin-left: 5px;
+}
+
+.betrag-input {
+  width: 115px;
+}

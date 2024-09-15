@@ -1,7 +1,7 @@
 <div class="edit-dialog__wrapper">
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
-      <input type="text" class="edit-dialog__title" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="edit-dialog__title" maxlength="12" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
       @if (viewModel.data.id !== undefined) {
         <div class="edit-dialog__id">
           (ID: {{viewModel.data.id}})
@@ -16,7 +16,12 @@
           <div class="edit-dialog__label">
             Betrag:
           </div>
-          <input type="number" class="edit-dialog__data" placeholder="0.00€" [(ngModel)]="viewModel.data.betrag" (ngModelChange)="onValueChanged()">
+          <div class="edit-dialog__betrag-input-wrapper">
+            <input type="number" [(ngModel)]="viewModel.data.betrag" class="edit-dialog__data edit-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()">
+            <div class="edit-dialog__betrag-euro-zeichen">
+              €
+            </div>
+          </div>
         </div>
       </div>
       <div class="edit-dialog__beschreibung-wrapper">

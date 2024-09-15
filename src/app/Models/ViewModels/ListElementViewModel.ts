@@ -1,4 +1,5 @@
 import {MenuItem} from "../Interfaces";
+import {Color} from "../Enums";
 
 export interface ListElementViewModel{
   data: ListElementData;
@@ -13,9 +14,15 @@ export interface ListElementData {
   menuItems?: MenuItem[];
   detailsVisible?: boolean;
   id?: number;
+  date?: Date;
+  erstelltAm?: Date;
 }
 
 export interface ListElementSettings {
   doMenuExist?: boolean;
   doDetailsExist?: boolean;
+  highlighted?: boolean;
+  betragColor?: Color;
+  isDarker?: boolean;
+  isGrayedOut?: boolean;
 }

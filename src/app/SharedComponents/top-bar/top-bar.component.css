@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 .top-bar__nav-button {
@@ -74,7 +74,7 @@
 }
 
 .darkgreen {
-  color: #005300;
+  color: #017001;
 }
 
 .top-bar__dropdown-box-slidin {
@@ -87,11 +87,12 @@
 }
 
 .top-bar__text-wrapper {
-  margin-top: 7px;
   margin-left: 7px;
+  margin-top: 7px;
 }
 
 .top-bar__title {
+  margin-top: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,6 +100,7 @@
 }
 
 .top-bar__version {
+  margin-top: -7px;
   font-size: 10px;
 }
 
@@ -118,4 +120,20 @@
   width: 100vw;
   height: 100%;
   z-index: 19;
+}
+
+.top-bar__budget-eintrag-wrapper {
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-bar__budget-eintrag-label {
+  height: 12px;
+  line-height: 12px;
+}
+
+.top-bar__budget-eintrag-data {
+  height: 12px;
+  line-height: 12px;
 }

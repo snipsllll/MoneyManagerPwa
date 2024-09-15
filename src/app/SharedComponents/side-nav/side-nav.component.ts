@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 import {SideNavElements} from "../../Models/Enums";
 
@@ -9,12 +9,36 @@ import {SideNavElements} from "../../Models/Enums";
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.css'
 })
-export class SideNavComponent {
+export class SideNavComponent implements OnInit{
 
   protected readonly SideNavElements = SideNavElements;
 
-  constructor(private router: Router, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(private router: Router,private route: ActivatedRoute, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
+  }
+
+  ngOnInit() {
+    if(this.route.snapshot.url.length === 0){
+      this.sideNavService.selectedElement = SideNavElements.home;
+    } else {
+      switch(this.route.snapshot.url[0].path) {
+        case 'budget':
+          this.sideNavService.selectedElement = SideNavElements.budget;
+          break;
+        case 'fixkosten':
+          this.sideNavService.selectedElement = SideNavElements.fixkosten;
+          break;
+        case 'sparschwein':
+          this.sideNavService.selectedElement = SideNavElements.sparschwein;
+          break;
+        case 'wunschliste':
+          this.sideNavService.selectedElement = SideNavElements.wunschliste;
+          break;
+        case 'einstellungen':
+          this.sideNavService.selectedElement = SideNavElements.einstellungen;
+          break;
+      }
+    }
   }
 
   onHomeClicked(): void {
@@ -39,5 +63,17 @@ export class SideNavComponent {
     this.router.navigate(['sparschwein']);
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.sparschwein;
+  }
+
+  onWunschlisteClicked() {
+    this.router.navigate(['wunschliste']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.wunschliste;
+  }
+
+  onEinstellungenClicked() {
+    this.router.navigate(['einstellungen']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.einstellungen;
   }
 }

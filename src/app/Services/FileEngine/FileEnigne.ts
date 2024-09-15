@@ -123,6 +123,17 @@ export class FileEngine {
               id: 1,
               betrag: 20
             }
+          ],
+          wunschlistenEintraege: [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 80,
+              title: 'Lego Bagger',
+              zusatz: 'Bei kaufland im Angebot',
+              gekauft: false,
+              erstelltAm: new Date()
+            }
           ]
         }
       case 1:
@@ -193,6 +204,26 @@ export class FileEngine {
               date: new Date(),
               id: 2,
               betrag: 10
+            }
+          ],
+          wunschlistenEintraege: [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 80,
+              title: 'Lego Bagger',
+              zusatz: 'Bei kaufland im Angebot',
+              gekauft: false,
+              erstelltAm: new Date()
+            },
+            {
+              date: new Date(),
+              id: 2,
+              betrag: 120,
+              title: 'Hängematte',
+              zusatz: 'Amazon',
+              gekauft: false,
+              erstelltAm: new Date()
             }
           ]
         }
@@ -320,6 +351,51 @@ export class FileEngine {
               id: 5,
               betrag: 50
             }
+          ],
+          wunschlistenEintraege: [
+            {
+              date: new Date(),
+              id: 1,
+              betrag: 80,
+              title: 'Lego Bagger',
+              zusatz: 'Bei kaufland im Angebot',
+              gekauft: false,
+              erstelltAm: new Date()
+            },
+            {
+              date: new Date(),
+              id: 2,
+              betrag: 120,
+              title: 'Hängematte',
+              zusatz: 'Amazon',
+              gekauft: false,
+              erstelltAm: new Date()
+            },{
+              date: new Date(),
+              id: 3,
+              betrag: 20,
+              title: 'Bowling',
+              zusatz: 'In der Libori-Galerie',
+              gekauft: true,
+              erstelltAm: new Date()
+            },
+            {
+              date: new Date(),
+              id: 4,
+              betrag: 120,
+              title: 'Laptop',
+              zusatz: 'Amazon',
+              gekauft: true,
+              gekauftAm: new Date(),
+              erstelltAm: new Date()
+            },{
+              date: new Date(),
+              id: 5,
+              betrag: 300,
+              title: 'E-Scooter',
+              gekauft: false,
+              erstelltAm: new Date()
+            }
           ]
         }
       case 3:
@@ -327,14 +403,16 @@ export class FileEngine {
           buchungen: [],
           savedMonths: [],
           fixKosten: [],
-          sparEintraege: []
+          sparEintraege: [],
+          wunschlistenEintraege: []
         };
     }
     return {
       buchungen: [],
       savedMonths: [],
       fixKosten: [],
-      sparEintraege: []
+      sparEintraege: [],
+      wunschlistenEintraege: []
     }
   }
 }

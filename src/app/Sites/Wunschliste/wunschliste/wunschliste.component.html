@@ -1,0 +1,40 @@
+<app-top-bar></app-top-bar>
+<div class="wunschliste">
+  <div class="wunschliste__filter-bar">
+    <div class="wunschliste__filter-bar-gekauftes-ausblenden-wrapper">
+      <input type="checkbox" class="wunschliste__filter-bar-gekauftes-ausblenden-box" [(ngModel)]="wirdGekauftesAusgeblendet" (change)="onGekaufteEintraegeAusblendenCheckboxClicked()">
+      <div class="wunschliste__filter-bar-gekauftes-ausblenden-label" (click)="onGekaufteEintraegeAusblendenLabelClicked()">
+        gekaufte Einträge ausblenden
+      </div>
+    </div>
+    <div class="wunschliste__filter-bar-filter-box-wrapper">
+      <div class="wunschliste__filter-bar-filter-box-label">
+        Filter:
+      </div>
+      <select class="wunschliste__filter-bar-filter-select" [(ngModel)]="selectedFilter" (change)="onFilterChanged()">
+        <option>neustes zuerst</option>
+        <option>ältestes zuerst</option>
+        <option>teuerstes zuerst</option>
+        <option>günstigstes zuerst</option>
+      </select>
+    </div>
+  </div>
+  <div class="wunschliste__list" *ngIf="elements().length > 0; else keineEintraege">
+    <div *ngFor="let wunschlistenEintrag of elements()">
+      <app-list-element [viewModel]="getViewModel(wunschlistenEintrag)"></app-list-element>
+    </div>
+    <div class="spacer">
+
+    </div>
+  </div>
+  <ng-template #keineEintraege>
+    <div class="keine-eintraege">
+      noch keine Einträge vorhanden
+    </div>
+  </ng-template>
+
+</div>
+
+<div class="wunschliste__add-button" (click)="onPlusClicked()">
+  +
+</div>
