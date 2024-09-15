@@ -111,7 +111,6 @@ export class DataService {
   }
 
   update(updateValues?: UpdateValues, safeAfterUpdate?: boolean) {
-
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
     if (!this.checkIfMonthExistsForDay(new Date())) {
       this.createNewMonth(new Date());
@@ -1008,4 +1007,3 @@ export class DataService {
     return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
 }
-

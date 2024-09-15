@@ -18,7 +18,6 @@ export class SideNavComponent implements OnInit{
   }
 
   ngOnInit() {
-    console.log(this.route.snapshot.url.length)
     if(this.route.snapshot.url.length === 0){
       this.sideNavService.selectedElement = SideNavElements.home;
     } else {
