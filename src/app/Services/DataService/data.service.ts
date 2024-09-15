@@ -11,7 +11,6 @@ import {
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
 import {DialogService} from "../DialogService/dialog.service";
-import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
