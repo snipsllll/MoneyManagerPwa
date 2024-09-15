@@ -234,12 +234,12 @@ export class WunschlisteComponent implements OnInit{
     this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
   }
 
-  onGekaufteEintraegeAusblendenCheckboxClicked(event?: Event) {
+  onGekaufteEintraegeAusblendenCheckboxClicked() {
     this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
     this.dataService.save();
   }
 
-  onGekaufteEintraegeAusblendenLabelClicked(event?: Event) {
+  onGekaufteEintraegeAusblendenLabelClicked() {
     this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
     this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
     this.dataService.save();
