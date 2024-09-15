@@ -685,13 +685,6 @@ export class DataService {
         daysLeft--;
       })
     })
-
-    /*
-    month.weeks?.forEach(week => {
-      week.days.forEach(day => {
-        day.budget = month.dailyBudget;
-      })
-    })*/
     /*Algorithm end*/
 
     this.setMonth(month)
