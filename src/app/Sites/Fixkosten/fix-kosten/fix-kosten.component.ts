@@ -23,6 +23,7 @@ export class FixKostenComponent  implements OnInit{
     return this.dataService.userData.fixKosten;
   })
   summe = computed(() => {
+    this.dataService.updated();
     let summe = 0;
     this.elements().forEach(element => {
       summe += element.betrag;
