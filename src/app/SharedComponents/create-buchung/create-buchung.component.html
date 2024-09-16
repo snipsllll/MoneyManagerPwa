@@ -1,15 +1,21 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="dayBudget().weekIstBudget && dayBudget().monthIstBudget && dayBudget().dayIstBudget; else noDayBudgetTop">
+    <div class="create-eintrag__budget"
+         *ngIf="dayBudget().weekIstBudget && dayBudget().monthIstBudget && dayBudget().dayIstBudget; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="dayBudget().monthIstBudget! < 0">{{ toFixedDown(dayBudget().monthIstBudget, 2) ?? '???' }}€</b>
+        monat: <b class="green"
+                  [class.red]="dayBudget().monthIstBudget! < 0">{{ toFixedDown(dayBudget().monthIstBudget, 2) ?? '???' }}
+        €</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="dayBudget().weekIstBudget! < 0">{{ toFixedDown(dayBudget().weekIstBudget, 2) ?? '???' }}€</b>
+        woche: <b class="green"
+                  [class.red]="dayBudget().weekIstBudget! < 0">{{ toFixedDown(dayBudget().weekIstBudget, 2) ?? '???' }}
+        €</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="dayBudget().dayIstBudget! < 0">{{ toFixedDown(dayBudget().dayIstBudget, 2) ?? '???' }}€</b>
+        tag: <b class="green"
+                [class.red]="dayBudget().dayIstBudget! < 0">{{ toFixedDown(dayBudget().dayIstBudget, 2) ?? '???' }}€</b>
       </div>
     </div>
     <ng-template #noDayBudgetTop>
@@ -31,7 +37,21 @@
   </div>
   <div class="create-eintrag__content">
     <div class="create-eintrag__top-content">
-      <input type="text" [(ngModel)]="buchung.title" maxlength="12" class="create-eintrag__title" autofocus placeholder="Titel" (change)="onTitleChanged()">
+      <div class="create-eintrag__top-line">
+        @if (!isSearchboxVisible()) {
+          <input type="text" [(ngModel)]="buchung.title" maxlength="12" class="create-eintrag__title" autofocus
+                 placeholder="Titel" (change)="onTitleChanged()">
+          <img src="assets/search.png" class="create-eintrag__search-button" (click)="onSearchClicked()"/>
+        } @else {
+          <div class="create-eintrag__search-box-wrapper">
+            <div class="create-eintrag__search-box">
+              <app-searchbox [items]="buchungen" [filterField]="'title'" (itemSelected)="onItemSelected($event)"></app-searchbox>
+            </div>
+            <img src="assets/close.png" class="create-eintrag__search-box-x-button" alt="x" (click)="onSearchboxCloseClicked()"/>
+          </div>
+
+        }
+      </div>
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
@@ -42,7 +62,8 @@
             Betrag:
           </div>
           <div class="betrag-input-wrapper">
-            <input type="number" [(ngModel)]="buchung.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()">
+            <input type="number" [(ngModel)]="buchung.betrag" class="create-eintrag__data betrag-input"
+                   placeholder="0.00" (ngModelChange)="onBetragChanged()">
             <div class="betrag-euro-zeichen">
               €
             </div>
@@ -63,7 +84,7 @@
         <input type="time" [(ngModel)]="buchung.time" (change)="onTimeChange($event)" class="create-eintrag__data">
       </div>
       <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz">
+        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz" *ngIf="!isSearchboxVisible()">
         <div class="create-eintrag__label-apz" (click)="onApzClicked()">
           Außer planmäßige Zahlung
         </div>
@@ -73,7 +94,8 @@
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
           Beschreibung:
         </div>
-        <textarea [(ngModel)]="buchung.beschreibung" class="create-eintrag__data create-eintrag__beschreibung-data" (change)="onBeschreibungChanged()">
+        <textarea [(ngModel)]="buchung.beschreibung" class="create-eintrag__data create-eintrag__beschreibung-data"
+                  (change)="onBeschreibungChanged()">
 
         </textarea>
       </div>
