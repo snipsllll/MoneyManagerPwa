@@ -3,9 +3,9 @@
   <input type="text" class="searchbox__input" [(ngModel)]="suchbegriff" placeholder="Suche" />
 
   <!-- Gefilterte Items anzeigen -->
-  <ul>
-    <li *ngFor="let item of gefilterteItems" (click)="eintragAuswaehlen(item)">
-      {{ item[filterField] }}
-    </li>
-  </ul>
+  <div class="searchbox__results-box">
+    <div class="searchbox__result" *ngFor="let item of gefilterteItems" (click)="eintragAuswaehlen(item)">
+      {{ item[filterField] }} ({{item['betrag']}}€)
+    </div>
+  </div>
 </div>

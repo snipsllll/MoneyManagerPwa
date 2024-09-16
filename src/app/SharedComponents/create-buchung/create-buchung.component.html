@@ -84,7 +84,7 @@
         <input type="time" [(ngModel)]="buchung.time" (change)="onTimeChange($event)" class="create-eintrag__data">
       </div>
       <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz">
+        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz" *ngIf="!isSearchboxVisible()">
         <div class="create-eintrag__label-apz" (click)="onApzClicked()">
           Außer planmäßige Zahlung
         </div>

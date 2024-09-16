@@ -54,6 +54,7 @@ export class CreateBuchungComponent {
 
   onItemSelected(item: Buchung) {
     this.isSearchboxVisible.set(false);
+    this.saveButtonDisabled.set(false);
     this.buchung.title = item.title;
     this.buchung.apz = item.apz;
     this.buchung.betrag = item.betrag;
@@ -65,7 +66,6 @@ export class CreateBuchungComponent {
       if (!this.saveButtonDisabled()) {
         let showConfDialog: boolean;
         if(this.buchung.apz === true){
-          console.log(this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!)
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
           showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag!);

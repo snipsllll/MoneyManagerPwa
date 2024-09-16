@@ -12,3 +12,21 @@
   align-items: center;
   font-size: 22px;
 }
+
+.searchbox__results-box {
+  max-height: 500px;
+  width: 100%;
+  background-color: #e5efff;
+  overflow-y: scroll;
+  padding: 1px;
+  margin-left: -1px;
+  box-shadow: black 1px 1px 2px;
+}
+
+.searchbox__result {
+  padding: 10px;
+  font-size: 15px;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid black;
+}
