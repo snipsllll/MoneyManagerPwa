@@ -15,11 +15,14 @@ export class CreateBuchungComponent {
   oldBuchung!: Buchung;
   showBetragWarning = false;
   date?: string;
+  isSearchboxVisible = signal<boolean>(false);
   dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
   saveButtonDisabled = signal<boolean>(true);
+  buchungen: Buchung[] = [];
 
   constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
     const date = new Date();
+    this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
 
     this.buchung = {
       title: '',
@@ -39,6 +42,22 @@ export class CreateBuchungComponent {
     };
     this.dayBudget.set(this.dataService.getDayIstBudgets(date)!);
     this.date = this.buchung.date.toISOString().slice(0, 10);
+  }
+
+  onSearchClicked() {
+    this.isSearchboxVisible.set(true);
+  }
+
+  onSearchboxCloseClicked() {
+    this.isSearchboxVisible.set(false);
+  }
+
+  onItemSelected(item: Buchung) {
+    this.isSearchboxVisible.set(false);
+    this.buchung.title = item.title;
+    this.buchung.apz = item.apz;
+    this.buchung.betrag = item.betrag;
+    this.buchung.beschreibung = item.beschreibung;
   }
 
   onSaveClicked() {
