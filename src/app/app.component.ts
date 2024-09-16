@@ -13,6 +13,15 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class AppComponent implements OnInit{
   title = 'Moma';
   inProduction = environment.production
+  testArray = [
+    { titel: 'Tasche', betrag: 12 },
+    { titel: 'Bagger', betrag: 50 },
+    { titel: 'Ball', betrag: 10 }
+  ];
+
+  test(event: Event) {
+    console.log(event)
+  }
 
   constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService) {
   }

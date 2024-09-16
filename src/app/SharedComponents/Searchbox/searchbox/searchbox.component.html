@@ -1,0 +1,11 @@
+<div>
+  <!-- Suchbox -->
+  <input type="text" [(ngModel)]="suchbegriff" placeholder="Suche" />
+
+  <!-- Gefilterte Items anzeigen -->
+  <ul>
+    <li *ngFor="let item of gefilterteItems" (click)="eintragAuswaehlen(item)">
+      {{ item[filterField] }}
+    </li>
+  </ul>
+</div>

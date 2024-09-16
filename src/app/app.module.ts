@@ -25,6 +25,7 @@ import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/einstellungen.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searchbox.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     CreateDialogComponent,
     WunschlisteComponent,
     SpinningFishComponent,
-    EinstellungenComponent
+    EinstellungenComponent,
+    SearchboxComponent
   ],
     imports: [
         BrowserModule,
