@@ -43,12 +43,14 @@ export class SparschweinComponent implements OnInit{
   }
 
   onEditClicked = (eintrag: EditDialogData) => {
+    console.log(eintrag)
     const x: EditDialogData = {
       title: eintrag.title,
       zusatz: eintrag.zusatz,
       date: eintrag.date,
       id: eintrag.id,
-      betrag: eintrag.betrag
+      betrag: eintrag.betrag,
+      vonHeuteAbziehen: eintrag.vonHeuteAbziehen
     }
     this.dialogService.showEditDialog(this.getEditDialogViewModel(x))
   }
@@ -77,6 +79,7 @@ export class SparschweinComponent implements OnInit{
       betrag: eintrag.betrag,
       title: this.getTitle(eintrag),
       zusatz: eintrag.zusatz,
+      vonHeuteAbziehen: eintrag.vonDayBudgetAbziehen,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -163,12 +166,14 @@ export class SparschweinComponent implements OnInit{
           id: eintrag.id!,
           title: eintrag.title,
           zusatz: eintrag.zusatz,
-          date: eintrag.date!
+          date: eintrag.date!,
+          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
         })
       },
       onCancelClick: () => {
 
-      }
+      },
+      istVonHeuteAbzeihenVisible: true
     }
   }
 

@@ -16,6 +16,7 @@ export interface ListElementData {
   id?: number;
   date?: Date;
   erstelltAm?: Date;
+  vonHeuteAbziehen?: boolean;
 }
 
 export interface ListElementSettings {
