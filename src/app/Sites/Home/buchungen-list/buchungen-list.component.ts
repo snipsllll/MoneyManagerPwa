@@ -52,7 +52,12 @@ export class BuchungenListComponent  implements OnInit{
   }
 
   getFutureDays() {
-    return this.days().filter(day => day.date.getDate() > new Date().getDate() || day.date.getMonth() > new Date().getMonth() || day.date.getFullYear() > new Date().getFullYear());
+    const today = new Date();  // Hol das heutige Datum
+
+    return this.days().filter(day => {
+      const dayDate = day.date;
+      return dayDate > today;  // Vergleiche direkt das Datum
+    });
   }
 
   setIsGeplantVisibleTrue() {
