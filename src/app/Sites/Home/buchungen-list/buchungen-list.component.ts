@@ -1,4 +1,4 @@
-import {Component, computed, OnInit} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {Day, Month} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 
@@ -9,6 +9,7 @@ import {DataService} from "../../../Services/DataService/data.service";
 })
 export class BuchungenListComponent  implements OnInit{
   date = new Date();
+  isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     const months: Month[] = this.dataService.userData.months();
     const days: Day[] = []
@@ -39,5 +40,30 @@ export class BuchungenListComponent  implements OnInit{
       rArray.push(day);
     })
     return rArray.sort((a, b) => b.date.getTime() - a.date.getTime())
+  }
+
+  getPresentAndPastDays() {
+    const today = new Date();  // Hol das heutige Datum
+
+    return this.days().filter(day => {
+      const dayDate = day.date;
+      return dayDate <= today;  // Vergleiche direkt das Datum
+    });
+  }
+
+  getFutureDays() {
+    return this.days().filter(day => day.date.getDate() > new Date().getDate() || day.date.getMonth() > new Date().getMonth() || day.date.getFullYear() > new Date().getFullYear());
+  }
+
+  setIsGeplantVisibleTrue() {
+    this.isGeplantVisible.set(true);
+  }
+
+  setIsGeplantVisibleFalse() {
+    this.isGeplantVisible.set(false);
+  }
+
+  toggleIsGeplantVisible() {
+    this.isGeplantVisible.set(!this.isGeplantVisible());
   }
 }

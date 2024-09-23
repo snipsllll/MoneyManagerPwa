@@ -1,20 +1,34 @@
 <div class="eintraege-list">
   <div class="eintraege-list__topbar">
   </div>
-  <div class="eintraege-list__list">
-    <app-buchungen-list-day *ngFor="let day of days()" [day]="day">
-
-    </app-buchungen-list-day>
-
-    @if (days().length !== 0) {
-      <div class="spacer">
-        .
+  @if (days().length > 0) {
+    <div class="eintraege-list__lists">
+      <div class="eintraege-list__geplant-text">
+        <img src="assets/chevron-right.png" class="eintraege-list__geplant-img" *ngIf="!isGeplantVisible()" (click)="setIsGeplantVisibleTrue()">
+        <img src="assets/chevron-down.png" class="eintraege-list__geplant-img" *ngIf="isGeplantVisible()" (click)="setIsGeplantVisibleFalse()">
+        <div  class="eintraege-list__geplant-label" (click)="toggleIsGeplantVisible()">
+          geplant
+        </div>
       </div>
-    } @else {
-      <div class="eintraege-list__keine-eintraege">
-        noch keine Einträge vorhanden
-      </div>
-    }
+      <div class="eintraege-list__geplant-list" *ngIf="getFutureDays().length > 0">
+        @if(isGeplantVisible()) {
+          <app-buchungen-list-day *ngFor="let day of getFutureDays()" [day]="day">
 
-  </div>
+          </app-buchungen-list-day>
+          <hr class="hr-geplant">
+        }
+      </div>
+
+      <div class="eintraege-list__list" *ngIf="getPresentAndPastDays().length > 0">
+        <app-buchungen-list-day *ngFor="let day of getPresentAndPastDays()" [day]="day">
+
+        </app-buchungen-list-day>
+      </div>
+    </div>
+
+  } @else {
+    <div class="eintraege-list__keine-eintraege">
+      noch keine Einträge vorhanden
+    </div>
+  }
 </div>
