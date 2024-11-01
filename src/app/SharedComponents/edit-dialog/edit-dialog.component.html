@@ -1,7 +1,7 @@
 <div class="edit-dialog__wrapper">
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
-      <input type="text" class="edit-dialog__title" maxlength="12" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="edit-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
       @if (viewModel.data.id !== undefined) {
         <div class="edit-dialog__id">
           (ID: {{viewModel.data.id}})

@@ -39,7 +39,7 @@
     <div class="create-eintrag__top-content">
       <div class="create-eintrag__top-line">
         @if (!isSearchboxVisible()) {
-          <input type="text" [(ngModel)]="buchung.title" maxlength="12" class="create-eintrag__title" autofocus
+          <input type="text" [(ngModel)]="buchung.title" maxlength="25" class="create-eintrag__title" autofocus
                  placeholder="Titel" (change)="onTitleChanged()">
           <img src="assets/search.png" class="create-eintrag__search-button" (click)="onSearchClicked()"/>
         } @else {
