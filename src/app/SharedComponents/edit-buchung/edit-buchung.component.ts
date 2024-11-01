@@ -152,23 +152,15 @@ export class EditBuchungComponent implements OnInit {
     this.saveButtonDisabled.set(this.isSaveAble());
   }
 
-  toFixedDown(number?: number, decimals?: number): number | undefined {
-    if(number === undefined) {
-      return undefined;
-    }
+  toFixedDown(number: number, decimals: number): number {
     const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
+
+    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
+    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
+
+    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
+    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
   }
 
   private hasBuchungChanged() {
