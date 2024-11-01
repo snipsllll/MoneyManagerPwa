@@ -103,10 +103,13 @@ export class BudgetComponent  implements OnInit{
 
   toFixedDown(number: number, decimals: number): number {
     const numberString = number.toString();
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
+
+    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
+    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
+
+    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
+    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
   }
 
   getStartdateForSelectedMonth() {
