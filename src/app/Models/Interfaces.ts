@@ -73,11 +73,12 @@ export interface SavedData {
   fixKosten: FixKostenEintrag[];
   sparEintraege: SparschweinEintrag[];
   wunschlistenEintraege: WunschlistenEintrag[];
-  settings?: Settings;
+  settings: Settings;
 }
 
 export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
+  showDayDifferenceInHome: boolean;
 }
 
 export interface WunschlistenFilter {

@@ -13,6 +13,7 @@ import {SettingsService} from "../../../Services/SettingsService/settings.servic
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
+  isDingsChecked!: boolean;
 
   constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
@@ -21,6 +22,7 @@ export class EinstellungenComponent implements OnInit{
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+    this.isDingsChecked = this.settingsService.getShowDayDifferenceInHome();
   }
 
   onAlleDatenLoeschenClicked() {
@@ -28,7 +30,7 @@ export class EinstellungenComponent implements OnInit{
     title: 'Alle Daten löschen?',
     message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
     onConfirmClicked: () => {
-      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: []})
+      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -114,6 +116,7 @@ export class EinstellungenComponent implements OnInit{
   }
 
   onDayDiffClicked() {
-    this.settingsService.showDayDifferenceInHome = !this.settingsService.showDayDifferenceInHome;
+    this.settingsService.setShowDayDifferenceInHome(!this.settingsService.getShowDayDifferenceInHome());
+    this.isDingsChecked = this.settingsService.getShowDayDifferenceInHome();
   }
 }

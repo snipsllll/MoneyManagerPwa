@@ -16,6 +16,7 @@ import {
   WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
+import {SaveService} from "../SaveService/save.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,15 +25,12 @@ import {DB} from "../../Models/Enums";
 export class DataService {
 
   userData!: UserData;
-  settings!: Settings;
   testData: DB = DB.noTD;
   download: boolean = true;
 
   updated = signal<number>(0);
 
-  private _fileEngine = new FileEngine(this.testData, this.download);
-
-  constructor() {
+  constructor(private saveService: SaveService) {
     this.initializeData();
   }
 
@@ -476,14 +474,13 @@ export class DataService {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: undefined
+      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDayDifferenceInHome: false}
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
     savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
-    savedData.settings = this.settings;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -498,16 +495,14 @@ export class DataService {
   }
 
   private initializeData() {
-    const savedData = this._fileEngine.load();
-
     //Converting SavedData to UserData
     this.userData = new UserData();
-    this.userData.buchungen.alleBuchungen = savedData.buchungen ?? [];
-    this.userData.fixKosten = savedData.fixKosten ?? [];
-    this.userData.sparEintraege = savedData.sparEintraege ?? [];
-    this.userData.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.userData.buchungen.alleBuchungen = this.saveService.getBuchungen() ?? [];
+    this.userData.fixKosten = this.saveService.getFixKosten() ?? [];
+    this.userData.sparEintraege = this.saveService.getSparEintraege() ?? [];
+    this.userData.wunschlistenEintraege = this.saveService.getWunschlistenEintraege() ?? [];
 
-    savedData.savedMonths?.forEach(month => {
+    this.saveService.getSavedMonths().forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {
         this.createNewMonth(month.date);
       }
@@ -515,13 +510,6 @@ export class DataService {
       this.changeTotalBudgetForMonth(month.date, month.totalBudget, false);
       this.setFixKostenEintragForMonth(month.date, month.fixkosten);
     });
-
-    this.settings = savedData.settings ?? {
-      wunschllistenFilter: {
-        gekaufteEintraegeAusblenden: false,
-        selectedFilter: ''
-      }
-    };
 
     this.update({}, false);
   }
@@ -815,12 +803,16 @@ export class DataService {
   }
 
   save(savedData?: SavedData) { //TODO testen
-    if(savedData !== undefined) {
-      this._fileEngine.save(savedData);
-      this.initializeData();
-    } else {
-      this._fileEngine.save(this.getSavedData());
+    if(savedData === undefined) {
+      savedData = this.getSavedData();
     }
+    this.saveService.setBuchungen(savedData.buchungen);
+    this.saveService.setFixKosten(savedData.fixKosten);
+    this.saveService.setSavedMonths(savedData.savedMonths);
+    this.saveService.setWunschlistenEintraege(savedData.wunschlistenEintraege);
+    this.saveService.setSparEintraege(savedData.sparEintraege);
+
+    this.saveService.saveChanges();
   }
 
   private sendUpdateToComponents() { //TODO testen

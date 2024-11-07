@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
+import {SaveService} from "../SaveService/save.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
 
-  showDayDifferenceInHome: boolean = false;
+  constructor(private saveService: SaveService) { }
 
-  constructor() { }
+  getShowDayDifferenceInHome() {
+    return this.saveService.getSettings().showDayDifferenceInHome;
+  }
+
+  setShowDayDifferenceInHome(showDayDifferenceInHome: boolean) {
+    let x = this.saveService.getSettings();
+    x.showDayDifferenceInHome = showDayDifferenceInHome;
+    this.saveService.setSettings(x);
+  }
 }
