@@ -2,6 +2,7 @@ import {Component, computed, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
 import {UT} from "../../../Models/Classes/UT";
 import {DataService} from "../../../Services/DataService/data.service";
+import {SettingsService} from "../../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -18,6 +19,6 @@ export class BuchungenListDayComponent {
 
   ut: UT = new UT();
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, public settingsService: SettingsService) {
   }
 }

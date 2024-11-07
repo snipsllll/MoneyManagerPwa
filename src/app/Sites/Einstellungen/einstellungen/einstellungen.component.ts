@@ -3,6 +3,7 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {SettingsService} from "../../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-einstellungen',
@@ -13,7 +14,7 @@ export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
 
-  constructor(private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -110,5 +111,9 @@ export class EinstellungenComponent implements OnInit{
     } catch (error) {
       console.error('Fehler beim Speichern der Datei:', error);
     }
+  }
+
+  onDayDiffClicked() {
+    this.settingsService.showDayDifferenceInHome = !this.settingsService.showDayDifferenceInHome;
   }
 }

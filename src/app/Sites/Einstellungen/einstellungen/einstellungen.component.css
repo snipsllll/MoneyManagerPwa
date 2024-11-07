@@ -34,8 +34,28 @@
   background-color: #6a9dc5;
 }
 
-.flex-spacer {
-  height: 10px;
-  width: 100px;
+.einstellungen__middle {
+  padding: 10px;
+  width: calc(100% - 20px);
   flex-grow: 1;
 }
+
+.einstellungen__day-diff-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.create-eintrag__data-apz {
+   height: 20px;
+   width: fit-content;
+   scale: 1.3;
+   position: relative;
+   z-index: 1;
+ }
+
+.create-eintrag__label-apz {
+  font-size: 18px;
+  color: #323232;
+  margin-left: 7px;
+}
+

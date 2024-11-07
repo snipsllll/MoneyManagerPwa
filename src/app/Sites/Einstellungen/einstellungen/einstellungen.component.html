@@ -9,8 +9,13 @@
       Daten exportieren
     </div>
   </div>
-  <div class="flex-spacer">
-
+  <div class="einstellungen__middle">
+    <div class="einstellungen__day-diff-wrapper">
+      <input type="checkbox" [(ngModel)]="settingsService.showDayDifferenceInHome" class="create-eintrag__data-apz">
+      <div class="create-eintrag__label-apz" (click)="onDayDiffClicked()">
+        Differenz pro Tag anzeigen
+      </div>
+    </div>
   </div>
 
   <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">
