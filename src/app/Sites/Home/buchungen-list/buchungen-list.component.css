@@ -8,14 +8,22 @@
   position: relative;
 }
 
-.eintraege-list__list {
+.eintraege-list__lists {
   height: 100%;
-  width: calc(100% - 20px);
-  padding: 10px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   overflow-y: scroll;
+}
+
+.eintraege-list__list, .eintraege-list__geplant-list {
+  width: calc(100% - 20px);
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.eintraege-list__list {
+  flex-grow: 1;
 }
 
 .eintraege-list__topbar {
@@ -38,4 +46,22 @@
   line-height: 300px;
   width: 10px;
   color: transparent;
+}
+
+.eintraege-list__geplant-text {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.eintraege-list__geplant-img {
+  width: 20px;
+  height: 20px;
+}
+
+.hr-geplant {
+  border: none;
+  height: 2px;
+  background-color: black;
+  width: 100%;
 }

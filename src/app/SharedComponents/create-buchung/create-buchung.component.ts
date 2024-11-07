@@ -16,12 +16,15 @@ export class CreateBuchungComponent {
   oldBuchung!: Buchung;
   showBetragWarning = false;
   date?: string;
+  isSearchboxVisible = signal<boolean>(false);
   dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
   saveButtonDisabled = signal<boolean>(true);
+  buchungen: Buchung[] = [];
   ut: UT = new UT();
 
   constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
     const date = new Date();
+    this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
 
     this.buchung = {
       title: '',
@@ -43,12 +46,28 @@ export class CreateBuchungComponent {
     this.date = this.buchung.date.toISOString().slice(0, 10);
   }
 
+  onSearchClicked() {
+    this.isSearchboxVisible.set(true);
+  }
+
+  onSearchboxCloseClicked() {
+    this.isSearchboxVisible.set(false);
+  }
+
+  onItemSelected(item: Buchung) {
+    this.isSearchboxVisible.set(false);
+    this.saveButtonDisabled.set(false);
+    this.buchung.title = item.title;
+    this.buchung.apz = item.apz;
+    this.buchung.betrag = item.betrag;
+    this.buchung.beschreibung = item.beschreibung;
+  }
+
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
         let showConfDialog: boolean;
         if(this.buchung.apz === true){
-          console.log(this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!)
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
           showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag!);

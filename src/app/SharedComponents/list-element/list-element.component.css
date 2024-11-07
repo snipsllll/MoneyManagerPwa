@@ -15,7 +15,7 @@
 }
 
 .list-element__main-center {
-  flex-grow: 1;
+  width: 270px;
 }
 
 .list-element__main-center-top {
@@ -24,6 +24,10 @@
 
 .list-element__main-center-bottom {
   font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .list-element__main-right {
