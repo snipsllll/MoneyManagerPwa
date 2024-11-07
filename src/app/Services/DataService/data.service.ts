@@ -221,6 +221,7 @@ export class DataService {
       }
 
       if (updateValues.months) {
+        console.log("a")
         updateValues.months.forEach(month => {
           if (!this.checkIfMonthExistsForDay(month.date)) {
             this.createNewMonth(month.date);
@@ -270,6 +271,7 @@ export class DataService {
         })
       }
     }
+    console.log("b")
 
     /*Weird and crazy stuff beginns here*/
     this.updateAllBuchungen();
@@ -302,6 +304,7 @@ export class DataService {
 
       this.calcSpareintragForMonth(month.startDate);
     });
+    console.log("c")
     if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
       this.save();
     }
@@ -762,37 +765,40 @@ export class DataService {
     return this.userData.buchungen.alleBuchungen.findIndex(buchung => buchung.id === id);
   }
 
-  createNewMonth(date: Date) { //TODO
+  createNewMonth(date: Date) {
     const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
-    const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); //TODO testen
+    const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
     const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
 
     const weeks: Week[] = [];
 
     let weekStartDate = startDate;
 
-    while (weekStartDate.getDate() <= endDate.getDate() && weekStartDate.getMonth() <= endDate.getMonth()) {
+    while (weekStartDate <= endDate) {
+      // Calculate the end of the week, or the end of the month if it falls within this week
       let weekEndDate: Date = this.getSunday(weekStartDate);
-
-      if (weekEndDate.getMonth() > endDate.getMonth()) {
-        weekEndDate = endDate;
+      if (weekEndDate > endDate) {
+        weekEndDate = endDate; // Adjust to end of the month if the week goes past it
       }
 
-      const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1; //TODO testen
+      const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1;
       const days: Day[] = [];
 
+      // Populate days in the week
       for (let d = weekStartDate.getDate(); d <= weekEndDate.getDate(); d++) {
         const dateForDay = new Date(weekStartDate.getFullYear(), weekStartDate.getMonth(), d);
-        days.push({date: dateForDay});
+        days.push({ date: dateForDay });
       }
 
+      // Push the week to weeks array
       weeks.push({
-        startDate: weekStartDate,
-        endDate: weekEndDate,
+        startDate: new Date(weekStartDate),
+        endDate: new Date(weekEndDate),
         daysInWeek: daysInWeek,
         days: days
       });
 
+      // Move to the next Monday
       weekStartDate = this.getNextMonday(weekStartDate);
     }
 
@@ -801,9 +807,11 @@ export class DataService {
       endDate: endDate,
       daysInMonth: daysInMonth,
       weeks: weeks
-    }
+    };
 
-    month.monatAbgeschlossen = !(this.isDayBeforeMonth(new Date(), month) || (month.startDate.getFullYear() === new Date().getFullYear() && month.startDate.getMonth() === new Date().getMonth()));
+    // Check if the month is completed or not
+    month.monatAbgeschlossen = !(this.isDayBeforeMonth(new Date(), month) ||
+      (month.startDate.getFullYear() === new Date().getFullYear() && month.startDate.getMonth() === new Date().getMonth()));
 
     this.userData.months().push(month);
   }
