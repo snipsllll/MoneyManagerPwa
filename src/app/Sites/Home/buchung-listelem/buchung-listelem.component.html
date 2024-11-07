@@ -1,7 +1,7 @@
 <div class="eintrag-listelem" [class.apz]="buchung.apz || buchung.spe" [class.first]="first" [class.last]="last">
   <div class="eintrag-listelem__menu-button__left" (click)="onBuchungClicked(buchung.id!)">
     <div class="eintrag-listelem__betrag all-centered">
-      <b>-{{ toFixedDown(buchung.betrag!, 2) }}€</b>
+      <b>-{{ ut.toFixedDown(buchung.betrag!, 2) }}€</b>
     </div>
     <div class="a">
       <div class="eintrag-listelem__title all-centered">

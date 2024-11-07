@@ -4,6 +4,7 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
 import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-create-buchung',
@@ -17,6 +18,7 @@ export class CreateBuchungComponent {
   date?: string;
   dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
   saveButtonDisabled = signal<boolean>(true);
+  ut: UT = new UT();
 
   constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
     const date = new Date();
@@ -151,25 +153,6 @@ export class CreateBuchungComponent {
 
   onApzClicked() {
     this.buchung.apz = !this.buchung.apz;
-  }
-
-  toFixedDown(number?: number, decimals?: number): number | undefined {
-    if(number === undefined) {
-      return undefined;
-    }
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private isBuchungEmpty() {

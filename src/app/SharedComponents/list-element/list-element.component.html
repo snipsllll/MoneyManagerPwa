@@ -2,17 +2,17 @@
   <div class="list-element__main">
     <div class="list-element__main-left">
       @if(viewModel.settings.isDarker) {
-        <b class="darker-text">{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.isGrayedOut) {
-        <b class="grayed-out-element">{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b class="grayed-out-element">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.red){
-        <b class="red">{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b class="red">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.green){
-        <b class="green">{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b class="green">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.black){
-        <b>{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else {
-        <b>{{ toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+        <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       }
     </div>
     <div class="list-element__main-center">

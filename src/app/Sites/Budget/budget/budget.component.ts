@@ -2,6 +2,8 @@ import {Component, computed, OnInit, signal} from '@angular/core';
 import {BudgetInfosForMonth} from "../../../Models/Interfaces";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
+import {Utils} from "../../../Utils";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-budget',
@@ -9,6 +11,8 @@ import {DataService} from "../../../Services/DataService/data.service";
   styleUrl: './budget.component.css'
 })
 export class BudgetComponent  implements OnInit{
+  ut: UT = new UT();
+
   selectedMonthIndex = signal<number>(new Date().getMonth());
 
   selectedYear = signal<number>(new Date().getFullYear());
@@ -99,14 +103,6 @@ export class BudgetComponent  implements OnInit{
 
   onFixKostenClicked() {
     this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   getStartdateForSelectedMonth() {

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/c
 import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {MenuItem} from "../../Models/Interfaces";
 import {Color} from "../../Models/Enums";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-list-element',
@@ -14,6 +15,7 @@ export class ListElementComponent implements OnInit{
   @Input() viewModel!: ListElementViewModel;
   @Output() onElementClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
+  ut: UT = new UT();
 
   constructor() {
   }
@@ -38,22 +40,6 @@ export class ListElementComponent implements OnInit{
     if(this.viewModel.settings.doDetailsExist) {
       this.onElementClicked.emit();
     }
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   protected readonly Color = Color;

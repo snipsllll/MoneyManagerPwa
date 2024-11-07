@@ -16,7 +16,7 @@
       <div class="top-bar__budget" *ngIf="dayBudget()!.verfuegbar !== undefined" (click)="toggleDropdown()"
            (touchstart)="onTouchStart()" (touchend)="onTouchEnd()" (touchcancel)="onTouchEnd()">
         <b class="darkgreen"
-           [class.darkred]="dayBudget()!.verfuegbar! < 0">{{ toFixedDown(dayBudget().verfuegbar!, 2) }}€</b>
+           [class.darkred]="dayBudget()!.verfuegbar! < 0">{{ ut.toFixedDown(dayBudget().verfuegbar!, 2) }}€</b>
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
@@ -26,7 +26,7 @@
           monat:
         </div>
         <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.month !== undefined; else blackContent"
-           [class.red]="+(dayBudget()!.month!) < 0">{{ toFixedDown(dayBudget()!.month!, 2) }}€</b>
+           [class.red]="+(dayBudget()!.month!) < 0">{{ ut.toFixedDown(dayBudget()!.month!, 2) }}€</b>
 
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
@@ -34,14 +34,14 @@
           woche:
         </div>
         <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.week !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.week!) < 0">{{ toFixedDown(dayBudget()!.week!, 2) }}€</b>
+                  [class.red]="+(dayBudget()!.week!) < 0">{{ ut.toFixedDown(dayBudget()!.week!, 2) }}€</b>
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           heute:
         </div>
         <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.day !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.day!) < 0">{{ toFixedDown(dayBudget()!.day!, 2) }}€</b>
+                  [class.red]="+(dayBudget()!.day!) < 0">{{ ut.toFixedDown(dayBudget()!.day!, 2) }}€</b>
       </div>
     </div>
   </div>

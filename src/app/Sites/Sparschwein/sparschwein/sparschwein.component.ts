@@ -12,6 +12,7 @@ import {
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-sparschwein',
@@ -19,6 +20,8 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
   styleUrl: './sparschwein.component.css'
 })
 export class SparschweinComponent implements OnInit{
+
+  ut: UT = new UT();
 
   sparschweinData = computed(() => {
     this.dataService.updated();
@@ -175,22 +178,6 @@ export class SparschweinComponent implements OnInit{
       },
       istVonHeuteAbzeihenVisible: true
     }
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private sortByDate(eintraege: SparschweinEintrag[]) {
