@@ -24,7 +24,8 @@ export class EditDialogComponent implements OnInit{
       title: this.viewModel.data.title,
       zusatz: this.viewModel.data.zusatz,
       date: this.viewModel.data.date,
-      id: this.viewModel.data.id
+      id: this.viewModel.data.id,
+      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen
     }
   }
 
@@ -35,6 +36,8 @@ export class EditDialogComponent implements OnInit{
     }
     if(this.checkDarfSpeichern()) {
       this.dialogService.isEditDialogVisible = false;
+      console.log(this.viewModel.data)
+      console.log(647364872)
       this.viewModel.onSaveClick(this.viewModel.data);
     }
   }
@@ -63,6 +66,10 @@ export class EditDialogComponent implements OnInit{
 
   onValueChanged() {
     this.darfSpeichern.set(this.checkDarfSpeichern());
+  }
+
+  onVonHeuteAbziehenClicked() {
+    this.viewModel.data.vonHeuteAbziehen = !this.viewModel.data.vonHeuteAbziehen;
   }
 
   private checkDarfSpeichern() {

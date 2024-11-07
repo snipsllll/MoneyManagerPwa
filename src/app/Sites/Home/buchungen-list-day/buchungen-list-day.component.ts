@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -9,11 +10,5 @@ import {Day} from "../../../Models/Interfaces";
 export class BuchungenListDayComponent {
   @Input() day!: Day;
 
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
-  }
+  ut: UT = new UT();
 }

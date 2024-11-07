@@ -138,3 +138,18 @@ hr {
   padding-right: 5px;
   font-size: 18px;
 }
+
+.create-dialog__von-heute-abziehen {
+  margin-top: 5px;
+  display: flex;
+}
+
+.create-dialog__label-checkbox {
+  font-size: 18px;
+  width: fit-content;
+}
+
+.create-dialog__checkbox-input-wrapper {
+  width: 25px;
+  scale: 1.3;
+}

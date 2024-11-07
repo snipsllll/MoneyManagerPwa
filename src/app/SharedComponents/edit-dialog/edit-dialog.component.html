@@ -24,6 +24,14 @@
           </div>
         </div>
       </div>
+      <div class="edit-dialog__von-heute-abziehen" *ngIf="viewModel.istVonHeuteAbzeihenVisible">
+        <div class="edit-dialog__checkbox-input-wrapper">
+          <input type="checkbox" [(ngModel)]="viewModel.data.vonHeuteAbziehen" class="edit-dialog__data edit-dialog__checkbox-input" placeholder="0.00" (change)="onValueChanged()">
+        </div>
+        <div class="edit-dialog__label-checkbox" (click)="onVonHeuteAbziehenClicked()">
+          vom heutigen Budget abziehen
+        </div>
+      </div>
       <div class="edit-dialog__beschreibung-wrapper">
         <div class="edit-dialog__label edit-dialog__beschreibung-label">
           Zusatz:

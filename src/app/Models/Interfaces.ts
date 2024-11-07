@@ -39,6 +39,8 @@ export interface Buchung {
   date: Date;
   time: string;
   apz?: boolean;
+  spe?: boolean;
+  speId?: number;
 }
 
 export interface ItfUserData {
@@ -147,6 +149,7 @@ export interface SparschweinEintrag {
   id: number;
   title?: string;
   zusatz?: string;
+  vonDayBudgetAbziehen?: boolean;
 }
 
 export interface MenuItem {

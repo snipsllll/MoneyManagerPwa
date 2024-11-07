@@ -2,6 +2,7 @@ export interface EditDialogViewModel {
   data: EditDialogData;
   onSaveClick: (editDialogData: EditDialogData) => void;
   onCancelClick: () => void;
+  istVonHeuteAbzeihenVisible?: boolean;
 }
 
 export interface EditDialogData {
@@ -11,4 +12,5 @@ export interface EditDialogData {
   id?: number;
   date?: Date;
   erstelltAm?: Date;
+  vonHeuteAbziehen?: boolean;
 }
