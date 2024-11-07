@@ -3,7 +3,7 @@
   <div class="sparschwein__top">
     <img src="../../../../assets/sparschwein.png" class="sparschwein__sparschwein" alt="sparschwein.png">
     <div class="sparschwein__betrag">
-      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ toFixedDown(sparschweinData().erspartes!, 2) }}€</b>
+      <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ ut.toFixedDown(sparschweinData().erspartes!, 2) }}€</b>
     </div>
   </div>
   <hr class="hr">

@@ -12,6 +12,7 @@ import {
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-sparschwein',
@@ -19,6 +20,8 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
   styleUrl: './sparschwein.component.css'
 })
 export class SparschweinComponent implements OnInit{
+
+  ut: UT = new UT();
 
   sparschweinData = computed(() => {
     this.dataService.updated();
@@ -43,12 +46,14 @@ export class SparschweinComponent implements OnInit{
   }
 
   onEditClicked = (eintrag: EditDialogData) => {
+    console.log(eintrag)
     const x: EditDialogData = {
       title: eintrag.title,
       zusatz: eintrag.zusatz,
       date: eintrag.date,
       id: eintrag.id,
-      betrag: eintrag.betrag
+      betrag: eintrag.betrag,
+      vonHeuteAbziehen: eintrag.vonHeuteAbziehen
     }
     this.dialogService.showEditDialog(this.getEditDialogViewModel(x))
   }
@@ -77,6 +82,7 @@ export class SparschweinComponent implements OnInit{
       betrag: eintrag.betrag,
       title: this.getTitle(eintrag),
       zusatz: eintrag.zusatz,
+      vonHeuteAbziehen: eintrag.vonDayBudgetAbziehen,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -143,11 +149,14 @@ export class SparschweinComponent implements OnInit{
           zusatz: eintrag.zusatz,
           isMonatEintrag: false,
           date: new Date(),
-          id: -1
+          id: -1,
+          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
         }
+        console.log(newSparschweinEintrag)
         this.sparschweinService.addEintrag(newSparschweinEintrag);
       },
-      onCancelClick: () => {}
+      onCancelClick: () => {},
+      istVonHeuteAbzeihenVisible: true
     }
   }
 
@@ -160,29 +169,15 @@ export class SparschweinComponent implements OnInit{
           id: eintrag.id!,
           title: eintrag.title,
           zusatz: eintrag.zusatz,
-          date: eintrag.date!
+          date: eintrag.date!,
+          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
         })
       },
       onCancelClick: () => {
 
-      }
+      },
+      istVonHeuteAbzeihenVisible: true
     }
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private sortByDate(eintraege: SparschweinEintrag[]) {

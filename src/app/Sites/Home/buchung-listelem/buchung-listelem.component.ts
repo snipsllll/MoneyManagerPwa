@@ -6,6 +6,7 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-buchung-listelem',
@@ -17,6 +18,7 @@ export class BuchungListelemComponent implements OnInit{
   @Input() first?: boolean;
   @Input() last?: boolean;
   showMenu = signal<boolean>(false);
+  ut: UT = new UT();
 
   constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
 
@@ -31,6 +33,7 @@ export class BuchungListelemComponent implements OnInit{
   }
 
   onBuchungClicked(buchungsId: number) {
+    if(!this.buchung.spe)
     this.router.navigate(['/buchungDetails', buchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
@@ -53,21 +56,5 @@ export class BuchungListelemComponent implements OnInit{
       }
     };
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 }

@@ -1,5 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, computed, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
+import {UT} from "../../../Models/Classes/UT";
+import {DataService} from "../../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -9,11 +11,13 @@ import {Day} from "../../../Models/Interfaces";
 export class BuchungenListDayComponent {
   @Input() day!: Day;
 
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
+  leftOvers = computed(() => {
+    this.dataService.updated();
+    return this.dataService.getDayIstBudgets(this.day.date).leftOvers
+  })
+
+  ut: UT = new UT();
+
+  constructor(private dataService: DataService) {
   }
 }

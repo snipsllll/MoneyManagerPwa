@@ -4,6 +4,7 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
 import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-create-buchung',
@@ -19,6 +20,7 @@ export class CreateBuchungComponent {
   dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
   saveButtonDisabled = signal<boolean>(true);
   buchungen: Buchung[] = [];
+  ut: UT = new UT();
 
   constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
     const date = new Date();
@@ -68,7 +70,7 @@ export class CreateBuchungComponent {
         if(this.buchung.apz === true){
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag!);
+          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! + this.dayBudget()!.leftOvers! < this.buchung.betrag!);
         }
 
         if (showConfDialog) {
@@ -101,8 +103,8 @@ export class CreateBuchungComponent {
       return;
     }
     const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Cancel?',
-      message: 'Do you really want to cancel? All changes will be lost!',
+      title: 'Abbrechen?',
+      message: 'Möchtest du wirklich abbrechen? Alle bisher eingetragenen Daten in der neuen Buchung werden verworfen!',
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
       },
@@ -170,25 +172,6 @@ export class CreateBuchungComponent {
 
   onApzClicked() {
     this.buchung.apz = !this.buchung.apz;
-  }
-
-  toFixedDown(number?: number, decimals?: number): number | undefined {
-    if(number === undefined) {
-      return undefined;
-    }
-    const numberString = number.toString();
-    if(numberString.indexOf(".") === -1) {
-      return number;
-    } else if(numberString.indexOf(".") === numberString.length - 2) {
-      const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-      let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-      numberNachKomma = numberNachKomma.substring(0, decimals);
-      return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 10) : (+numberVorKomma) - (+numberNachKomma / 10);
-    }
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private isBuchungEmpty() {

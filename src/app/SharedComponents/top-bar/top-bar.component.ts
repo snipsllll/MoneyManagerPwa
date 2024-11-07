@@ -4,6 +4,7 @@ import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
 import {Router} from "@angular/router";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-top-bar',
@@ -26,6 +27,7 @@ export class TopBarComponent implements OnInit {
     };
     return y;
   })
+  ut: UT = new UT();
 
   constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
@@ -47,14 +49,6 @@ export class TopBarComponent implements OnInit {
   test() {
     console.log(this.dataService.userData)
     console.log(this.dataService.userData.months())
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const numberVorKomma = numberString.substring(0, numberString.indexOf("."));
-    let numberNachKomma = numberString.substring(numberString.indexOf(".") + 1, numberString.length);
-    numberNachKomma = numberNachKomma.substring(0, decimals);
-    return +numberVorKomma > 0 ? (+numberVorKomma) + (+numberNachKomma / 100) : (+numberVorKomma) - (+numberNachKomma / 100);
   }
 
   private pressTimer: any;
