@@ -18,14 +18,14 @@
           total Budget:
         </div>
         <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
-               [(ngModel)]="data().totalBudget">
+               [(ngModel)]="data().totalBudget" onfocus="this.select()">
       </div>
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
           Sparen:
         </div>
         <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
-               [(ngModel)]="data().sparen">
+               [(ngModel)]="data().sparen" onfocus="this.select()">
       </div>
       <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
         <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
