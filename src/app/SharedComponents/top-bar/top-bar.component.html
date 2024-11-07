@@ -34,14 +34,14 @@
           woche:
         </div>
         <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.week !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.week!) < 0">{{ ut.toFixedDown(dayBudget()!.week!, 2) }}€</b>
+                  [class.red]="+(dayBudget()!.week! + dayBudget()!.leftOvers!) < 0">{{ ut.toFixedDown(dayBudget()!.week! + dayBudget()!.leftOvers!, 2) }}€</b>
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           heute:
         </div>
         <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.day !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.day!) < 0">{{ ut.toFixedDown(dayBudget()!.day!, 2) }}€</b>
+                  [class.red]="+(dayBudget()!.day! + dayBudget()!.leftOvers!) < 0">{{ ut.toFixedDown(dayBudget()!.day! + dayBudget()!.leftOvers!, 2) }}€</b>
       </div>
     </div>
   </div>

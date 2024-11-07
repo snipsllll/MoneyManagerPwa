@@ -6,10 +6,10 @@
         monat: <b class="green" [class.red]="dayBudget().monthIstBudget! < 0">{{ ut.toFixedDown(dayBudget().monthIstBudget, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="dayBudget().weekIstBudget! < 0">{{ ut.toFixedDown(dayBudget().weekIstBudget, 2) ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="dayBudget().weekIstBudget! + dayBudget()!.leftOvers! < 0">{{ ut.toFixedDown(dayBudget().weekIstBudget! + dayBudget()!.leftOvers!, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="dayBudget().dayIstBudget! < 0">{{ ut.toFixedDown(dayBudget().dayIstBudget, 2) ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="dayBudget().dayIstBudget! + dayBudget()!.leftOvers! < 0">{{ ut.toFixedDown(dayBudget().dayIstBudget! + dayBudget()!.leftOvers!, 2) ?? '???' }}€</b>
       </div>
     </div>
     <ng-template #noDayBudgetTop>

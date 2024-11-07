@@ -221,7 +221,6 @@ export class DataService {
       }
 
       if (updateValues.months) {
-        console.log("a")
         updateValues.months.forEach(month => {
           if (!this.checkIfMonthExistsForDay(month.date)) {
             this.createNewMonth(month.date);
@@ -271,7 +270,6 @@ export class DataService {
         })
       }
     }
-    console.log("b")
 
     /*Weird and crazy stuff beginns here*/
     this.updateAllBuchungen();
@@ -304,7 +302,7 @@ export class DataService {
 
       this.calcSpareintragForMonth(month.startDate);
     });
-    console.log("c")
+
     if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
       this.save();
     }
@@ -920,6 +918,10 @@ export class DataService {
         if ((day.date.getDate() < new Date().getDate() && day.date.getMonth() === new Date().getMonth()) || (day.date.getMonth() < new Date().getMonth() && day.date.getFullYear() <= new Date().getFullYear())) {
           leftovers += day.leftOvers ?? 0;
         }
+        /*
+        if(day.date.getDate() === new Date().getDate() && day.date.getMonth() === new Date().getMonth()){
+          leftovers += day.budget ?? 0;
+        }*/
       })
     })
     month.leftOvers = +(leftovers);
