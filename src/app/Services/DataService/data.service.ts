@@ -918,6 +918,10 @@ export class DataService {
         if ((day.date.getDate() < new Date().getDate() && day.date.getMonth() === new Date().getMonth()) || (day.date.getMonth() < new Date().getMonth() && day.date.getFullYear() <= new Date().getFullYear())) {
           leftovers += day.leftOvers ?? 0;
         }
+        /*
+        if(day.date.getDate() === new Date().getDate() && day.date.getMonth() === new Date().getMonth()){
+          leftovers += day.budget ?? 0;
+        }*/
       })
     })
     month.leftOvers = +(leftovers);

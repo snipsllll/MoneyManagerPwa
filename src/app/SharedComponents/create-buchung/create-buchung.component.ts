@@ -70,7 +70,7 @@ export class CreateBuchungComponent {
         if(this.buchung.apz === true){
           showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag!);
+          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! + this.dayBudget()!.leftOvers! < this.buchung.betrag!);
         }
 
         if (showConfDialog) {
