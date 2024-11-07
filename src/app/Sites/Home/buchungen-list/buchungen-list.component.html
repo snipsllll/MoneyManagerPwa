@@ -7,7 +7,7 @@
         <img src="assets/chevron-right.png" class="eintraege-list__geplant-img" *ngIf="!isGeplantVisible()" (click)="setIsGeplantVisibleTrue()">
         <img src="assets/chevron-down.png" class="eintraege-list__geplant-img" *ngIf="isGeplantVisible()" (click)="setIsGeplantVisibleFalse()">
         <div  class="eintraege-list__geplant-label" (click)="toggleIsGeplantVisible()">
-          geplant
+          geplant ({{ getFutureDays().length}})
         </div>
       </div>
       <div class="eintraege-list__geplant-list" *ngIf="getFutureDays().length > 0">
