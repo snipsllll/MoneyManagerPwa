@@ -13,7 +13,8 @@ import {SettingsService} from "../../../Services/SettingsService/settings.servic
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
-  isDingsChecked!: boolean;
+  isShowDayDiffChecked!: boolean;
+  isEnableToHighBuchungenChecked!: boolean;
 
   constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
@@ -22,7 +23,8 @@ export class EinstellungenComponent implements OnInit{
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.isDingsChecked = this.settingsService.getShowDayDifferenceInHome();
+    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
   }
 
   onAlleDatenLoeschenClicked() {
@@ -117,6 +119,11 @@ export class EinstellungenComponent implements OnInit{
 
   onDayDiffClicked() {
     this.settingsService.setShowDayDifferenceInHome(!this.settingsService.getShowDayDifferenceInHome());
-    this.isDingsChecked = this.settingsService.getShowDayDifferenceInHome();
+    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+  }
+
+  onZuVielErlaubtClicked() {
+    this.settingsService.setIsToHighBuchungenEnabled(!this.settingsService.getIsToHighBuchungenEnabled());
+    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
   }
 }

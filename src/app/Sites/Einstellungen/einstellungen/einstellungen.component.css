@@ -40,7 +40,7 @@
   flex-grow: 1;
 }
 
-.einstellungen__day-diff-wrapper {
+.einstellungen__checkbox-wrapper {
   display: flex;
   align-items: center;
 }
