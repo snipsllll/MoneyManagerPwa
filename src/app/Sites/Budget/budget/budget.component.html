@@ -59,7 +59,7 @@
           verfügbar für diesen Monat:
         </div>
         <div class="budget__element-data">
-          {{ data().budget }}€
+          {{ ut.toFixedDown(data().budget, 2) }}€
         </div>
       </div>
       <div class="budget__element-wrapper">

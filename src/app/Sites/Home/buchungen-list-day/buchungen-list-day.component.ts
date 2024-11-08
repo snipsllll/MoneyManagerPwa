@@ -12,9 +12,9 @@ import {SettingsService} from "../../../Services/SettingsService/settings.servic
 export class BuchungenListDayComponent {
   @Input() day!: Day;
 
-  leftOvers = computed(() => {
+  availableMoneyForDay = computed(() => {
     this.dataService.updated();
-    return this.dataService.getDayIstBudgets(this.day.date).leftOvers
+    return this.dataService.getAvailableMoneyForDay(this.day.date)
   })
 
   ut: UT = new UT();

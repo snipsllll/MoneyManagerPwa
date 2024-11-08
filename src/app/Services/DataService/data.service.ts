@@ -2,6 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {FileEngine} from "../FileEngine/FileEnigne";
 import {
+  AvailableMoney,
   Buchung,
   BudgetInfosForMonth,
   Day,
@@ -305,6 +306,87 @@ export class DataService {
       this.save();
     }
     this.sendUpdateToComponents();
+  }
+
+  getDayBudgetDictForMonth(monthDate: Date) {
+    const month = this.getMonthByDate(monthDate);
+
+    let dict: {[date: string]: number} = {};
+    let budget = month.budget!;
+    let daysLeft = month.daysInMonth!;
+
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          if(buchung.apz) {
+            budget -= buchung.betrag!;
+          }
+        })
+        dict[day.date.toLocaleDateString()] = budget / daysLeft;
+        budget -= dict[day.date.toLocaleDateString()];
+        daysLeft--;
+      })
+    })
+
+    return dict;
+  }
+
+  getAvailableMoneyForDay(dayDate: Date): number {
+    const month = this.getMonthByDate(dayDate);
+    const x = this.getDayBudgetDictForMonth(dayDate);
+
+    let isDayReached = false;
+    let daysLeftOver = month.daysInMonth!;
+    let notSpendMoney = 0;
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        if(!isDayReached){
+          if(day.date.getDate() === dayDate.getDate()){
+            isDayReached = true;
+          }
+
+          let moneySpendOnDay = 0;
+          day.buchungen?.forEach(buchung => {
+            if(!buchung.apz) {
+              moneySpendOnDay += buchung.betrag!;
+            }
+          })
+
+          notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
+          daysLeftOver--;
+        }
+      })
+    })
+
+    return notSpendMoney;
+  }
+
+  getAvailableMoney(dayDate: Date): AvailableMoney {
+    const availableForDay = this.getAvailableMoneyForDay(dayDate);
+    const daySollBudgets = this.getDayBudgetDictForMonth(dayDate);
+
+    let availableForWeek = 0;
+    let isDayReached = false;
+    this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
+      if(day.date.getDate() === dayDate.getDate()) {
+        isDayReached = true;
+      }
+      if(isDayReached) {
+        availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
+      }
+    })
+    availableForWeek += availableForDay;
+
+    const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
+
+    const x = {
+      availableForDay: availableForDay,
+      availableForWeek: availableForWeek,
+      availableForMonth: availableForMonth
+    }
+
+    console.log(x);
+    return x;
   }
 
   getDayIstBudgets(date: Date): DayIstBudgets {

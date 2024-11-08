@@ -159,3 +159,9 @@ export interface MenuItem {
   onClick: (input?: any) => void;
   grayedOut?: boolean;
 }
+
+export interface AvailableMoney {
+  availableForMonth: number;
+  availableForWeek: number;
+  availableForDay: number;
+}

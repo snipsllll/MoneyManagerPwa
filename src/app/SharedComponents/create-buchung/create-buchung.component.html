@@ -1,15 +1,15 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="dayBudget().weekIstBudget && dayBudget().monthIstBudget && dayBudget().dayIstBudget; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="availableMoney().availableForDay && availableMoney().availableForWeek && availableMoney().availableForWeek; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="dayBudget().monthIstBudget! < 0">{{ ut.toFixedDown(dayBudget().monthIstBudget, 2) ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="availableMoney().availableForMonth < 0">{{ ut.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="dayBudget().weekIstBudget! + dayBudget()!.leftOvers! < 0">{{ ut.toFixedDown(dayBudget().weekIstBudget! + dayBudget()!.leftOvers!, 2) ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="availableMoney().availableForWeek < 0">{{ ut.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="dayBudget().dayIstBudget! + dayBudget()!.leftOvers! < 0">{{ ut.toFixedDown(dayBudget().dayIstBudget! + dayBudget()!.leftOvers!, 2) ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="availableMoney().availableForDay < 0">{{ ut.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}€</b>
       </div>
     </div>
     <ng-template #noDayBudgetTop>
