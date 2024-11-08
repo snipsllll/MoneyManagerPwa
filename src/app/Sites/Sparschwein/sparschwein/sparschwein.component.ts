@@ -26,6 +26,7 @@ export class SparschweinComponent implements OnInit{
   sparschweinData = computed(() => {
     this.dataService.updated();
     const x = this.sparschweinService.getData();
+    console.log(x)
     x.eintraege = this.sortByDate(x.eintraege);
     console.log(x);
     return x;

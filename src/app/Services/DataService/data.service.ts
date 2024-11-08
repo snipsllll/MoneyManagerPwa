@@ -1050,24 +1050,31 @@ export class DataService {
 
   private calcSpareintragForMonth(date: Date) {
     const month = this.getMonthByDate(date);
+    console.log(month)
 
     if (month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
       if (this.isMonthSpareintragVorhanden(date)) {
         this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
           date: month.startDate,
-          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
+          betrag: (this.getAvailableMoney(this.getLastDayOfMonth(date).date)).availableForDay + (month.sparen ?? 0),
           id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
           isMonatEintrag: true
         }
       } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
-          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
+          betrag: (this.getAvailableMoney(this.getLastDayOfMonth(date).date)).availableForDay + (month.sparen ?? 0),
           id: this.getNextFreeSparEintragId(),
           isMonatEintrag: true
         })
       }
     }
+  }
+
+  private getLastDayOfMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+    const week = month.weeks![month.weeks?.length! -1];
+    return week.days[week.days.length -1];
   }
 
   private getIndexOfMonthSpareintrag(date: Date) {
