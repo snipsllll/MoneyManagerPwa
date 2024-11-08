@@ -14,19 +14,11 @@ import {UT} from "../../Models/Classes/UT";
 export class TopBarComponent implements OnInit {
 
   title?: string;
-  dayBudget = computed(() => {
+  availableMoney = computed(() => {
     this.dataService.updated();
-    const x = this.dataService.getDayIstBudgets(new Date());
-    const y: DayIstBudgetViewModel = {
-      month: x?.monthIstBudget,
-      week: x?.weekIstBudget,
-      day: x?.dayIstBudget,
-      leftOvers: x?.leftOvers,
-      gespartes: x?.gespartes,
-      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0))
-    };
-    return y;
+    return this.dataService.getAvailableMoney(new Date())
   })
+
   ut: UT = new UT();
 
   constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {

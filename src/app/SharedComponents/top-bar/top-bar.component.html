@@ -13,10 +13,10 @@
 
     </div>
     <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN'">
-      <div class="top-bar__budget" *ngIf="dayBudget()!.verfuegbar !== undefined" (click)="toggleDropdown()"
+      <div class="top-bar__budget" *ngIf="availableMoney()!.availableForDay !== undefined" (click)="toggleDropdown()"
            (touchstart)="onTouchStart()" (touchend)="onTouchEnd()" (touchcancel)="onTouchEnd()">
         <b class="darkgreen"
-           [class.darkred]="dayBudget()!.verfuegbar! < 0">{{ ut.toFixedDown(dayBudget().verfuegbar!, 2) }}€</b>
+           [class.darkred]="availableMoney()!.availableForDay < 0">{{ ut.toFixedDown(availableMoney()!.availableForDay, 2) }}€</b>
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
@@ -25,23 +25,23 @@
         <div class="top-bar__budget-eintrag-label">
           monat:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.month !== undefined; else blackContent"
-           [class.red]="+(dayBudget()!.month!) < 0">{{ ut.toFixedDown(dayBudget()!.month!, 2) }}€</b>
+        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForMonth !== undefined; else blackContent"
+           [class.red]="+(availableMoney()!.availableForMonth) < 0">{{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€</b>
 
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           woche:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.week !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.week! + dayBudget()!.leftOvers!) < 0">{{ ut.toFixedDown(dayBudget()!.week! + dayBudget()!.leftOvers!, 2) }}€</b>
+        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForWeek !== undefined; else blackContent"
+                  [class.red]="+(availableMoney()!.availableForWeek!) < 0">{{ ut.toFixedDown(availableMoney()!.availableForWeek!, 2) }}€</b>
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           heute:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="dayBudget()!.day !== undefined; else blackContent"
-                  [class.red]="+(dayBudget()!.day! + dayBudget()!.leftOvers!) < 0">{{ ut.toFixedDown(dayBudget()!.day! + dayBudget()!.leftOvers!, 2) }}€</b>
+        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForDay !== undefined; else blackContent"
+                  [class.red]="+(availableMoney()!.availableForDay!) < 0">{{ ut.toFixedDown(availableMoney()!.availableForDay!, 2) }}€</b>
       </div>
     </div>
   </div>
