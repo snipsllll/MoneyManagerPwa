@@ -3,29 +3,22 @@
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
     <div class="create-eintrag__budget" *ngIf="isAvailableMoneyValid(); else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="availableMoney().availableForMonth < 0">{{ utils.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}€</b>
+        monat: <b class="green"
+                  [class.red]="availableMoney().availableForMonth < 0">{{ utils.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}
+        €</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="availableMoney().availableForWeek < 0">{{ utils.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}€</b>
+        woche: <b class="green"
+                  [class.red]="availableMoney().availableForWeek < 0">{{ utils.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}
+        €</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="availableMoney().availableForDay < 0">{{ utils.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}€</b>
+        tag: <b class="green"
+                [class.red]="availableMoney().availableForDay < 0">{{ utils.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}
+        €</b>
       </div>
     </div>
-    <ng-template #noDayBudgetTop>
-      <div class="create-eintrag__budget">
-        <div class="ce__budget-eintrag">
-          monat: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          woche: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          tag: <b>???</b>
-        </div>
-      </div>
-    </ng-template>
-    <div class="create-eintrag__top-spacer" (click)="onBackClicked()">
+    <div class="create-eintrag__top-spacer">
 
     </div>
   </div>
@@ -39,17 +32,18 @@
         } @else {
           <div class="create-eintrag__search-box-wrapper">
             <div class="create-eintrag__search-box">
-              <app-searchbox [items]="buchungen" [filterField]="'title'" (itemSelected)="onItemSelected($event)"></app-searchbox>
+              <app-searchbox [items]="buchungen" [filterField]="'title'"
+                             (itemSelected)="onItemSelected($event)"></app-searchbox>
             </div>
-            <img src="assets/close.png" class="create-eintrag__search-box-x-button" alt="x" (click)="onSearchboxCloseClicked()"/>
+            <img src="assets/close.png" class="create-eintrag__search-box-x-button" alt="x"
+                 (click)="onSearchboxCloseClicked()"/>
           </div>
-
         }
       </div>
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
-          {{betragWarnung}}
+          {{ betragWarnung }}
         </div>
         <div class="create-eintrag__betrag-wrapper">
           <div class="create-eintrag__label">
@@ -107,5 +101,19 @@
       </div>
     </div>
   </div>
-
 </div>
+
+
+<ng-template #noDayBudgetTop>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      monat: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      woche: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      tag: <b>???</b>
+    </div>
+  </div>
+</ng-template>

@@ -3,29 +3,16 @@
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
     <div class="create-eintrag__budget" *ngIf="availableMoney().availableForMonth && availableMoney().availableForWeek && availableMoney().availableForDay; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="availableMoney().availableForMonth! < 0">{{ ut.toFixedDown(availableMoney().availableForMonth! + oldBuchung?.betrag! - buchung()?.betrag!, 2) ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="availableMoney().availableForMonth! < 0">{{ getAvailableMoneyMonth() ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="availableMoney().availableForWeek!< 0">{{ ut.toFixedDown(availableMoney().availableForWeek! + oldBuchung?.betrag! - buchung()?.betrag!, 2) ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="availableMoney().availableForWeek!< 0">{{ getAvailableMoneyWeek() ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="availableMoney().availableForDay!< 0">{{ ut.toFixedDown(availableMoney().availableForDay!+ oldBuchung?.betrag! - buchung()?.betrag!, 2) ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="availableMoney().availableForDay!< 0">{{ getAvailableMoneyDay() ?? '???' }}€</b>
       </div>
     </div>
-    <ng-template #noDayBudgetTop>
-      <div class="create-eintrag__budget">
-        <div class="ce__budget-eintrag">
-          monat: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          woche: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          tag: <b>???</b>
-        </div>
-      </div>
-    </ng-template>
-    <div class="create-eintrag__top-spacer" (click)="onBackClicked()">
+    <div class="create-eintrag__top-spacer">
 
     </div>
   </div>
@@ -88,7 +75,7 @@
       <div class="create-eintrag__button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="create-eintrag__button" [class.disabled]="saveButtonDisabled()" (click)="onSaveClicked()">
+      <div class="create-eintrag__button" [class.disabled]="isSaveButtonDisabled()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>
@@ -98,3 +85,18 @@
     Error: No Eintrag provided!
   </div>
 </div>
+
+
+<ng-template #noDayBudgetTop>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      monat: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      woche: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      tag: <b>???</b>
+    </div>
+  </div>
+</ng-template>
