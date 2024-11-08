@@ -1,15 +1,15 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="availableMoney().availableForDay && availableMoney().availableForWeek && availableMoney().availableForWeek; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="isAvailableMoneyValid(); else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="availableMoney().availableForMonth < 0">{{ ut.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="availableMoney().availableForMonth < 0">{{ utils.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="availableMoney().availableForWeek < 0">{{ ut.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="availableMoney().availableForWeek < 0">{{ utils.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="availableMoney().availableForDay < 0">{{ ut.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="availableMoney().availableForDay < 0">{{ utils.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}€</b>
       </div>
     </div>
     <ng-template #noDayBudgetTop>
@@ -69,7 +69,7 @@
         <div class="create-eintrag__label">
           Datum:
         </div>
-        <input type="date" [(ngModel)]="date" (change)="onDateChange()" class="create-eintrag__data">
+        <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange()" class="create-eintrag__data">
       </div>
       <div class="create-eintrag__uhrzeit-wrapper">
         <div class="create-eintrag__label">
@@ -102,7 +102,7 @@
       <div class="create-eintrag__button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="create-eintrag__button" [class.disabled]="saveButtonDisabled()" (click)="onSaveClicked()">
+      <div class="create-eintrag__button" [class.disabled]="isSaveButtonDisabled()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>

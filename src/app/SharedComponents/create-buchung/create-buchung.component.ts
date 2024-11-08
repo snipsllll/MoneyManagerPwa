@@ -15,41 +15,36 @@ import {SettingsService} from "../../Services/SettingsService/settings.service";
 export class CreateBuchungComponent {
   buchung!: Buchung;
   oldBuchung!: Buchung;
+  buchungen: Buchung[] = []; //für Searchbox
+
+  selectedDate?: string;
   showBetragWarning = false;
-  date?: string;
+  betragWarnung = '';
+
   isSearchboxVisible = signal<boolean>(false);
+  isSaveButtonDisabled = signal<boolean>(true);
   dateUpdated = signal<number>(0);
+
   availableMoney = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
     return this.dataService.getAvailableMoney(this.buchung.date)
   })
-  saveButtonDisabled = signal<boolean>(true);
-  buchungen: Buchung[] = [];
-  ut: UT = new UT();
-  betragWarnung = '';
 
-  constructor(private settingsService: SettingsService, private dataService: DataService, public dialogService: DialogService, private router: Router) {
-    const date = new Date();
+  utils: UT = new UT();
+
+  constructor(private settingsService: SettingsService,
+              private dataService: DataService,
+              public dialogService: DialogService,
+              private router: Router)
+  {
     this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
 
-    this.buchung = {
-      title: '',
-      betrag: null,
-      date: date,
-      time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
-      beschreibung: '',
-      apz: false
-    };
-    this.oldBuchung = {
-      title: '',
-      betrag: null,
-      date: new Date(this.buchung.date),
-      time: this.buchung.time,
-      beschreibung: '',
-      apz: false
-    };
-    this.date = this.buchung.date.toISOString().slice(0, 10);
+    const date = new Date();
+    this.buchung = this.getNewEmptyBuchung(date);
+    this.oldBuchung = this.getNewEmptyBuchung(date);
+
+    this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
   }
 
   onSearchClicked() {
@@ -62,7 +57,8 @@ export class CreateBuchungComponent {
 
   onItemSelected(item: Buchung) {
     this.isSearchboxVisible.set(false);
-    this.saveButtonDisabled.set(false);
+    this.isSaveButtonDisabled.set(false);
+
     this.buchung.title = item.title;
     this.buchung.apz = item.apz;
     this.buchung.betrag = item.betrag;
@@ -71,16 +67,16 @@ export class CreateBuchungComponent {
 
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
-      if (!this.saveButtonDisabled()) {
-        let isBuchungInvalid: boolean;
-        if(this.buchung.apz === true){
-          isBuchungInvalid = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
-        } else {
-          isBuchungInvalid = (this.availableMoney() !== null && this.availableMoney().availableForDay !== undefined && this.availableMoney().availableForDay < this.buchung.betrag!);
-        }
+      if (!this.isSaveButtonDisabled()) {
+        let isBetragZuHoch = this.buchung.apz
+          ? this.buchung.betrag! > this.availableMoney().availableForMonth
+          : this.buchung.betrag! > this.availableMoney().availableForDay
 
-        if (isBuchungInvalid) {
-          if(this.settingsService.getIsToHighBuchungenEnabled()){
+        if (!isBetragZuHoch) {
+          this.dataService.addBuchung(this.buchung);
+          this.router.navigate(['/']);
+        } else {
+          if (this.settingsService.getIsToHighBuchungenEnabled()) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
               title: 'Betrag ist zu hoch',
               message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
@@ -97,12 +93,7 @@ export class CreateBuchungComponent {
           } else {
             this.betragWarnung = "der Betrag ist zu hoch!";
             this.showBetragWarning = true;
-            console.log('nö');
           }
-
-        } else {
-          this.dataService.addBuchung(this.buchung);
-          this.router.navigate(['/']);
         }
       }
     } else {
@@ -116,6 +107,7 @@ export class CreateBuchungComponent {
       this.router.navigate(['/']);
       return;
     }
+
     const confirmDialogViewModel: ConfirmDialogViewModel = {
       title: 'Abbrechen?',
       message: 'Möchtest du wirklich abbrechen? Alle bisher eingetragenen Daten in der neuen Buchung werden verworfen!',
@@ -127,6 +119,7 @@ export class CreateBuchungComponent {
         this.router.navigate(['/']);
       }
     }
+
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
@@ -150,13 +143,11 @@ export class CreateBuchungComponent {
   }
 
   onDateChange() {
-    if (this.date)
-      this.buchung!.date = new Date(this.date);
+    if (this.selectedDate)
+      this.buchung!.date = new Date(this.selectedDate);
 
-    this.dataService.getAvailableMoney(this.buchung.date);
-
-    this.dateUpdated.set(this.dateUpdated() + 1);
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateDate();
+    this.updateSaveButton();
   }
 
   onTimeChange(event: any) {
@@ -164,22 +155,22 @@ export class CreateBuchungComponent {
     const date = new Date();
     date.setHours(+hours, +minutes);
     this.buchung!.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onBetragChanged() {
-    if (this.buchung.betrag !== null) {
+    if (this.buchung.betrag !== null)
       this.buchung.betrag = +(this.buchung.betrag!);
-    }
-    this.saveButtonDisabled.set(this.isSaveAble());
+
+    this.updateSaveButton();
   }
 
   onTitleChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onBeschreibungChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onApzClicked() {
@@ -192,5 +183,28 @@ export class CreateBuchungComponent {
 
   private isSaveAble() {
     return this.buchung.betrag === null || this.buchung.betrag === 0;
+  }
+
+  private updateDate() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
+  }
+
+  private updateSaveButton() {
+    this.isSaveButtonDisabled.set(this.isSaveAble());
+  }
+
+  private getNewEmptyBuchung(date: Date) {
+    return {
+      title: '',
+      betrag: null,
+      date: date,
+      time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
+      beschreibung: '',
+      apz: false
+    };
+  }
+
+  protected isAvailableMoneyValid() {
+    return this.availableMoney().availableForDay && this.availableMoney().availableForWeek && this.availableMoney().availableForWeek
   }
 }
