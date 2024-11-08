@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, computed, signal} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
@@ -18,7 +18,12 @@ export class CreateBuchungComponent {
   showBetragWarning = false;
   date?: string;
   isSearchboxVisible = signal<boolean>(false);
-  dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
+  dateUpdated = signal<number>(0);
+  availableMoney = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataService.getAvailableMoney(this.buchung.date)
+  })
   saveButtonDisabled = signal<boolean>(true);
   buchungen: Buchung[] = [];
   ut: UT = new UT();
@@ -44,7 +49,6 @@ export class CreateBuchungComponent {
       beschreibung: '',
       apz: false
     };
-    this.dayBudget.set(this.dataService.getDayIstBudgets(date)!);
     this.date = this.buchung.date.toISOString().slice(0, 10);
   }
 
@@ -72,7 +76,7 @@ export class CreateBuchungComponent {
         if(this.buchung.apz === true){
           isBuchungInvalid = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
-          isBuchungInvalid = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! + this.dayBudget()!.leftOvers! < this.buchung.betrag!);
+          isBuchungInvalid = (this.availableMoney() !== null && this.availableMoney().availableForDay !== undefined && this.availableMoney().availableForDay < this.buchung.betrag!);
         }
 
         if (isBuchungInvalid) {
@@ -149,11 +153,9 @@ export class CreateBuchungComponent {
     if (this.date)
       this.buchung!.date = new Date(this.date);
 
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung.date) ?? {
-      monthIstBudget: undefined,
-      dayIstBudget: undefined,
-      weekIstBudget: undefined
-    });
+    this.dataService.getAvailableMoney(this.buchung.date);
+
+    this.dateUpdated.set(this.dateUpdated() + 1);
     this.saveButtonDisabled.set(this.isSaveAble());
   }
 

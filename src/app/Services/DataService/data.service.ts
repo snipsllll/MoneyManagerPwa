@@ -2,6 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {FileEngine} from "../FileEngine/FileEnigne";
 import {
+  AvailableMoney,
   Buchung,
   BudgetInfosForMonth,
   Day,
@@ -358,6 +359,34 @@ export class DataService {
     })
 
     return notSpendMoney;
+  }
+
+  getAvailableMoney(dayDate: Date): AvailableMoney {
+    const availableForDay = this.getAvailableMoneyForDay(dayDate);
+    const daySollBudgets = this.getDayBudgetDictForMonth(dayDate);
+
+    let availableForWeek = 0;
+    let isDayReached = false;
+    this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
+      if(day.date.getDate() === dayDate.getDate()) {
+        isDayReached = true;
+      }
+      if(isDayReached) {
+        availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
+      }
+    })
+    availableForWeek += availableForDay;
+
+    const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
+
+    const x = {
+      availableForDay: availableForDay,
+      availableForWeek: availableForWeek,
+      availableForMonth: availableForMonth
+    }
+
+    console.log(x);
+    return x;
   }
 
   getDayIstBudgets(date: Date): DayIstBudgets {

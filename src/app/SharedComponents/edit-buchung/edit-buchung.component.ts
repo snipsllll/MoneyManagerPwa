@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {NavigationService} from "../../Services/NavigationService/navigation.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "../../Services/DataService/data.service";
@@ -16,7 +16,12 @@ export class EditBuchungComponent implements OnInit {
   buchung = signal<Buchung | undefined>(undefined);
   oldBuchung?: Buchung;
   date?: string;
-  dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
+  dateUpdated = signal<number>(0);
+  availableMoney = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataService.getAvailableMoney(this.buchung()!.date)
+  })
   showBetragWarning = false;
   saveButtonDisabled = signal<boolean>(true);
   ut: UT = new UT();
@@ -40,7 +45,7 @@ export class EditBuchungComponent implements OnInit {
       };
       this.date = this.buchung()?.date.toISOString().slice(0, 10);
     })
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung()!.date)!);
+    this.dateUpdated.set(this.dateUpdated() + 1);
   }
 
   onSaveClicked() {
@@ -50,7 +55,7 @@ export class EditBuchungComponent implements OnInit {
         if(this.buchung()!.apz){
           showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
         } else {
-          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
+          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.availableMoney() !== null && this.availableMoney().availableForDay !== undefined && this.availableMoney().availableForDay! < this.buchung()!.betrag!);
         }
 
         if (showConfDialog) {
@@ -99,7 +104,7 @@ export class EditBuchungComponent implements OnInit {
   onDateChange() {
     if (this.date)
       this.buchung()!.date = new Date(this.date);
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung()!.date)!);
+    this.dateUpdated.set(this.dateUpdated() + 1);
     this.saveButtonDisabled.set(this.isSaveAble());
   }
 
