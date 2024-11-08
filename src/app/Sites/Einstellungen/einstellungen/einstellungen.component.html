@@ -9,8 +9,19 @@
       Daten exportieren
     </div>
   </div>
-  <div class="flex-spacer">
-
+  <div class="einstellungen__middle">
+    <div class="einstellungen__checkbox-wrapper">
+      <input type="checkbox" [(ngModel)]="isShowDayDiffChecked" (click)="onDayDiffClicked()" class="create-eintrag__data-apz">
+      <div class="create-eintrag__label-apz" (click)="onDayDiffClicked()">
+        Differenz pro Tag anzeigen
+      </div>
+    </div>
+    <div class="einstellungen__checkbox-wrapper">
+      <input type="checkbox" [(ngModel)]="isEnableToHighBuchungenChecked" (click)="onZuVielErlaubtClicked()" class="create-eintrag__data-apz">
+      <div class="create-eintrag__label-apz" (click)="onZuVielErlaubtClicked()">
+        Zu hohe Buchungen erlauben
+      </div>
+    </div>
   </div>
 
   <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">

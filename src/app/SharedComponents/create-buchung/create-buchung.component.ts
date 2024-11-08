@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
+import {SettingsService} from "../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-create-buchung',
@@ -21,8 +22,9 @@ export class CreateBuchungComponent {
   saveButtonDisabled = signal<boolean>(true);
   buchungen: Buchung[] = [];
   ut: UT = new UT();
+  betragWarnung = '';
 
-  constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
+  constructor(private settingsService: SettingsService, private dataService: DataService, public dialogService: DialogService, private router: Router) {
     const date = new Date();
     this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
 
@@ -66,33 +68,41 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.saveButtonDisabled()) {
-        let showConfDialog: boolean;
+        let isBuchungInvalid: boolean;
         if(this.buchung.apz === true){
-          showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
+          isBuchungInvalid = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
         } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! + this.dayBudget()!.leftOvers! < this.buchung.betrag!);
+          isBuchungInvalid = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! + this.dayBudget()!.leftOvers! < this.buchung.betrag!);
         }
 
-        if (showConfDialog) {
-          const confirmDialogViewModel: ConfirmDialogViewModel = {
-            title: 'Betrag ist zu hoch',
-            message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
-            onCancelClicked: () => {
-              this.dialogService.isConfirmDialogVisible = false;
-            },
-            onConfirmClicked: () => {
-              this.dataService.addBuchung(this.buchung);
-              this.dialogService.isConfirmDialogVisible = false;
-              this.router.navigate(['/']);
+        if (isBuchungInvalid) {
+          if(this.settingsService.getIsToHighBuchungenEnabled()){
+            const confirmDialogViewModel: ConfirmDialogViewModel = {
+              title: 'Betrag ist zu hoch',
+              message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+              onCancelClicked: () => {
+                this.dialogService.isConfirmDialogVisible = false;
+              },
+              onConfirmClicked: () => {
+                this.dataService.addBuchung(this.buchung);
+                this.dialogService.isConfirmDialogVisible = false;
+                this.router.navigate(['/']);
+              }
             }
+            this.dialogService.showConfirmDialog(confirmDialogViewModel);
+          } else {
+            this.betragWarnung = "der Betrag ist zu hoch!";
+            this.showBetragWarning = true;
+            console.log('nö');
           }
-          this.dialogService.showConfirmDialog(confirmDialogViewModel);
+
         } else {
           this.dataService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         }
       }
     } else {
+      this.betragWarnung = 'der Betrag darf nicht 0 betragen!';
       this.showBetragWarning = true;
     }
   }

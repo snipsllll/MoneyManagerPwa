@@ -34,7 +34,7 @@
       <div class="create-eintrag__top-line">
         @if (!isSearchboxVisible()) {
           <input type="text" [(ngModel)]="buchung.title" maxlength="12" class="create-eintrag__title" autofocus
-                 placeholder="Titel" (change)="onTitleChanged()">
+                 placeholder="Titel" (change)="onTitleChanged()" onfocus="this.select()">
           <img src="assets/search.png" class="create-eintrag__search-button" (click)="onSearchClicked()"/>
         } @else {
           <div class="create-eintrag__search-box-wrapper">
@@ -49,7 +49,7 @@
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
-          der Betrag darf nicht 0 betragen!
+          {{betragWarnung}}
         </div>
         <div class="create-eintrag__betrag-wrapper">
           <div class="create-eintrag__label">
@@ -57,7 +57,7 @@
           </div>
           <div class="betrag-input-wrapper">
             <input type="number" [(ngModel)]="buchung.betrag" class="create-eintrag__data betrag-input"
-                   placeholder="0.00" (ngModelChange)="onBetragChanged()">
+                   placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
             <div class="betrag-euro-zeichen">
               €
             </div>

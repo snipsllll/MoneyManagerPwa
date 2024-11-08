@@ -32,7 +32,7 @@
   <div class="create-eintrag__content" *ngIf="buchung() !== undefined">
     <div class="create-eintrag__top-content">
       <input type="text" [(ngModel)]="buchung()!.title" maxlength="12" class="create-eintrag__title" autofocus placeholder="Titel"
-             (ngModelChange)="onTitleChanged()">
+             (ngModelChange)="onTitleChanged()" onfocus="this.select()">
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
@@ -43,7 +43,7 @@
             Betrag:
           </div>
           <div class="betrag-input-wrapper">
-            <input type="number" [(ngModel)]="buchung()!.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()">
+            <input type="number" [(ngModel)]="buchung()!.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
             <div class="betrag-euro-zeichen">
               €
             </div>

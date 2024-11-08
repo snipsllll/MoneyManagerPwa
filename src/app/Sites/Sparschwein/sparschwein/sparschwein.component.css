@@ -50,7 +50,7 @@
   width: calc(100% - 20px);
   flex-grow: 1;
   overflow-y: scroll;
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }
 
 .hr-details {
@@ -367,9 +367,9 @@
   background-color: #cccccc;
 }
 
-hr {
+.hr-sparschwein {
   width: 100%;
-  margin: 5px 0 10px 0;
+  margin: 5px 0 0 0;
   padding: 0;
   border: none;
   height: 2px;
