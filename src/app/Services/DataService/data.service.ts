@@ -307,6 +307,59 @@ export class DataService {
     this.sendUpdateToComponents();
   }
 
+  getDayBudgetDictForMonth(monthDate: Date) {
+    const month = this.getMonthByDate(monthDate);
+
+    let dict: {[date: string]: number} = {};
+    let budget = month.budget!;
+    let daysLeft = month.daysInMonth!;
+
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          if(buchung.apz) {
+            budget -= buchung.betrag!;
+          }
+        })
+        dict[day.date.toLocaleDateString()] = budget / daysLeft;
+        budget -= dict[day.date.toLocaleDateString()];
+        daysLeft--;
+      })
+    })
+
+    return dict;
+  }
+
+  getAvailableMoneyForDay(dayDate: Date): number {
+    const month = this.getMonthByDate(dayDate);
+    const x = this.getDayBudgetDictForMonth(dayDate);
+
+    let isDayReached = false;
+    let daysLeftOver = month.daysInMonth!;
+    let notSpendMoney = 0;
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        if(!isDayReached){
+          if(day.date.getDate() === dayDate.getDate()){
+            isDayReached = true;
+          }
+
+          let moneySpendOnDay = 0;
+          day.buchungen?.forEach(buchung => {
+            if(!buchung.apz) {
+              moneySpendOnDay += buchung.betrag!;
+            }
+          })
+
+          notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
+          daysLeftOver--;
+        }
+      })
+    })
+
+    return notSpendMoney;
+  }
+
   getDayIstBudgets(date: Date): DayIstBudgets {
     const monthIndex = this.getIndexOfMonth(date);
     if (monthIndex === -1) {
