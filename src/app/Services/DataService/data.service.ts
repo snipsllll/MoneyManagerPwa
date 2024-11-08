@@ -308,7 +308,7 @@ export class DataService {
     this.sendUpdateToComponents();
   }
 
-  getDayBudgetDictForMonth(monthDate: Date) {
+  getDictForDayBudgetsInMonth(monthDate: Date) {
     const month = this.getMonthByDate(monthDate);
 
     let dict: {[date: string]: number} = {};
@@ -333,7 +333,7 @@ export class DataService {
 
   getAvailableMoneyForDay(dayDate: Date): number {
     const month = this.getMonthByDate(dayDate);
-    const x = this.getDayBudgetDictForMonth(dayDate);
+    const x = this.getDictForDayBudgetsInMonth(dayDate);
 
     let isDayReached = false;
     let daysLeftOver = month.daysInMonth!;
@@ -363,7 +363,7 @@ export class DataService {
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
     const availableForDay = this.getAvailableMoneyForDay(dayDate);
-    const daySollBudgets = this.getDayBudgetDictForMonth(dayDate);
+    const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
 
     let availableForWeek = 0;
     let isDayReached = false;
@@ -379,60 +379,10 @@ export class DataService {
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
 
-    const x = {
+    return {
       availableForDay: availableForDay,
       availableForWeek: availableForWeek,
       availableForMonth: availableForMonth
-    }
-
-    console.log(x);
-    return x;
-  }
-
-  getDayIstBudgets(date: Date): DayIstBudgets {
-    const monthIndex = this.getIndexOfMonth(date);
-    if (monthIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
-      }
-    }
-    const month = this.userData.months()[monthIndex];
-
-    const weekIndex = this.getIndexOfWeekInMonth(date);
-    if (weekIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
-      }
-    }
-    const week = this.userData.months()[monthIndex].weeks![this.getIndexOfWeekInMonth(date)];
-
-    const dayIndex = this.getIndexOfDayInWeek(date);
-    if (dayIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
-      }
-    }
-    const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
-    const gespartes = this.getGespartes();
-
-    return {
-      dayIstBudget: day.istBudget ?? undefined,
-      weekIstBudget: week.istBudget ?? undefined,
-      monthIstBudget: month.istBudget ?? undefined,
-      leftOvers: month.leftOvers ?? undefined,
-      gespartes: gespartes
     }
   }
 
@@ -476,10 +426,6 @@ export class DataService {
       })
     }
     return summe;
-  }
-
-  getSparEintraege() {
-    return this.userData.sparEintraege.sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 
   addSparEintrag(eintrag: SparschweinEintrag) {
@@ -1004,22 +950,6 @@ export class DataService {
     this.setMonth(month);
   }
 
-  private getGespartes() {
-    let gespartes = 0;
-    this.userData.sparEintraege.forEach(eintrag => {
-      gespartes += eintrag.betrag;
-    })
-    return gespartes;
-  }
-
-  private getAusgabenForDay(day: Day) {
-    let gesAusgaben = 0;
-    day.buchungen?.forEach(buchung => {
-      gesAusgaben += buchung.betrag!;
-    })
-    return gesAusgaben;
-  }
-
   private getPlannedAusgabenForDay(day: Day) {
     let gesAusgaben = 0;
     day.buchungen?.forEach(buchung => {
@@ -1050,7 +980,6 @@ export class DataService {
 
   private calcSpareintragForMonth(date: Date) {
     const month = this.getMonthByDate(date);
-    console.log(month)
 
     if (month.startDate.getMonth() < new Date().getMonth() || month.startDate.getFullYear() < new Date().getFullYear()) {
       if (this.isMonthSpareintragVorhanden(date)) {
