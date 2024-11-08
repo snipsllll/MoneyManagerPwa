@@ -128,6 +128,4 @@ export class BudgetComponent  implements OnInit{
       })
     });
   }
-
-  protected readonly DataService = DataService;
 }

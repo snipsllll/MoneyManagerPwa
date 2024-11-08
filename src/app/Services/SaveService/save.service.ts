@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
-  Buchung,
-  FixKostenEintrag, SavedData,
+  Buchung, Day,
+  FixKostenEintrag, Month, SavedData,
   SavedMonth,
   Settings,
   SparschweinEintrag,

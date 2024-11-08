@@ -81,6 +81,31 @@ export class DataService {
     this.setMonth(month);
   }
 
+  addSparEintrag(eintrag: SparschweinEintrag) {
+    eintrag.id = this.getNextFreeSparEintragId();
+    this.update({
+      newSparEintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  editSparEintrag(eintrag: SparschweinEintrag) {
+    this.update({
+      editedSparEintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  deleteSparEintrag(eintragId: number) {
+    this.update({
+      deletedSparEintragIds: [
+        eintragId
+      ]
+    });
+  }
+
   addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
     wunschlistenEintrag.id = this.getNextFreeWunschlistenEintragId();
     this.update({
@@ -428,29 +453,19 @@ export class DataService {
     return summe;
   }
 
-  addSparEintrag(eintrag: SparschweinEintrag) {
-    eintrag.id = this.getNextFreeSparEintragId();
-    this.update({
-      newSparEintraege: [
-        eintrag
-      ]
+  getAllDays() {
+    const months: Month[] = this.userData.months();
+    const days: Day[] = []
+    months.forEach(month => {
+      month.weeks?.forEach(week => {
+        week.days.forEach(day => {
+          if(day.buchungen!.length > 0){
+            days.push(day);
+          }
+        })
+      })
     });
-  }
-
-  editSparEintrag(eintrag: SparschweinEintrag) {
-    this.update({
-      editedSparEintraege: [
-        eintrag
-      ]
-    });
-  }
-
-  deleteSparEintrag(eintragId: number) {
-    this.update({
-      deletedSparEintragIds: [
-        eintragId
-      ]
-    });
+    return days;
   }
 
   private getIndexOfMonth(date: Date) {
