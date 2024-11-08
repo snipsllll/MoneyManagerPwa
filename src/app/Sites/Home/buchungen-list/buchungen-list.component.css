@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* damit der Inhalt die restliche Höhe nutzt */
+  margin-top: 10px;
 }
 
 .eintraege-list__list,
@@ -53,7 +54,6 @@
 .eintraege-list__geplant-text {
   display: flex;
   align-items: center;
-  margin-top: 10px;
 }
 
 .eintraege-list__geplant-img {
