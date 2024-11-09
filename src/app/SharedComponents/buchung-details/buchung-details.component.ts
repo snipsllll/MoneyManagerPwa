@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {NavigationService} from "../../Services/NavigationService/navigation.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,7 +12,7 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
   templateUrl: './buchung-details.component.html',
   styleUrl: './buchung-details.component.css'
 })
-export class BuchungDetailsComponent {
+export class BuchungDetailsComponent implements OnInit{
   buchung? = signal<Buchung | undefined>(undefined);
   titelVorhanden = false;
 
@@ -29,6 +29,7 @@ export class BuchungDetailsComponent {
       }
     });
     this.navigationService.previousRoute = Sites.home;
+    this.dataService.getAvailableMoneyForDay(this.buchung!()!.date!)
   }
 
   onBackClicked() {

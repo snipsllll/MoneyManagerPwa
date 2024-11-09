@@ -3,6 +3,7 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {SettingsService} from "../../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-einstellungen',
@@ -12,14 +13,18 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
+  isShowDayDiffChecked!: boolean;
+  isEnableToHighBuchungenChecked!: boolean;
 
-  constructor(private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
   }
 
   onAlleDatenLoeschenClicked() {
@@ -27,7 +32,7 @@ export class EinstellungenComponent implements OnInit{
     title: 'Alle Daten löschen?',
     message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
     onConfirmClicked: () => {
-      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: []})
+      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -110,5 +115,15 @@ export class EinstellungenComponent implements OnInit{
     } catch (error) {
       console.error('Fehler beim Speichern der Datei:', error);
     }
+  }
+
+  onDayDiffClicked() {
+    this.settingsService.setShowDayDifferenceInHome(!this.settingsService.getShowDayDifferenceInHome());
+    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+  }
+
+  onZuVielErlaubtClicked() {
+    this.settingsService.setIsToHighBuchungenEnabled(!this.settingsService.getIsToHighBuchungenEnabled());
+    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
   }
 }

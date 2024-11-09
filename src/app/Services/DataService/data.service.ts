@@ -2,6 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {FileEngine} from "../FileEngine/FileEnigne";
 import {
+  AvailableMoney,
   Buchung,
   BudgetInfosForMonth,
   Day,
@@ -16,6 +17,7 @@ import {
   WunschlistenEintrag
 } from "../../Models/Interfaces";
 import {DB} from "../../Models/Enums";
+import {SaveService} from "../SaveService/save.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,15 +26,12 @@ import {DB} from "../../Models/Enums";
 export class DataService {
 
   userData!: UserData;
-  settings!: Settings;
   testData: DB = DB.noTD;
   download: boolean = true;
 
   updated = signal<number>(0);
 
-  private _fileEngine = new FileEngine(this.testData, this.download);
-
-  constructor() {
+  constructor(private saveService: SaveService) {
     this.initializeData();
   }
 
@@ -80,6 +79,31 @@ export class DataService {
     month.gesperrteFixKosten = fixkostenEintraege;
 
     this.setMonth(month);
+  }
+
+  addSparEintrag(eintrag: SparschweinEintrag) {
+    eintrag.id = this.getNextFreeSparEintragId();
+    this.update({
+      newSparEintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  editSparEintrag(eintrag: SparschweinEintrag) {
+    this.update({
+      editedSparEintraege: [
+        eintrag
+      ]
+    });
+  }
+
+  deleteSparEintrag(eintragId: number) {
+    this.update({
+      deletedSparEintragIds: [
+        eintragId
+      ]
+    });
   }
 
   addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
@@ -272,6 +296,8 @@ export class DataService {
     }
 
     /*Weird and crazy stuff beginns here*/
+    this.updateAllBuchungen();
+
     this.userData.months().forEach(month => {
       //Buchungen in Monat zu den jeweiligen Tagen hinzufügen/updaten
       this.updateBuchungenForMonth(month.startDate);
@@ -300,56 +326,88 @@ export class DataService {
 
       this.calcSpareintragForMonth(month.startDate);
     });
+
     if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
       this.save();
     }
     this.sendUpdateToComponents();
   }
 
-  getDayIstBudgets(date: Date): DayIstBudgets {
-    const monthIndex = this.getIndexOfMonth(date);
-    if (monthIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
-      }
-    }
-    const month = this.userData.months()[monthIndex];
+  getDictForDayBudgetsInMonth(monthDate: Date) {
+    const month = this.getMonthByDate(monthDate);
 
-    const weekIndex = this.getIndexOfWeekInMonth(date);
-    if (weekIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
-      }
-    }
-    const week = this.userData.months()[monthIndex].weeks![this.getIndexOfWeekInMonth(date)];
+    let dict: {[date: string]: number} = {};
+    let budget = month.budget!;
+    let daysLeft = month.daysInMonth!;
 
-    const dayIndex = this.getIndexOfDayInWeek(date);
-    if (dayIndex === -1) {
-      return {
-        dayIstBudget: undefined,
-        weekIstBudget: undefined,
-        monthIstBudget: undefined,
-        leftOvers: undefined,
-        gespartes: undefined
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          if(buchung.apz) {
+            budget -= buchung.betrag!;
+          }
+        })
+        dict[day.date.toLocaleDateString()] = budget / daysLeft;
+        budget -= dict[day.date.toLocaleDateString()];
+        daysLeft--;
+      })
+    })
+
+    return dict;
+  }
+
+  getAvailableMoneyForDay(dayDate: Date): number {
+    const month = this.getMonthByDate(dayDate);
+    const x = this.getDictForDayBudgetsInMonth(dayDate);
+
+    let isDayReached = false;
+    let daysLeftOver = month.daysInMonth!;
+    let notSpendMoney = 0;
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        if(!isDayReached){
+          if(day.date.getDate() === dayDate.getDate()){
+            isDayReached = true;
+          }
+
+          let moneySpendOnDay = 0;
+          day.buchungen?.forEach(buchung => {
+            if(!buchung.apz) {
+              moneySpendOnDay += buchung.betrag!;
+            }
+          })
+
+          notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
+          daysLeftOver--;
+        }
+      })
+    })
+
+    return notSpendMoney;
+  }
+
+  getAvailableMoney(dayDate: Date): AvailableMoney {
+    const availableForDay = this.getAvailableMoneyForDay(dayDate);
+    const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
+
+    let availableForWeek = 0;
+    let isDayReached = false;
+    this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
+      if(day.date.getDate() === dayDate.getDate()) {
+        isDayReached = true;
       }
-    }
-    const day = this.userData.months()[monthIndex].weeks![weekIndex].days![dayIndex];
-    const gespartes = this.getGespartes();
+      if(isDayReached) {
+        availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
+      }
+    })
+    availableForWeek += availableForDay;
+
+    const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
 
     return {
-      dayIstBudget: day.istBudget ?? undefined,
-      weekIstBudget: week.istBudget ?? undefined,
-      monthIstBudget: month.istBudget ?? undefined,
-      leftOvers: month.leftOvers ?? undefined,
-      gespartes: gespartes
+      availableForDay: availableForDay,
+      availableForWeek: availableForWeek,
+      availableForMonth: availableForMonth
     }
   }
 
@@ -395,33 +453,19 @@ export class DataService {
     return summe;
   }
 
-  getSparEintraege() {
-    return this.userData.sparEintraege.sort((a, b) => b.date.getTime() - a.date.getTime());
-  }
-
-  addSparEintrag(eintrag: SparschweinEintrag) {
-    eintrag.id = this.getNextFreeSparEintragId();
-    this.update({
-      newSparEintraege: [
-        eintrag
-      ]
+  getAllDays() {
+    const months: Month[] = this.userData.months();
+    const days: Day[] = []
+    months.forEach(month => {
+      month.weeks?.forEach(week => {
+        week.days.forEach(day => {
+          if(day.buchungen!.length > 0){
+            days.push(day);
+          }
+        })
+      })
     });
-  }
-
-  editSparEintrag(eintrag: SparschweinEintrag) {
-    this.update({
-      editedSparEintraege: [
-        eintrag
-      ]
-    });
-  }
-
-  deleteSparEintrag(eintragId: number) {
-    this.update({
-      deletedSparEintragIds: [
-        eintragId
-      ]
-    });
+    return days;
   }
 
   private getIndexOfMonth(date: Date) {
@@ -473,14 +517,13 @@ export class DataService {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: undefined
+      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDayDifferenceInHome: false}
     }
 
     savedData.buchungen = this.userData.buchungen.alleBuchungen;
     savedData.fixKosten = this.userData.fixKosten;
     savedData.sparEintraege = this.userData.sparEintraege;
     savedData.wunschlistenEintraege = this.userData.wunschlistenEintraege;
-    savedData.settings = this.settings;
 
     this.userData.months().forEach(month => {
       savedData.savedMonths.push({
@@ -495,16 +538,14 @@ export class DataService {
   }
 
   private initializeData() {
-    const savedData = this._fileEngine.load();
-
     //Converting SavedData to UserData
     this.userData = new UserData();
-    this.userData.buchungen.alleBuchungen = savedData.buchungen ?? [];
-    this.userData.fixKosten = savedData.fixKosten ?? [];
-    this.userData.sparEintraege = savedData.sparEintraege ?? [];
-    this.userData.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.userData.buchungen.alleBuchungen = this.saveService.getBuchungen() ?? [];
+    this.userData.fixKosten = this.saveService.getFixKosten() ?? [];
+    this.userData.sparEintraege = this.saveService.getSparEintraege() ?? [];
+    this.userData.wunschlistenEintraege = this.saveService.getWunschlistenEintraege() ?? [];
 
-    savedData.savedMonths?.forEach(month => {
+    this.saveService.getSavedMonths().forEach(month => {
       if (!this.checkIfMonthExistsForDay(month.date)) {
         this.createNewMonth(month.date);
       }
@@ -512,13 +553,6 @@ export class DataService {
       this.changeTotalBudgetForMonth(month.date, month.totalBudget, false);
       this.setFixKostenEintragForMonth(month.date, month.fixkosten);
     });
-
-    this.settings = savedData.settings ?? {
-      wunschllistenFilter: {
-        gekaufteEintraegeAusblenden: false,
-        selectedFilter: ''
-      }
-    };
 
     this.update({}, false);
   }
@@ -708,6 +742,40 @@ export class DataService {
     this.setMonth(month);
   }
 
+  private updateAllBuchungen() {
+    this.userData.sparEintraege.forEach(eintrag => {
+      if(eintrag.vonDayBudgetAbziehen === true && this.userData.buchungen.alleBuchungen.find(buchung => buchung.speId === eintrag.id) === undefined) {
+        this.userData.buchungen.alleBuchungen.push({
+          date: eintrag.date,
+          betrag: eintrag.betrag,
+          id: this.getNextFreeBuchungsId(),
+          title: eintrag.title ?? '',
+          beschreibung: 'Spar-Eintrag',
+          time: eintrag.date.toLocaleTimeString(),
+          spe: true,
+          speId: eintrag.id
+        })
+      }
+    })
+
+    const alleBuchungen: Buchung[] = [];
+      this.userData.buchungen.alleBuchungen.forEach(buchung => {
+        let addBuchung = true;
+        if(buchung.spe) {
+          if(this.userData.sparEintraege.find(eintrag => eintrag.id === buchung.speId) === undefined){
+            addBuchung = false;
+          }
+        }
+
+        if(addBuchung) {
+          alleBuchungen.push(buchung);
+        }
+      })
+
+      this.userData.buchungen.alleBuchungen = alleBuchungen;
+
+  }
+
   private updateBuchungenForMonth(date: Date) { //TODO testen
     const month = this.getMonthByDate(date);
 
@@ -726,37 +794,40 @@ export class DataService {
     return this.userData.buchungen.alleBuchungen.findIndex(buchung => buchung.id === id);
   }
 
-  createNewMonth(date: Date) { //TODO
+  createNewMonth(date: Date) {
     const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
-    const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); //TODO testen
+    const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
     const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
 
     const weeks: Week[] = [];
 
     let weekStartDate = startDate;
 
-    while (weekStartDate.getDate() <= endDate.getDate() && weekStartDate.getMonth() <= endDate.getMonth()) {
+    while (weekStartDate <= endDate) {
+      // Calculate the end of the week, or the end of the month if it falls within this week
       let weekEndDate: Date = this.getSunday(weekStartDate);
-
-      if (weekEndDate.getMonth() > endDate.getMonth()) {
-        weekEndDate = endDate;
+      if (weekEndDate > endDate) {
+        weekEndDate = endDate; // Adjust to end of the month if the week goes past it
       }
 
-      const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1; //TODO testen
+      const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1;
       const days: Day[] = [];
 
+      // Populate days in the week
       for (let d = weekStartDate.getDate(); d <= weekEndDate.getDate(); d++) {
         const dateForDay = new Date(weekStartDate.getFullYear(), weekStartDate.getMonth(), d);
-        days.push({date: dateForDay});
+        days.push({ date: dateForDay });
       }
 
+      // Push the week to weeks array
       weeks.push({
-        startDate: weekStartDate,
-        endDate: weekEndDate,
+        startDate: new Date(weekStartDate),
+        endDate: new Date(weekEndDate),
         daysInWeek: daysInWeek,
         days: days
       });
 
+      // Move to the next Monday
       weekStartDate = this.getNextMonday(weekStartDate);
     }
 
@@ -765,20 +836,26 @@ export class DataService {
       endDate: endDate,
       daysInMonth: daysInMonth,
       weeks: weeks
-    }
+    };
 
-    month.monatAbgeschlossen = !(this.isDayBeforeMonth(new Date(), month) || (month.startDate.getFullYear() === new Date().getFullYear() && month.startDate.getMonth() === new Date().getMonth()));
+    // Check if the month is completed or not
+    month.monatAbgeschlossen = !(this.isDayBeforeMonth(new Date(), month) ||
+      (month.startDate.getFullYear() === new Date().getFullYear() && month.startDate.getMonth() === new Date().getMonth()));
 
     this.userData.months().push(month);
   }
 
   save(savedData?: SavedData) { //TODO testen
-    if(savedData !== undefined) {
-      this._fileEngine.save(savedData);
-      this.initializeData();
-    } else {
-      this._fileEngine.save(this.getSavedData());
+    if(savedData === undefined) {
+      savedData = this.getSavedData();
     }
+    this.saveService.setBuchungen(savedData.buchungen);
+    this.saveService.setFixKosten(savedData.fixKosten);
+    this.saveService.setSavedMonths(savedData.savedMonths);
+    this.saveService.setWunschlistenEintraege(savedData.wunschlistenEintraege);
+    this.saveService.setSparEintraege(savedData.sparEintraege);
+
+    this.saveService.saveChanges();
   }
 
   private sendUpdateToComponents() { //TODO testen
@@ -876,28 +953,16 @@ export class DataService {
         if ((day.date.getDate() < new Date().getDate() && day.date.getMonth() === new Date().getMonth()) || (day.date.getMonth() < new Date().getMonth() && day.date.getFullYear() <= new Date().getFullYear())) {
           leftovers += day.leftOvers ?? 0;
         }
+        /*
+        if(day.date.getDate() === new Date().getDate() && day.date.getMonth() === new Date().getMonth()){
+          leftovers += day.budget ?? 0;
+        }*/
       })
     })
     month.leftOvers = +(leftovers);
     /*Algorithm end*/
 
     this.setMonth(month);
-  }
-
-  private getGespartes() {
-    let gespartes = 0;
-    this.userData.sparEintraege.forEach(eintrag => {
-      gespartes += eintrag.betrag;
-    })
-    return gespartes;
-  }
-
-  private getAusgabenForDay(day: Day) {
-    let gesAusgaben = 0;
-    day.buchungen?.forEach(buchung => {
-      gesAusgaben += buchung.betrag!;
-    })
-    return gesAusgaben;
   }
 
   private getPlannedAusgabenForDay(day: Day) {
@@ -935,19 +1000,25 @@ export class DataService {
       if (this.isMonthSpareintragVorhanden(date)) {
         this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)] = {
           date: month.startDate,
-          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
+          betrag: (this.getAvailableMoney(this.getLastDayOfMonth(date).date)).availableForDay + (month.sparen ?? 0),
           id: this.userData.sparEintraege[this.getIndexOfMonthSpareintrag(date)].id,
           isMonatEintrag: true
         }
       } else {
         this.userData.sparEintraege.push({
           date: month.startDate,
-          betrag: (month.leftOvers ?? 0) + (month.sparen ?? 0),
+          betrag: (this.getAvailableMoney(this.getLastDayOfMonth(date).date)).availableForDay + (month.sparen ?? 0),
           id: this.getNextFreeSparEintragId(),
           isMonatEintrag: true
         })
       }
     }
+  }
+
+  private getLastDayOfMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+    const week = month.weeks![month.weeks?.length! -1];
+    return week.days[week.days.length -1];
   }
 
   private getIndexOfMonthSpareintrag(date: Date) {

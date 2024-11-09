@@ -1,7 +1,7 @@
 <div class="create-dialog__wrapper">
   <div class="create-dialog floating-box">
     <div class="create-dialog__content">
-      <input type="text" class="create-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="create-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()" onfocus="this.select()">
       <hr class="create-dialog__hr-title">
       <div class="create-dialog__betrag-wrapper">
         <div class="create-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
@@ -12,10 +12,18 @@
             Betrag:
           </div>
           <div class="create-dialog__betrag-input-wrapper">
-            <input type="number" [(ngModel)]="eintrag.betrag" class="create-dialog__data create-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()">
+            <input type="number" [(ngModel)]="eintrag.betrag" class="create-dialog__data create-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()" onfocus="this.select()">
             <div class="create-dialog__betrag-euro-zeichen">
               €
             </div>
+          </div>
+        </div>
+        <div class="create-dialog__von-heute-abziehen" *ngIf="viewModel.istVonHeuteAbzeihenVisible">
+          <div class="create-dialog__checkbox-input-wrapper">
+            <input type="checkbox" [(ngModel)]="eintrag.vonHeuteAbziehen" class="create-dialog__data create-dialog__checkbox-input" placeholder="0.00" (change)="onValueChanged()">
+          </div>
+          <div class="create-dialog__label-checkbox" (click)="onVonHeuteAbziehenClicked()">
+            vom heutigen Budget abziehen
           </div>
         </div>
       </div>

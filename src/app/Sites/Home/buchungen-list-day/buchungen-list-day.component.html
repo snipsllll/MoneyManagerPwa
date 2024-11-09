@@ -1,6 +1,6 @@
 <div class="buchungen-list-day" *ngIf="day.buchungen && day.buchungen.length > 0">
   <div class="buchungen-list-day__date">
-    <div class="day-label">{{day.date.toLocaleDateString()}} <div *ngIf="day.istBudget" class="red buchungen-list-day__day-budget" [class.green]="day.istBudget! > 0">{{ toFixedDown(day.istBudget!, 2) }}€</div></div>
+    <div class="day-label">{{day.date.toLocaleDateString()}} <div *ngIf="day.istBudget && settingsService.getShowDayDifferenceInHome()" class="red buchungen-list-day__day-budget" [class.green]="availableMoneyForDay() > 0">{{ ut.toFixedDown(availableMoneyForDay() , 2) }}€</div></div>
   </div>
   <div class="bld__box">
     <div *ngFor="let buchung of day.buchungen; let i = index; let last = last, let first = first" [class.apz]="buchung.apz">

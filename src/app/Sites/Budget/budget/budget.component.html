@@ -18,14 +18,14 @@
           total Budget:
         </div>
         <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
-               [(ngModel)]="data().totalBudget">
+               [(ngModel)]="data().totalBudget" onfocus="this.select()">
       </div>
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
           Sparen:
         </div>
         <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
-               [(ngModel)]="data().sparen">
+               [(ngModel)]="data().sparen" onfocus="this.select()">
       </div>
       <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
         <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
@@ -59,7 +59,7 @@
           verfügbar für diesen Monat:
         </div>
         <div class="budget__element-data">
-          {{ data().budget }}€
+          {{ ut.toFixedDown(data().budget, 2) }}€
         </div>
       </div>
       <div class="budget__element-wrapper">
@@ -67,7 +67,7 @@
           tägl. Budget:
         </div>
         <div class="budget__element-data">
-          {{ toFixedDown(data().dayBudget!, 2) }}€
+          {{ ut.toFixedDown(data().dayBudget!, 2) }}€
         </div>
       </div>
     </div>

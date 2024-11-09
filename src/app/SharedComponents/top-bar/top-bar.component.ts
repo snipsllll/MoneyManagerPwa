@@ -4,6 +4,7 @@ import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
 import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
 import {Router} from "@angular/router";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-top-bar',
@@ -13,19 +14,12 @@ import {Router} from "@angular/router";
 export class TopBarComponent implements OnInit {
 
   title?: string;
-  dayBudget = computed(() => {
+  availableMoney = computed(() => {
     this.dataService.updated();
-    const x = this.dataService.getDayIstBudgets(new Date());
-    const y: DayIstBudgetViewModel = {
-      month: x?.monthIstBudget,
-      week: x?.weekIstBudget,
-      day: x?.dayIstBudget,
-      leftOvers: x?.leftOvers,
-      gespartes: x?.gespartes,
-      verfuegbar: +((x?.leftOvers! ?? 0) + (x?.dayIstBudget! ?? 0))
-    };
-    return y;
+    return this.dataService.getAvailableMoney(new Date())
   })
+
+  ut: UT = new UT();
 
   constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
@@ -47,17 +41,6 @@ export class TopBarComponent implements OnInit {
   test() {
     console.log(this.dataService.userData)
     console.log(this.dataService.userData.months())
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
-
-    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
-    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
-
-    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
-    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
   }
 
   private pressTimer: any;

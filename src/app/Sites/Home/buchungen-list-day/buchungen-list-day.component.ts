@@ -1,5 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, computed, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
+import {UT} from "../../../Models/Classes/UT";
+import {DataService} from "../../../Services/DataService/data.service";
+import {SettingsService} from "../../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -9,14 +12,13 @@ import {Day} from "../../../Models/Interfaces";
 export class BuchungenListDayComponent {
   @Input() day!: Day;
 
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
+  availableMoneyForDay = computed(() => {
+    this.dataService.updated();
+    return this.dataService.getAvailableMoneyForDay(this.day.date)
+  })
 
-    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
-    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
+  ut: UT = new UT();
 
-    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
-    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
+  constructor(private dataService: DataService, public settingsService: SettingsService) {
   }
 }

@@ -142,3 +142,19 @@ hr {
   padding-right: 5px;
   font-size: 18px;
 }
+
+.edit-dialog__von-heute-abziehen {
+  margin-top: 5px;
+  display: flex;
+}
+
+.edit-dialog__label-checkbox {
+  font-size: 18px;
+  width: fit-content;
+}
+
+.edit-dialog__checkbox-input-wrapper {
+  width: 25px;
+  scale: 1.3;
+}
+

@@ -2,6 +2,7 @@ import {Component, computed, OnInit, signal} from '@angular/core';
 import {BudgetInfosForMonth} from "../../../Models/Interfaces";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-budget',
@@ -9,6 +10,8 @@ import {DataService} from "../../../Services/DataService/data.service";
   styleUrl: './budget.component.css'
 })
 export class BudgetComponent  implements OnInit{
+  ut: UT = new UT();
+
   selectedMonthIndex = signal<number>(new Date().getMonth());
 
   selectedYear = signal<number>(new Date().getFullYear());
@@ -61,7 +64,7 @@ export class BudgetComponent  implements OnInit{
   ngOnInit() {
     this.topbarService.title.set('BUDGET');
     this.topbarService.dropDownSlidIn.set(false);
-    this.topbarService.isDropDownDisabled = true;
+    this.topbarService.isDropDownDisabled = false;
     this.update();
   }
 
@@ -101,17 +104,6 @@ export class BudgetComponent  implements OnInit{
     this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
   }
 
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
-
-    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
-    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
-
-    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
-    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
-  }
-
   getStartdateForSelectedMonth() {
     return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
   }
@@ -136,6 +128,4 @@ export class BudgetComponent  implements OnInit{
       })
     });
   }
-
-  protected readonly DataService = DataService;
 }

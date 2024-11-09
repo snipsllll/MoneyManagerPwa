@@ -134,7 +134,14 @@ export class FileEngine {
               gekauft: false,
               erstelltAm: new Date()
             }
-          ]
+          ],
+          settings: {
+            wunschllistenFilter: {
+              selectedFilter: '',
+              gekaufteEintraegeAusblenden: false
+            },
+            showDayDifferenceInHome: false
+          }
         }
       case 1:
         return {
@@ -225,7 +232,14 @@ export class FileEngine {
               gekauft: false,
               erstelltAm: new Date()
             }
-          ]
+          ],
+          settings: {
+            wunschllistenFilter: {
+              selectedFilter: '',
+              gekaufteEintraegeAusblenden: false
+            },
+            showDayDifferenceInHome: false
+          }
         }
       case 2:
         return {
@@ -396,7 +410,14 @@ export class FileEngine {
               gekauft: false,
               erstelltAm: new Date()
             }
-          ]
+          ],
+          settings: {
+            wunschllistenFilter: {
+              selectedFilter: '',
+              gekaufteEintraegeAusblenden: false
+            },
+            showDayDifferenceInHome: false
+          }
         }
       case 3:
         return {
@@ -404,7 +425,9 @@ export class FileEngine {
           savedMonths: [],
           fixKosten: [],
           sparEintraege: [],
-          wunschlistenEintraege: []
+          wunschlistenEintraege: [],
+          settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},
+            showDayDifferenceInHome: false}
         };
     }
     return {
@@ -412,7 +435,9 @@ export class FileEngine {
       savedMonths: [],
       fixKosten: [],
       sparEintraege: [],
-      wunschlistenEintraege: []
+      wunschlistenEintraege: [],
+      settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},
+        showDayDifferenceInHome: false}
     }
   }
 }

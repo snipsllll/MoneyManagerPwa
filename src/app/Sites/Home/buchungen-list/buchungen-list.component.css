@@ -1,21 +1,23 @@
 .eintraege-list {
-  height: calc(100% - 10px);
+  height: calc(100vh - 70px); /* gesamte Ansichtshöhe */
   width: calc(100% - 20px);
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
+  overflow-y: auto; /* 'scroll' zu 'auto' ändern */
 }
 
 .eintraege-list__lists {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  flex-grow: 1; /* damit der Inhalt die restliche Höhe nutzt */
+  margin-top: 10px;
 }
 
-.eintraege-list__list, .eintraege-list__geplant-list {
+.eintraege-list__list,
+.eintraege-list__geplant-list {
   width: calc(100% - 20px);
   padding: 0 10px;
   display: flex;
@@ -24,6 +26,7 @@
 
 .eintraege-list__list {
   flex-grow: 1;
+  overflow-y: auto; /* Scrollen im Hauptlisten-Container zulassen */
 }
 
 .eintraege-list__topbar {
@@ -33,7 +36,7 @@
   background-color: white;
 }
 
-.eintraege-list__keine-eintraege{
+.eintraege-list__keine-eintraege {
   width: 100%;
   height: 100%;
   display: flex;
@@ -51,7 +54,6 @@
 .eintraege-list__geplant-text {
   display: flex;
   align-items: center;
-  margin-top: 10px;
 }
 
 .eintraege-list__geplant-img {

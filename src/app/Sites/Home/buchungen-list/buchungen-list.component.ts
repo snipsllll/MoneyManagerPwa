@@ -11,18 +11,8 @@ export class BuchungenListComponent  implements OnInit{
   date = new Date();
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
-    const months: Month[] = this.dataService.userData.months();
-    const days: Day[] = []
-    months.forEach(month => {
-      month.weeks?.forEach(week => {
-        week.days.forEach(day => {
-          if(day.buchungen!.length > 0){
-            days.push(day);
-          }
-        })
-      })
-    });
-    return this.orderByDateDesc(days);
+    this.dataService.updated();
+    return this.orderByDateDesc(this.dataService.getAllDays());
   })
 
   constructor(private dataService: DataService){

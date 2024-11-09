@@ -1,7 +1,7 @@
 <div class="edit-dialog__wrapper">
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
-      <input type="text" class="edit-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
+      <input type="text" class="edit-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()" onfocus="this.select()">
       @if (viewModel.data.id !== undefined) {
         <div class="edit-dialog__id">
           (ID: {{viewModel.data.id}})
@@ -17,11 +17,19 @@
             Betrag:
           </div>
           <div class="edit-dialog__betrag-input-wrapper">
-            <input type="number" [(ngModel)]="viewModel.data.betrag" class="edit-dialog__data edit-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()">
+            <input type="number" [(ngModel)]="viewModel.data.betrag" class="edit-dialog__data edit-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()" onfocus="this.select()">
             <div class="edit-dialog__betrag-euro-zeichen">
               €
             </div>
           </div>
+        </div>
+      </div>
+      <div class="edit-dialog__von-heute-abziehen" *ngIf="viewModel.istVonHeuteAbzeihenVisible">
+        <div class="edit-dialog__checkbox-input-wrapper">
+          <input type="checkbox" [(ngModel)]="viewModel.data.vonHeuteAbziehen" class="edit-dialog__data edit-dialog__checkbox-input" placeholder="0.00" (change)="onValueChanged()">
+        </div>
+        <div class="edit-dialog__label-checkbox" (click)="onVonHeuteAbziehenClicked()">
+          vom heutigen Budget abziehen
         </div>
       </div>
       <div class="edit-dialog__beschreibung-wrapper">

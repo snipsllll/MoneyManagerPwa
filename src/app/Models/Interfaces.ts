@@ -39,6 +39,8 @@ export interface Buchung {
   date: Date;
   time: string;
   apz?: boolean;
+  spe?: boolean;
+  speId?: number;
 }
 
 export interface ItfUserData {
@@ -71,11 +73,13 @@ export interface SavedData {
   fixKosten: FixKostenEintrag[];
   sparEintraege: SparschweinEintrag[];
   wunschlistenEintraege: WunschlistenEintrag[];
-  settings?: Settings;
+  settings: Settings;
 }
 
 export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
+  showDayDifferenceInHome: boolean;
+  toHighBuchungenEnabled?: boolean;
 }
 
 export interface WunschlistenFilter {
@@ -147,10 +151,17 @@ export interface SparschweinEintrag {
   id: number;
   title?: string;
   zusatz?: string;
+  vonDayBudgetAbziehen?: boolean;
 }
 
 export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
   grayedOut?: boolean;
+}
+
+export interface AvailableMoney {
+  availableForMonth: number;
+  availableForWeek: number;
+  availableForDay: number;
 }

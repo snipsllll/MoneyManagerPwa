@@ -6,6 +6,7 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-buchung-listelem',
@@ -17,6 +18,7 @@ export class BuchungListelemComponent implements OnInit{
   @Input() first?: boolean;
   @Input() last?: boolean;
   showMenu = signal<boolean>(false);
+  ut: UT = new UT();
 
   constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
 
@@ -31,6 +33,7 @@ export class BuchungListelemComponent implements OnInit{
   }
 
   onBuchungClicked(buchungsId: number) {
+    if(!this.buchung.spe)
     this.router.navigate(['/buchungDetails', buchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
@@ -53,16 +56,5 @@ export class BuchungListelemComponent implements OnInit{
       }
     };
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
-
-    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
-    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
-
-    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
-    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
   }
 }

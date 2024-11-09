@@ -1,9 +1,11 @@
-import {Component, signal} from '@angular/core';
+import {Component, computed, signal} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
 import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {UT} from "../../Models/Classes/UT";
+import {SettingsService} from "../../Services/SettingsService/settings.service";
 
 @Component({
   selector: 'app-create-buchung',
@@ -13,35 +15,36 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 export class CreateBuchungComponent {
   buchung!: Buchung;
   oldBuchung!: Buchung;
-  showBetragWarning = false;
-  date?: string;
-  isSearchboxVisible = signal<boolean>(false);
-  dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
-  saveButtonDisabled = signal<boolean>(true);
-  buchungen: Buchung[] = [];
+  buchungen: Buchung[] = []; //für Searchbox
 
-  constructor(private dataService: DataService, public dialogService: DialogService, private router: Router) {
-    const date = new Date();
+  selectedDate?: string;
+  showBetragWarning = false;
+  betragWarnung = '';
+
+  isSearchboxVisible = signal<boolean>(false);
+  isSaveButtonDisabled = signal<boolean>(true);
+  dateUpdated = signal<number>(0);
+
+  availableMoney = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataService.getAvailableMoney(this.buchung.date)
+  })
+
+  utils: UT = new UT();
+
+  constructor(private settingsService: SettingsService,
+              private dataService: DataService,
+              public dialogService: DialogService,
+              private router: Router)
+  {
     this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
 
-    this.buchung = {
-      title: '',
-      betrag: null,
-      date: date,
-      time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
-      beschreibung: '',
-      apz: false
-    };
-    this.oldBuchung = {
-      title: '',
-      betrag: null,
-      date: new Date(this.buchung.date),
-      time: this.buchung.time,
-      beschreibung: '',
-      apz: false
-    };
-    this.dayBudget.set(this.dataService.getDayIstBudgets(date)!);
-    this.date = this.buchung.date.toISOString().slice(0, 10);
+    const date = new Date();
+    this.buchung = this.getNewEmptyBuchung(date);
+    this.oldBuchung = this.getNewEmptyBuchung(date);
+
+    this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
   }
 
   onSearchClicked() {
@@ -54,7 +57,8 @@ export class CreateBuchungComponent {
 
   onItemSelected(item: Buchung) {
     this.isSearchboxVisible.set(false);
-    this.saveButtonDisabled.set(false);
+    this.isSaveButtonDisabled.set(false);
+
     this.buchung.title = item.title;
     this.buchung.apz = item.apz;
     this.buchung.betrag = item.betrag;
@@ -63,34 +67,37 @@ export class CreateBuchungComponent {
 
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
-      if (!this.saveButtonDisabled()) {
-        let showConfDialog: boolean;
-        if(this.buchung.apz === true){
-          showConfDialog = (this.buchung.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung.date!)?.budget!);
-        } else {
-          showConfDialog = (this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung.betrag!);
-        }
+      if (!this.isSaveButtonDisabled()) {
+        let isBetragZuHoch = this.buchung.apz
+          ? this.buchung.betrag! > this.availableMoney().availableForMonth
+          : this.buchung.betrag! > this.availableMoney().availableForDay
 
-        if (showConfDialog) {
-          const confirmDialogViewModel: ConfirmDialogViewModel = {
-            title: 'Betrag ist zu hoch',
-            message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
-            onCancelClicked: () => {
-              this.dialogService.isConfirmDialogVisible = false;
-            },
-            onConfirmClicked: () => {
-              this.dataService.addBuchung(this.buchung);
-              this.dialogService.isConfirmDialogVisible = false;
-              this.router.navigate(['/']);
-            }
-          }
-          this.dialogService.showConfirmDialog(confirmDialogViewModel);
-        } else {
+        if (!isBetragZuHoch) {
           this.dataService.addBuchung(this.buchung);
           this.router.navigate(['/']);
+        } else {
+          if (this.settingsService.getIsToHighBuchungenEnabled()) {
+            const confirmDialogViewModel: ConfirmDialogViewModel = {
+              title: 'Betrag ist zu hoch',
+              message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+              onCancelClicked: () => {
+                this.dialogService.isConfirmDialogVisible = false;
+              },
+              onConfirmClicked: () => {
+                this.dataService.addBuchung(this.buchung);
+                this.dialogService.isConfirmDialogVisible = false;
+                this.router.navigate(['/']);
+              }
+            }
+            this.dialogService.showConfirmDialog(confirmDialogViewModel);
+          } else {
+            this.betragWarnung = "der Betrag ist zu hoch!";
+            this.showBetragWarning = true;
+          }
         }
       }
     } else {
+      this.betragWarnung = 'der Betrag darf nicht 0 betragen!';
       this.showBetragWarning = true;
     }
   }
@@ -100,9 +107,10 @@ export class CreateBuchungComponent {
       this.router.navigate(['/']);
       return;
     }
+
     const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Cancel?',
-      message: 'Do you really want to cancel? All changes will be lost!',
+      title: 'Abbrechen?',
+      message: 'Möchtest du wirklich abbrechen? Alle bisher eingetragenen Daten in der neuen Buchung werden verworfen!',
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
       },
@@ -111,6 +119,7 @@ export class CreateBuchungComponent {
         this.router.navigate(['/']);
       }
     }
+
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
@@ -134,15 +143,11 @@ export class CreateBuchungComponent {
   }
 
   onDateChange() {
-    if (this.date)
-      this.buchung!.date = new Date(this.date);
+    if (this.selectedDate)
+      this.buchung!.date = new Date(this.selectedDate);
 
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung.date) ?? {
-      monthIstBudget: undefined,
-      dayIstBudget: undefined,
-      weekIstBudget: undefined
-    });
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateDate();
+    this.updateSaveButton();
   }
 
   onTimeChange(event: any) {
@@ -150,37 +155,26 @@ export class CreateBuchungComponent {
     const date = new Date();
     date.setHours(+hours, +minutes);
     this.buchung!.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onBetragChanged() {
-    if (this.buchung.betrag !== null) {
+    if (this.buchung.betrag !== null)
       this.buchung.betrag = +(this.buchung.betrag!);
-    }
-    this.saveButtonDisabled.set(this.isSaveAble());
+
+    this.updateSaveButton();
   }
 
   onTitleChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onBeschreibungChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
+    this.updateSaveButton();
   }
 
   onApzClicked() {
     this.buchung.apz = !this.buchung.apz;
-  }
-
-  toFixedDown(number: number, decimals: number): number {
-    const numberString = number.toString();
-    const [numberVorKomma, numberNachKomma = ""] = numberString.split(".");
-
-    // Verkürze numberNachKomma auf die gewünschte Anzahl von Dezimalstellen
-    const gekuerztesNachKomma = numberNachKomma.substring(0, decimals).padEnd(decimals, '0');
-
-    // Kombiniere den Vor- und Nachkomma-Teil wieder als Zahl
-    return parseFloat(`${numberVorKomma}.${gekuerztesNachKomma}`);
   }
 
   private isBuchungEmpty() {
@@ -189,5 +183,28 @@ export class CreateBuchungComponent {
 
   private isSaveAble() {
     return this.buchung.betrag === null || this.buchung.betrag === 0;
+  }
+
+  private updateDate() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
+  }
+
+  private updateSaveButton() {
+    this.isSaveButtonDisabled.set(this.isSaveAble());
+  }
+
+  private getNewEmptyBuchung(date: Date) {
+    return {
+      title: '',
+      betrag: null,
+      date: date,
+      time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
+      beschreibung: '',
+      apz: false
+    };
+  }
+
+  protected isAvailableMoneyValid() {
+    return this.availableMoney().availableForDay && this.availableMoney().availableForWeek && this.availableMoney().availableForWeek
   }
 }

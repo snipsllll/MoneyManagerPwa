@@ -13,6 +13,7 @@ import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/Ed
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {Color} from "../../../Models/Enums";
 import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
+import {SaveService} from "../../../Services/SaveService/save.service";
 
 @Component({
   selector: 'app-wunschliste',
@@ -34,7 +35,7 @@ export class WunschlisteComponent implements OnInit{
 
   newWunschlistenEintrag!: WunschlistenEintrag;
 
-  constructor(private sparschweinService: SparschweinService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
+  constructor(private saveService: SaveService, private sparschweinService: SparschweinService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
   }
 
   ngOnInit() {
@@ -49,8 +50,8 @@ export class WunschlisteComponent implements OnInit{
       gekauft: false,
       erstelltAm: new Date()
     }
-    this.selectedFilter.set(this.dataService.settings?.wunschllistenFilter.selectedFilter ?? '');
-    this.wirdGekauftesAusgeblendet.set(this.dataService.settings?.wunschllistenFilter.gekaufteEintraegeAusblenden ?? false);
+    this.selectedFilter.set(this.saveService.getSettings().wunschllistenFilter.selectedFilter ?? '');
+    this.wirdGekauftesAusgeblendet.set(this.saveService.getSettings().wunschllistenFilter.gekaufteEintraegeAusblenden ?? false);
   }
 
   getElements(selectedFilter?: string) {
@@ -78,14 +79,18 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onFilterChanged() {
-    if(this.dataService.settings) {
-      this.dataService.settings!.wunschllistenFilter.selectedFilter = this.selectedFilter();
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.selectedFilter = this.selectedFilter();
+      this.saveService.setSettings(x);
     }
   }
 
   onGekaufteEintraegeAusblendenChanged() {
-    if(this.dataService.settings) {
-      this.dataService.settings!.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
     }
   }
 
@@ -235,14 +240,19 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onGekaufteEintraegeAusblendenCheckboxClicked() {
-    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
-    this.dataService.save();
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
+    }
   }
 
   onGekaufteEintraegeAusblendenLabelClicked() {
-    this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
-    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
-    this.dataService.save();
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
+    }
   }
 
   private kannKaufen(eintrag: WunschlistenEintrag) {
