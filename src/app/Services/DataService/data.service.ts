@@ -69,6 +69,14 @@ export class DataService {
     })
   }
 
+  setFixKostenEintragForMonth(date: Date, fixkostenEintraege?: FixKostenEintrag[]) {
+    const month = this.getMonthByDate(date);
+
+    month.gesperrteFixKosten = fixkostenEintraege;
+
+    this.setMonth(month);
+  }
+
   addWunschlistenEintrag(wunschlistenEintrag: WunschlistenEintrag) {
     wunschlistenEintrag.id = this.getNextFreeWunschlistenEintragId();
     this.update({
@@ -497,6 +505,7 @@ export class DataService {
       }
       this.changeSparenForMonth(month.date, month.sparen, false);
       this.changeTotalBudgetForMonth(month.date, month.totalBudget, false);
+      this.setFixKostenEintragForMonth(month.date, month.fixkosten);
     });
 
     this.settings = savedData.settings ?? {
