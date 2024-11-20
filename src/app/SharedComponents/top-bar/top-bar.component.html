@@ -13,12 +13,12 @@
 
     </div>
     <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN'">
-      <div class="top-bar__budget" *ngIf="availableMoney()!.availableForDay !== undefined"
+      <div class="top-bar__budget" *ngIf="availableMoney()!.availableForMonth !== undefined"
            (click)="toggleDropdown()"
            (touchstart)="onTouchStart()"
            (touchend)="onTouchEnd()"
            (touchcancel)="onTouchEnd()">
-        <b class="darkgreen" [class.darkred]="availableMoney()!.availableForDay < 0">
+        <b class="darkgreen" [class.darkred]="availableMoney()!.availableForMonth < 0">
           {{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€
         </b>
       </div>
