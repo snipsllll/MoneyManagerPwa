@@ -45,7 +45,7 @@ export class EditBuchungComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set(this.dataProvider.getBuchungById(buchungsId));
+      this.buchung?.set({...this.dataProvider.getBuchungById(buchungsId)!});
       this.oldBuchung = {
         id: this.buchung()!.id,
         data: {
@@ -64,9 +64,11 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung()!.data.betrag! > this.availableMoney().availableForDay
+        const availableForDay = this.availableMoney().availableForDay;
+        console.log(availableForDay)
+        let isBetragZuHoch = this.buchung()!.data.betrag! > availableForDay
 
-        if (!isBetragZuHoch) {
+        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           this.dataChangeService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
         } else {
