@@ -63,7 +63,12 @@ export class DataProviderService {
       }
     })
 
-    return sparschweinEintraege;
+    //TODO: Workaround für mehrmals hinzugefügte Sparschweineinträge => distinct (fixen)
+
+    return sparschweinEintraege.filter(
+      (item, index, self) =>
+        self.findIndex((t) => t.id === item.id) === index
+    )
   }
 
   getAusgabenBetragForDay(day: IDay): number | undefined {

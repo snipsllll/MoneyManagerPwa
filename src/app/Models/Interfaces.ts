@@ -30,13 +30,6 @@ export interface Day {
   buchungen?: IBuchung[];
 }
 
-export interface DayIstBudgets {
-  monthIstBudget?: number;
-  weekIstBudget?: number;
-  dayIstBudget?: number;
-  gespartes?: number;
-}
-
 export interface BudgetInfosForMonth {
   totalBudget: number;
   sparen: number;
