@@ -55,7 +55,7 @@ export class WunschlisteComponent implements OnInit{
   }
 
   getElements(selectedFilter?: string) {
-    let allElements = this.dataService.userData.wunschlistenEintraege;
+    let allElements = this.dataProvider.getAlleWunschlistenEintraege();
     if(this.wirdGekauftesAusgeblendet()){
       allElements = allElements.filter(element => element.data.gekauft === false);
     }
@@ -167,7 +167,6 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onEditClicked = (eintrag: ListElementData) => {
-    console.log(eintrag)
     const editDialogViewModel: EditDialogViewModel = {
       data: {
         betrag: eintrag.betrag,

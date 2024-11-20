@@ -1,6 +1,7 @@
 import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
+import {currentDbVersion} from "./CurrentDbVersion";
 
 export class UserData {
 
@@ -9,32 +10,57 @@ export class UserData {
   public fixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
-  public settings: Settings;
+  public settings!: Settings;
 
   private _fileEngine: FileEngine = new FileEngine(true);
 
   constructor() {
-    const savedData: SavedData = this._fileEngine.load();
-    this.buchungen = savedData.buchungen;
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.fixkostenEintraege = savedData.fixKosten;
-    this.sparschweinEintraege = savedData.sparEintraege;
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
-    this.settings = savedData.settings;
-    console.log(this)
+    this.initialize();
   }
 
   save(savedData?: SavedData) {
     if (savedData) {
-      this._fileEngine.save(savedData);
+      this._fileEngine.save(this.checkForDbUpdates(savedData as SavedData));
       this.reload();
     } else {
       this._fileEngine.save(this.getSavedData());
     }
   }
 
-  reload() {
-    const savedData: SavedData = this._fileEngine.load();
+  private initialize() {
+    let savedData: any | SavedData = this._fileEngine.load();
+    savedData = this.checkForDbUpdates(savedData) as SavedData;
+
+    this.buchungen = savedData.buchungen;
+    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
+    this.fixkostenEintraege = savedData.fixKosten;
+    this.sparschweinEintraege = savedData.sparEintraege;
+    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
+    this.settings = savedData.settings;
+  }
+
+  private checkForDbUpdates(data: any): SavedData {
+    let currentData: any = data;
+
+    if(currentData.dbVersion < 2) {
+      currentData.settings.x = true;
+    }
+
+    if(currentData.dbVersion < 3) {
+      currentData.settings.y = 123;
+    }
+
+    if(currentData.dbVersion < 4) {
+      currentData.settings.y = [currentData.settings.y];
+    }
+
+    currentData.dbVersion = currentDbVersion;
+    return currentData as SavedData;
+  }
+
+  private reload() {
+    let savedData: any = this._fileEngine.load();
+
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
     this.fixkostenEintraege = savedData.fixKosten;
@@ -57,7 +83,8 @@ export class UserData {
       wunschlistenEintraege: [],
       sparEintraege: [],
       fixKosten: [],
-      savedMonths: []
+      savedMonths: [],
+      dbVersion: currentDbVersion
     });
     this.reload();
   }
@@ -69,7 +96,8 @@ export class UserData {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDaySpend: false, toHighBuchungenEnabled: false}
+      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDaySpend: false, toHighBuchungenEnabled: false},
+      dbVersion: currentDbVersion
     }
 
     savedData.buchungen = this.buchungen;
@@ -148,10 +176,6 @@ export class UserData {
     })
 
     return months;
-  }
-
-  private convertBuchungen() {
-
   }
 
   private getSunday(inputDate: Date): Date {

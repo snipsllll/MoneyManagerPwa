@@ -55,12 +55,15 @@ export interface SavedData {
   sparEintraege: ISparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
   settings: Settings;
+  dbVersion: number;
 }
 
 export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
   showDaySpend: boolean;
   toHighBuchungenEnabled: boolean;
+  x?: boolean;
+  y?: number[];
 }
 
 export interface WunschlistenFilter {

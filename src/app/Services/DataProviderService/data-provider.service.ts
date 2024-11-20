@@ -144,8 +144,6 @@ export class DataProviderService {
         }
       })
     })
-    console.log(notSpendMoney)
-
     return notSpendMoney;
   }
 
@@ -173,8 +171,6 @@ export class DataProviderService {
     availableForWeek += availableForDay;
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
-
-    console.log(availableForDay)
 
     return {
       availableForDay: availableForDay,

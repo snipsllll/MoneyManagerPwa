@@ -12,7 +12,7 @@ export class DataService {
   updated = signal<number>(0);
 
   constructor() {
-    this.update();
+    this.update(false);
   }
 
   update(safeAfterUpdate?: boolean) {
