@@ -349,10 +349,6 @@ export class DataService {
 
 
   /*
-
-
-
-
     private getIndexOfWeekInMonth(date: Date): number {
       const monthIndex = this.getIndexOfMonth(date);
       if (monthIndex === -1) {

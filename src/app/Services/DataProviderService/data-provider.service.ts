@@ -203,8 +203,24 @@ export class DataProviderService {
     return this.dataService.userData.settings;
   }
 
+  getBudgetInfosForMonth(date: Date): BudgetInfosForMonth | null {
+    const monthIndex = this.getIndexOfMonth(date);
+    if (monthIndex === -1) {
+      return null;
+    }
+    const month = this.dataService.userData.months[monthIndex];
 
-  //methoden die von anderen componenten genutzt werden aus dataService
+    return {
+      budget: month.budget ?? 0,
+      sparen: month.sparen ?? 0,
+      totalBudget: month.totalBudget ?? 0,
+      istBudget: month.istBudget,
+      dayBudget: month.dailyBudget ?? 0,
+      fixKostenSumme: this.getFixkostenSummeForMonth(month),
+      fixKostenGesperrt: month.monatAbgeschlossen ?? false,
+      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.dataService.userData.fixkostenEintraege
+    }
+  }
 
   private getDictForDayBudgetsInMonth(monthDate: Date) {
     const month = this.getMonthByDate(monthDate);
@@ -244,25 +260,6 @@ export class DataProviderService {
       return -1;
     }
     return x;
-  }
-
-  getBudgetInfosForMonth(date: Date): BudgetInfosForMonth | null {
-    const monthIndex = this.getIndexOfMonth(date);
-    if (monthIndex === -1) {
-      return null;
-    }
-    const month = this.dataService.userData.months[monthIndex];
-
-    return {
-      budget: month.budget ?? 0,
-      sparen: month.sparen ?? 0,
-      totalBudget: month.totalBudget ?? 0,
-      istBudget: month.istBudget,
-      dayBudget: month.dailyBudget ?? 0,
-      fixKostenSumme: this.getFixkostenSummeForMonth(month),
-      fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.dataService.userData.fixkostenEintraege
-    }
   }
 
   private getIndexOfMonth(date: Date) {
