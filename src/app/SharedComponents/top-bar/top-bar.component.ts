@@ -43,6 +43,13 @@ export class TopBarComponent implements OnInit {
     console.log(this.dataService.userData.months())
   }
 
+  getDaysLeftText() {
+    const daysLeft = this.dataService.getDaysLeftForMonth(new Date());
+    return daysLeft === 1
+      ? "für 1 Tag"
+      : `für ${daysLeft} Tage`
+  }
+
   private pressTimer: any;
   private holdTime: number = 5000; // 5 Sekunden
 

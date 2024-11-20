@@ -1088,6 +1088,11 @@ export class DataService {
     return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
 
+  getDaysLeftForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+    return month.daysInMonth! - date.getDate();
+  }
+
   getDayByeDate(date: Date): Day | undefined {
     const month = this.getMonthByDate(date);
     let selectedDay: Day | undefined = undefined;

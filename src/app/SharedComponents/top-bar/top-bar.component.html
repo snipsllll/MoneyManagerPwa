@@ -21,6 +21,9 @@
         <b class="darkgreen" [class.darkred]="availableMoney()!.availableForMonth < 0">
           {{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€
         </b>
+        <div class="top-bar__tage-left">
+          {{ getDaysLeftText() }}
+        </div>
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
