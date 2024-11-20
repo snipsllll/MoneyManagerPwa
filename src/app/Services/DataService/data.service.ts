@@ -1087,4 +1087,19 @@ export class DataService {
   private getIndexOfWunschlistenEintragById(eintragId: number) {
     return this.userData.wunschlistenEintraege.findIndex(eintrag => eintrag.id === eintragId);
   }
+
+  getDayByeDate(date: Date): Day | undefined {
+    const month = this.getMonthByDate(date);
+    let selectedDay: Day | undefined = undefined;
+
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        if(day.date.toLocaleDateString() === date.toLocaleDateString()) {
+          selectedDay =  day;
+        }
+      })
+    })
+
+    return selectedDay;
+  }
 }
