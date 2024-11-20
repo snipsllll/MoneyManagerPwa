@@ -27,6 +27,7 @@ export class UserData {
   save(savedData?: SavedData) {
     if (savedData) {
       this._fileEngine.save(savedData);
+      this.reload();
     } else {
       this._fileEngine.save(this.getSavedData());
     }
