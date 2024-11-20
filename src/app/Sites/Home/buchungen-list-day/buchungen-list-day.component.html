@@ -2,7 +2,7 @@
   <div class="buchungen-list-day__date">
     <div class="day-label">
       {{day.date.toLocaleDateString()}}
-      <div *ngIf="dataProvider.getSettings().showDayDifferenceInHome" class="buchungen-list-day__day-budget">
+      <div *ngIf="dataProvider.getSettings().showDaySpend" class="buchungen-list-day__day-budget">
         -{{ ut.toFixedDown(ausgabenForDay() , 2) }}€
       </div>
     </div>

@@ -3,7 +3,6 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
-import {SettingsService} from "../../../Services/SettingsService/settings.service";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {SavedData} from "../../../Models/Interfaces";
@@ -16,13 +15,13 @@ import {SavedData} from "../../../Models/Interfaces";
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
-  isShowDayDiffChecked!: boolean;
+  isShowDaySpendChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
 
-  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
     this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
-    this.isShowDayDiffChecked = settings.showDayDifferenceInHome !== undefined ? settings.showDayDifferenceInHome : true;
+    this.isShowDaySpendChecked = settings.showDaySpend !== undefined ? settings.showDaySpend : true;
   }
 
   ngOnInit() {
@@ -124,8 +123,8 @@ export class EinstellungenComponent implements OnInit{
   }
 
   onDayDiffClicked() {
-    this.dataChangeService.setSettingShowDayDiff(!this.dataProvider.getSettings().showDayDifferenceInHome);
-    this.isShowDayDiffChecked = this.dataProvider.getSettings().showDayDifferenceInHome;
+    this.dataChangeService.setSettingShowDayDiff(!this.dataProvider.getSettings().showDaySpend);
+    this.isShowDaySpendChecked = this.dataProvider.getSettings().showDaySpend;
   }
 
   onZuVielErlaubtClicked() {

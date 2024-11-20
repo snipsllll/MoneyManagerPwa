@@ -131,6 +131,13 @@ export class DataProviderService {
   }
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
+    if(this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0){
+      return {
+        availableForMonth: -0,
+        availableForWeek: -0,
+        availableForDay: -0
+      };
+    }
     const availableForDay = this.getAvailableMoneyForDay(dayDate);
     const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
 

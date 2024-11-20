@@ -59,7 +59,7 @@ export interface SavedData {
 
 export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
-  showDayDifferenceInHome: boolean;
+  showDaySpend: boolean;
   toHighBuchungenEnabled: boolean;
 }
 

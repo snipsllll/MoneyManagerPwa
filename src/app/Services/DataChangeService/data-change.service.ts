@@ -111,7 +111,7 @@ export class DataChangeService {
   }
 
   setSettingShowDayDiff(value: boolean) {
-    this.dataService.userData.settings.showDayDifferenceInHome = value;
+    this.dataService.userData.settings.showDaySpend = value;
     this.dataService.update();
   }
 

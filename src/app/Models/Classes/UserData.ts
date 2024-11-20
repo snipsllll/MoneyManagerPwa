@@ -48,7 +48,7 @@ export class UserData {
       buchungen: [],
       settings: {
         toHighBuchungenEnabled: true,
-        showDayDifferenceInHome: true,
+        showDaySpend: true,
         wunschllistenFilter: {
           selectedFilter: '',
           gekaufteEintraegeAusblenden: false
@@ -69,7 +69,7 @@ export class UserData {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDayDifferenceInHome: false, toHighBuchungenEnabled: false}
+      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDaySpend: false, toHighBuchungenEnabled: false}
     }
 
     savedData.buchungen = this.buchungen;

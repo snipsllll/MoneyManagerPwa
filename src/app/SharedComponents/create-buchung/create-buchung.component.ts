@@ -4,7 +4,6 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
-import {SettingsService} from "../../Services/SettingsService/settings.service";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {IBuchung, IBuchungData} from "../../Models/NewInterfaces";
