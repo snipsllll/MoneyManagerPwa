@@ -35,8 +35,7 @@ export class CreateBuchungComponent {
 
   utils: UT = new UT();
 
-  constructor(private settingsService: SettingsService,
-              private dataProvider: DataProviderService,
+  constructor(private dataProvider: DataProviderService,
               private dataChangeService: DataChangeService,
               private dataService: DataService,
               public dialogService: DialogService,
@@ -77,7 +76,7 @@ export class CreateBuchungComponent {
           this.dataChangeService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         } else {
-          if (this.settingsService.getIsToHighBuchungenEnabled()) {
+          if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
               title: 'Betrag ist zu hoch',
               message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,

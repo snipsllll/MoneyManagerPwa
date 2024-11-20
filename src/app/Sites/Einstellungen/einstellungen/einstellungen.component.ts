@@ -5,6 +5,8 @@ import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {SettingsService} from "../../../Services/SettingsService/settings.service";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {SavedData} from "../../../Models/Interfaces";
 
 @Component({
   selector: 'app-einstellungen',
@@ -17,15 +19,16 @@ export class EinstellungenComponent implements OnInit{
   isShowDayDiffChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
 
-  constructor(private dataChangeService: DataChangeService, public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+    const settings = this.dataProvider.getSettings();
+    this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
+    this.isShowDayDiffChecked = settings.showDayDifferenceInHome !== undefined ? settings.showDayDifferenceInHome : true;
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
-    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
   }
 
   onAlleDatenLoeschenClicked() {
@@ -33,7 +36,8 @@ export class EinstellungenComponent implements OnInit{
     title: 'Alle Daten löschen?',
     message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
     onConfirmClicked: () => {
-      //this.dataChangeService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
+      this.dataService.userData.deleteAllData();
+      this.dataService.update();
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -65,7 +69,7 @@ export class EinstellungenComponent implements OnInit{
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          //this.dataChangeService.save(JSON.parse(fileContent));
+          this.dataService.userData.save(JSON.parse(fileContent) as SavedData);
           this.dialogService.isConfirmDialogVisible = false;
         },
         onCancelClicked: () => {
@@ -119,12 +123,12 @@ export class EinstellungenComponent implements OnInit{
   }
 
   onDayDiffClicked() {
-    this.settingsService.setShowDayDifferenceInHome(!this.settingsService.getShowDayDifferenceInHome());
-    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+    this.dataChangeService.setSettingShowDayDiff(!this.dataProvider.getSettings().showDayDifferenceInHome);
+    this.isShowDayDiffChecked = this.dataProvider.getSettings().showDayDifferenceInHome;
   }
 
   onZuVielErlaubtClicked() {
-    this.settingsService.setIsToHighBuchungenEnabled(!this.settingsService.getIsToHighBuchungenEnabled());
-    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
+    this.dataChangeService.setSettingEnableToHighBuchungen(!this.dataProvider.getSettings().toHighBuchungenEnabled);
+    this.isEnableToHighBuchungenChecked = this.dataProvider.getSettings().toHighBuchungenEnabled;
   }
 }

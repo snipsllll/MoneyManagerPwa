@@ -3,10 +3,9 @@ import {
   IBuchung,
   IBuchungData,
   IFixkostenEintrag,
-  IFixkostenEintragData, IMonth, ISparschweinEintrag, ISparschweinEintragData,
+  IFixkostenEintragData, ISparschweinEintrag, ISparschweinEintragData,
   IWunschlistenEintrag, IWunschlistenEintragData
 } from "../../Models/NewInterfaces";
-import {UserData} from "../../Models/Classes/UserData";
 import {DataService} from "../DataService/data.service";
 
 @Injectable({
@@ -106,8 +105,14 @@ export class DataChangeService {
     this.dataService.update();
   }
 
-  save() {
-    this.dataService.userData.save();
+  setSettingEnableToHighBuchungen(value: boolean) {
+    this.dataService.userData.settings.toHighBuchungenEnabled = value;
+    this.dataService.update();
+  }
+
+  setSettingShowDayDiff(value: boolean) {
+    this.dataService.userData.settings.showDayDifferenceInHome = value;
+    this.dataService.update();
   }
 
 

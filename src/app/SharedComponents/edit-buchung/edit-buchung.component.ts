@@ -18,6 +18,7 @@ export class EditBuchungComponent implements OnInit {
   oldBuchung?: IBuchung;
   date?: string;
   showBetragWarning = false;
+  betragWarnung?: string;
 
   buchung = signal<IBuchung | undefined>(undefined);
   dateUpdated = signal<number>(0);
@@ -69,22 +70,29 @@ export class EditBuchungComponent implements OnInit {
           this.dataChangeService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
         } else {
-          const confirmDialogViewModel: ConfirmDialogViewModel = {
-            title: 'Betrag ist zu hoch',
-            message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.data.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.data.date.toLocaleDateString()}. Trotzdem fortfahren?`,
-            onCancelClicked: () => {
-              this.dialogService.isConfirmDialogVisible = false;
-            },
-            onConfirmClicked: () => {
-              this.dataChangeService.editBuchung(this.buchung()!);
-              this.dialogService.isConfirmDialogVisible = false;
-              this.router.navigate(['/']);
+          if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
+            const confirmDialogViewModel: ConfirmDialogViewModel = {
+              title: 'Betrag ist zu hoch',
+              message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.data.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.data.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+              onCancelClicked: () => {
+                this.dialogService.isConfirmDialogVisible = false;
+              },
+              onConfirmClicked: () => {
+                this.dataChangeService.editBuchung(this.buchung()!);
+                this.dialogService.isConfirmDialogVisible = false;
+                this.router.navigate(['/']);
+              }
             }
+            this.dialogService.showConfirmDialog(confirmDialogViewModel);
+          } else {
+            this.betragWarnung = "der Betrag ist zu hoch!";
+            this.showBetragWarning = true;
           }
-          this.dialogService.showConfirmDialog(confirmDialogViewModel);
+
         }
       }
     } else {
+      this.betragWarnung = 'der Betrag darf nicht 0 betragen!'
       this.showBetragWarning = true;
     }
   }

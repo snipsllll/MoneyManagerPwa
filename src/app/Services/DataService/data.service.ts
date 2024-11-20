@@ -247,7 +247,7 @@ export class DataService {
     this.setMonth(month);
   }
 
-  private save(savedData?: SavedData) { //TODO testen
+  private save() { //TODO testen
     this.userData.save();
   }
 

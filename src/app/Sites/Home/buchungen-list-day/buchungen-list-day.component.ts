@@ -25,6 +25,6 @@ export class BuchungenListDayComponent {
 
   ut: UT = new UT();
 
-  constructor(private dataProvider: DataProviderService, private dataService: DataService, public settingsService: SettingsService) {
+  constructor(public dataProvider: DataProviderService, private dataService: DataService, public settingsService: SettingsService) {
   }
 }

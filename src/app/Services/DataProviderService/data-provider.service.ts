@@ -8,7 +8,7 @@ import {
   IWunschlistenEintrag
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
-import {AvailableMoney, BudgetInfosForMonth, Day, Month} from "../../Models/Interfaces";
+import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +190,10 @@ export class DataProviderService {
 
   getMonthByDate(date: Date) {
     return this.dataService.userData.months[this.getIndexOfMonth(date)];
+  }
+
+  getSettings(): Settings {
+    return this.dataService.userData.settings;
   }
 
 

@@ -21,10 +21,44 @@ export class UserData {
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
+    console.log(this)
   }
 
-  save() {
-    this._fileEngine.save(this.getSavedData());
+  save(savedData?: SavedData) {
+    if (savedData) {
+      this._fileEngine.save(savedData);
+    } else {
+      this._fileEngine.save(this.getSavedData());
+    }
+  }
+
+  reload() {
+    const savedData: SavedData = this._fileEngine.load();
+    this.buchungen = savedData.buchungen;
+    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
+    this.fixkostenEintraege = savedData.fixKosten;
+    this.sparschweinEintraege = savedData.sparEintraege;
+    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
+    this.settings = savedData.settings;
+  }
+
+  deleteAllData() {
+    this._fileEngine.save({
+      buchungen: [],
+      settings: {
+        toHighBuchungenEnabled: true,
+        showDayDifferenceInHome: true,
+        wunschllistenFilter: {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        }
+      },
+      wunschlistenEintraege: [],
+      sparEintraege: [],
+      fixKosten: [],
+      savedMonths: []
+    });
+    this.reload();
   }
 
   getSavedData(): SavedData {
@@ -34,13 +68,14 @@ export class UserData {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDayDifferenceInHome: false}
+      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDayDifferenceInHome: false, toHighBuchungenEnabled: false}
     }
 
     savedData.buchungen = this.buchungen;
     savedData.fixKosten = this.fixkostenEintraege;
     savedData.sparEintraege = this.sparschweinEintraege;
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
+    savedData.settings = this.settings;
 
     this.months.forEach(month => {
       savedData.savedMonths.push({
