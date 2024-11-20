@@ -60,4 +60,5 @@ export interface ISparschweinEintragData {
   zusatz?: string;
   vonWunschliste?: boolean;
   wunschlistenId?: number;
+  vonMonat?: boolean;
 }

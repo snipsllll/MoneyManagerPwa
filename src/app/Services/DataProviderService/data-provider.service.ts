@@ -9,11 +9,14 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
+import {UT} from "../../Models/Classes/UT";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataProviderService {
+
+  private utils = new UT();
 
   constructor(private dataService: DataService) { }
 
@@ -42,7 +45,25 @@ export class DataProviderService {
   }
 
   getAlleSparschweinEintraege(): ISparschweinEintrag[] {
-    return this.dataService.userData.sparschweinEintraege;
+    const sparschweinEintraege = this.dataService.userData.sparschweinEintraege;
+    const months = this.dataService.userData.months;
+    months.forEach(month => {
+      if(month.monatAbgeschlossen) {
+        sparschweinEintraege.push(
+          {
+            id: -1,
+            data: {
+              betrag: month.istBudget!,
+              date: month.endDate!,
+              title: `Restgeld für ${month.startDate.toLocaleDateString()}`,
+              vonMonat: true
+            }
+          }
+        )
+      }
+    })
+
+    return sparschweinEintraege;
   }
 
   getAusgabenBetragForDay(day: IDay): number | undefined {
