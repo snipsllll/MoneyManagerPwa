@@ -58,4 +58,6 @@ export interface ISparschweinEintragData {
   title: string;
   betrag: number;
   zusatz?: string;
+  vonWunschliste?: boolean;
+  wunschlistenId?: number;
 }

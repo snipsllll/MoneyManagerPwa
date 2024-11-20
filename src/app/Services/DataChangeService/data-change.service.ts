@@ -95,6 +95,11 @@ export class DataChangeService {
     this.dataService.update();
   }
 
+  deleteSparschweinEintragByWunschId(wunschId: number) {
+    this.dataService.userData.sparschweinEintraege.splice(this.getIndexOfSparschweinEintragByWunschId(wunschId), 1);
+    this.dataService.update();
+  }
+
   changeTotalBudgetBetragForMonth(date: Date, editedTotalBudgetBetrag: number) {
     this.dataService.userData.months[this.getIndexOfMonthByDate(date)].totalBudget = editedTotalBudgetBetrag;
     this.dataService.update();
@@ -178,6 +183,10 @@ export class DataChangeService {
 
   private getIndexOfSparschweinEintragById(id: number) {
     return this.dataService.userData.sparschweinEintraege.findIndex(eintrag => eintrag.id === id);
+  }
+
+  private getIndexOfSparschweinEintragByWunschId(id: number) {
+    return this.dataService.userData.sparschweinEintraege.findIndex(eintrag => eintrag.data.wunschlistenId === id);
   }
 
   private getIndexOfMonthByDate(date: Date) {

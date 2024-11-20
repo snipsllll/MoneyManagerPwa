@@ -78,8 +78,8 @@ export class SparschweinComponent implements OnInit{
   getEintragViewModel(eintrag: ISparschweinEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doDetailsExist: false,
-      doMenuExist: true,
-      isDarker: false
+      doMenuExist: !eintrag.data.vonWunschliste,
+      isDarker: eintrag.data.vonWunschliste
     }
 
     const data: ListElementData = {

@@ -42,9 +42,9 @@ export class DataService {
       this.calcIstBudgetForMonth(month.startDate);
     });
 
-    if (safeAfterUpdate === undefined || safeAfterUpdate === true) {
+    if (safeAfterUpdate === undefined || safeAfterUpdate)
       this.save();
-    }
+
     this.sendUpdateToComponents();
   }
 

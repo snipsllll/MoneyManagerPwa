@@ -166,15 +166,16 @@ export class WunschlisteComponent implements OnInit{
     }
   }
 
-  onEditClicked = (eintrag: IWunschlistenEintrag) => {
+  onEditClicked = (eintrag: ListElementData) => {
+    console.log(eintrag)
     const editDialogViewModel: EditDialogViewModel = {
       data: {
-        betrag: eintrag.data.betrag,
-        title: eintrag.data.title,
-        zusatz: eintrag.data.zusatz,
-        id: eintrag.id,
-        erstelltAm: eintrag.data.erstelltAm,
-        date: eintrag.data.date
+        betrag: eintrag.betrag,
+        title: eintrag.title,
+        zusatz: eintrag.zusatz,
+        id: eintrag.id!,
+        erstelltAm: eintrag.erstelltAm,
+        date: eintrag.date
       },
       onSaveClick: this.onEditSaveClicked,
       onCancelClick: this.onEditCancelClicked
@@ -220,7 +221,7 @@ export class WunschlisteComponent implements OnInit{
         betrag: eintrag.betrag,
         title: eintrag.title ?? 'ohne Titel',
         zusatz: eintrag.zusatz,
-        gekauft: false,
+        gekauft: true,
         date: eintrag.date!,
         erstelltAm: eintrag.erstelltAm!
       }
@@ -228,6 +229,14 @@ export class WunschlisteComponent implements OnInit{
     console.log(newWunschlistenEintrag)
     if(this.kannKaufen(newWunschlistenEintrag)){
       this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
+      this.dataChangeService.addSparschweinEintrag({
+        date: new Date(),
+        betrag: eintrag.betrag * -1,
+        title: eintrag.title,
+        zusatz: eintrag.zusatz,
+        vonWunschliste: true,
+        wunschlistenId: eintrag.id
+      })
     }
   }
 
@@ -244,6 +253,7 @@ export class WunschlisteComponent implements OnInit{
       }
     }
     this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
+    this.dataChangeService.deleteSparschweinEintragByWunschId(eintrag.id!);
   }
 
   onGekaufteEintraegeAusblendenCheckboxClicked() {
