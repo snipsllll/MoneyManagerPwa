@@ -136,10 +136,7 @@ export class DataProviderService {
 
           let moneySpendOnDay = 0;
           day.buchungen?.forEach(buchung => {
-            /*
-            if(!buchung.apz) {
-              moneySpendOnDay += buchung.betrag!;
-            }*/
+            moneySpendOnDay += buchung.data.betrag!;
           })
 
           notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
@@ -147,6 +144,7 @@ export class DataProviderService {
         }
       })
     })
+    console.log(notSpendMoney)
 
     return notSpendMoney;
   }
@@ -175,6 +173,8 @@ export class DataProviderService {
     availableForWeek += availableForDay;
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
+
+    console.log(availableForDay)
 
     return {
       availableForDay: availableForDay,

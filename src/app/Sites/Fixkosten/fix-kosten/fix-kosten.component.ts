@@ -104,13 +104,13 @@ export class FixKostenComponent  implements OnInit{
 
   }
 
-  onEditClicked = (eintrag: IFixkostenEintrag) => {
+  onEditClicked = (eintrag: ListElementData) => {
     const editDialogViewModel: EditDialogViewModel = {
       data: {
-        betrag: eintrag.data.betrag,
-        title: eintrag.data.title,
-        zusatz: eintrag.data.zusatz,
-        id: eintrag.id
+        betrag: eintrag.betrag,
+        title: eintrag.title,
+        zusatz: eintrag.zusatz,
+        id: eintrag.id!
       },
       onSaveClick: this.onEditSaveClicked,
       onCancelClick: this.onEditCancelClicked

@@ -159,8 +159,7 @@ export class SparschweinComponent implements OnInit{
         }
         this.dataChangeService.addSparschweinEintrag(newSparschweinEintrag);
       },
-      onCancelClick: () => {},
-      istVonHeuteAbzeihenVisible: true
+      onCancelClick: () => {}
     }
   }
 
