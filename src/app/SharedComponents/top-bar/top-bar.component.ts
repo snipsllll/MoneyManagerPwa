@@ -2,9 +2,9 @@ import {Component, computed, OnInit} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
-import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
 import {Router} from "@angular/router";
 import {UT} from "../../Models/Classes/UT";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 
 @Component({
   selector: 'app-top-bar',
@@ -16,12 +16,12 @@ export class TopBarComponent implements OnInit {
   title?: string;
   availableMoney = computed(() => {
     this.dataService.updated();
-    return this.dataService.getAvailableMoney(new Date())
+    return this.dataProvider.getAvailableMoney(new Date())
   })
 
   ut: UT = new UT();
 
-  constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(private dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
 
@@ -40,11 +40,11 @@ export class TopBarComponent implements OnInit {
 
   test() {
     console.log(this.dataService.userData)
-    console.log(this.dataService.userData.months())
+    console.log(this.dataService.userData.months)
   }
 
   getDaysLeftText() {
-    const daysLeft = this.dataService.getDaysLeftForMonth(new Date());
+    const daysLeft = this.dataProvider.getAnzahlDaysLeftForMonth(new Date());
     return daysLeft === 1
       ? "für 1 Tag"
       : `für ${daysLeft} Tage`

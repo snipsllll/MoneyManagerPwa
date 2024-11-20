@@ -3,6 +3,7 @@ import {Day} from "../../../Models/Interfaces";
 import {UT} from "../../../Models/Classes/UT";
 import {DataService} from "../../../Services/DataService/data.service";
 import {SettingsService} from "../../../Services/SettingsService/settings.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -14,16 +15,16 @@ export class BuchungenListDayComponent {
 
   ausgabenForDay = computed(() => {
     this.dataService.updated();
-    const day = this.dataService.getDayByeDate(this.day.date);
+    const day = this.dataProvider.getDayByeDate(this.day.date);
     let ausgaben = 0;
     day?.buchungen?.forEach(buchung => {
-      ausgaben += buchung.betrag!;
+      ausgaben += buchung.data.betrag!;
     })
     return ausgaben;
   })
 
   ut: UT = new UT();
 
-  constructor(private dataService: DataService, public settingsService: SettingsService) {
+  constructor(private dataProvider: DataProviderService, private dataService: DataService, public settingsService: SettingsService) {
   }
 }

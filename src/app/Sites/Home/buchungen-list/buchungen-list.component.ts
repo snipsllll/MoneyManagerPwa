@@ -1,6 +1,7 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {Day, Month} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 
 @Component({
   selector: 'app-buchungen-list',
@@ -12,10 +13,10 @@ export class BuchungenListComponent  implements OnInit{
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     this.dataService.updated();
-    return this.orderByDateDesc(this.dataService.getAllDays());
+    return this.orderByDateDesc(this.dataProvider.getAllDays());
   })
 
-  constructor(private dataService: DataService){
+  constructor(private dataProvider: DataProviderService, private dataService: DataService){
 
   }
 
@@ -26,7 +27,7 @@ export class BuchungenListComponent  implements OnInit{
   orderByDateDesc(array: Day[]) {
     const rArray: Day[] = [];
     array.forEach(day => {
-      day.buchungen?.sort((a, b) => b.date.getTime() - a.date.getTime())
+      day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
       rArray.push(day);
     })
     return rArray.sort((a, b) => b.date.getTime() - a.date.getTime())

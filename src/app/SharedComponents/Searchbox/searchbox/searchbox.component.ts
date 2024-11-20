@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Buchung} from "../../../Models/Interfaces";
 
 @Component({
   selector: 'app-searchbox',

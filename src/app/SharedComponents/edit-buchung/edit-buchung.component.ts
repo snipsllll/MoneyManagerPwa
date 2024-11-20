@@ -3,9 +3,11 @@ import {NavigationService} from "../../Services/NavigationService/navigation.ser
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
-import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
+import {IBuchung} from "../../Models/NewInterfaces";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-edit-buchung',
@@ -13,66 +15,68 @@ import {UT} from "../../Models/Classes/UT";
   styleUrl: './edit-buchung.component.css'
 })
 export class EditBuchungComponent implements OnInit {
-  oldBuchung?: Buchung;
+  oldBuchung?: IBuchung;
   date?: string;
   showBetragWarning = false;
 
-  buchung = signal<Buchung | undefined>(undefined);
+  buchung = signal<IBuchung | undefined>(undefined);
   dateUpdated = signal<number>(0);
   isSaveButtonDisabled = signal<boolean>(true);
 
   availableMoney = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    return this.dataService.getAvailableMoney(this.buchung()!.date)
+    return this.dataProvider.getAvailableMoney(this.buchung()!.data.date)
   })
 
   ut: UT = new UT();
 
-  constructor(private navigationService: NavigationService,
-              private router: Router,
-              private dataService: DataService,
-              private route: ActivatedRoute,
-              public dialogService: DialogService)
-  { }
+  constructor(
+    private dataProvider: DataProviderService,
+    private dataChangeService: DataChangeService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    public dialogService: DialogService) {
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set(this.dataService.getBuchungById(buchungsId));
+      this.buchung?.set(this.dataProvider.getBuchungById(buchungsId));
       this.oldBuchung = {
-        date: new Date(this.buchung()!.date),
-        beschreibung: this.buchung()!.beschreibung,
-        betrag: this.buchung()!.betrag,
-        title: this.buchung()!.title,
-        time: this.buchung()!.time,
         id: this.buchung()!.id,
-        apz: this.buchung()!.apz
+        data: {
+          date: new Date(this.buchung()!.data.date),
+          beschreibung: this.buchung()!.data.beschreibung,
+          betrag: this.buchung()!.data.betrag,
+          title: this.buchung()!.data.title,
+          time: this.buchung()!.data.time
+        }
       };
-      this.date = this.buchung()?.date.toISOString().slice(0, 10);
+      this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
     this.updateDate();
   }
 
   onSaveClicked() {
-    if (this.buchung()!.betrag !== 0 && this.buchung()!.betrag !== null) {
-      if(!this.isSaveButtonDisabled()){
-        let isBetragZuHoch = this.buchung()!.apz
-          ? this.buchung()!.betrag! > this.availableMoney().availableForMonth
-          : this.buchung()!.betrag! > this.availableMoney().availableForDay
+    if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
+      if (!this.isSaveButtonDisabled()) {
+        let isBetragZuHoch = this.buchung()!.data.betrag! > this.availableMoney().availableForDay
 
         if (!isBetragZuHoch) {
-          this.dataService.editBuchung(this.buchung()!);
+          this.dataChangeService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
         } else {
           const confirmDialogViewModel: ConfirmDialogViewModel = {
             title: 'Betrag ist zu hoch',
-            message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+            message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.data.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.data.date.toLocaleDateString()}. Trotzdem fortfahren?`,
             onCancelClicked: () => {
               this.dialogService.isConfirmDialogVisible = false;
             },
             onConfirmClicked: () => {
-              this.dataService.editBuchung(this.buchung()!);
+              this.dataChangeService.editBuchung(this.buchung()!);
               this.dialogService.isConfirmDialogVisible = false;
               this.router.navigate(['/']);
             }
@@ -91,7 +95,7 @@ export class EditBuchungComponent implements OnInit {
 
   onDateChange() {
     if (this.date)
-      this.buchung()!.date = new Date(this.date);
+      this.buchung()!.data.date = new Date(this.date);
 
     this.updateDate();
     this.updateSaveButton();
@@ -101,7 +105,7 @@ export class EditBuchungComponent implements OnInit {
     const [hours, minutes] = event.target.value.split(':');
     const date = new Date();
     date.setHours(+hours, +minutes);
-    this.buchung()!.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+    this.buchung()!.data.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
     this.updateSaveButton();
   }
 
@@ -110,8 +114,8 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onBetragChanged() {
-    if(this.buchung()!.betrag !== null)
-      this.buchung()!.betrag = +(this.buchung()!.betrag!);
+    if (this.buchung()!.data.betrag !== null)
+      this.buchung()!.data.betrag = +(this.buchung()!.data.betrag!);
 
     this.updateSaveButton();
   }
@@ -125,8 +129,8 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onApzClicked() {
-    this.buchung()!.apz = !this.buchung()?.apz;
-    this.updateSaveButton();
+    //this.buchung()!.apz = !this.buchung()?.apz;
+    //this.updateSaveButton();
   }
 
   onValueChange() {
@@ -134,11 +138,11 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private hasBuchungChanged() {
-    return !(this.buchung()!.apz === this.oldBuchung?.apz && this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
+    return !(this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
   }
 
   private isSaveAble() {
-    return (this.buchung()!.betrag === null || this.buchung()!.betrag === 0) && this.hasBuchungChanged();
+    return (this.buchung()!.data.betrag === null || this.buchung()!.data.betrag === 0) && this.hasBuchungChanged();
   }
 
   private executeExitAction() {
@@ -169,14 +173,14 @@ export class EditBuchungComponent implements OnInit {
   }
 
   protected getAvailableMoneyMonth() {
-    return this.ut.toFixedDown(this.availableMoney().availableForMonth!+ this.oldBuchung?.betrag! - this.buchung()?.betrag!, 2)
+    return this.ut.toFixedDown(this.availableMoney().availableForMonth! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
   }
 
   protected getAvailableMoneyWeek() {
-    return this.ut.toFixedDown(this.availableMoney().availableForWeek!+ this.oldBuchung?.betrag! - this.buchung()?.betrag!, 2)
+    return this.ut.toFixedDown(this.availableMoney().availableForWeek! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
   }
 
   protected getAvailableMoneyDay() {
-    return this.ut.toFixedDown(this.availableMoney().availableForDay!+ this.oldBuchung?.betrag! - this.buchung()?.betrag!, 2)
+    return this.ut.toFixedDown(this.availableMoney().availableForDay! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
   }
 }

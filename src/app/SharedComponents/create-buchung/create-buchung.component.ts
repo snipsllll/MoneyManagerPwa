@@ -2,10 +2,12 @@ import {Component, computed, signal} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
-import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
 import {SettingsService} from "../../Services/SettingsService/settings.service";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
+import {IBuchung, IBuchungData} from "../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-create-buchung',
@@ -13,9 +15,9 @@ import {SettingsService} from "../../Services/SettingsService/settings.service";
   styleUrl: './create-buchung.component.css'
 })
 export class CreateBuchungComponent {
-  buchung!: Buchung;
-  oldBuchung!: Buchung;
-  buchungen: Buchung[] = []; //für Searchbox
+  buchung!: IBuchungData;
+  oldBuchung!: IBuchungData;
+  buchungen: IBuchung[] = []; //für Searchbox
 
   selectedDate?: string;
   showBetragWarning = false;
@@ -28,17 +30,19 @@ export class CreateBuchungComponent {
   availableMoney = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    return this.dataService.getAvailableMoney(this.buchung.date)
+    return this.dataProvider.getAvailableMoney(this.buchung.date)
   })
 
   utils: UT = new UT();
 
   constructor(private settingsService: SettingsService,
+              private dataProvider: DataProviderService,
+              private dataChangeService: DataChangeService,
               private dataService: DataService,
               public dialogService: DialogService,
               private router: Router)
   {
-    this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
+    this.buchungen = this.dataService.userData.buchungen;
 
     const date = new Date();
     this.buchung = this.getNewEmptyBuchung(date);
@@ -55,12 +59,11 @@ export class CreateBuchungComponent {
     this.isSearchboxVisible.set(false);
   }
 
-  onItemSelected(item: Buchung) {
+  onItemSelected(item: IBuchungData) {
     this.isSearchboxVisible.set(false);
     this.isSaveButtonDisabled.set(false);
 
     this.buchung.title = item.title;
-    this.buchung.apz = item.apz;
     this.buchung.betrag = item.betrag;
     this.buchung.beschreibung = item.beschreibung;
   }
@@ -68,12 +71,10 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.apz
-          ? this.buchung.betrag! > this.availableMoney().availableForMonth
-          : this.buchung.betrag! > this.availableMoney().availableForDay
+        let isBetragZuHoch = this.buchung.betrag! > this.availableMoney().availableForDay
 
         if (!isBetragZuHoch) {
-          this.dataService.addBuchung(this.buchung);
+          this.dataChangeService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         } else {
           if (this.settingsService.getIsToHighBuchungenEnabled()) {
@@ -84,7 +85,7 @@ export class CreateBuchungComponent {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                this.dataService.addBuchung(this.buchung);
+                this.dataChangeService.addBuchung(this.buchung);
                 this.dialogService.isConfirmDialogVisible = false;
                 this.router.navigate(['/']);
               }
@@ -174,7 +175,7 @@ export class CreateBuchungComponent {
   }
 
   onApzClicked() {
-    this.buchung.apz = !this.buchung.apz;
+    //this.buchung.apz = !this.buchung.apz;
   }
 
   private isBuchungEmpty() {

@@ -9,7 +9,7 @@ export interface EditDialogData {
   title?: string;
   betrag: number;
   zusatz?: string;
-  id?: number;
+  id: number;
   date?: Date;
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;

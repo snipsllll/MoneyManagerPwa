@@ -3,6 +3,8 @@ import {BudgetInfosForMonth} from "../../../Models/Interfaces";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {UT} from "../../../Models/Classes/UT";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 
 @Component({
   selector: 'app-budget',
@@ -57,7 +59,7 @@ export class BudgetComponent  implements OnInit{
     return '';
   });
 
-  constructor(public topbarService: TopbarService, protected dataService: DataService) {
+  constructor(public dataProvider: DataProviderService, private dataChangeService: DataChangeService, public topbarService: TopbarService, protected dataService: DataService) {
     this.update();
   }
 
@@ -91,12 +93,12 @@ export class BudgetComponent  implements OnInit{
   }
 
   onSparenChanged() {
-    this.dataService.changeSparenForMonth(this.getDateForSelectedMonth(), this.data().sparen);
+    this.dataChangeService.changeSparenBetragForMonth(this.getDateForSelectedMonth(), this.data().sparen);
     this.update();
   }
 
   onTotalBudgetChanged() {
-    this.dataService.changeTotalBudgetForMonth(this.getDateForSelectedMonth(), this.data().totalBudget);
+    this.dataChangeService.changeTotalBudgetBetragForMonth(this.getDateForSelectedMonth(), this.data().totalBudget);
     this.update();
   }
 
@@ -117,13 +119,13 @@ export class BudgetComponent  implements OnInit{
   }
 
   private update() {
-    this.data.set(this.dataService.getBudgetInfosForMonth(this.getDateForSelectedMonth()) ?? {
+    this.data.set(this.dataProvider.getBudgetInfosForMonth(this.getDateForSelectedMonth()) ?? {
       budget: 0,
       dayBudget: 0,
       istBudget: 0,
       totalBudget: 0,
       sparen: 0,
-      fixKostenSumme: this.dataService.getFixKostenSummeForMonth({
+      fixKostenSumme: this.dataProvider.getFixkostenSummeForMonth({
         startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
       })
     });

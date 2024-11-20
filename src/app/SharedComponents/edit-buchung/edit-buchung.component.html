@@ -18,7 +18,7 @@
   </div>
   <div class="create-eintrag__content" *ngIf="buchung() !== undefined">
     <div class="create-eintrag__top-content">
-      <input type="text" [(ngModel)]="buchung()!.title" maxlength="25" class="create-eintrag__title" autofocus placeholder="Titel"
+      <input type="text" [(ngModel)]="buchung()!.data.title" maxlength="25" class="create-eintrag__title" autofocus placeholder="Titel"
              (ngModelChange)="onTitleChanged()" onfocus="this.select()">
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
@@ -30,7 +30,7 @@
             Betrag:
           </div>
           <div class="betrag-input-wrapper">
-            <input type="number" [(ngModel)]="buchung()!.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
+            <input type="number" [(ngModel)]="buchung()!.data.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
             <div class="betrag-euro-zeichen">
               €
             </div>
@@ -48,7 +48,7 @@
         <div class="create-eintrag__label">
           Uhrzeit:
         </div>
-        <input type="time" [(ngModel)]="buchung()!.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
+        <input type="time" [(ngModel)]="buchung()!.data.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
       </div>
       <!-- Keine APZ mehr -->
 
@@ -65,7 +65,7 @@
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
           Beschreibung:
         </div>
-        <textarea [(ngModel)]="buchung()!.beschreibung"
+        <textarea [(ngModel)]="buchung()!.data.beschreibung"
                   class="create-eintrag__data create-eintrag__beschreibung-data" (ngModelChange)="onBeschreibungChanged()">
 
         </textarea>

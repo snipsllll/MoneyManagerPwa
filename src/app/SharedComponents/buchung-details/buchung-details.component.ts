@@ -2,10 +2,11 @@ import {Component, OnInit, signal} from '@angular/core';
 import {NavigationService} from "../../Services/NavigationService/navigation.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {DataService} from "../../Services/DataService/data.service";
-import {Buchung} from "../../Models/Interfaces";
 import {Sites} from "../../Models/Enums";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {IBuchung} from "../../Models/NewInterfaces";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-buchung-details',
@@ -13,23 +14,23 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
   styleUrl: './buchung-details.component.css'
 })
 export class BuchungDetailsComponent implements OnInit{
-  buchung? = signal<Buchung | undefined>(undefined);
+  buchung? = signal<IBuchung | undefined>(undefined);
   titelVorhanden = false;
 
-  constructor(private navigationService: NavigationService, private dialogService: DialogService, private router: Router, private route: ActivatedRoute, private dataService: DataService) {
+  constructor(private dataChangeService: DataChangeService, private navigationService: NavigationService, private dialogService: DialogService, private router: Router, private route: ActivatedRoute, private dataProvider: DataProviderService) {
 
   }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set(this.dataService.getBuchungById(buchungsId));
-      if(this.buchung!()?.title !== null && this.buchung!()?.title !== undefined && this.buchung!()?.title !== '') {
+      this.buchung?.set(this.dataProvider.getBuchungById(buchungsId));
+      if(this.buchung!()?.data.title !== null && this.buchung!()?.data.title !== undefined && this.buchung!()?.data.title !== '') {
         this.titelVorhanden = true;
       }
     });
     this.navigationService.previousRoute = Sites.home;
-    this.dataService.getAvailableMoneyForDay(this.buchung!()!.date!)
+    this.dataProvider.getAvailableMoneyForDay(this.buchung!()!.data.date!)
   }
 
   onBackClicked() {
@@ -42,7 +43,7 @@ export class BuchungDetailsComponent implements OnInit{
       message: 'Willst du die Buchung wirklich löschen? Sie kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.dataService.deleteBuchung(this.buchung!()!.id!);
+        this.dataChangeService.deleteBuchung(this.buchung!()!.id!);
         this.router.navigate([this.navigationService.getBackRoute()])
       },
       onCancelClicked: () => {

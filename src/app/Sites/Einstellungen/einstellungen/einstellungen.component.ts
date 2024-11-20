@@ -4,6 +4,7 @@ import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {SettingsService} from "../../../Services/SettingsService/settings.service";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-einstellungen',
@@ -16,7 +17,7 @@ export class EinstellungenComponent implements OnInit{
   isShowDayDiffChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
 
-  constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private dataChangeService: DataChangeService, public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class EinstellungenComponent implements OnInit{
     title: 'Alle Daten löschen?',
     message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
     onConfirmClicked: () => {
-      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
+      //this.dataChangeService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -64,7 +65,7 @@ export class EinstellungenComponent implements OnInit{
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.save(JSON.parse(fileContent));
+          //this.dataChangeService.save(JSON.parse(fileContent));
           this.dialogService.isConfirmDialogVisible = false;
         },
         onCancelClicked: () => {
@@ -80,7 +81,7 @@ export class EinstellungenComponent implements OnInit{
 
   exportFile(): void {
     // Inhalt der Datei
-    const fileContent = JSON.stringify(this.dataService.getSavedData());
+    const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
     // Erstelle ein Blob-Objekt mit dem Textinhalt und dem MIME-Typ
     const blob = new Blob([fileContent], { type: 'text/plain' });
@@ -101,7 +102,7 @@ export class EinstellungenComponent implements OnInit{
       const handle = await (window as any).showDirectoryPicker();
 
       // Inhalt der Datei
-      const fileContent = JSON.stringify(this.dataService.getSavedData());
+      const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
       // Erstelle die Datei im ausgewählten Ordner
       const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });

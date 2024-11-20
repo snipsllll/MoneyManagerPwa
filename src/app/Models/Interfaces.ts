@@ -1,3 +1,5 @@
+import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "./NewInterfaces";
+
 export interface Month {
   totalBudget?: number;
   sparen?: number;
@@ -8,8 +10,7 @@ export interface Month {
   istBudget?: number;
   dailyBudget?: number;
   weeks?: Week[];
-  leftOvers?: number;
-  gesperrteFixKosten?: FixKostenEintrag[];
+  gesperrteFixKosten?: IFixkostenEintrag[];
   monatAbgeschlossen?: boolean;
 }
 
@@ -20,40 +21,20 @@ export interface Week {
   budget?: number;
   istBudget?: number;
   days: Day[];
-  leftOvers?: number;
 }
 
 export interface Day {
   date: Date;
   budget?: number;
   istBudget?: number;
-  buchungen?: Buchung[];
-  leftOvers?: number;
-}
-
-export interface Buchung {
-  id?: number
-  title: string
-  betrag: number | null
-  beschreibung?: string
-  date: Date;
-  time: string;
-  apz?: boolean;
-  spe?: boolean;
-  speId?: number;
-}
-
-export interface ItfUserData {
-  buchungen?: Buchung[],
-  months: Month[]
+  buchungen?: IBuchung[];
 }
 
 export interface DayIstBudgets {
   monthIstBudget?: number;
   weekIstBudget?: number;
   dayIstBudget?: number;
-  leftOvers?: number,
-  gespartes?: number
+  gespartes?: number;
 }
 
 export interface BudgetInfosForMonth {
@@ -63,16 +44,16 @@ export interface BudgetInfosForMonth {
   dayBudget: number;
   istBudget?: number;
   fixKostenSumme?: number;
-  fixKostenEintraege?: FixKostenEintrag[];
+  fixKostenEintraege?: IFixkostenEintrag[];
   fixKostenGesperrt?: boolean;
 }
 
 export interface SavedData {
-  buchungen: Buchung[];
+  buchungen: IBuchung[];
   savedMonths: SavedMonth[];
-  fixKosten: FixKostenEintrag[];
-  sparEintraege: SparschweinEintrag[];
-  wunschlistenEintraege: WunschlistenEintrag[];
+  fixKosten: IFixkostenEintrag[];
+  sparEintraege: ISparschweinEintrag[];
+  wunschlistenEintraege: IWunschlistenEintrag[];
   settings: Settings;
 }
 
@@ -91,67 +72,7 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
-  fixkosten?: FixKostenEintrag[];
-}
-
-export interface FixKostenEintrag {
-  id?: number;
-  betrag: number;
-  title: string;
-  zusatz?: string;
-}
-
-export interface WunschlistenEintrag {
-  date: Date;
-  id?: number;
-  betrag: number;
-  title: string;
-  zusatz?: string;
-  gekauft: boolean;
-  gekauftAm?: Date;
-  erstelltAm: Date;
-}
-
-export interface UpdateValues {
-  months?: UpdateValuesForMonth[];
-  newFixkostenEintraege?: FixKostenEintrag[];
-  deletedFixkostenEintreageIds?: number[];
-  editedFixkostenEintraege?: FixKostenEintrag[];
-  newBuchungen?: Buchung[];
-  deletedBuchungsIds?: number[];
-  editedBuchungen?: Buchung[];
-  newSparEintraege?: SparschweinEintrag[];
-  editedSparEintraege?: SparschweinEintrag[];
-  deletedSparEintragIds?: number[];
-  newWunschlistenEintraege?: WunschlistenEintrag[];
-  editedWunschlistenEintraege?: WunschlistenEintrag[];
-  deletedWunschlistenEintragIds?: number[];
-}
-
-export interface UpdateValuesForMonth {
-  date: Date;
-  newSparen?: number;
-  newTotalBudget?: number;
-  newMaxDayBudget?: number;
-  newFixkostenEintraege?: FixKostenEintrag[];
-  deletedFixkostenEintreageIds?: number[];
-  editedFixKostenEintraege?: FixKostenEintrag[];
-}
-
-export interface SparschweinData {
-  erspartes: number;
-  eintraege: SparschweinEintrag[];
-}
-
-export interface SparschweinEintrag {
-  isMonatEintrag?: boolean;
-  isWunschlistenEintrag?: boolean;
-  betrag: number;
-  date: Date;
-  id: number;
-  title?: string;
-  zusatz?: string;
-  vonDayBudgetAbziehen?: boolean;
+  fixkosten?: IFixkostenEintrag[];
 }
 
 export interface MenuItem {

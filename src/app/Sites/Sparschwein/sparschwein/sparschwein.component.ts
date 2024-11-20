@@ -1,9 +1,7 @@
 import {Component, computed, OnInit} from '@angular/core';
-import {SparschweinEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
-import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
 import {
   ListElementData,
   ListElementSettings,
@@ -13,6 +11,9 @@ import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewMo
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../../Models/Classes/UT";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {ISparschweinEintrag, ISparschweinEintragData} from "../../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-sparschwein',
@@ -25,14 +26,16 @@ export class SparschweinComponent implements OnInit{
 
   sparschweinData = computed(() => {
     this.dataService.updated();
-    const x = this.sparschweinService.getData();
-    console.log(x)
-    x.eintraege = this.sortByDate(x.eintraege);
-    console.log(x);
-    return x;
+    let eintraege = this.dataProvider.getAlleSparschweinEintraege();
+    eintraege = this.sortByDate(eintraege);
+    let erspartes = this.dataProvider.getErspartes();
+    return {
+      eintraege: eintraege,
+      erspartes: erspartes
+    };
   });
 
-  constructor(private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService, private sparschweinService: SparschweinService) {
+  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
 
   }
 
@@ -64,7 +67,7 @@ export class SparschweinComponent implements OnInit{
       title: 'Eintrag Löschen?',
       message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.sparschweinService.deleteEintrag(eintrag.id!);
+        this.dataChangeService.deleteSparschweinEintrag(eintrag.id!);
       },
       onCancelClicked: () => {}
     }
@@ -72,18 +75,18 @@ export class SparschweinComponent implements OnInit{
     this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
-  getEintragViewModel(eintrag: SparschweinEintrag): ListElementViewModel {
+  getEintragViewModel(eintrag: ISparschweinEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doDetailsExist: false,
-      doMenuExist: !(eintrag.isMonatEintrag || eintrag.isWunschlistenEintrag),
-      isDarker: eintrag.isMonatEintrag,
+      doMenuExist: true,
+      isDarker: false
     }
 
     const data: ListElementData = {
-      betrag: eintrag.betrag,
+      betrag: eintrag.data.betrag,
       title: this.getTitle(eintrag),
-      zusatz: eintrag.zusatz,
-      vonHeuteAbziehen: eintrag.vonDayBudgetAbziehen,
+      zusatz: eintrag.data.zusatz,
+      vonHeuteAbziehen: false,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -102,13 +105,17 @@ export class SparschweinComponent implements OnInit{
     }
   }
 
-  private getTitle(eintrag: SparschweinEintrag) {
+  private getTitle(eintrag: ISparschweinEintrag) {
+    const art = eintrag.data.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
+    const title = eintrag.data.title !== undefined && eintrag.data.title !== '' ? eintrag.data.title : art;
+    return `${title} (${eintrag.data.date.toLocaleDateString()})`;
+    /*
     if(!eintrag.isMonatEintrag) {
       const art = eintrag.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
       const title = eintrag.title !== undefined && eintrag.title !== '' ? eintrag.title : art;
       return `${title} (${eintrag.date.toLocaleDateString()})`;
     }
-    return `Restgeld: ${this.getMonthNameByIndex(eintrag.date.getMonth())} ${eintrag.date.getFullYear()}`
+    return `Restgeld: ${this.getMonthNameByIndex(eintrag.date.getMonth())} ${eintrag.date.getFullYear()}`*/
   }
 
   private getMonthNameByIndex(index: number) {
@@ -144,17 +151,13 @@ export class SparschweinComponent implements OnInit{
   private getCreateDialogViewModel(): CreateDialogViewModel {
     return {
       onSaveClick: (eintrag: CreateDialogEintrag) => {
-        const newSparschweinEintrag: SparschweinEintrag = {
+        const newSparschweinEintrag: ISparschweinEintragData = {
           betrag: eintrag.betrag ?? 0,
-          title: eintrag.title,
+          title: eintrag.title ?? 'unbenannt',
           zusatz: eintrag.zusatz,
-          isMonatEintrag: false,
-          date: new Date(),
-          id: -1,
-          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
+          date: new Date()
         }
-        console.log(newSparschweinEintrag)
-        this.sparschweinService.addEintrag(newSparschweinEintrag);
+        this.dataChangeService.addSparschweinEintrag(newSparschweinEintrag);
       },
       onCancelClick: () => {},
       istVonHeuteAbzeihenVisible: true
@@ -165,13 +168,14 @@ export class SparschweinComponent implements OnInit{
     return {
       data: eintrag,
       onSaveClick: (eintrag: EditDialogData) => {
-        this.sparschweinService.editEintrag({
-          betrag: eintrag.betrag,
+        this.dataChangeService.editSparschweinEintrag({
           id: eintrag.id!,
-          title: eintrag.title,
-          zusatz: eintrag.zusatz,
-          date: eintrag.date!,
-          vonDayBudgetAbziehen: eintrag.vonHeuteAbziehen
+          data: {
+            betrag: eintrag.betrag,
+            title: eintrag.title ?? 'unbenannt',
+            zusatz: eintrag.zusatz,
+            date: eintrag.date!
+          }
         })
       },
       onCancelClick: () => {
@@ -181,8 +185,8 @@ export class SparschweinComponent implements OnInit{
     }
   }
 
-  private sortByDate(eintraege: SparschweinEintrag[]) {
-    return eintraege.sort((a, b) => b.date.getTime() - a.date.getTime())
+  private sortByDate(eintraege: ISparschweinEintrag[]) {
+    return eintraege.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   }
 
 }

@@ -11,7 +11,7 @@
       >
     </div>
   </div>
-  <div class="budget floating-box" *ngIf="dataService.checkIfMonthExistsForDay(getStartdateForSelectedMonth()) || !dataService.isDayBeforeMonth(getStartdateForSelectedMonth(), dataService.getMonthByDate(getTodayDate())); else noMonth">
+  <div class="budget floating-box" *ngIf="dataProvider.checkIfMonthExistsForDay(getStartdateForSelectedMonth()) || !dataProvider.isDayBeforeMonth(getStartdateForSelectedMonth(), dataProvider.getMonthByDate(getTodayDate())); else noMonth">
     <div class="budget__top">
       <div class="budget__element-wrapper">
         <div class="budget__element-label">
@@ -44,10 +44,10 @@
            *ngIf="isFixkostenDetailsVisible()">
         <div *ngFor="let eintrag of data().fixKostenEintraege" class="budget__fixkosten-detail-wrapper">
           <div class="budget__fixkosten-details-title">
-            - {{ eintrag.title }}
+            - {{ eintrag.data.title }}
           </div>
           <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.betrag }}€
+            {{ eintrag.data.betrag }}€
           </div>
         </div>
       </div>

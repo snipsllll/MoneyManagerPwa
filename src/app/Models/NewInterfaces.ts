@@ -16,6 +16,7 @@ export interface IBuchung {
 
 export interface IBuchungData {
   date: Date;
+  time: string;
   title: string
   betrag: number | null
   beschreibung?: string
