@@ -64,10 +64,7 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        const availableForDay = this.availableMoney().availableForDay;
-        console.log(availableForDay)
-        let isBetragZuHoch = this.buchung()!.data.betrag! > availableForDay
-
+        let isBetragZuHoch = !this.availableMoney().noData && this.getAvailableMoneyDay()! < 0;
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           this.dataChangeService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
