@@ -45,7 +45,7 @@ export class DataProviderService {
   }
 
   getAlleSparschweinEintraege(): ISparschweinEintrag[] {
-    const sparschweinEintraege = this.dataService.userData.sparschweinEintraege;
+    const sparschweinEintraege = this.dataService.userData.sparschweinEintraege
     const months = this.dataService.userData.months;
     months.forEach(month => {
       if(month.monatAbgeschlossen) {
@@ -64,7 +64,6 @@ export class DataProviderService {
     })
 
     //TODO: Workaround für mehrmals hinzugefügte Sparschweineinträge => distinct (fixen)
-
     return sparschweinEintraege.filter(
       (item, index, self) =>
         self.findIndex((t) => t.id === item.id) === index
@@ -81,7 +80,7 @@ export class DataProviderService {
   }
 
   getErspartes() {
-    let eintraege = this.dataService.userData.sparschweinEintraege;
+    let eintraege = this.getAlleSparschweinEintraege();
     let erspartes = 0;
 
     eintraege.forEach(eintrag => {

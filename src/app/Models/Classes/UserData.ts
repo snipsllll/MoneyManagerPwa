@@ -10,25 +10,24 @@ export class UserData {
   public fixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
-  public settings!: Settings;
+  public settings: Settings = {
+    showDaySpend: false,
+    toHighBuchungenEnabled: false,
+    wunschllistenFilter: {
+      selectedFilter: '',
+      gekaufteEintraegeAusblenden: false
+    }
+  };
 
   private _fileEngine: FileEngine = new FileEngine(true);
 
   constructor() {
-    this.initialize();
+    this.loadDataFromStorage();
   }
 
-  save(savedData?: SavedData) {
-    if (savedData) {
-      this._fileEngine.save(this.checkForDbUpdates(savedData as SavedData));
-      this.reload();
-    } else {
-      this._fileEngine.save(this.getSavedData());
-    }
-  }
-
-  private initialize() {
+  loadDataFromStorage() {
     let savedData: any | SavedData = this._fileEngine.load();
+    console.log(savedData)
     savedData = this.checkForDbUpdates(savedData) as SavedData;
 
     this.buchungen = savedData.buchungen;
@@ -39,23 +38,125 @@ export class UserData {
     this.settings = savedData.settings;
   }
 
+  save(savedData?: SavedData) {
+    console.log(savedData)
+    if (savedData) {
+      this._fileEngine.save(this.checkForDbUpdates(savedData));
+      this.reload();
+    } else {
+      this._fileEngine.save(this.getSavedData());
+    }
+  }
+
   private checkForDbUpdates(data: any): SavedData {
-    let currentData: any = data;
+    let currentData: any;
 
-    if(currentData.dbVersion < 2) {
-      currentData.settings.x = true;
-    }
+    data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
+      ? currentData = data
+      : currentData = {dbVersion: 0, ...data};
 
-    if(currentData.dbVersion < 3) {
-      currentData.settings.y = 123;
-    }
-
-    if(currentData.dbVersion < 4) {
-      currentData.settings.y = [currentData.settings.y];
+    if (currentData.dbVersion < 1) {
+      currentData = this.convertToVersion1(currentData);
     }
 
     currentData.dbVersion = currentDbVersion;
     return currentData as SavedData;
+  }
+
+  private convertToVersion1(datax: any): any {
+    // Umwandlung der Buchungen
+    let buchungen = datax.buchungen.map((buchung: any) => ({
+      id: buchung.id,
+      data: {
+        date: buchung.date,
+        beschreibung: buchung.beschreibung,
+        betrag: buchung.betrag,
+        title: buchung.title,
+        time: buchung.time
+      }
+    }));
+
+    // Umwandlung der fixKosten
+    let fixkosten = datax.fixKosten.map((fixkosteneintrag: any) => ({
+      id: fixkosteneintrag.id,
+      data: {
+        betrag: fixkosteneintrag.betrag,
+        title: fixkosteneintrag.title,
+        zusatz: fixkosteneintrag.zusatz
+      }
+    }));
+
+    // Umwandlung der savedMonths
+    let savedMonths = datax.savedMonths.map((month: any) => ({
+      date: month.date,
+      totalBudget: month.totalBudget,
+      sparen: month.sparen,
+      fixkosten: month.fixkosten.map((fixkosteneintrag: any) => ({
+        id: fixkosteneintrag.id,
+        data: {
+          betrag: fixkosteneintrag.betrag,
+          title: fixkosteneintrag.title,
+          zusatz: fixkosteneintrag.zusatz
+        }
+      }))
+    }));
+
+    interface SparEintragV0 {
+      id: number;
+      data: {
+        betrag: number;
+        title: string;
+        beschreibung: string;
+        date: Date;
+        vonMonat: boolean;
+      }
+    }
+
+    // Umwandlung der sparEintraege
+    let sparEintraege: SparEintragV0[] = datax.sparEintraege.map((sparEintrag: any) => ({
+      id: sparEintrag.id,
+      data: {
+        betrag: sparEintrag.betrag,
+        title: sparEintrag.title,
+        zusatz: sparEintrag.zusatz,
+        date: sparEintrag.date,
+        vonMonat: sparEintrag.isMonatEintrag
+      }
+    }));
+
+    sparEintraege = sparEintraege.filter(eintrag => eintrag.data.vonMonat !== true)
+
+    // Umwandlung der wunschlistenEintraege
+    let wunschlistenEintraege = datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
+      id: wunschlisteEintrag.id,
+      data: {
+        betrag: wunschlisteEintrag.betrag,
+        title: wunschlisteEintrag.title,
+        zusatz: wunschlisteEintrag.zusatz,
+        gekauft: wunschlisteEintrag.gekauft,
+        date: wunschlisteEintrag.date,
+        erstelltAm: wunschlisteEintrag.erstelltAm
+      }
+    }));
+
+    // Die restlichen Eigenschaften extrahieren, ohne die umgewandelten Daten
+    const { buchungen: _, fixKosten: __, sparEintraege: ___, wunschlistenEintraege: ____ , ...rest } = datax;
+
+    // Die finale umgewandelte Struktur
+    return {
+      buchungen,
+      savedMonths,
+      fixKosten: fixkosten,
+      sparEintraege,
+      wunschlistenEintraege,
+      settings: {
+        toHighBuchungenEnabled: true,
+        showDaySpend: true,
+        wunschllistenFilter: datax.settings.wunschllistenFilter
+      },
+      dbVersion: 1,
+      ...rest
+    };
   }
 
   private reload() {
@@ -96,7 +197,11 @@ export class UserData {
       fixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
-      settings: {wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true}, showDaySpend: false, toHighBuchungenEnabled: false},
+      settings: {
+        wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
+        showDaySpend: false,
+        toHighBuchungenEnabled: false
+      },
       dbVersion: currentDbVersion
     }
 
@@ -144,7 +249,7 @@ export class UserData {
         // Populate days in the week
         for (let d = weekStartDate.getDate(); d <= weekEndDate.getDate(); d++) {
           const dateForDay = new Date(weekStartDate.getFullYear(), weekStartDate.getMonth(), d);
-          days.push({ date: dateForDay });
+          days.push({date: dateForDay});
         }
 
         // Push the week to weeks array
@@ -216,7 +321,7 @@ export class UserData {
     if (dayDate.getFullYear() > monthStartDate.getFullYear()) {
       return false;
     }
-    if(dayDate.getFullYear() < monthStartDate.getFullYear()) {
+    if (dayDate.getFullYear() < monthStartDate.getFullYear()) {
       return true
     }
     return dayDate.getMonth() < monthStartDate.getMonth();

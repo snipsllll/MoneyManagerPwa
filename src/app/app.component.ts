@@ -4,6 +4,7 @@ import {DialogService} from "./Services/DialogService/dialog.service";
 import {environment} from "../environments/environment";
 import {SwUpdate} from "@angular/service-worker";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DataService} from "./Services/DataService/data.service";
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit{
     console.log(event)
   }
 
-  constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService) {
+  constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService, private dataService: DataService) {
+
   }
 
   ngOnInit() {

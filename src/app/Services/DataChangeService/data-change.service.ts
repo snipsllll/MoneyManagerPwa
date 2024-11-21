@@ -71,6 +71,9 @@ export class DataChangeService {
   }
 
   deleteWunschlistenEintrag(wunschlistenEintragId: number) {
+    const boundSparschweinEintrag = this.dataService.userData.sparschweinEintraege.filter(eintrag => eintrag.data.wunschlistenId === wunschlistenEintragId);
+    const index = this.dataService.userData.sparschweinEintraege.indexOf(boundSparschweinEintrag[0]);
+    this.dataService.userData.sparschweinEintraege.splice(index, 1);
     this.dataService.userData.wunschlistenEintraege.splice(this.getIndexOfWunschlistenEintragById(wunschlistenEintragId), 1);
     this.dataService.update();
   }

@@ -146,7 +146,8 @@ export class WunschlisteComponent implements OnInit{
       menuItems: [
         {
           label: 'bearbeiten',
-          onClick: this.onEditClicked
+          onClick: this.onEditClicked,
+          grayedOut: eintrag.data.gekauft
         },
         {
           label: 'löschen',
