@@ -35,6 +35,8 @@ export class SparschweinComponent implements OnInit{
     };
   });
 
+  expandedElementId: number | null = null;
+
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
 
   }
@@ -43,6 +45,11 @@ export class SparschweinComponent implements OnInit{
     this.topbarService.title.set('SPARSCHWEIN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+  }
+
+  onElementClicked(id: number) {
+    console.log(12345123)
+    this.expandedElementId = this.expandedElementId === id ? null : id;
   }
 
   onPlusClicked() {
@@ -77,7 +84,7 @@ export class SparschweinComponent implements OnInit{
 
   getEintragViewModel(eintrag: ISparschweinEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
-      doDetailsExist: false,
+      doDetailsExist: true,
       doMenuExist: !eintrag.data.vonWunschliste && !eintrag.data.vonMonat,
       isDarker: eintrag.data.vonWunschliste || eintrag.data.vonMonat
     }

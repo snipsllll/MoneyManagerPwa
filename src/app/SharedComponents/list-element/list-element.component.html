@@ -1,5 +1,9 @@
-<div class="list-element floating-box" [class.grayed-out-element]="viewModel.settings.isGrayedOut" [class.highlighted]="viewModel.settings.highlighted === true" [class.darker]="viewModel.settings.isDarker">
-  <div class="list-element__main">
+<div class="list-element floating-box"
+     [class.grayed-out-element]="viewModel.settings.isGrayedOut"
+     [class.highlighted]="viewModel.settings.highlighted === true"
+     [class.darker]="viewModel.settings.isDarker"
+     [style.maxHeight]="isExpanded ? '200px' : '70px'">
+  <div class="list-element__main" (click)="onEintragClicked()">
     <div class="list-element__main-left">
       @if(viewModel.settings.isDarker) {
         <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
@@ -19,15 +23,16 @@
       <div class="list-element__main-center-top">
         <b>{{ viewModel.data.title }}</b>
       </div>
-      <div *ngIf="viewModel.data.zusatz" class="list-element__main-center-bottom">
-        {{ viewModel.data.zusatz }}
-      </div>
     </div>
     <div class="list-element__main-right">
       <div *ngIf="viewModel.settings.doMenuExist" class="list-element__menu-button" (click)="onMenuClicked()">
         ...
       </div>
     </div>
+  </div>
+
+  <div *ngIf="isExpanded" class="list-element__detailss">
+    {{ viewModel.data.zusatz }}
   </div>
 
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">

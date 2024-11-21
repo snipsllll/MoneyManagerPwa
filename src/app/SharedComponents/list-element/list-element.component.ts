@@ -13,6 +13,7 @@ import {UT} from "../../Models/Classes/UT";
 export class ListElementComponent implements OnInit{
 
   @Input() viewModel!: ListElementViewModel;
+  @Input() isExpanded: boolean = false;
   @Output() onElementClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
   ut: UT = new UT();

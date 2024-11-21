@@ -9,7 +9,8 @@
   <hr class="hr-sparschwein">
   <div class="sparschwein__bottom">
     <div class="sparschwein__list" *ngIf="sparschweinData().eintraege.length > 0; else keineEintraege">
-      <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)">
+      <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)" [isExpanded]="expandedElementId === eintrag.id"
+                        (onElementClicked)="onElementClicked(eintrag.id)">
 
       </app-list-element>
       <div class="spacer"></div>

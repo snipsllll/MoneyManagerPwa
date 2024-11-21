@@ -1,6 +1,8 @@
 .list-element {
   position: relative; /* Wichtig, damit das Menü relativ zum Container positioniert wird */
   box-shadow: none !important;
+  overflow: hidden;
+  transition: max-height 2s ease-in-out;
 }
 
 .list-element__main {
@@ -38,10 +40,6 @@
   padding: 10px;
   margin-bottom: 7px;
   font-weight: bold;
-}
-
-.list-element__details {
-
 }
 
 .list-element__menu-wrapper {
@@ -133,4 +131,9 @@
 .grayed-out-element {
   background-color: #b5b5b5;
   color: #4c4c4c;
+}
+
+.list-element__detailss {
+  padding: 10px;
+  color: #333;
 }
