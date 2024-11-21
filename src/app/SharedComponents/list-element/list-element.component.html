@@ -4,7 +4,7 @@
      [class.darker]="viewModel.settings.isDarker"
      [style.maxHeight]="isExpanded ? '200px' : '70px'">
   <div class="list-element__main">
-    <div class="list-element__main-left">
+    <div class="list-element__main-left" (click)="onEintragClicked()">
       @if(viewModel.settings.isDarker) {
         <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.isGrayedOut) {

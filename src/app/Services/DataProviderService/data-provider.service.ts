@@ -153,7 +153,6 @@ export class DataProviderService {
   }
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
-    console.log(this.getMonthByDate(dayDate))
     if(this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0){
       return {
         availableForMonth: -0,
@@ -178,8 +177,6 @@ export class DataProviderService {
     availableForWeek += availableForDay;
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
-
-    console.log(availableForDay)
 
     return {
       availableForDay: availableForDay,

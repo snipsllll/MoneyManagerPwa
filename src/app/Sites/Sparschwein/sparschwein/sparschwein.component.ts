@@ -35,8 +35,6 @@ export class SparschweinComponent implements OnInit{
     };
   });
 
-  expandedElementId: number | null = null;
-
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
 
   }
@@ -47,17 +45,11 @@ export class SparschweinComponent implements OnInit{
     this.topbarService.isDropDownDisabled = true;
   }
 
-  onElementClicked(id: number) {
-    console.log(12345123)
-    this.expandedElementId = this.expandedElementId === id ? null : id;
-  }
-
   onPlusClicked() {
     this.dialogService.showCreateDialog(this.getCreateDialogViewModel())
   }
 
   onEditClicked = (eintrag: EditDialogData) => {
-    console.log(eintrag)
     const x: EditDialogData = {
       title: eintrag.title,
       zusatz: eintrag.zusatz,
@@ -65,7 +57,6 @@ export class SparschweinComponent implements OnInit{
       id: eintrag.id,
       betrag: eintrag.betrag
     }
-    console.log(this.getEditDialogViewModel(x))
     this.dialogService.showEditDialog(this.getEditDialogViewModel(x))
   }
 

@@ -36,8 +36,6 @@ export class EditDialogComponent implements OnInit{
     }
     if(this.checkDarfSpeichern()) {
       this.dialogService.isEditDialogVisible = false;
-      console.log(this.viewModel.data)
-      console.log(647364872)
       this.viewModel.onSaveClick(this.viewModel.data);
     }
   }
