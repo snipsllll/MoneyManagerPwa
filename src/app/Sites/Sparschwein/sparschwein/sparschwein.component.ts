@@ -180,7 +180,7 @@ export class SparschweinComponent implements OnInit{
       onCancelClick: () => {
 
       },
-      istVonHeuteAbzeihenVisible: true
+      istVonHeuteAbzeihenVisible: false
     }
   }
 

@@ -75,8 +75,8 @@
 
 .edit-dialog__beschreibung-data {
   height: 300px;
-  width: 100%;
-  padding: 0;
+  width: calc(100% - 20px);
+  padding: 10px;
   border-radius: 10px;
 }
 
