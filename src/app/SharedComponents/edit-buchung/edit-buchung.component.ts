@@ -45,17 +45,18 @@ export class EditBuchungComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set({...this.dataProvider.getBuchungById(buchungsId)!});
-      this.oldBuchung = {
-        id: this.buchung()!.id,
+
+      this.oldBuchung = {...this.dataProvider.getBuchungById(buchungsId)!}
+      this.buchung?.set({
+        id: this.oldBuchung!.id,
         data: {
-          date: new Date(this.buchung()!.data.date),
-          beschreibung: this.buchung()!.data.beschreibung,
-          betrag: this.buchung()!.data.betrag,
-          title: this.buchung()!.data.title,
-          time: this.buchung()!.data.time
+          date: new Date(this.oldBuchung!.data.date),
+          beschreibung: this.oldBuchung!.data.beschreibung,
+          betrag: this.oldBuchung!.data.betrag,
+          title: this.oldBuchung!.data.title,
+          time: this.oldBuchung!.data.time
         }
-      };
+      });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
     this.updateDate();
