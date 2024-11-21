@@ -32,8 +32,8 @@ export class ListElementComponent implements OnInit{
   onMenuEintragClicked(menuItem: MenuItem) {
     if(!menuItem.grayedOut){
       this.isMenuVisible.set(false);
+      menuItem.onClick(this.viewModel.data);
     }
-    menuItem.onClick(this.viewModel.data);
   }
 
   onEintragClicked() {
