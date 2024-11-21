@@ -27,7 +27,6 @@ export class UserData {
 
   loadDataFromStorage() {
     let savedData: any | SavedData = this._fileEngine.load();
-    console.log(savedData)
     savedData = this.checkForDbUpdates(savedData) as SavedData;
 
     this.buchungen = savedData.buchungen;
@@ -39,7 +38,6 @@ export class UserData {
   }
 
   save(savedData?: SavedData) {
-    console.log(savedData)
     if (savedData) {
       this._fileEngine.save(this.checkForDbUpdates(savedData));
       this.reload();

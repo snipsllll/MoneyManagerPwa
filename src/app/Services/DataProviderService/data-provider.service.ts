@@ -26,7 +26,6 @@ export class DataProviderService {
 
   getAlleSparschweinEintraege(): ISparschweinEintrag[] {
     const sparschweinEintraege = this.utils.clone(this.dataService.userData.sparschweinEintraege) as ISparschweinEintrag[];
-    console.log(sparschweinEintraege)
     const months = this.dataService.userData.months;
     months.forEach(month => {
       if(month.monatAbgeschlossen) {
