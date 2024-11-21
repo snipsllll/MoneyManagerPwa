@@ -157,6 +157,16 @@ export class DataProviderService {
     }
   }
 
+  getAvailableMoneyCapped(dayDate: Date): AvailableMoney{
+    const availableMoney = this.getAvailableMoney(dayDate);
+
+    availableMoney.availableForDay = availableMoney.availableForDay > 0 ? availableMoney.availableForDay : 0;
+    availableMoney.availableForWeek = availableMoney.availableForWeek > 0 ? availableMoney.availableForWeek : 0;
+    availableMoney.availableForMonth = availableMoney.availableForMonth > 0 ? availableMoney.availableForMonth : 0;
+
+    return availableMoney;
+  }
+
   getFixkostenSummeForMonth(month: Month) {
     let summe = 0;
     if (month.monatAbgeschlossen) {

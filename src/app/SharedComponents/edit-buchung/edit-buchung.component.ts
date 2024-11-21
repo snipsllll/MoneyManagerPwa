@@ -24,6 +24,12 @@ export class EditBuchungComponent implements OnInit {
   dateUpdated = signal<number>(0);
   isSaveButtonDisabled = signal<boolean>(true);
 
+  availableMoneyCapped = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataProvider.getAvailableMoneyCapped(this.buchung()!.data.date)
+  })
+
   availableMoney = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
@@ -65,7 +71,7 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = !this.availableMoney().noData && this.getAvailableMoneyDay()! < 0;
+        let isBetragZuHoch = !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0;
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           this.dataChangeService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
@@ -181,14 +187,17 @@ export class EditBuchungComponent implements OnInit {
   }
 
   protected getAvailableMoneyMonth() {
-    return this.ut.toFixedDown(this.availableMoney().availableForMonth! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    const x = this.ut.toFixedDown(this.availableMoney().availableForMonth! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    return x && x > 0 ? x : 0;
   }
 
   protected getAvailableMoneyWeek() {
-    return this.ut.toFixedDown(this.availableMoney().availableForWeek! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    const x = this.ut.toFixedDown(this.availableMoney().availableForWeek! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    return x && x > 0 ? x : 0;
   }
 
   protected getAvailableMoneyDay() {
-    return this.ut.toFixedDown(this.availableMoney().availableForDay! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    const x = this.ut.toFixedDown(this.availableMoney().availableForDay! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
+    return x && x > 0 ? x : 0;
   }
 }

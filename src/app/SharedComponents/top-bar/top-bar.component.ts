@@ -19,6 +19,11 @@ export class TopBarComponent implements OnInit {
     return this.dataProvider.getAvailableMoney(new Date())
   })
 
+  availableMoneyCapped = computed(() => {
+    this.dataService.updated();
+    return this.dataProvider.getAvailableMoneyCapped(new Date())
+  })
+
   ut: UT = new UT();
 
   constructor(private dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {

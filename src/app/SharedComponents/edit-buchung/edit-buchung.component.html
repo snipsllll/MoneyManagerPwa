@@ -1,15 +1,15 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="!availableMoney().noData">
+    <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="availableMoney().availableForMonth! < 0">{{ getAvailableMoneyMonth() ?? '???' }}€</b>
+        monat: <b class="green" [class.red]="availableMoneyCapped().availableForMonth! < 0">{{ getAvailableMoneyMonth() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="availableMoney().availableForWeek! < 0">{{ getAvailableMoneyWeek() ?? '???' }}€</b>
+        woche: <b class="green" [class.red]="availableMoneyCapped().availableForWeek! < 0">{{ getAvailableMoneyWeek() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="availableMoney().availableForDay! < 0">{{ getAvailableMoneyDay() ?? '???' }}€</b>
+        tag: <b class="green" [class.red]="availableMoneyCapped().availableForDay! < 0">{{ getAvailableMoneyDay() }}€</b>
       </div>
     </div>
     <div class="create-eintrag__top-spacer">

@@ -26,10 +26,10 @@ export class CreateBuchungComponent {
   isSaveButtonDisabled = signal<boolean>(true);
   dateUpdated = signal<number>(0);
 
-  availableMoney = computed(() => {
+  availableMoneyCapped = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    return this.dataProvider.getAvailableMoney(this.buchung.date)
+    return this.dataProvider.getAvailableMoneyCapped(this.buchung.date)
   })
 
   utils: UT = new UT();
@@ -69,7 +69,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.betrag! > this.availableMoney().availableForDay
+        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDay
 
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
@@ -204,6 +204,6 @@ export class CreateBuchungComponent {
   }
 
   protected isAvailableMoneyValid() {
-    return this.availableMoney().availableForDay && this.availableMoney().availableForWeek && this.availableMoney().availableForWeek
+    return this.availableMoneyCapped().availableForDay && this.availableMoneyCapped().availableForWeek && this.availableMoneyCapped().availableForWeek
   }
 }
