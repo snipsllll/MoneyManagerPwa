@@ -12,7 +12,7 @@
       </div>
 
     </div>
-    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && !availableMoney().noData">
+    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && !availableMoney().noData">
       <div class="top-bar__budget"
            (click)="toggleDropdown()"
            (touchstart)="onTouchStart()"
