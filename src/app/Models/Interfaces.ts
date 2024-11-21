@@ -81,4 +81,5 @@ export interface AvailableMoney {
   availableForMonth: number;
   availableForWeek: number;
   availableForDay: number;
+  noData: boolean;
 }
