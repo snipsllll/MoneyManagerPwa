@@ -3,18 +3,18 @@
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
     <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green"
-                  [class.red]="availableMoneyCapped().availableForMonth < 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2)}}
+        monat: <b class="red"
+                  [class.green]="availableMoneyCapped().availableForMonth > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2)}}
         €</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green"
-                  [class.red]="availableMoneyCapped().availableForWeek < 0">{{ utils.toFixedDown(availableMoneyCapped().availableForWeek, 2) }}
+        woche: <b class="red"
+                  [class.green]="availableMoneyCapped().availableForWeek > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForWeek, 2) }}
         €</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green"
-                [class.red]="availableMoneyCapped().availableForDay < 0">{{ utils.toFixedDown(availableMoneyCapped().availableForDay, 2) }}
+        tag: <b class="red"
+                [class.green]="availableMoneyCapped().availableForDay > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForDay, 2) }}
         €</b>
       </div>
     </div>

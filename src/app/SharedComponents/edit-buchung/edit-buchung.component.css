@@ -6,11 +6,11 @@
 }
 
 .red {
-  color: red !important;
+  color: red;
 }
 
 .green {
-  color: green;
+  color: green !important;
 }
 
 .create-eintrag__content {
