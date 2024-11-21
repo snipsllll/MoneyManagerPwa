@@ -32,8 +32,9 @@
         } @else {
           <div class="create-eintrag__search-box-wrapper">
             <div class="create-eintrag__search-box">
-              <app-searchbox [items]="buchungen" [filterField]="'title'"
-                             (itemSelected)="onItemSelected($event)"></app-searchbox>
+              <app-searchbox [items]="buchungen" [filterField]="'data.title'"
+                             (itemSelected)="onItemSelected($event)">
+              </app-searchbox>
             </div>
             <img src="assets/close.png" class="create-eintrag__search-box-x-button" alt="x"
                  (click)="onSearchboxCloseClicked()"/>
