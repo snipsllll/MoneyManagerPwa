@@ -15,6 +15,7 @@
 
 .top-bar__left {
   display: flex;
+  margin-top: 6px;
 }
 
 .top-bar__right {
