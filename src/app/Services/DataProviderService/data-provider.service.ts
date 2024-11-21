@@ -20,26 +20,6 @@ export class DataProviderService {
 
   constructor(private dataService: DataService) { }
 
-  getUnspendMoneyForMonth(month: IMonth): number | undefined {
-    return undefined;
-  }
-
-  getAlleBuchungen(): IBuchung[] {
-    return this.dataService.userData.buchungen;
-  }
-
-  getAlleBuchungenForMonth(month: IMonth): IBuchung[] {
-    return [];
-  }
-
-  getAlleBuchungenForDay(day: IDay): IBuchung[] {
-    return [];
-  }
-
-  getAlleFixkostenEintraegeForMonth(month: IMonth): IFixkostenEintrag[] {
-    return [];
-  }
-
   getAlleWunschlistenEintraege(): IWunschlistenEintrag[] {
     return this.dataService.userData.wunschlistenEintraege;
   }
@@ -64,15 +44,7 @@ export class DataProviderService {
       }
     })
 
-    //TODO: Workaround für mehrmals hinzugefügte Sparschweineinträge => distinct (fixen)
-    return sparschweinEintraege.filter(
-      (item, index, self) =>
-        self.findIndex((t) => t.id === item.id) === index
-    )
-  }
-
-  getAusgabenBetragForDay(day: IDay): number | undefined {
-    return undefined;
+    return sparschweinEintraege;
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {
