@@ -55,7 +55,7 @@ export interface ISparschweinEintrag {
 
 export interface ISparschweinEintragData {
   date: Date;
-  title: string;
+  title?: string;
   betrag: number;
   zusatz?: string;
   vonWunschliste?: boolean;

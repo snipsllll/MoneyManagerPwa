@@ -12,13 +12,13 @@
       </div>
 
     </div>
-    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN'">
-      <div class="top-bar__budget" *ngIf="availableMoney()!.availableForMonth !== undefined"
+    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && !availableMoney().noData">
+      <div class="top-bar__budget"
            (click)="toggleDropdown()"
            (touchstart)="onTouchStart()"
            (touchend)="onTouchEnd()"
            (touchcancel)="onTouchEnd()">
-        <div *ngIf="!availableMoney().noData">
+        <div>
           <b class="darkgreen" [class.darkred]="availableMoney()!.availableForMonth < 0">
             {{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€
           </b>
@@ -26,7 +26,6 @@
             {{ getDaysLeftText() }}
           </div>
         </div>
-
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"

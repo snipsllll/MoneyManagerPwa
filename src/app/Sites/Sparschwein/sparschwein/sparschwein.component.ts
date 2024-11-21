@@ -63,9 +63,9 @@ export class SparschweinComponent implements OnInit{
       zusatz: eintrag.zusatz,
       date: eintrag.date,
       id: eintrag.id,
-      betrag: eintrag.betrag,
-      vonHeuteAbziehen: eintrag.vonHeuteAbziehen
+      betrag: eintrag.betrag
     }
+    console.log(this.getEditDialogViewModel(x))
     this.dialogService.showEditDialog(this.getEditDialogViewModel(x))
   }
 
@@ -90,10 +90,11 @@ export class SparschweinComponent implements OnInit{
     }
 
     const data: ListElementData = {
+      id: eintrag.id,
       betrag: eintrag.data.betrag,
       title: this.getTitle(eintrag),
       zusatz: eintrag.data.zusatz,
-      vonHeuteAbziehen: false,
+      date: eintrag.data.date,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -160,7 +161,7 @@ export class SparschweinComponent implements OnInit{
       onSaveClick: (eintrag: CreateDialogEintrag) => {
         const newSparschweinEintrag: ISparschweinEintragData = {
           betrag: eintrag.betrag ?? 0,
-          title: eintrag.title ?? 'unbenannt',
+          title: eintrag.title,
           zusatz: eintrag.zusatz,
           date: new Date()
         }
@@ -174,20 +175,21 @@ export class SparschweinComponent implements OnInit{
     return {
       data: eintrag,
       onSaveClick: (eintrag: EditDialogData) => {
-        this.dataChangeService.editSparschweinEintrag({
+        const editedSparschweinEintrag = {
           id: eintrag.id!,
           data: {
             betrag: eintrag.betrag,
-            title: eintrag.title ?? 'unbenannt',
+            title: eintrag.title,
             zusatz: eintrag.zusatz,
             date: eintrag.date!
           }
-        })
+        };
+        console.log(editedSparschweinEintrag)
+        this.dataChangeService.editSparschweinEintrag(editedSparschweinEintrag)
       },
       onCancelClick: () => {
 
-      },
-      istVonHeuteAbzeihenVisible: false
+      }
     }
   }
 

@@ -27,6 +27,7 @@
   font-size: 25px;
   background-color: #d1d1d1;
   width: fit-content;
+  min-width: 60px;
   padding: 10px 10px 10px 20px;
   height: 60%;
   border-top-left-radius: 10px;
@@ -42,9 +43,9 @@
   position: absolute;
   font-size: 11px;
   overflow: visible;
-  width: 100%;
   margin: auto;
   bottom: -5px;
+  right: 10px;
 }
 
 .top-bar__nav-button {

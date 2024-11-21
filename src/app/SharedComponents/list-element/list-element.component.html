@@ -3,7 +3,7 @@
      [class.highlighted]="viewModel.settings.highlighted === true"
      [class.darker]="viewModel.settings.isDarker"
      [style.maxHeight]="isExpanded ? '200px' : '70px'">
-  <div class="list-element__main" (click)="onEintragClicked()">
+  <div class="list-element__main">
     <div class="list-element__main-left">
       @if(viewModel.settings.isDarker) {
         <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
@@ -20,7 +20,7 @@
       }
     </div>
     <div class="list-element__main-center">
-      <div class="list-element__main-center-top">
+      <div class="list-element__main-center-top" (click)="onEintragClicked()">
         <b>{{ viewModel.data.title }}</b>
       </div>
     </div>
@@ -32,7 +32,7 @@
   </div>
 
   <div *ngIf="isExpanded" class="list-element__detailss">
-    {{ viewModel.data.zusatz }}
+    {{ viewModel.data.zusatz ?? '-- keine Beschreibung --' }}
   </div>
 
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
