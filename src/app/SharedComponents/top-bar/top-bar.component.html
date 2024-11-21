@@ -18,16 +18,19 @@
            (touchstart)="onTouchStart()"
            (touchend)="onTouchEnd()"
            (touchcancel)="onTouchEnd()">
-        <b class="darkgreen" [class.darkred]="availableMoney()!.availableForMonth < 0">
-          {{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€
-        </b>
-        <div class="top-bar__tage-left">
-          {{ getDaysLeftText() }}
+        <div *ngIf="!availableMoney().noData">
+          <b class="darkgreen" [class.darkred]="availableMoney()!.availableForMonth < 0">
+            {{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€
+          </b>
+          <div class="top-bar__tage-left">
+            {{ getDaysLeftText() }}
+          </div>
         </div>
+
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
-         (click)="toggleDropdown()">
+         (click)="toggleDropdown()" *ngIf="!availableMoney().noData">
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           monat:
