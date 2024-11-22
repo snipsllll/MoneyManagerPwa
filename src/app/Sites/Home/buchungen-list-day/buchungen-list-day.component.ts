@@ -45,5 +45,20 @@ export class BuchungenListDayComponent {
     }
   }
 
+  getTagesAnzeigeBudget(): number {
+    switch (this.dataProvider.getSettings().tagesAnzeigeOption) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        return this.ut.toFixedDown(this.ausgabenForDay(), 2)!
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDayFromSoll(this.day.date), 2)!
+        break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)!
+        break;
+    }
+    return 0;
+  }
+
   protected readonly TagesAnzeigeOptions = TagesAnzeigeOptions;
 }

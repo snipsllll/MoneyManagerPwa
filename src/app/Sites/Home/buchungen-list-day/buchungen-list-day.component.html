@@ -3,7 +3,13 @@
     <div class="day-label">
       {{day.date.toLocaleDateString()}}
       <div *ngIf="dataProvider.getSettings().showDaySpend && dataProvider.getSettings().tagesAnzeigeOption !== TagesAnzeigeOptions.leer" class="buchungen-list-day__day-budget">
-        {{ getTagesAnzeigeText() }}
+        <div class="green" [class.red]="getTagesAnzeigeBudget() < 0" *ngIf="dataProvider.getSettings().tagesAnzeigeOption === TagesAnzeigeOptions.RestbetragVonIstBetrag || dataProvider.getSettings().tagesAnzeigeOption === TagesAnzeigeOptions.RestbetragVonSollBudget; else grayNumbers">
+          {{ getTagesAnzeigeText() }}
+        </div>
+        <ng-template #grayNumbers>
+          {{ getTagesAnzeigeText() }}
+        </ng-template>
+
       </div>
     </div>
   </div>
