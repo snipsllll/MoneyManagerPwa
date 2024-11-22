@@ -25,15 +25,15 @@
       </div>
     </div>
     <div class="einstellungen__section">
-      <div class="einstellungen__checkbox-wrapper">
-        <div class="einstellungen__label" (click)="onZuVielErlaubtClicked()">
-          - Anzeige oben rechts
+      <div class="einstellungen__multi-select-wrapper">
+        <div class="einstellungen__label-multi-select" (click)="onZuVielErlaubtClicked()">
+          - Restgeld-Anzeige
         </div>
         <select class="einstellungen__multi-select" [(ngModel)]="topBarAnzeigeOption" (change)="onAnzeigeObenRechtsChanged()">
-          <option>Restgeld für Monat</option>
-          <option>Restgeld für Woche</option>
-          <option>Restgeld für Tag</option>
-          <option>Ausblenden</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Monat</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Woche</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Tag</option>
+          <option class="einstellungen__multi-select--option">Ausblenden</option>
         </select>
       </div>
     </div>

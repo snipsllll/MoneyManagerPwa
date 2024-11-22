@@ -48,11 +48,26 @@ export class TopBarComponent implements OnInit {
     console.log(this.dataService.userData)
   }
 
-  getDaysLeftText() {
+  getDaysLeftText(): string | undefined {
+    switch (this.dataProvider.getSettings().topBarAnzeigeEinstellung) {
+      case TopBarBudgetOptions.monat:
+        return 'für diesen Monat';
+        break;
+      case TopBarBudgetOptions.woche:
+        return 'für diese Woche';
+        break;
+      case TopBarBudgetOptions.tag:
+        return 'für Heute';
+        break;
+      default:
+        return undefined;
+        break;
+    }
+    /*
     const daysLeft = this.dataProvider.getAnzahlDaysLeftForMonth(new Date());
     return daysLeft === 1
       ? "für 1 Tag"
-      : `für ${daysLeft} Tage`
+      : `für ${daysLeft} Tage`*/
   }
 
   getSelectedtTopBarBudget() {

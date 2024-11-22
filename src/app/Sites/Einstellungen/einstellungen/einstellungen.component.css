@@ -70,11 +70,31 @@
   margin-left: 7px;
 }
 
+.einstellungen__multi-select-wrapper {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .einstellungen__multi-select {
   margin-left: auto;
+  font-size: 16px;
+  margin-top: 20px;
   height: 25px;
   border: #070e2e solid 1px;
   border-radius: 5px;
-  background-color: transparent;
+  background-color: #f4f4f4;
 }
 
+.einstellungen__multi-select--option {
+  font-size: 12px;
+}
+
+.einstellungen__label-multi-select {
+  margin-right: 10px;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #323232;
+  margin-left: 7px;
+}

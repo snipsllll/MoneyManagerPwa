@@ -22,7 +22,7 @@
           <b class="darkgreen" [class.darkred]="getSelectedtTopBarBudgetCapped() !== undefined && getSelectedtTopBarBudgetCapped()! === 0">
             {{ getSelectedtTopBarBudgetCapped() }}€
           </b>
-          <div class="top-bar__tage-left" *ngIf="dataProvider.getSettings().topBarAnzeigeEinstellung === TopBarBudgetOptions.monat">
+          <div class="top-bar__tage-left">
             {{ getDaysLeftText() }}
           </div>
         </div>
