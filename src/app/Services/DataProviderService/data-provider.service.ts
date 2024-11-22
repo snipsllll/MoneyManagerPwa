@@ -36,7 +36,7 @@ export class DataProviderService {
             data: {
               betrag: month.istBudget!,
               date: month.endDate!,
-              title: this.getMonatText(month),
+              title: this.getMonatJahrTextForMonth(month),
               vonMonat: true
             }
           }
@@ -275,7 +275,7 @@ export class DataProviderService {
     return this.dataService.userData.months.findIndex(monat => monat.startDate.toLocaleDateString() === monthStartDate.toLocaleDateString())
   }
 
-  private getMonatText(month: Month) {
+  private getMonatJahrTextForMonth(month: Month) {
     let monthText: string = '';
 
     switch(month.startDate.getMonth()) {
