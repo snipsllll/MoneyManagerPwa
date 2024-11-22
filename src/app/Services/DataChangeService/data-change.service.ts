@@ -104,11 +104,13 @@ export class DataChangeService {
   }
 
   changeTotalBudgetBetragForMonth(date: Date, editedTotalBudgetBetrag: number) {
+    this.dataService.createNewMonthIfNecessary(date);
     this.dataService.userData.months[this.getIndexOfMonthByDate(date)].totalBudget = editedTotalBudgetBetrag;
     this.dataService.update();
   }
 
   changeSparenBetragForMonth(date: Date, editedSparenBetrag: number) {
+    this.dataService.createNewMonthIfNecessary(date);
     this.dataService.userData.months[this.getIndexOfMonthByDate(date)].sparen = editedSparenBetrag;
     this.dataService.update();
   }

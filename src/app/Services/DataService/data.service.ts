@@ -48,6 +48,12 @@ export class DataService {
     this.sendUpdateToComponents();
   }
 
+  createNewMonthIfNecessary(date: Date) {
+    if (!this.checkIfMonthExistsForDay(date)) {
+      this.createNewMonth(date);
+    }
+  }
+
 
   private checkIfMonthExistsForDay(date: Date): boolean {
     return this.userData.months.findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
