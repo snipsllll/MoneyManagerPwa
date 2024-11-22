@@ -17,6 +17,7 @@ export class EinstellungenComponent implements OnInit{
   @ViewChild('fileInput') fileInput: any;
   isShowDaySpendChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
+  topBarAnzeigeOption!: any;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
@@ -131,5 +132,9 @@ export class EinstellungenComponent implements OnInit{
   onZuVielErlaubtClicked() {
     this.dataChangeService.setSettingEnableToHighBuchungen(!this.dataProvider.getSettings().toHighBuchungenEnabled);
     this.isEnableToHighBuchungenChecked = this.dataProvider.getSettings().toHighBuchungenEnabled;
+  }
+
+  onAnzeigeObenRechtsChanged() {
+
   }
 }

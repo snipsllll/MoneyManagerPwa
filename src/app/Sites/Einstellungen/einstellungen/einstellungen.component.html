@@ -10,16 +10,31 @@
     </div>
   </div>
   <div class="einstellungen__middle">
-    <div class="einstellungen__checkbox-wrapper">
-      <input type="checkbox" [(ngModel)]="isShowDaySpendChecked" (click)="onDayDiffClicked()" class="create-eintrag__data-apz">
-      <div class="create-eintrag__label-apz" (click)="onDayDiffClicked()">
-        Ausgaben Pro Tag anzeigen
+    <div class="einstellungen__section">
+      <div class="einstellungen__checkbox-wrapper">
+        <input type="checkbox" [(ngModel)]="isShowDaySpendChecked" (click)="onDayDiffClicked()" class="create-eintrag__data-apz">
+        <div class="einstellungen__label" (click)="onDayDiffClicked()">
+          Ausgaben Pro Tag anzeigen
+        </div>
+      </div>
+      <div class="einstellungen__checkbox-wrapper">
+        <input type="checkbox" [(ngModel)]="isEnableToHighBuchungenChecked" (click)="onZuVielErlaubtClicked()" class="create-eintrag__data-apz">
+        <div class="einstellungen__label" (click)="onZuVielErlaubtClicked()">
+          Zu hohe Buchungen erlauben
+        </div>
       </div>
     </div>
-    <div class="einstellungen__checkbox-wrapper">
-      <input type="checkbox" [(ngModel)]="isEnableToHighBuchungenChecked" (click)="onZuVielErlaubtClicked()" class="create-eintrag__data-apz">
-      <div class="create-eintrag__label-apz" (click)="onZuVielErlaubtClicked()">
-        Zu hohe Buchungen erlauben
+    <div class="einstellungen__section">
+      <div class="einstellungen__checkbox-wrapper">
+        <div class="einstellungen__label" (click)="onZuVielErlaubtClicked()">
+          - Anzeige oben rechts
+        </div>
+        <select class="einstellungen__multi-select" [(ngModel)]="topBarAnzeigeOption" (change)="onAnzeigeObenRechtsChanged()">
+          <option>Restgeld für Monat</option>
+          <option>Restgeld für Woche</option>
+          <option>Restgeld für Tag</option>
+          <option>Nicht anzeigen</option>
+        </select>
       </div>
     </div>
   </div>
