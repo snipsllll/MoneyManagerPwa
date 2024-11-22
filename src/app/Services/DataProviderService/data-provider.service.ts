@@ -49,8 +49,9 @@ export class DataProviderService {
 
   getFixkostenEintraegeForMonth(date: Date) {
     const month = this.getMonthByDate(date);
+    console.log(month)
 
-    return (month.specialFixkostenEintraege ?? []).concat(month.monatAbgeschlossen ? (month.uebernommeneStandardFixkostenEintraege ?? []) : this.dataService.userData.standardFixkostenEintraege ?? []);
+    return (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).concat(month && month.monatAbgeschlossen ? (month.uebernommeneStandardFixkostenEintraege ?? []) : this.dataService.userData.standardFixkostenEintraege ?? []);
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {

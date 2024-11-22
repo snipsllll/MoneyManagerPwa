@@ -51,7 +51,7 @@ export class DataChangeService {
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IFixkostenEintrag[]) {
-    console.log(this.dataService.userData)
+    console.log(elemente)
     this.dataService.createNewMonthIfNecessary(date);
     const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
     if(month === undefined) {
@@ -63,7 +63,7 @@ export class DataChangeService {
     elemente.forEach(element => {
       if(this.dataService.userData.standardFixkostenEintraege.findIndex(x => x.id === element.id) === -1) {
         month.specialFixkostenEintraege?.push({
-          id: -1,
+          id: this.getNextFreeFixkostenEintragId(),
           data: {
             title: element.data.title,
             zusatz: element.data.zusatz,
@@ -173,8 +173,9 @@ export class DataChangeService {
 
   private getNextFreeFixkostenEintragId() {
     let freeId = 1;
-    for (let i = 0; i < this.dataService.userData.standardFixkostenEintraege.length; i++) {
-      if (this.dataService.userData.standardFixkostenEintraege.find(x => x.id === freeId) === undefined) {
+    const alleEintraege = this.getAlleFixkostenEintraege();
+    for (let i = 0; i < alleEintraege.length; i++) {
+      if (alleEintraege.find(x => x.id === freeId) === undefined) {
         return freeId;
       } else {
         freeId++;
@@ -232,6 +233,22 @@ export class DataChangeService {
     const month = new Date(date).getMonth();
     const monthStartDate = new Date(year, month);
     return this.dataService.userData.months.findIndex(monat => monat.startDate.toLocaleDateString() === monthStartDate.toLocaleDateString())
+  }
+
+  private getAlleFixkostenEintraegeIds(): number[] {
+    let eintraege = this.dataService.userData.standardFixkostenEintraege.map(obj => obj.id) ?? [];
+    this.dataService.userData.months.forEach(month => {
+      eintraege = eintraege.concat(month.specialFixkostenEintraege ? month.specialFixkostenEintraege.map(obj => obj.id) : []);
+    })
+    return eintraege;
+  }
+
+  private getAlleFixkostenEintraege(): IFixkostenEintrag[] {
+    let eintraege = this.dataService.userData.standardFixkostenEintraege ?? [];
+    this.dataService.userData.months.forEach(month => {
+      eintraege = eintraege.concat(month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []);
+    })
+    return eintraege;
   }
 
 
