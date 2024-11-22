@@ -71,7 +71,7 @@ export class DataProviderService {
       }
     })
 
-    let alleEintraege =  a.concat(b);
+    let alleEintraege =  b.concat(a);
 
     if(onlyIncluded) {
       alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);

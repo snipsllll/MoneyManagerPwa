@@ -90,8 +90,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
   getViewModel(eintrag: IMonthFixkostenEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doMenuExist: true,
-      doDetailsExist: true,
-      isDarker: eintrag.data.isStandardFixkostenEintrag
+      doDetailsExist: true
     }
 
     const data: ListElementData = {
