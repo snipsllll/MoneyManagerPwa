@@ -93,11 +93,18 @@ export class UserData {
       specialFixkostenEintraege: []
     }));
 
-    const { savedMonths: _, fixKosten: __, ...rest } = data;
+    let settings = {
+      topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
+      tagesAnzeigeOption: TagesAnzeigeOptions.Tagesausgaben,
+      ...data.settings
+    }
+
+    const { savedMonths: _, fixKosten: __, settings: ___,  ...rest } = data;
 
     return {
       savedMonths,
       standardFixkosten,
+      settings,
       dbVersion: 2,
       ...rest
     };

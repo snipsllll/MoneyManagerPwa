@@ -16,22 +16,25 @@ import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
-  isShowDaySpendChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
-    const settings = this.dataProvider.getSettings();
-    this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
-    this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
-    this.tagesAnzeigeOption = this.getTagesAnzeigeOptionByNumber(settings.tagesAnzeigeOption);
+    this.update();
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+  }
+
+  update() {
+    const settings = this.dataProvider.getSettings();
+    this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
+    this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
+    this.tagesAnzeigeOption = this.getTagesAnzeigeOptionByNumber(settings.tagesAnzeigeOption);
   }
 
   onAlleDatenLoeschenClicked() {
@@ -41,6 +44,7 @@ export class EinstellungenComponent implements OnInit{
     onConfirmClicked: () => {
       this.dataService.userData.deleteAllData();
       this.dataService.update();
+      this.update();
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -74,7 +78,8 @@ export class EinstellungenComponent implements OnInit{
         onConfirmClicked: () => {
           console.log(fileContent)
           this.dataService.userData.save(JSON.parse(fileContent));
-          this.dataService.update()
+          this.dataService.update();
+          this.update();
           this.dialogService.isConfirmDialogVisible = false;
         },
         onCancelClicked: () => {
