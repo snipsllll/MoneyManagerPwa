@@ -20,13 +20,13 @@ import {MonatFixkostenDialogViewModel} from "../../../Models/ViewModels/MonatFix
   templateUrl: './monat-fixkosten-dialog.component.html',
   styleUrl: './monat-fixkosten-dialog.component.css'
 })
-export class MonatFixkostenDialogComponent implements OnInit{
+export class MonatFixkostenDialogComponent implements OnInit {
   @Input() viewModel!: MonatFixkostenDialogViewModel;
   summe = computed(() => {
     this.dataService.updated();
     let summe = 0;
     this.viewModel.elemente.forEach(element => {
-      if(element.data.isExcluded !== true) {
+      if (element.data.isExcluded !== true) {
         summe += element.data.betrag;
       }
     })
@@ -46,7 +46,7 @@ export class MonatFixkostenDialogComponent implements OnInit{
   }
 
   onCancelClicked() {
-    if(this.checkHasChanged()) {
+    if (this.checkHasChanged()) {
       const confirmDialogViewModel: ConfirmDialogViewModel = {
         title: 'Abbrechen?',
         message: 'Willst du wirklich abbrechen? Alle nicht gespeicherten Änderungen werden verworfen!',
@@ -54,7 +54,8 @@ export class MonatFixkostenDialogComponent implements OnInit{
           this.dialogService.isCreateDialogVisible = false;
           this.viewModel.onAbortClicked();
         },
-        onCancelClicked() {}
+        onCancelClicked() {
+        }
       }
       this.dialogService.showConfirmDialog(confirmDialogViewModel);
     } else {
@@ -64,7 +65,7 @@ export class MonatFixkostenDialogComponent implements OnInit{
   }
 
   onSaveClicked() {
-    if(this.checkDarfSpeichern()) {
+    if (this.checkDarfSpeichern()) {
       this.dialogService.isCreateDialogVisible = false;
       this.viewModel.onSaveClicked(this.viewModel);
     }
@@ -89,7 +90,8 @@ export class MonatFixkostenDialogComponent implements OnInit{
   getViewModel(eintrag: IMonthFixkostenEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doMenuExist: true,
-      doDetailsExist: true
+      doDetailsExist: true,
+      isDarker: eintrag.data.isStandardFixkostenEintrag
     }
 
     const data: ListElementData = {
@@ -99,16 +101,27 @@ export class MonatFixkostenDialogComponent implements OnInit{
       zusatz: eintrag.data.zusatz,
       isStandardFixkostenEintrag: eintrag.data.isStandardFixkostenEintrag,
       isExcluded: eintrag.data.isExcluded,
-      menuItems: [
-        {
-          label: 'ausschließen',
-          onClick: this.onAusschliessenClicked
-        },
-        {
-          label: 'einschließen',
-          onClick: this.onEinschliessenClicked
-        }
-      ]
+      menuItems: eintrag.data.isStandardFixkostenEintrag
+        ? [
+          {
+            label: 'ausschließen',
+            onClick: this.onAusschliessenClicked
+          },
+          {
+            label: 'einschließen',
+            onClick: this.onEinschliessenClicked
+          }
+        ]
+        : [
+          {
+            label: 'bearbeiten',
+            onClick: this.onEditClicked
+          },
+          {
+            label: 'löschen',
+            onClick: this.onDeleteClicked
+          }
+        ]
     }
 
     return {
@@ -159,7 +172,8 @@ export class MonatFixkostenDialogComponent implements OnInit{
       onConfirmClicked: () => {
         this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
       },
-      onCancelClicked: () => {}
+      onCancelClicked: () => {
+      }
     }
 
     this.dialogService.showConfirmDialog(confirmDialogViewModel)
@@ -188,5 +202,6 @@ export class MonatFixkostenDialogComponent implements OnInit{
     this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === newFixKostenEintrag.id)] = newFixKostenEintrag;
   }
 
-  onEditCancelClicked = () => {}
+  onEditCancelClicked = () => {
+  }
 }

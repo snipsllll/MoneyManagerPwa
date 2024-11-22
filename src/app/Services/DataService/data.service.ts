@@ -130,18 +130,35 @@ export class DataService {
   private updateFixkostenForMonth(startDate: Date) {
     const month = this.getMonthByDate(startDate);
     if (!month.monatAbgeschlossen && this.userData.standardFixkostenEintraege) {
-      this.userData.standardFixkostenEintraege.forEach(eintrag => {
-        if(month.uebernommeneStandardFixkostenEintraege?.findIndex(eintragx => eintrag.id === eintragx.id) === -1) {
+      this.userData.standardFixkostenEintraege.forEach(standardEintrag => {
+        if(month.uebernommeneStandardFixkostenEintraege?.findIndex(eintragx => standardEintrag.id === eintragx.id) === -1) {
+          //nicht eingefügte standardfixkosten einfügen
           month.uebernommeneStandardFixkostenEintraege.push({
-            id: eintrag.id,
+            id: standardEintrag.id,
             data: {
-              betrag: eintrag.data.betrag,
-              title: eintrag.data.title,
-              zusatz: eintrag.data.zusatz,
+              betrag: standardEintrag.data.betrag,
+              title: standardEintrag.data.title,
+              zusatz: standardEintrag.data.zusatz,
               isStandardFixkostenEintrag: true,
               isExcluded: false
             }
           });
+        } else {
+          //geänderte standardfixkosten anpassen
+          const eintrag = month.uebernommeneStandardFixkostenEintraege?.find(eintragx => standardEintrag.id === eintragx.id)!
+          if(eintrag.data.title !== standardEintrag.data.title || eintrag.data.betrag !== standardEintrag.data.betrag || eintrag.data.zusatz !== standardEintrag.data.zusatz) {
+            console.log(eintrag)
+            month.uebernommeneStandardFixkostenEintraege![month.uebernommeneStandardFixkostenEintraege!.findIndex(eintragx => standardEintrag.id === eintragx.id)] = standardEintrag;
+          }
+        }
+      })
+    }
+
+    //gelöschte standardFixckosteneintraege die aber noch in den uebernommenen drin sind löschen
+    if(!month.monatAbgeschlossen) {
+      month.uebernommeneStandardFixkostenEintraege?.forEach(eintrag => {
+        if (this.userData.standardFixkostenEintraege?.findIndex(standardEintrag => standardEintrag.id === eintrag.id) === -1) {
+          month.uebernommeneStandardFixkostenEintraege!.splice(month.uebernommeneStandardFixkostenEintraege!.findIndex(x => x.id === eintrag.id)!, 1);
         }
       })
     }
