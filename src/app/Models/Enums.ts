@@ -56,5 +56,6 @@ export enum TagesAnzeigeOptions {
   Tagesausgaben,
   RestbetragVonSollBudget,
   RestbetragVonIstBetrag,
+  RestMonat,
   leer
 }

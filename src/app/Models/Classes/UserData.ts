@@ -2,7 +2,7 @@ import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
-import {TopBarBudgetOptions} from "../Enums";
+import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 
 export class UserData {
 
@@ -209,7 +209,9 @@ export class UserData {
         wunschlistenFilter: {
           selectedFilter: '',
           gekaufteEintraegeAusblenden: false
-        }
+        },
+        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
       },
       wunschlistenEintraege: [],
       sparEintraege: [],

@@ -186,6 +186,9 @@ export class EinstellungenComponent implements OnInit{
       case 'Restgeld für Tag (ist)':
         option = TagesAnzeigeOptions.RestbetragVonIstBetrag;
         break;
+      case 'Restgeld für Monat':
+        option = TagesAnzeigeOptions.RestMonat;
+        break;
       case 'Ausblenden':
         option = TagesAnzeigeOptions.leer;
         break;
@@ -205,6 +208,9 @@ export class EinstellungenComponent implements OnInit{
         break;
       case TagesAnzeigeOptions.RestbetragVonIstBetrag:
         text = 'Restgeld für Tag (ist)';
+        break;
+      case TagesAnzeigeOptions.RestMonat:
+        text = 'Restgeld für Monat';
         break;
       case TagesAnzeigeOptions.leer:
         text = 'Ausblenden';

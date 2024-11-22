@@ -30,10 +30,9 @@ export class MonatFixkostenDialogComponent implements OnInit{
     })
     return summe;
   })
-  selectedElement = signal<number>(-1);
   newFixKostenEintrag!: IFixkostenEintragData;
 
-  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
+  constructor(private dialogService: DialogService, public dataService: DataService) {
   }
 
   ngOnInit() {

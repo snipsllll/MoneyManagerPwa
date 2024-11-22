@@ -39,6 +39,9 @@ export class BuchungenListDayComponent {
       case TagesAnzeigeOptions.RestbetragVonIstBetrag:
           return `${this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)}€`;
           break;
+      case TagesAnzeigeOptions.RestMonat:
+        return 'not implemented yet' //`${this.ut.toFixedDown(this.dataProvider.getAvailableMoney(this.day.date).availableForMonth, 2)}€`
+        break;
       default:
           return undefined;
           break;
@@ -55,6 +58,9 @@ export class BuchungenListDayComponent {
         break;
       case TagesAnzeigeOptions.RestbetragVonIstBetrag:
         return this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)!
+        break;
+      case TagesAnzeigeOptions.RestMonat:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoney(this.day.date).availableForMonth, 2)!
         break;
     }
     return 0;

@@ -10,7 +10,6 @@ import {
   MonatFixkostenDialogData,
   MonatFixkostenDialogViewModel
 } from "../../../Models/ViewModels/MonatFixkostenDialogViewModel";
-import {CreateDialogEintrag} from "../../../Models/ViewModels/CreateDialogViewModel";
 
 @Component({
   selector: 'app-budget',
