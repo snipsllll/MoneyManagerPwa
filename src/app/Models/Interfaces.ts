@@ -13,6 +13,8 @@ export interface Month {
   weeks?: Week[];
   gesperrteFixKosten?: IFixkostenEintrag[];
   monatAbgeschlossen?: boolean;
+  uebernommeneStandardFixkostenEintraege?: IFixkostenEintrag[];
+  specialFixkostenEintraege?: IFixkostenEintrag[];
 }
 
 export interface Week {
@@ -45,7 +47,7 @@ export interface BudgetInfosForMonth {
 export interface SavedData {
   buchungen: IBuchung[];
   savedMonths: SavedMonth[];
-  standardFixKosten: IFixkostenEintrag[];
+  standardFixkostenEintraege: IFixkostenEintrag[];
   sparEintraege: ISparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
   settings: Settings;
@@ -53,7 +55,7 @@ export interface SavedData {
 }
 
 export interface Settings {
-  wunschllistenFilter: WunschlistenFilter;
+  wunschlistenFilter: WunschlistenFilter;
   toHighBuchungenEnabled: boolean;
   topBarAnzeigeEinstellung?: TopBarBudgetOptions;
   tagesAnzeigeOption?: TagesAnzeigeOptions;
@@ -68,7 +70,8 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
-  fixkosten?: IFixkostenEintrag[];
+  uebernommeneStandardFixkostenEintraege?: IFixkostenEintrag[];
+  specialFixkostenEintraege?: IFixkostenEintrag[];
 }
 
 export interface MenuItem {

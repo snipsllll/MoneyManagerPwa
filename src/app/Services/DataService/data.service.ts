@@ -100,7 +100,9 @@ export class DataService {
       startDate: startDate,
       endDate: endDate,
       daysInMonth: daysInMonth,
-      weeks: weeks
+      weeks: weeks,
+      uebernommeneStandardFixkostenEintraege: this.userData.standardFixkostenEintraege ? this.userData.standardFixkostenEintraege : [],
+      specialFixkostenEintraege: []
     };
 
     // Check if the month is completed or not
@@ -127,7 +129,7 @@ export class DataService {
   private updateFixkostenForMonth(startDate: Date) {
     const month = this.getMonthByDate(startDate);
     if (!month.monatAbgeschlossen) {
-      month.gesperrteFixKosten = this.userData.standardFixkostenEintraege;
+      month.uebernommeneStandardFixkostenEintraege = this.userData.standardFixkostenEintraege;
     }
   }
 

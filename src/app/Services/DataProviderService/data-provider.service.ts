@@ -50,7 +50,7 @@ export class DataProviderService {
   getFixkostenEintraegeForMonth(date: Date) {
     const month = this.getMonthByDate(date);
 
-    return month.gesperrteFixKosten;
+    return month.uebernommeneStandardFixkostenEintraege?.concat(month.specialFixkostenEintraege ?? []);
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {

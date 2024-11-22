@@ -14,7 +14,7 @@ export class UserData {
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
-    wunschllistenFilter: {
+    wunschlistenFilter: {
       selectedFilter: '',
       gekaufteEintraegeAusblenden: false
     }
@@ -27,12 +27,12 @@ export class UserData {
   }
 
   loadDataFromStorage() {
-    let savedData: any | SavedData = this._fileEngine.load();
-    savedData = this.checkForDbUpdates(savedData) as SavedData;
+    let loadedData: any = this._fileEngine.load();
+    let savedData = this.checkForDbUpdates(loadedData);
 
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.fixKosten;
+    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
@@ -67,19 +67,28 @@ export class UserData {
   }
 
   private convertFixkostenToStandardFixkosten(data: any) {
-    let standardFixkosten = data.fixKosten.map((fixkostenEintrag: any) => ({
-      id: fixkostenEintrag.id,
+    let standardFixkosten = data.fixKosten.map((fixkosteneintrag: any) => ({
+      id: fixkosteneintrag.id,
       data: {
-        betrag: fixkostenEintrag.data.betrag,
-        title: fixkostenEintrag.data.title,
-        zusatz: fixkostenEintrag.data.zusatz
+        betrag: fixkosteneintrag.data.betrag,
+        title: fixkosteneintrag.data.title,
+        zusatz: fixkosteneintrag.data.zusatz
       }
-    }))
+    }));
 
-    const { fixKosten: _, ...rest } = data;
+    let savedMonths = data.savedMonths.map((month: any) => ({
+      date: month.date,
+      totalBudget: month.totalBudget,
+      sparen: month.sparen,
+      uebernommeneStandardFixkostenEintraege: month.fixkosten ?? [],
+      specialFixkostenEintraege: []
+    }));
+
+    const { savedMonths: _, fixKosten: __, ...rest } = data;
 
     return {
-      fixKosten: standardFixkosten,
+      savedMonths,
+      standardFixkosten,
       dbVersion: 2,
       ...rest
     };
@@ -186,7 +195,7 @@ export class UserData {
 
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.fixKosten;
+    this.standardFixkostenEintraege = savedData.standardFixkosten;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
@@ -197,14 +206,14 @@ export class UserData {
       buchungen: [],
       settings: {
         toHighBuchungenEnabled: true,
-        wunschllistenFilter: {
+        wunschlistenFilter: {
           selectedFilter: '',
           gekaufteEintraegeAusblenden: false
         }
       },
       wunschlistenEintraege: [],
       sparEintraege: [],
-      standardFixKosten: [],
+      standardFixkostenEintraege: [],
       savedMonths: [],
       dbVersion: currentDbVersion
     });
@@ -215,18 +224,18 @@ export class UserData {
     const savedData: SavedData = {
       buchungen: [],
       savedMonths: [],
-      standardFixKosten: [],
+      standardFixkostenEintraege: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
       settings: {
-        wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
+        wunschlistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
         toHighBuchungenEnabled: false
       },
       dbVersion: currentDbVersion
     }
 
     savedData.buchungen = this.buchungen;
-    savedData.standardFixKosten = this.standardFixkostenEintraege;
+    savedData.standardFixkostenEintraege = this.standardFixkostenEintraege;
     savedData.sparEintraege = this.sparschweinEintraege;
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
     savedData.settings = this.settings;
@@ -236,7 +245,8 @@ export class UserData {
         date: month.startDate,
         totalBudget: month.totalBudget ?? 0,
         sparen: month.sparen ?? 0,
-        fixkosten: month.gesperrteFixKosten
+        uebernommeneStandardFixkostenEintraege: month.uebernommeneStandardFixkostenEintraege,
+        specialFixkostenEintraege: month.specialFixkostenEintraege
       })
     })
 
@@ -295,7 +305,9 @@ export class UserData {
           endDate: endDate,
           daysInMonth: daysInMonth,
           weeks: weeks,
-          monatAbgeschlossen: abgeschlossen
+          monatAbgeschlossen: abgeschlossen,
+          uebernommeneStandardFixkostenEintraege: savedMonth.uebernommeneStandardFixkostenEintraege ?? [],
+          specialFixkostenEintraege: savedMonth.specialFixkostenEintraege ?? []
         }
       )
     })
