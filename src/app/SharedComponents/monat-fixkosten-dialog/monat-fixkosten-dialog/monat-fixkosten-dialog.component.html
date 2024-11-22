@@ -1,0 +1,43 @@
+<div class="monat-fixkosten-dialog-wrapper">
+  <div class="floating-box monat-fixkosten-dialog">
+    <div  class="monat-fixkosten-dialog__list">
+      <div *ngFor="let fixKostenEintrag of viewModel.elemente">
+        <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+      </div>
+      <div style="height: calc(100vh - 70px - 190px)"></div>
+    </div>
+    <div class="monat-fixkosten-dialog__bottom-wrapper">
+      <div class="monat-fixkosten-dialog__summe-wrapper">
+        <div class="monat-fixkosten-dialog__summe-label">
+          Fixkosten Summe:
+        </div>
+        <div class="monat-fixkosten-dialog__summe-data">
+          <b>{{summe()}}</b>
+        </div>
+      </div>
+      <div class="monat-fixkosten-dialog__add-button-wrapper">
+        <div class="monat-fixkosten-dialog__add-button" (click)="onPlusClicked()">
+          +
+        </div>
+      </div>
+    </div>
+    <div class="monat-fixkosten-dialog__buttons-wrapper">
+      <div class="monat-fixkosten-dialog__button" (click)=onCancelClicked()>
+        abbrechen
+      </div>
+      <div class="monat-fixkosten-dialog__button" (click)="onSaveClicked()">
+        speichern
+      </div>
+    </div>
+    <ng-template #keineEintraege>
+      <div class="monat-fixkosten-dialog__keine-eintraege">
+        noch keine Einträge vorhanden
+      </div>
+    </ng-template>
+
+
+
+  </div>
+
+</div>
+
