@@ -18,4 +18,10 @@
 
     </app-create-dialog>
   }
+
+  @if (dialogService.isMonatFixkostenDialogVisible) {
+    <app-monat-fixkosten-dialog [viewModel]="dialogService.monatFixkostenDialogViewModel!">
+
+    </app-monat-fixkosten-dialog>
+  }
 </div>

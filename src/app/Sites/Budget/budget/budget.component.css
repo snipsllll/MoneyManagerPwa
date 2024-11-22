@@ -56,6 +56,12 @@
   margin-right: -3px;
 }
 
+.budget__edit-fixkosten-icon {
+  height: 17px;
+  width: 17px;
+  margin-left: 3px;
+}
+
 .budget__element-label-fixkosten {
   margin: 0;
   display: flex;

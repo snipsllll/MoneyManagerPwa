@@ -47,6 +47,12 @@ export class DataProviderService {
     return sparschweinEintraege;
   }
 
+  getFixkostenEintraegeForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    return month.gesperrteFixKosten;
+  }
+
   getAnzahlDaysLeftForMonth(date: Date) {
     const month = this.getMonthByDate(date);
     return month.daysInMonth! - date.getDate();

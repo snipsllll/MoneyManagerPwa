@@ -26,6 +26,7 @@ import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning
 import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/einstellungen.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searchbox.component';
+import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searc
     WunschlisteComponent,
     SpinningFishComponent,
     EinstellungenComponent,
-    SearchboxComponent
+    SearchboxComponent,
+    MonatFixkostenDialogComponent
   ],
     imports: [
         BrowserModule,

@@ -50,6 +50,10 @@ export class DataChangeService {
     this.dataService.update();
   }
 
+  editFixkostenEintraegeForMonth(date: Date, elemente: IFixkostenEintrag[]) {
+
+  }
+
   deleteFixkostenEintrag(fixkostenEintragId: number) {
     this.dataService.userData.fixkostenEintraege.splice(this.getIndexOfFixkostenEintragById(fixkostenEintragId), 1);
     this.dataService.update();

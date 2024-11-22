@@ -5,6 +5,12 @@ import {DataService} from "../../../Services/DataService/data.service";
 import {UT} from "../../../Models/Classes/UT";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {DialogService} from "../../../Services/DialogService/dialog.service";
+import {
+  MonatFixkostenDialogData,
+  MonatFixkostenDialogViewModel
+} from "../../../Models/ViewModels/MonatFixkostenDialogViewModel";
+import {CreateDialogEintrag} from "../../../Models/ViewModels/CreateDialogViewModel";
 
 @Component({
   selector: 'app-budget',
@@ -59,7 +65,7 @@ export class BudgetComponent  implements OnInit{
     return '';
   });
 
-  constructor(public dataProvider: DataProviderService, private dataChangeService: DataChangeService, public topbarService: TopbarService, protected dataService: DataService) {
+  constructor(private dialogService: DialogService, public dataProvider: DataProviderService, private dataChangeService: DataChangeService, public topbarService: TopbarService, protected dataService: DataService) {
     this.update();
   }
 
@@ -112,6 +118,24 @@ export class BudgetComponent  implements OnInit{
 
   getTodayDate() {
     return new Date();
+  }
+
+  onFixkostenEditClicked() {
+    const viewModel: MonatFixkostenDialogViewModel = {
+      elemente: this.dataProvider.getFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [],
+      onAbortClicked: this.onFixkostenAbortClicked,
+      onSaveClicked: this.onFixkostenSaveClicked
+    }
+    this.dialogService.showMonatFixkostenDialog(viewModel);
+  }
+
+  onFixkostenAbortClicked = () => {
+    this.dialogService.isMonatFixkostenDialogVisible = false;
+  }
+
+  onFixkostenSaveClicked = (data: MonatFixkostenDialogData) => {
+    this.dataChangeService.editFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth(), data.elemente);
+    this.dialogService.isMonatFixkostenDialogVisible = false;
   }
 
   private getDateForSelectedMonth() {
