@@ -46,12 +46,11 @@
   margin-bottom: 10px;
   background-color: white;
   flex-grow: 1;
+  overflow-y: scroll;
 }
 
 .monat-fixkosten-dialog__list {
   width: 100%;
-  overflow-y: scroll;
-  flex-grow: 1;
 }
 
 .monat-fixkosten-dialog__bottom-wrapper {
