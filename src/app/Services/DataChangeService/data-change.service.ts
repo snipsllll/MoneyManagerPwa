@@ -125,6 +125,11 @@ export class DataChangeService {
     this.dataService.update();
   }
 
+  setTopBarAnzeigeOption(option: number) {
+    this.dataService.userData.settings.topBarAnzeigeEinstellung = option;
+    this.dataService.update();
+  }
+
 
   private getNextFreeBuchungId() {
     let freeId = 1;

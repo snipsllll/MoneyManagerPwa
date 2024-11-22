@@ -1,4 +1,5 @@
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "./NewInterfaces";
+import {TopBarBudgetOptions} from "./Enums";
 
 export interface Month {
   totalBudget?: number;
@@ -55,8 +56,7 @@ export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
   showDaySpend: boolean;
   toHighBuchungenEnabled: boolean;
-  x?: boolean;
-  y?: number[];
+  topBarAnzeigeEinstellung?: TopBarBudgetOptions;
 }
 
 export interface WunschlistenFilter {

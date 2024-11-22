@@ -6,6 +6,7 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {SavedData} from "../../../Models/Interfaces";
+import {TopBarBudgetOptions} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-einstellungen',
@@ -17,12 +18,15 @@ export class EinstellungenComponent implements OnInit{
   @ViewChild('fileInput') fileInput: any;
   isShowDaySpendChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
-  topBarAnzeigeOption!: any;
+  topBarAnzeigeOption!: string;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
+    console.log(settings)
     this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
     this.isShowDaySpendChecked = settings.showDaySpend !== undefined ? settings.showDaySpend : true;
+    this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
+    console.log(this.topBarAnzeigeOption)
   }
 
   ngOnInit() {
@@ -135,6 +139,43 @@ export class EinstellungenComponent implements OnInit{
   }
 
   onAnzeigeObenRechtsChanged() {
+    let option = 0;
 
+    switch (this.topBarAnzeigeOption) {
+      case 'Restgeld für Monat':
+        option = TopBarBudgetOptions.monat;
+        break;
+      case 'Restgeld für Woche':
+        option = TopBarBudgetOptions.woche;
+        break;
+      case 'Restgeld für Tag':
+        option = TopBarBudgetOptions.tag;
+        break;
+      case 'Ausblenden':
+        option = TopBarBudgetOptions.leer;
+        break;
+    }
+    this.dataChangeService.setTopBarAnzeigeOption(option);
+  }
+
+  getTopBarOptionByNumber(option: number | undefined) {
+    let text = '';
+
+    switch (option) {
+      case TopBarBudgetOptions.monat:
+        text = 'Restgeld für Monat';
+        break;
+      case TopBarBudgetOptions.woche:
+        text = 'Restgeld für Woche';
+        break;
+      case TopBarBudgetOptions.tag:
+        text = 'Restgeld für Tag';
+        break;
+      case TopBarBudgetOptions.leer:
+        text = 'Ausblenden';
+        break;
+    }
+
+    return text;
   }
 }

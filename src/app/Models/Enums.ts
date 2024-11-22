@@ -44,3 +44,10 @@ export enum Color {
   green,
   black
 }
+
+export enum TopBarBudgetOptions {
+  monat,
+  woche,
+  tag,
+  leer
+}
