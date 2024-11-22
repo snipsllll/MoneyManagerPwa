@@ -52,7 +52,7 @@
           Beschreibung:
         </div>
         <div class="create-eintrag__data create-eintrag__beschreibung-data">
-          {{ buchung()!.data.beschreibung }}
+          {{ buchung()!.data.beschreibung !== "" ? buchung()!.data.beschreibung : '-- keine Beschreibung --' }}
         </div>
       </div>
     </div>
