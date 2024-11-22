@@ -6,7 +6,7 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {SavedData} from "../../../Models/Interfaces";
-import {TopBarBudgetOptions} from "../../../Models/Enums";
+import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-einstellungen',
@@ -19,12 +19,14 @@ export class EinstellungenComponent implements OnInit{
   isShowDaySpendChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
   topBarAnzeigeOption!: string;
+  tagesAnzeigeOption!: string;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
     this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
     this.isShowDaySpendChecked = settings.showDaySpend !== undefined ? settings.showDaySpend : true;
     this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
+    this.tagesAnzeigeOption = this.getTagesAnzeigeOptionByNumber(settings.tagesAnzeigeOption);
   }
 
   ngOnInit() {
@@ -170,6 +172,47 @@ export class EinstellungenComponent implements OnInit{
         text = 'Restgeld für Tag';
         break;
       case TopBarBudgetOptions.leer:
+        text = 'Ausblenden';
+        break;
+    }
+
+    return text;
+  }
+
+  onTagesAnzeigeChanged() {
+    let option = 0;
+
+    switch (this.tagesAnzeigeOption) {
+      case 'Ausgaben':
+        option = TagesAnzeigeOptions.Tagesausgaben;
+        break;
+      case 'Restgeld für Tag (soll)':
+        option = TagesAnzeigeOptions.RestbetragVonSollBudget;
+        break;
+      case 'Restgeld für Tag (ist)':
+        option = TagesAnzeigeOptions.RestbetragVonIstBetrag;
+        break;
+      case 'Ausblenden':
+        option = TagesAnzeigeOptions.leer;
+        break;
+    }
+    this.dataChangeService.setTagesAnzeigeOption(option);
+  }
+
+  getTagesAnzeigeOptionByNumber(option: number | undefined) {
+    let text = '';
+
+    switch (option) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        text = 'Ausgaben';
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+        text = 'Restgeld für Tag (soll)';
+        break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+        text = 'Restgeld für Tag (ist)';
+        break;
+      case TagesAnzeigeOptions.leer:
         text = 'Ausblenden';
         break;
     }

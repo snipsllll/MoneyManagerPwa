@@ -130,6 +130,11 @@ export class DataChangeService {
     this.dataService.update();
   }
 
+  setTagesAnzeigeOption(option: number) {
+    this.dataService.userData.settings.tagesAnzeigeOption = option;
+    this.dataService.update();
+  }
+
 
   private getNextFreeBuchungId() {
     let freeId = 1;

@@ -51,3 +51,10 @@ export enum TopBarBudgetOptions {
   tag,
   leer
 }
+
+export enum TagesAnzeigeOptions {
+  Tagesausgaben,
+  RestbetragVonSollBudget,
+  RestbetragVonIstBetrag,
+  leer
+}
