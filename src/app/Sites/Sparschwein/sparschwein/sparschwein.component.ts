@@ -83,7 +83,7 @@ export class SparschweinComponent implements OnInit{
     const data: ListElementData = {
       id: eintrag.id,
       betrag: eintrag.data.betrag,
-      title: this.getTitle(eintrag),
+      title: eintrag.data.title ?? '',
       zusatz: eintrag.data.zusatz,
       date: eintrag.data.date,
       menuItems: [
