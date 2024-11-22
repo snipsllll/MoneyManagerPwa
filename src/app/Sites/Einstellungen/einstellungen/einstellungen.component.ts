@@ -24,7 +24,6 @@ export class EinstellungenComponent implements OnInit{
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
     this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
-    this.isShowDaySpendChecked = settings.showDaySpend !== undefined ? settings.showDaySpend : true;
     this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
     this.tagesAnzeigeOption = this.getTagesAnzeigeOptionByNumber(settings.tagesAnzeigeOption);
   }
@@ -126,11 +125,6 @@ export class EinstellungenComponent implements OnInit{
     } catch (error) {
       console.error('Fehler beim Speichern der Datei:', error);
     }
-  }
-
-  onDayDiffClicked() {
-    this.dataChangeService.setSettingShowDayDiff(!this.dataProvider.getSettings().showDaySpend);
-    this.isShowDaySpendChecked = this.dataProvider.getSettings().showDaySpend;
   }
 
   onZuVielErlaubtClicked() {

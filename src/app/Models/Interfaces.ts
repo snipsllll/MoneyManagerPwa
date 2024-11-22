@@ -54,7 +54,6 @@ export interface SavedData {
 
 export interface Settings {
   wunschllistenFilter: WunschlistenFilter;
-  showDaySpend: boolean;
   toHighBuchungenEnabled: boolean;
   topBarAnzeigeEinstellung?: TopBarBudgetOptions;
   tagesAnzeigeOption?: TagesAnzeigeOptions;

@@ -12,7 +12,6 @@ export class UserData {
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
   public settings: Settings = {
-    showDaySpend: false,
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
     wunschllistenFilter: {
@@ -175,7 +174,6 @@ export class UserData {
       buchungen: [],
       settings: {
         toHighBuchungenEnabled: true,
-        showDaySpend: true,
         wunschllistenFilter: {
           selectedFilter: '',
           gekaufteEintraegeAusblenden: false
@@ -199,7 +197,6 @@ export class UserData {
       wunschlistenEintraege: [],
       settings: {
         wunschllistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
-        showDaySpend: false,
         toHighBuchungenEnabled: false
       },
       dbVersion: currentDbVersion
