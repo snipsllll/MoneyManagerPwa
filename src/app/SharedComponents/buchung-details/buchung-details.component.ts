@@ -31,7 +31,6 @@ export class BuchungDetailsComponent implements OnInit{
     });
     this.navigationService.previousRoute = Sites.home;
     this.dataProvider.getAvailableMoneyForDay(this.buchung!()!.data.date!)
-    console.log(this.buchung!())
   }
 
   onBackClicked() {

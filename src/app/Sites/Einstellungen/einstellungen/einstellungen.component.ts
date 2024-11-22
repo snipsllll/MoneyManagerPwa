@@ -22,11 +22,9 @@ export class EinstellungenComponent implements OnInit{
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     const settings = this.dataProvider.getSettings();
-    console.log(settings)
     this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
     this.isShowDaySpendChecked = settings.showDaySpend !== undefined ? settings.showDaySpend : true;
     this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
-    console.log(this.topBarAnzeigeOption)
   }
 
   ngOnInit() {
