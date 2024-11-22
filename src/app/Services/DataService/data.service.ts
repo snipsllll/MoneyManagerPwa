@@ -127,7 +127,7 @@ export class DataService {
   private updateFixkostenForMonth(startDate: Date) {
     const month = this.getMonthByDate(startDate);
     if (!month.monatAbgeschlossen) {
-      month.gesperrteFixKosten = this.userData.fixkostenEintraege;
+      month.gesperrteFixKosten = this.userData.standardFixkostenEintraege;
     }
   }
 
@@ -299,10 +299,10 @@ export class DataService {
         })
       }
     } else {
-      if (this.userData.fixkostenEintraege === undefined) {
-        this.userData.fixkostenEintraege = [];
+      if (this.userData.standardFixkostenEintraege === undefined) {
+        this.userData.standardFixkostenEintraege = [];
       }
-      this.userData.fixkostenEintraege.forEach(eintrag => {
+      this.userData.standardFixkostenEintraege.forEach(eintrag => {
         summe += eintrag.data.betrag;
       })
     }

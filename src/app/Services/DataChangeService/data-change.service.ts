@@ -41,21 +41,45 @@ export class DataChangeService {
       data: fixkostenEintragData
     };
 
-    this.dataService.userData.fixkostenEintraege.push(newFixkostenEintrag);
+    this.dataService.userData.standardFixkostenEintraege.push(newFixkostenEintrag);
     this.dataService.update();
   }
 
   editFixkostenEintrag(editedFixkostenEintrag: IFixkostenEintrag): void {
-    this.dataService.userData.fixkostenEintraege[this.getIndexOfFixkostenEintragById(editedFixkostenEintrag.id)] = editedFixkostenEintrag;
+    this.dataService.userData.standardFixkostenEintraege[this.getIndexOfFixkostenEintragById(editedFixkostenEintrag.id)] = editedFixkostenEintrag;
     this.dataService.update();
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IFixkostenEintrag[]) {
+    console.log(this.dataService.userData)
+    this.dataService.createNewMonthIfNecessary(date);
+    const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
+    if(month === undefined) {
+      throw new Error("error in dataChangeService editFixckostenEintraegeForMonth: Month is undefined!");
+    }
 
+    const editedEintraege: IFixkostenEintrag[] = [];
+
+    elemente.forEach(element => {
+      if(this.dataService.userData.standardFixkostenEintraege.findIndex(x => x.id === element.id) === -1) {
+        this.addFixkostenEintrag({
+          title: element.data.title,
+          zusatz: element.data.zusatz,
+          betrag: element.data.betrag
+        })
+        // TODO Wie finde ich die id von des neu hinzugefügten eintrags raus
+      } else {
+        editedEintraege.push(element);
+      }
+
+    })
+
+    this.dataService.userData.months[this.getIndexOfMonthByDate(date)].gesperrteFixKosten = elemente;
+    this.dataService.update();
   }
 
   deleteFixkostenEintrag(fixkostenEintragId: number) {
-    this.dataService.userData.fixkostenEintraege.splice(this.getIndexOfFixkostenEintragById(fixkostenEintragId), 1);
+    this.dataService.userData.standardFixkostenEintraege.splice(this.getIndexOfFixkostenEintragById(fixkostenEintragId), 1);
     this.dataService.update();
   }
 
@@ -149,8 +173,8 @@ export class DataChangeService {
 
   private getNextFreeFixkostenEintragId() {
     let freeId = 1;
-    for (let i = 0; i < this.dataService.userData.fixkostenEintraege.length; i++) {
-      if (this.dataService.userData.fixkostenEintraege.find(x => x.id === freeId) === undefined) {
+    for (let i = 0; i < this.dataService.userData.standardFixkostenEintraege.length; i++) {
+      if (this.dataService.userData.standardFixkostenEintraege.find(x => x.id === freeId) === undefined) {
         return freeId;
       } else {
         freeId++;
@@ -188,7 +212,7 @@ export class DataChangeService {
   }
 
   private getIndexOfFixkostenEintragById(id: number) {
-    return this.dataService.userData.fixkostenEintraege.findIndex(eintrag => eintrag.id === id);
+    return this.dataService.userData.standardFixkostenEintraege.findIndex(eintrag => eintrag.id === id);
   }
 
   private getIndexOfWunschlistenEintragById(id: number) {

@@ -201,10 +201,10 @@ export class DataProviderService {
         })
       }
     } else {
-      if (this.dataService.userData.fixkostenEintraege === undefined) {
-        this.dataService.userData.fixkostenEintraege = [];
+      if (this.dataService.userData.standardFixkostenEintraege === undefined) {
+        this.dataService.userData.standardFixkostenEintraege = [];
       }
-      this.dataService.userData.fixkostenEintraege.forEach(eintrag => {
+      this.dataService.userData.standardFixkostenEintraege.forEach(eintrag => {
         summe += eintrag.data.betrag;
       })
     }
@@ -248,7 +248,7 @@ export class DataProviderService {
       dayBudget: month.dailyBudget ?? 0,
       fixKostenSumme: this.getFixkostenSummeForMonth(month),
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.dataService.userData.fixkostenEintraege
+      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.dataService.userData.standardFixkostenEintraege
     }
   }
 

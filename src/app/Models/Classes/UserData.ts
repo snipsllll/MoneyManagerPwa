@@ -8,7 +8,7 @@ export class UserData {
 
   public buchungen: IBuchung[] = [];
   public months: Month[] = [];
-  public fixkostenEintraege: IFixkostenEintrag[] = [];
+  public standardFixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
   public settings: Settings = {
@@ -32,7 +32,7 @@ export class UserData {
 
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.fixkostenEintraege = savedData.fixKosten;
+    this.standardFixkostenEintraege = savedData.fixKosten;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
@@ -58,8 +58,31 @@ export class UserData {
       currentData = this.convertToVersion1(currentData);
     }
 
+    if(currentData.dbVersion < 2) {
+      currentData = this.convertFixkostenToStandardFixkosten(currentData);
+    }
+
     currentData.dbVersion = currentDbVersion;
     return currentData as SavedData;
+  }
+
+  private convertFixkostenToStandardFixkosten(data: any) {
+    let standardFixkosten = data.fixKosten.map((fixkostenEintrag: any) => ({
+      id: fixkostenEintrag.id,
+      data: {
+        betrag: fixkostenEintrag.data.betrag,
+        title: fixkostenEintrag.data.title,
+        zusatz: fixkostenEintrag.data.zusatz
+      }
+    }))
+
+    const { fixKosten: _, ...rest } = data;
+
+    return {
+      fixKosten: standardFixkosten,
+      dbVersion: 2,
+      ...rest
+    };
   }
 
   private convertToVersion1(datax: any): any {
@@ -163,7 +186,7 @@ export class UserData {
 
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.fixkostenEintraege = savedData.fixKosten;
+    this.standardFixkostenEintraege = savedData.fixKosten;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
@@ -181,7 +204,7 @@ export class UserData {
       },
       wunschlistenEintraege: [],
       sparEintraege: [],
-      fixKosten: [],
+      standardFixKosten: [],
       savedMonths: [],
       dbVersion: currentDbVersion
     });
@@ -192,7 +215,7 @@ export class UserData {
     const savedData: SavedData = {
       buchungen: [],
       savedMonths: [],
-      fixKosten: [],
+      standardFixKosten: [],
       sparEintraege: [],
       wunschlistenEintraege: [],
       settings: {
@@ -203,7 +226,7 @@ export class UserData {
     }
 
     savedData.buchungen = this.buchungen;
-    savedData.fixKosten = this.fixkostenEintraege;
+    savedData.standardFixKosten = this.standardFixkostenEintraege;
     savedData.sparEintraege = this.sparschweinEintraege;
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
     savedData.settings = this.settings;

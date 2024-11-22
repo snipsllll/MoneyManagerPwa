@@ -22,7 +22,7 @@ import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInter
 export class FixKostenComponent  implements OnInit{
   elements = computed(() => {
     this.dataService.updated();
-    return this.dataService.userData.fixkostenEintraege;
+    return this.dataService.userData.standardFixkostenEintraege;
   })
   summe = computed(() => {
     this.dataService.updated();

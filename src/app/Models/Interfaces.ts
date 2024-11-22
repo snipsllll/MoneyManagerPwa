@@ -45,7 +45,7 @@ export interface BudgetInfosForMonth {
 export interface SavedData {
   buchungen: IBuchung[];
   savedMonths: SavedMonth[];
-  fixKosten: IFixkostenEintrag[];
+  standardFixKosten: IFixkostenEintrag[];
   sparEintraege: ISparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
   settings: Settings;

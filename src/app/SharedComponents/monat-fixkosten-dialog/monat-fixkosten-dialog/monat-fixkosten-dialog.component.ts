@@ -115,12 +115,15 @@ export class MonatFixkostenDialogComponent implements OnInit{
   }
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
-    const newFixkostenEintrag: IFixkostenEintragData = {
-      betrag: eintrag.betrag ?? 0,
-      title: eintrag.title ?? 'kein Titel',
-      zusatz: eintrag.zusatz
+    const newFixkostenEintrag: IFixkostenEintrag = {
+      id: -1,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'kein Titel',
+        zusatz: eintrag.zusatz
+      }
     }
-    this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
+    this.viewModel.elemente.push(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
@@ -146,12 +149,12 @@ export class MonatFixkostenDialogComponent implements OnInit{
     this.dialogService.showEditDialog(editDialogViewModel);
   }
 
-  onDeleteClicked = (eintrag: EditDialogData) => {
+  onDeleteClicked = (x: EditDialogData) => {
     const confirmDialogViewModel: ConfirmDialogViewModel = {
       title: 'Eintrag Löschen?',
       message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.dataChangeService.deleteFixkostenEintrag(eintrag.id!);
+        this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
       },
       onCancelClicked: () => {}
     }
@@ -169,7 +172,7 @@ export class MonatFixkostenDialogComponent implements OnInit{
       }
     }
 
-    this.dataChangeService.editFixkostenEintrag(newFixKostenEintrag);
+    this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === newFixKostenEintrag.id)] = newFixKostenEintrag;
   }
 
   onEditCancelClicked = () => {}
