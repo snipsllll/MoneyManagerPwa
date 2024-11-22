@@ -27,9 +27,11 @@ export class FixKostenComponent  implements OnInit{
   summe = computed(() => {
     this.dataService.updated();
     let summe = 0;
-    this.elements().forEach(element => {
-      summe += element.data.betrag;
-    })
+    if(this.elements()) {
+      this.elements().forEach(element => {
+        summe += element.data.betrag;
+      })
+    }
     return summe;
   })
   selectedElement = signal<number>(-1);

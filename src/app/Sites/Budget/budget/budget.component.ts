@@ -137,6 +137,7 @@ export class BudgetComponent  implements OnInit{
   }
 
   onFixkostenSaveClicked = (data: MonatFixkostenDialogData) => {
+    console.log(data)
     this.dataChangeService.editFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth(), data.elemente);
     this.dialogService.isMonatFixkostenDialogVisible = false;
     this.update();

@@ -1,11 +1,13 @@
 <div class="monat-fixkosten-dialog-wrapper">
   <div class="floating-box monat-fixkosten-dialog">
-    <div class="monat-fixkosten-dialog__list">
-      <div *ngIf="viewModel.elemente.length > 0; else keineEintraege">
-        <div *ngFor="let fixKostenEintrag of viewModel.elemente">
-          <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+    <div class="monat-fixkosten-dialog__list-wrapper">
+      <div class="monat-fixkosten-dialog__list">
+        <div *ngIf="viewModel.elemente.length > 0; else keineEintraege">
+          <div *ngFor="let fixKostenEintrag of viewModel.elemente">
+            <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+          </div>
+          <div style="height: calc(100vh - 70px - 190px)"></div>
         </div>
-        <div style="height: calc(100vh - 70px - 190px)"></div>
       </div>
     </div>
     <div class="monat-fixkosten-dialog__bottom-wrapper">

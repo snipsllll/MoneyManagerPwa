@@ -132,15 +132,19 @@ export class MonatFixkostenDialogComponent implements OnInit {
   }
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
-    const newFixkostenEintrag: IFixkostenEintrag = {
-      id: -1,
+    console.log(eintrag)
+    const newFixkostenEintrag: IMonthFixkostenEintrag = {
+      id: 0,
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
-        zusatz: eintrag.zusatz
+        zusatz: eintrag.zusatz,
+        isExcluded: false,
+        isStandardFixkostenEintrag: false
       }
     }
     this.viewModel.elemente.push(newFixkostenEintrag);
+    console.log(this.viewModel)
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,

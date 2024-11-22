@@ -51,6 +51,7 @@ export class DataChangeService {
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IMonthFixkostenEintrag[]) {
+    console.log(elemente)
     this.dataService.createNewMonthIfNecessary(date);
     const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
     if(month === undefined) {
@@ -61,18 +62,23 @@ export class DataChangeService {
     month.specialFixkostenEintraege = [];
 
     elemente.forEach(element => {
-      if(this.dataService.userData.standardFixkostenEintraege.findIndex(x => x.id === element.id) === -1) {
-        month.specialFixkostenEintraege?.push({
-          id: this.getNextFreeFixkostenEintragId(),
-          data: {
-            title: element.data.title,
-            zusatz: element.data.zusatz,
-            betrag: element.data.betrag
-          }
-        })
+      if(element.data.isStandardFixkostenEintrag === true) {
+        if(this.dataService.userData.standardFixkostenEintraege.findIndex(x => x.id === element.id) === -1) {
+          month.specialFixkostenEintraege?.push({
+            id: this.getNextFreeFixkostenEintragId(),
+            data: {
+              title: element.data.title,
+              zusatz: element.data.zusatz,
+              betrag: element.data.betrag
+            }
+          })
+        } else {
+          month.uebernommeneStandardFixkostenEintraege!.push(element)
+        }
       } else {
-        month.uebernommeneStandardFixkostenEintraege!.push(element)
+        month.specialFixkostenEintraege!.push(element);
       }
+
     })
 
     this.dataService.userData.months[this.getIndexOfMonthByDate(date)].gesperrteFixKosten = elemente;
