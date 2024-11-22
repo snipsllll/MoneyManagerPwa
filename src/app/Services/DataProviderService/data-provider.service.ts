@@ -50,7 +50,7 @@ export class DataProviderService {
   getFixkostenEintraegeForMonth(date: Date) {
     const month = this.getMonthByDate(date);
 
-    return month.uebernommeneStandardFixkostenEintraege?.concat(month.specialFixkostenEintraege ?? []);
+    return (month.specialFixkostenEintraege ?? []).concat(month.monatAbgeschlossen ? (month.uebernommeneStandardFixkostenEintraege ?? []) : this.dataService.userData.standardFixkostenEintraege ?? []);
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {
@@ -194,20 +194,13 @@ export class DataProviderService {
 
   getFixkostenSummeForMonth(month: Month) {
     let summe = 0;
-    if (month.monatAbgeschlossen) {
-      if (month.gesperrteFixKosten) {
-        month.gesperrteFixKosten.forEach(eintrag => {
-          summe += eintrag.data.betrag;
-        })
-      }
-    } else {
-      if (this.dataService.userData.standardFixkostenEintraege === undefined) {
-        this.dataService.userData.standardFixkostenEintraege = [];
-      }
-      this.dataService.userData.standardFixkostenEintraege.forEach(eintrag => {
-        summe += eintrag.data.betrag;
-      })
-    }
+    const eintraege = this.getFixkostenEintraegeForMonth(month.startDate);
+    if(!eintraege)
+      return 0;
+
+    eintraege.forEach(eintrag => {
+      summe += eintrag.data.betrag;
+    })
     return summe;
   }
 
@@ -248,7 +241,7 @@ export class DataProviderService {
       dayBudget: month.dailyBudget ?? 0,
       fixKostenSumme: this.getFixkostenSummeForMonth(month),
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: month.monatAbgeschlossen ? month.gesperrteFixKosten : this.dataService.userData.standardFixkostenEintraege
+      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate)
     }
   }
 

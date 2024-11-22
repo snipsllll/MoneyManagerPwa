@@ -58,18 +58,18 @@ export class DataChangeService {
       throw new Error("error in dataChangeService editFixckostenEintraegeForMonth: Month is undefined!");
     }
 
-    const editedEintraege: IFixkostenEintrag[] = [];
+    month.specialFixkostenEintraege = [];
 
     elemente.forEach(element => {
       if(this.dataService.userData.standardFixkostenEintraege.findIndex(x => x.id === element.id) === -1) {
-        this.addFixkostenEintrag({
-          title: element.data.title,
-          zusatz: element.data.zusatz,
-          betrag: element.data.betrag
+        month.specialFixkostenEintraege?.push({
+          id: -1,
+          data: {
+            title: element.data.title,
+            zusatz: element.data.zusatz,
+            betrag: element.data.betrag
+          }
         })
-        // TODO Wie finde ich die id von des neu hinzugefügten eintrags raus
-      } else {
-        editedEintraege.push(element);
       }
 
     })
