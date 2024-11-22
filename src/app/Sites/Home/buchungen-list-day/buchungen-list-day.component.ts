@@ -1,8 +1,9 @@
-import {Component, computed, Input, signal} from '@angular/core';
+import {Component, computed, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
 import {UT} from "../../../Models/Classes/UT";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {TagesAnzeigeOptions} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -26,4 +27,23 @@ export class BuchungenListDayComponent {
 
   constructor(public dataProvider: DataProviderService, private dataService: DataService) {
   }
+
+  getTagesAnzeigeText() {
+    switch (this.dataProvider.getSettings().tagesAnzeigeOption) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        return `-${this.ut.toFixedDown(this.ausgabenForDay(), 2)}€`
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+          return `${this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDayFromSoll(this.day.date), 2)}€`
+          break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+          return `${this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)}€`;
+          break;
+      default:
+          return undefined;
+          break;
+    }
+  }
+
+  protected readonly TagesAnzeigeOptions = TagesAnzeigeOptions;
 }

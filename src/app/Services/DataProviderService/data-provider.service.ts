@@ -124,6 +124,24 @@ export class DataProviderService {
     return notSpendMoney;
   }
 
+  getAvailableMoneyForDayFromSoll(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    return (month.dailyBudget ?? 0) - this.getAusgabenForDay(date);
+  }
+
+  getAusgabenForDay(date: Date) {
+    const day = this.getDayByeDate(date);
+    console.log(day)
+    let ausgaben = 0;
+
+    day?.buchungen?.forEach(buchung => {
+      ausgaben += buchung.data.betrag ?? 0;
+    });
+
+    return ausgaben;
+  }
+
   getAvailableMoney(dayDate: Date): AvailableMoney {
     if(this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0){
       return {
