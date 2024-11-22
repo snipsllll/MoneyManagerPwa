@@ -1,7 +1,7 @@
 .list-element {
   position: relative; /* Wichtig, damit das Menü relativ zum Container positioniert wird */
   box-shadow: none !important;
-  transition: max-height 2s ease-in-out;
+  transition: max-height 0.3s ease-in-out;
 }
 
 .list-element__main {
@@ -131,4 +131,5 @@
   padding: 10px 0 0 0;
   color: #333;
   font-size: 16px;
+  word-break: break-word;
 }
