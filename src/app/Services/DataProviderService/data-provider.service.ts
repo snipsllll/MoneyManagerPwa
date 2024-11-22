@@ -10,6 +10,7 @@ import {
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
+import {Months} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class DataProviderService {
             data: {
               betrag: month.istBudget!,
               date: month.endDate!,
-              title: `Restgeld für ${month.startDate.toLocaleDateString()}`,
+              title: this.getMonatText(month),
               vonMonat: true
             }
           }
@@ -272,5 +273,52 @@ export class DataProviderService {
     const month = new Date(date).getMonth();
     const monthStartDate = new Date(year, month);
     return this.dataService.userData.months.findIndex(monat => monat.startDate.toLocaleDateString() === monthStartDate.toLocaleDateString())
+  }
+
+  private getMonatText(month: Month) {
+    let monthText: string = '';
+
+    switch(month.startDate.getMonth()) {
+      case 0:
+        monthText = 'Januar';
+        break;
+      case 1:
+        monthText = 'Februar';
+        break;
+      case 2:
+        monthText = 'März';
+        break;
+      case 3:
+        monthText = 'April';
+        break;
+      case 4:
+        monthText = 'Mai';
+        break;
+      case 5:
+        monthText = 'Juni';
+        break;
+      case 6:
+        monthText = 'Juli';
+        break;
+      case 7:
+        monthText = 'August';
+        break;
+      case 8:
+        monthText = 'September';
+        break;
+      case 9:
+        monthText = 'Oktober';
+        break;
+      case 10:
+        monthText = 'November';
+        break;
+      case 11:
+        monthText = 'Dezember';
+        break;
+    }
+
+    const yearText = month.startDate.getFullYear().toString();
+
+    return `Restgeld von ${monthText} ${yearText}`;
   }
 }
