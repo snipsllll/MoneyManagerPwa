@@ -91,7 +91,7 @@
 }
 
 .darkred {
-  color: #980000;
+  color: #980000 !important;
 }
 
 .green {
@@ -99,7 +99,7 @@
 }
 
 .darkgreen {
-  color: #017001 !important;
+  color: #017001;
 }
 
 .top-bar__dropdown-box-slidin {
