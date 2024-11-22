@@ -1,5 +1,5 @@
 <div class="list-element floating-box"
-     [class.grayed-out-element]="viewModel.settings.isGrayedOut"
+     [class.grayed-out-element]="viewModel.settings.isGrayedOut || viewModel.data.isExcluded"
      [class.highlighted]="viewModel.settings.highlighted === true"
      [class.darker]="viewModel.settings.isDarker"
      [style.maxHeight]="isExpanded ? '800px' : '70px'">

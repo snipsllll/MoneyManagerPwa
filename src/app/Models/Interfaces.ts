@@ -1,4 +1,10 @@
-import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "./NewInterfaces";
+import {
+  IBuchung,
+  IFixkostenEintrag,
+  IMonthFixkostenEintrag,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "./NewInterfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "./Enums";
 
 export interface Month {
@@ -13,8 +19,8 @@ export interface Month {
   weeks?: Week[];
   gesperrteFixKosten?: IFixkostenEintrag[];
   monatAbgeschlossen?: boolean;
-  uebernommeneStandardFixkostenEintraege?: IFixkostenEintrag[];
-  specialFixkostenEintraege?: IFixkostenEintrag[];
+  uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
+  specialFixkostenEintraege?: IMonthFixkostenEintrag[];
 }
 
 export interface Week {
@@ -40,7 +46,7 @@ export interface BudgetInfosForMonth {
   dayBudget: number;
   istBudget?: number;
   fixKostenSumme?: number;
-  fixKostenEintraege?: IFixkostenEintrag[];
+  fixKostenEintraege?: IMonthFixkostenEintrag[];
   fixKostenGesperrt?: boolean;
 }
 

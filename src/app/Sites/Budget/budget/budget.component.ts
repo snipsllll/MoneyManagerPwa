@@ -121,11 +121,15 @@ export class BudgetComponent  implements OnInit{
 
   onFixkostenEditClicked() {
     const viewModel: MonatFixkostenDialogViewModel = {
-      elemente: this.dataProvider.getFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [],
+      elemente: this.getFixkostenDialogElements(),
       onAbortClicked: this.onFixkostenAbortClicked,
       onSaveClicked: this.onFixkostenSaveClicked
     }
     this.dialogService.showMonatFixkostenDialog(viewModel);
+  }
+
+  getFixkostenDialogElements() {
+    return this.dataProvider.getFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [];
   }
 
   onFixkostenAbortClicked = () => {

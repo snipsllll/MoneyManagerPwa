@@ -1,5 +1,5 @@
 import {Component, computed, Input, OnInit, signal} from '@angular/core';
-import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
+import {IFixkostenEintrag, IFixkostenEintragData, IMonthFixkostenEintrag} from "../../../Models/NewInterfaces";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
@@ -26,7 +26,9 @@ export class MonatFixkostenDialogComponent implements OnInit{
     this.dataService.updated();
     let summe = 0;
     this.viewModel.elemente.forEach(element => {
-      summe += element.data.betrag;
+      if(element.data.isExcluded !== true) {
+        summe += element.data.betrag;
+      }
     })
     return summe;
   })
@@ -84,10 +86,10 @@ export class MonatFixkostenDialogComponent implements OnInit{
     this.dialogService.showCreateDialog(createDialogViewModel);
   }
 
-  getViewModel(eintrag: IFixkostenEintrag): ListElementViewModel {
+  getViewModel(eintrag: IMonthFixkostenEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doMenuExist: true,
-      doDetailsExist: true,
+      doDetailsExist: true
     }
 
     const data: ListElementData = {
@@ -95,14 +97,16 @@ export class MonatFixkostenDialogComponent implements OnInit{
       betrag: eintrag.data.betrag,
       title: eintrag.data.title,
       zusatz: eintrag.data.zusatz,
+      isStandardFixkostenEintrag: eintrag.data.isStandardFixkostenEintrag,
+      isExcluded: eintrag.data.isExcluded,
       menuItems: [
         {
-          label: 'bearbeiten',
-          onClick: this.onEditClicked
+          label: 'ausschließen',
+          onClick: this.onAusschliessenClicked
         },
         {
-          label: 'löschen',
-          onClick: this.onDeleteClicked
+          label: 'einschließen',
+          onClick: this.onEinschliessenClicked
         }
       ]
     }
@@ -159,6 +163,16 @@ export class MonatFixkostenDialogComponent implements OnInit{
     }
 
     this.dialogService.showConfirmDialog(confirmDialogViewModel)
+  }
+
+  onAusschliessenClicked = (eintragx: EditDialogData) => {
+    this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === eintragx.id)].data.isExcluded = true;
+    this.dataService.update(false);
+  }
+
+  onEinschliessenClicked = (eintragx: EditDialogData) => {
+    this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === eintragx.id)].data.isExcluded = false;
+    this.dataService.update(false);
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {

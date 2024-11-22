@@ -18,6 +18,8 @@ export interface ListElementData {
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;
   wunschId?: number;
+  isStandardFixkostenEintrag?: boolean;
+  isExcluded?: boolean;
 }
 
 export interface ListElementSettings {

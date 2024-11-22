@@ -3,7 +3,7 @@ import {
   IBuchung,
   IBuchungData,
   IFixkostenEintrag,
-  IFixkostenEintragData, ISparschweinEintrag, ISparschweinEintragData,
+  IFixkostenEintragData, IMonthFixkostenEintrag, ISparschweinEintrag, ISparschweinEintragData,
   IWunschlistenEintrag, IWunschlistenEintragData
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
@@ -50,14 +50,14 @@ export class DataChangeService {
     this.dataService.update();
   }
 
-  editFixkostenEintraegeForMonth(date: Date, elemente: IFixkostenEintrag[]) {
-    console.log(elemente)
+  editFixkostenEintraegeForMonth(date: Date, elemente: IMonthFixkostenEintrag[]) {
     this.dataService.createNewMonthIfNecessary(date);
     const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
     if(month === undefined) {
       throw new Error("error in dataChangeService editFixckostenEintraegeForMonth: Month is undefined!");
     }
 
+    month.uebernommeneStandardFixkostenEintraege = [];
     month.specialFixkostenEintraege = [];
 
     elemente.forEach(element => {
@@ -70,11 +70,13 @@ export class DataChangeService {
             betrag: element.data.betrag
           }
         })
+      } else {
+        month.uebernommeneStandardFixkostenEintraege!.push(element)
       }
-
     })
 
     this.dataService.userData.months[this.getIndexOfMonthByDate(date)].gesperrteFixKosten = elemente;
+    this.dataService.userData.months[this.getIndexOfMonthByDate(date)].uebernommeneStandardFixkostenEintraege = month.uebernommeneStandardFixkostenEintraege;
     this.dataService.update();
   }
 

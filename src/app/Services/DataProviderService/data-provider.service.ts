@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   IBuchung,
   IDay,
   IFixkostenEintrag,
-  IMonth,
+  IMonth, IMonthFixkostenEintrag,
   ISparschweinEintrag,
   IWunschlistenEintrag
 } from "../../Models/NewInterfaces";
@@ -19,7 +19,8 @@ export class DataProviderService {
 
   private utils = new UT();
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService) {
+  }
 
   getAlleWunschlistenEintraege(): IWunschlistenEintrag[] {
     return this.dataService.userData.wunschlistenEintraege;
@@ -29,7 +30,7 @@ export class DataProviderService {
     const sparschweinEintraege = this.utils.clone(this.dataService.userData.sparschweinEintraege) as ISparschweinEintrag[];
     const months = this.dataService.userData.months;
     months.forEach(month => {
-      if(month.monatAbgeschlossen) {
+      if (month.monatAbgeschlossen) {
         sparschweinEintraege.push(
           {
             id: -1,
@@ -47,11 +48,36 @@ export class DataProviderService {
     return sparschweinEintraege;
   }
 
-  getFixkostenEintraegeForMonth(date: Date) {
+  getFixkostenEintraegeForMonth(date: Date, onlyIncluded?: boolean) {
     const month = this.getMonthByDate(date);
-    console.log(month)
 
-    return (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).concat(month && month.monatAbgeschlossen ? (month.uebernommeneStandardFixkostenEintraege ?? []) : this.dataService.userData.standardFixkostenEintraege ?? []);
+    const a: IMonthFixkostenEintrag[] = (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
+      return {
+        id: eintrag.id,
+        data: {
+          isStandardFixkostenEintrag: false,
+          ...eintrag.data
+        }
+      }
+    })
+
+    const b: IMonthFixkostenEintrag[] = (month && month.uebernommeneStandardFixkostenEintraege ? month.uebernommeneStandardFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
+      return {
+        id: eintrag.id,
+        data: {
+          isStandardFixkostenEintrag: true,
+          ...eintrag.data
+        }
+      }
+    })
+
+    let alleEintraege =  a.concat(b);
+
+    if(onlyIncluded) {
+      alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);
+    }
+
+    return alleEintraege;
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {
@@ -80,8 +106,8 @@ export class DataProviderService {
 
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        if(day.date.toLocaleDateString() === date.toLocaleDateString()) {
-          selectedDay =  day;
+        if (day.date.toLocaleDateString() === date.toLocaleDateString()) {
+          selectedDay = day;
         }
       })
     })
@@ -95,7 +121,7 @@ export class DataProviderService {
     months.forEach(month => {
       month.weeks?.forEach(week => {
         week.days.forEach(day => {
-          if(day.buchungen && day.buchungen.length > 0){
+          if (day.buchungen && day.buchungen.length > 0) {
             days.push(day);
           }
         })
@@ -113,8 +139,8 @@ export class DataProviderService {
     let notSpendMoney = 0;
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        if(!isDayReached){
-          if(day.date.getDate() === dayDate.getDate()){
+        if (!isDayReached) {
+          if (day.date.getDate() === dayDate.getDate()) {
             isDayReached = true;
           }
 
@@ -150,7 +176,7 @@ export class DataProviderService {
   }
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
-    if(this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0){
+    if (this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0) {
       return {
         availableForMonth: -0,
         availableForWeek: -0,
@@ -164,10 +190,10 @@ export class DataProviderService {
     let availableForWeek = 0;
     let isDayReached = false;
     this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
-      if(day.date.getDate() === dayDate.getDate()) {
+      if (day.date.getDate() === dayDate.getDate()) {
         isDayReached = true;
       }
-      if(isDayReached) {
+      if (isDayReached) {
         availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
       }
     })
@@ -183,7 +209,7 @@ export class DataProviderService {
     }
   }
 
-  getAvailableMoneyCapped(dayDate: Date): AvailableMoney{
+  getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
     const availableMoney = this.getAvailableMoney(dayDate);
 
     availableMoney.availableForDay = availableMoney.availableForDay > 0 ? availableMoney.availableForDay : 0;
@@ -195,8 +221,8 @@ export class DataProviderService {
 
   getFixkostenSummeForMonth(month: Month) {
     let summe = 0;
-    const eintraege = this.getFixkostenEintraegeForMonth(month.startDate);
-    if(!eintraege)
+    const eintraege = this.getFixkostenEintraegeForMonth(month.startDate, true);
+    if (!eintraege)
       return 0;
 
     eintraege.forEach(eintrag => {
@@ -213,7 +239,7 @@ export class DataProviderService {
     if (dayDate.getFullYear() > month.startDate.getFullYear()) {
       return false;
     }
-    if(dayDate.getFullYear() < month.startDate.getFullYear()) {
+    if (dayDate.getFullYear() < month.startDate.getFullYear()) {
       return true
     }
     return dayDate.getMonth() < month.startDate.getMonth();
@@ -242,14 +268,14 @@ export class DataProviderService {
       dayBudget: month.dailyBudget ?? 0,
       fixKostenSumme: this.getFixkostenSummeForMonth(month),
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate)
+      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true)
     }
   }
 
   private getDictForDayBudgetsInMonth(monthDate: Date) {
     const month = this.getMonthByDate(monthDate);
 
-    let dict: {[date: string]: number} = {};
+    let dict: { [date: string]: number } = {};
     let budget = month.budget!;
     let daysLeft = month.daysInMonth!;
 
@@ -296,7 +322,7 @@ export class DataProviderService {
   private getMonatJahrTextForMonth(month: Month) {
     let monthText: string = '';
 
-    switch(month.startDate.getMonth()) {
+    switch (month.startDate.getMonth()) {
       case 0:
         monthText = 'Januar';
         break;

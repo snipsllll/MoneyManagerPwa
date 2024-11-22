@@ -1,6 +1,7 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {Day, Month, SavedData, Week} from "../../Models/Interfaces";
+import {IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -128,8 +129,21 @@ export class DataService {
 
   private updateFixkostenForMonth(startDate: Date) {
     const month = this.getMonthByDate(startDate);
-    if (!month.monatAbgeschlossen) {
-      month.uebernommeneStandardFixkostenEintraege = this.userData.standardFixkostenEintraege;
+    if (!month.monatAbgeschlossen && this.userData.standardFixkostenEintraege) {
+      this.userData.standardFixkostenEintraege.forEach(eintrag => {
+        if(month.uebernommeneStandardFixkostenEintraege?.findIndex(eintragx => eintrag.id === eintragx.id) === -1) {
+          month.uebernommeneStandardFixkostenEintraege.push({
+            id: eintrag.id,
+            data: {
+              betrag: eintrag.data.betrag,
+              title: eintrag.data.title,
+              zusatz: eintrag.data.zusatz,
+              isStandardFixkostenEintrag: true,
+              isExcluded: false
+            }
+          });
+        }
+      })
     }
   }
 
@@ -292,22 +306,44 @@ export class DataService {
     return ausgabenSumme;
   }
 
+  private getFixkostenEintraegeForMonth(date: Date, onlyIncluded?: boolean) {
+    const month = this.getMonthByDate(date);
+
+    const a: IMonthFixkostenEintrag[] = (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
+      return {
+        id: eintrag.id,
+        data: {
+          isStandardFixkostenEintrag: false,
+          ...eintrag.data
+        }
+      }
+    })
+
+    const b: IMonthFixkostenEintrag[] = (month && month.uebernommeneStandardFixkostenEintraege ? month.uebernommeneStandardFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
+      return {
+        id: eintrag.id,
+        data: {
+          isStandardFixkostenEintrag: true,
+          ...eintrag.data
+        }
+      }
+    })
+
+    let alleEintraege =  a.concat(b);
+
+    if(onlyIncluded) {
+      alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);
+    }
+
+    return alleEintraege;
+  }
+
   private getFixkostenSummeForMonth(month: Month) {
     let summe = 0;
-    if (month.monatAbgeschlossen) {
-      if (month.gesperrteFixKosten) {
-        month.gesperrteFixKosten.forEach(eintrag => {
-          summe += eintrag.data.betrag;
-        })
-      }
-    } else {
-      if (this.userData.standardFixkostenEintraege === undefined) {
-        this.userData.standardFixkostenEintraege = [];
-      }
-      this.userData.standardFixkostenEintraege.forEach(eintrag => {
-        summe += eintrag.data.betrag;
-      })
-    }
+    const alleEintraege = this.getFixkostenEintraegeForMonth(month.startDate, true);
+    alleEintraege.forEach(eintrag => {
+      summe += eintrag.data.betrag;
+    })
     return summe;
   }
 

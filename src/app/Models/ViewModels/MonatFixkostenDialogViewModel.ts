@@ -1,11 +1,11 @@
-import {IFixkostenEintrag} from "../NewInterfaces";
+import {IFixkostenEintrag, IMonthFixkostenEintrag} from "../NewInterfaces";
 
 export interface MonatFixkostenDialogViewModel {
-  elemente: IFixkostenEintrag[];
+  elemente: IMonthFixkostenEintrag[];
   onSaveClicked: (monatFixkostenDialogdata: MonatFixkostenDialogData) => void;
   onAbortClicked: () => void;
 }
 
 export interface MonatFixkostenDialogData {
-  elemente: IFixkostenEintrag[];
+  elemente: IMonthFixkostenEintrag[];
 }

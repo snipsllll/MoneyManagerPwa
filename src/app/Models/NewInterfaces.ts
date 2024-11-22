@@ -22,9 +22,22 @@ export interface IBuchungData {
   beschreibung?: string
 }
 
+export interface IMonthFixkostenEintrag {
+  id: number;
+  data: IMonthFixkostenEintragData;
+}
+
 export interface IFixkostenEintrag {
   id: number;
   data: IFixkostenEintragData;
+}
+
+export interface IMonthFixkostenEintragData {
+  title: string;
+  betrag: number;
+  zusatz?: string;
+  isExcluded?: boolean;
+  isStandardFixkostenEintrag?: boolean;
 }
 
 export interface IFixkostenEintragData {
