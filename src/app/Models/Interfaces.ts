@@ -76,8 +76,8 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
-  uebernommeneStandardFixkostenEintraege?: IFixkostenEintrag[];
-  specialFixkostenEintraege?: IFixkostenEintrag[];
+  uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
+  specialFixkostenEintraege?: IMonthFixkostenEintrag[];
 }
 
 export interface MenuItem {

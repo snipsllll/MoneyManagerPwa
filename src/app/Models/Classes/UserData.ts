@@ -80,7 +80,16 @@ export class UserData {
       date: month.date,
       totalBudget: month.totalBudget,
       sparen: month.sparen,
-      uebernommeneStandardFixkostenEintraege: month.fixkosten ?? [],
+      uebernommeneStandardFixkostenEintraege: month.fixkosten.map((fixkosteneintrag: any) => ({
+        id: fixkosteneintrag.id,
+        data: {
+          betrag: fixkosteneintrag.betrag,
+          title: fixkosteneintrag.title,
+          zusatz: fixkosteneintrag.zusatz,
+          isExcluded: false,
+          isStandardFixkostenEintrag: true
+        }
+      })) ?? [],
       specialFixkostenEintraege: []
     }));
 
