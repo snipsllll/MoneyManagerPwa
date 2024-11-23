@@ -207,11 +207,13 @@ export class UserData {
   }
 
   private reload() {
-    let savedData: any = this._fileEngine.load();
+    let loadedData: any = this._fileEngine.load();
+
+    let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
     this.buchungen = savedData.buchungen;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.standardFixkosten;
+    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.settings = savedData.settings;
