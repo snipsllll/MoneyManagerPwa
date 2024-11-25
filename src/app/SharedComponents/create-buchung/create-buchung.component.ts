@@ -57,13 +57,13 @@ export class CreateBuchungComponent {
     this.isSearchboxVisible.set(false);
   }
 
-  onItemSelected(item: IBuchungData) {
+  onItemSelected(item: IBuchung) {
     this.isSearchboxVisible.set(false);
     this.isSaveButtonDisabled.set(false);
 
-    this.buchung.title = item.title;
-    this.buchung.betrag = item.betrag;
-    this.buchung.beschreibung = item.beschreibung;
+    this.buchung.title = item.data.title;
+    this.buchung.betrag = item.data.betrag;
+    this.buchung.beschreibung = item.data.beschreibung;
   }
 
   onSaveClicked() {
