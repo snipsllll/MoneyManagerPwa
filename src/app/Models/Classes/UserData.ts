@@ -31,7 +31,7 @@ export class UserData {
     const newId = this.buchungsKategorien.length
       ? Math.max(...this.buchungsKategorien.map(k => k.id)) + 1
       : 1; // Neue ID generieren
-    this.buchungsKategorien.push({ id: newId, name });
+    this.buchungsKategorien.push({id: newId, name});
     this.save();
   }
 
@@ -88,16 +88,110 @@ export class UserData {
       currentData = this.convertToVersion1(currentData);
     }
 
-    if(currentData.dbVersion < 2) {
+    if (currentData.dbVersion < 2) {
       currentData = this.convertFixkostenToStandardFixkosten(currentData);
     }
 
-    if(currentData.dbVersion < 3) {
+    if (currentData.dbVersion < 3) {
       currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
     }
 
     currentData.dbVersion = currentDbVersion;
-    return currentData as SavedData;
+    //return currentData as SavedData;
+
+    return this.getLongTestData();
+
+
+  }
+
+  getLongTestData() {
+    const testSavedData: SavedData = {
+      buchungen: [],
+      buchungsKategorien: [
+        {id: 1, name: "Lebensmittel"},
+        {id: 2, name: "Miete"},
+        {id: 3, name: "Freizeit"},
+      ],
+      savedMonths: [],
+      standardFixkostenEintraege: [
+        {
+          id: 1,
+          data: {title: "Miete", betrag: 1000},
+        },
+        {
+          id: 2,
+          data: {title: "Versicherungen", betrag: 200},
+        },
+      ],
+      sparEintraege: [
+        {
+          id: 1,
+          data: {
+            date: new Date(2024, 0, 1),
+            betrag: 50,
+            zusatz: "Spareinlage für Urlaub",
+          },
+        },
+      ],
+      wunschlistenEintraege: [
+        {
+          id: 1,
+          data: {
+            date: new Date(2024, 0, 5),
+            title: "Neue Kopfhörer",
+            betrag: 200,
+            gekauft: false,
+            erstelltAm: new Date(2024, 0, 1),
+          },
+        },
+      ],
+      settings: {
+        wunschlistenFilter: {
+          gekaufteEintraegeAusblenden: true,
+          selectedFilter: "alle",
+        },
+        toHighBuchungenEnabled: true,
+        topBarAnzeigeEinstellung: undefined,
+        tagesAnzeigeOption: undefined,
+      },
+      dbVersion: 1,
+    };
+
+// Dynamisch jeden Tag jedes Monats im Jahr 2024 mit mindestens einer Buchung initialisieren
+    const year = 2024;
+
+    for (let month = 0; month < 12; month++) {
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Monat in `savedMonths` hinzufügen
+      testSavedData.savedMonths.push({
+        date: new Date(year, month),
+        totalBudget: 3000,
+        sparen: 500,
+        uebernommeneStandardFixkostenEintraege: [],
+        specialFixkostenEintraege: [],
+      });
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const currentDate = new Date(year, month, day);
+        const dailyBuchung: IBuchung = {
+          id: testSavedData.buchungen.length + 1, // Fortlaufende ID
+          data: {
+            date: currentDate,
+            time: "12:00",
+            title: `Test-Buchung ${currentDate.toDateString()}`,
+            betrag: Math.floor(Math.random() * 100) + 1, // Zufälliger Betrag zwischen 1 und 100
+            beschreibung: `Beschreibung für ${currentDate.toDateString()}`,
+            buchungsKategorie: (day % 3) + 1, // Kategorie zyklisch (1, 2, 3)
+          },
+        };
+
+        // Buchung in das Buchungen-Array hinzufügen
+        testSavedData.buchungen.push(dailyBuchung);
+      }
+
+    }
+    return testSavedData;
   }
 
   private addEmptyKategorieZuAllenBuchungen(data: any) {
@@ -114,7 +208,7 @@ export class UserData {
       }
     }))
 
-    const { buchungen: _, ...rest } = data;
+    const {buchungen: _, ...rest} = data;
 
     return {
       buchungen: buchungen,
@@ -156,7 +250,7 @@ export class UserData {
       ...data.settings
     }
 
-    const { savedMonths: _, fixKosten: __, settings: ___,  ...rest } = data;
+    const {savedMonths: _, fixKosten: __, settings: ___, ...rest} = data;
 
     return {
       savedMonths,
@@ -244,7 +338,7 @@ export class UserData {
     }));
 
     // Die restlichen Eigenschaften extrahieren, ohne die umgewandelten Daten
-    const { buchungen: _, fixKosten: __, sparEintraege: ___, wunschlistenEintraege: ____ , ...rest } = datax;
+    const {buchungen: _, fixKosten: __, sparEintraege: ___, wunschlistenEintraege: ____, ...rest} = datax;
 
     // Die finale umgewandelte Struktur
     return {

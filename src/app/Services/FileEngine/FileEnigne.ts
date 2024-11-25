@@ -1,5 +1,6 @@
 import {environment} from "../../../environments/environment";
 import {SavedData} from "../../Models/Interfaces";
+import {IBuchung} from "../../Models/NewInterfaces";
 
 
 export class FileEngine {

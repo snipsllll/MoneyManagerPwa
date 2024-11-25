@@ -117,7 +117,7 @@ export class AuswertungenComponent implements OnInit{
         {
           label: 'Ausgaben pro Tag',
           data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)', // Grünlich
+          backgroundColor: 'rgba(67,182,255,0.6)'
         }
       ],
     };
@@ -148,7 +148,7 @@ export class AuswertungenComponent implements OnInit{
         {
           label: 'Total Budget pro Monat',
           data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)', // Grünlich
+          backgroundColor: 'rgba(67,182,255,0.6)'
         }
       ],
     };
@@ -179,7 +179,7 @@ export class AuswertungenComponent implements OnInit{
         {
           label: 'Übriges Geld pro Monat',
           data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)', // Grünlich
+          backgroundColor: 'rgba(67,182,255,0.6)'
         }
       ],
     };

@@ -181,7 +181,6 @@ export class DataProviderService {
 
   getAusgabenForDay(date: Date) {
     const day = this.getDayByeDate(date);
-    console.log(day)
     let ausgaben = 0;
 
     day?.buchungen?.forEach(buchung => {
