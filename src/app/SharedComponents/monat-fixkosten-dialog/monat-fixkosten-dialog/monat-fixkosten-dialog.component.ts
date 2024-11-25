@@ -198,7 +198,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     const newFixKostenEintrag: IFixkostenEintrag = {
       id: eintrag.id,
       data: {
-        betrag: eintrag.betrag,
+        betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         zusatz: eintrag.zusatz
       }

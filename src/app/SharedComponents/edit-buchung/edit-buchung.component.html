@@ -57,7 +57,7 @@
         <select class="betrag-input-wrapper create-eintrag__data" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()">
           <option
             *ngFor="let kategorie of kategorien"
-            class=""
+            class="multiselect-option"
             [value]="kategorie.id">
             {{ kategorie.name }}
           </option>

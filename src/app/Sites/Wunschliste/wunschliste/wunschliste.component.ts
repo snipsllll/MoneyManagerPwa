@@ -200,7 +200,7 @@ export class WunschlisteComponent implements OnInit{
     const newWunschlistenEintrag: IWunschlistenEintrag = {
       id: eintrag.id!,
       data: {
-        betrag: eintrag.betrag,
+        betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         zusatz: eintrag.zusatz,
         gekauft: false,
@@ -218,7 +218,7 @@ export class WunschlisteComponent implements OnInit{
     const newWunschlistenEintrag: IWunschlistenEintrag = {
       id: eintrag.id!,
       data: {
-        betrag: eintrag.betrag,
+        betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         zusatz: eintrag.zusatz,
         gekauft: true,
@@ -231,7 +231,7 @@ export class WunschlisteComponent implements OnInit{
       this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
       this.dataChangeService.addSparschweinEintrag({
         date: new Date(),
-        betrag: eintrag.betrag * -1,
+        betrag: (eintrag.betrag ?? 0) * -1,
         title: eintrag.title,
         zusatz: eintrag.zusatz,
         vonWunschliste: true,
@@ -244,7 +244,7 @@ export class WunschlisteComponent implements OnInit{
     const newWunschlistenEintrag: IWunschlistenEintrag = {
       id: eintrag.id!,
       data: {
-        betrag: eintrag.betrag,
+        betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         zusatz: eintrag.zusatz,
         gekauft: false,

@@ -224,4 +224,8 @@ export class EinstellungenComponent implements OnInit{
 
     return text;
   }
+
+  onKatVerwaltenClicked() {
+    this.dialogService.showBuchungsKategorienDialog();
+  }
 }

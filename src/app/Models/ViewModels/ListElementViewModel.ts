@@ -7,7 +7,7 @@ export interface ListElementViewModel{
 }
 
 export interface ListElementData {
-  betrag: number,
+  betrag?: number,
   title: string,
   zusatz?: string,
   details?: string,

@@ -178,6 +178,10 @@ export class DataChangeService {
     this.dataService.userData.editKategorie(id, name);
   }
 
+  deleteAllBuchungsKategorien() {
+    this.dataService.userData.buchungsKategorien = [];
+  }
+
 
   private getNextFreeBuchungId() {
     let freeId = 1;

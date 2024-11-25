@@ -7,7 +7,7 @@ export interface EditDialogViewModel {
 
 export interface EditDialogData {
   title?: string;
-  betrag: number;
+  betrag?: number;
   zusatz?: string;
   id: number;
   date?: Date;

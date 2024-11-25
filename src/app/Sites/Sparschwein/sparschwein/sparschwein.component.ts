@@ -169,7 +169,7 @@ export class SparschweinComponent implements OnInit{
         const editedSparschweinEintrag = {
           id: eintrag.id!,
           data: {
-            betrag: eintrag.betrag,
+            betrag: eintrag.betrag ?? 0,
             title: eintrag.title,
             zusatz: eintrag.zusatz,
             date: eintrag.date!

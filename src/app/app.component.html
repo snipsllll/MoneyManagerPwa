@@ -24,4 +24,10 @@
 
     </app-monat-fixkosten-dialog>
   }
+
+  @if (dialogService.isBuchungsKategorienDialogVisible) {
+    <app-buchungskategorien-dialog [viewModel]="dialogService.buchungsKategorienDialogViewModel!">
+
+    </app-buchungskategorien-dialog>
+  }
 </div>

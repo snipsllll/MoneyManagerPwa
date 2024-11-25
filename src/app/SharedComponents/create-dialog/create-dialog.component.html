@@ -3,7 +3,7 @@
     <div class="create-dialog__content">
       <input type="text" class="create-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="eintrag.title" (ngModelChange)="onValueChanged()" onfocus="this.select()">
       <hr class="hr-title">
-      <div class="create-dialog__betrag-wrapper">
+      <div class="create-dialog__betrag-wrapper" *ngIf="!viewModel.isBetragAusgeblendet">
         <div class="create-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
           der Betrag darf nicht 0 betragen!
         </div>
@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="create-dialog__beschreibung-wrapper">
+      <div class="create-dialog__beschreibung-wrapper" *ngIf="!viewModel.isBetragAusgeblendet">
         <div class="create-dialog__label create-dialog__beschreibung-label">
           Zusatz:
         </div>

@@ -27,6 +27,7 @@ import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/eins
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searchbox.component';
 import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component';
+import { BuchungskategorienDialogComponent } from './SharedComponents/buchungskategorien-dialog/buchungskategorien-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkoste
     SpinningFishComponent,
     EinstellungenComponent,
     SearchboxComponent,
-    MonatFixkostenDialogComponent
+    MonatFixkostenDialogComponent,
+    BuchungskategorienDialogComponent
   ],
     imports: [
         BrowserModule,

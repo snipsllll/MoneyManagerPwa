@@ -6,6 +6,9 @@ import {
   MonatFixkostenDialogComponent
 } from "../../SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component";
 import {MonatFixkostenDialogViewModel} from "../../Models/ViewModels/MonatFixkostenDialogViewModel";
+import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
+import {DataProviderService} from "../DataProviderService/data-provider.service";
+import {DataChangeService} from "../DataChangeService/data-change.service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +28,10 @@ export class DialogService {
   isMonatFixkostenDialogVisible = false;
   monatFixkostenDialogViewModel?: MonatFixkostenDialogViewModel;
 
-  constructor() {
+  isBuchungsKategorienDialogVisible = false;
+  buchungsKategorienDialogViewModel?: BuchungsKategorienDialogViewModel;
+
+  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
 
   showConfirmDialog(confirmDialogViewModel: ConfirmDialogViewModel) {
@@ -46,6 +52,23 @@ export class DialogService {
   showMonatFixkostenDialog(monatFixkostenDialogViewModel: MonatFixkostenDialogViewModel) {
     this.isMonatFixkostenDialogVisible = true;
     this.monatFixkostenDialogViewModel = monatFixkostenDialogViewModel;
+  }
+
+  showBuchungsKategorienDialog() {
+    this.isBuchungsKategorienDialogVisible = true;
+    this.buchungsKategorienDialogViewModel = {
+      elemente: this.dataProvider.getBuchungsKategorien(),
+      onAbortClicked: () => {
+        this.isBuchungsKategorienDialogVisible = false;
+      },
+      onSaveClicked: (elemente: {id: number, name: string}[]) => {
+        this.dataChangeService.deleteAllBuchungsKategorien();
+        elemente.forEach(element => {
+          this.dataChangeService.addBuchungsKategorie(element.name);
+        });
+        this.isBuchungsKategorienDialogVisible = false;
+      }
+    }
   }
 }
 
