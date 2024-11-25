@@ -1,5 +1,16 @@
 <div class="auswertungen">
   <app-top-bar></app-top-bar>
+  <div class="budget__month-select">
+    <div class="budget__month-left" (click)="onMonthPrevClicked()">
+      <
+    </div>
+    <div class="budget__month-center">
+      {{ selectedMonth() }} {{ ' ' + selectedYear() }}
+    </div>
+    <div class="budget__month-right" (click)="onMonthNextClicked()">
+      >
+    </div>
+  </div>
   <div>
     <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
   </div>

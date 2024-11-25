@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {BarChartViewModel} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
@@ -15,6 +15,40 @@ export class AuswertungenComponent implements OnInit{
   totalBudgetCVMForMonthsInYear!: BarChartViewModel;
   nichtAusgegebenesGeldCVMForMonthsInYear!: BarChartViewModel;
 
+  selectedMonth = computed(() =>{
+    switch(this.selectedMonthIndex()){
+      case 0:
+        return 'Januar';
+      case 1:
+        return 'Februar';
+      case 2:
+        return 'März';
+      case 3:
+        return 'April';
+      case 4:
+        return 'Mai';
+      case 5:
+        return 'Juni';
+      case 6:
+        return 'Juli';
+      case 7:
+        return 'August';
+      case 8:
+        return 'September';
+      case 9:
+        return 'Oktober';
+      case 10:
+        return 'November';
+      case 11:
+        return 'Dezember';
+    }
+    return '';
+  });
+
+  selectedMonthIndex = signal<number>(new Date().getMonth());
+
+  selectedYear = signal<number>(new Date().getFullYear());
+
   constructor(private dataProvider: DataProviderService, private topbarService: TopbarService) {
   }
 
@@ -27,11 +61,45 @@ export class AuswertungenComponent implements OnInit{
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
   }
 
+  update() {
+    this.ausgabenProTagCVM = this.getDailyAusgabenCVMForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+    this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
+    this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
+  }
+
+  onMonthPrevClicked() {
+    if(this.selectedMonthIndex() > 0
+    ) {
+      this.selectedMonthIndex.set(this.selectedMonthIndex() - 1)
+    } else {
+      this.selectedMonthIndex.set(11);
+      this.selectedYear.set(this.selectedYear() - 1);
+    }
+    this.update();
+  }
+
+  onMonthNextClicked() {
+    if(this.selectedMonthIndex() < 11
+    ) {
+      this.selectedMonthIndex.set(this.selectedMonthIndex() + 1)
+    } else {
+      this.selectedMonthIndex.set(0);
+      this.selectedYear.set(this.selectedYear() + 1);
+    }
+    this.update();
+  }
+
   getDailyAusgabenCVMForMonth(date?: Date) {
     date = date ?? new Date();
     const month = this.dataProvider.getMonthByDate(date);
 
     let data: number[] = [];
+    if(!month) {
+      return {
+        datasets: [],
+        labels: []
+      }
+    }
 
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
