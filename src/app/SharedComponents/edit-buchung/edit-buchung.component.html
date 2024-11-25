@@ -50,16 +50,19 @@
         </div>
         <input type="time" [(ngModel)]="buchung()!.data.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
       </div>
-      <!-- Keine APZ mehr -->
-
-      <!--
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung()!.apz" class="create-eintrag__data-apz" (ngModelChange)="onValueChange()">
-        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          Kategorie:
         </div>
+        <select class="betrag-input-wrapper create-eintrag__data" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()">
+          <option
+            *ngFor="let kategorie of kategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.name }}
+          </option>
+        </select>
       </div>
-      -->
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">
         <div class="create-eintrag__label create-eintrag__beschreibung-label">

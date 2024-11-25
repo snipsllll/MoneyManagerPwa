@@ -19,6 +19,7 @@ export class EditBuchungComponent implements OnInit {
   date?: string;
   showBetragWarning = false;
   betragWarnung?: string;
+  kategorien!: { id: number, name: string }[];
 
   buchung = signal<IBuchung | undefined>(undefined);
   dateUpdated = signal<number>(0);
@@ -60,11 +61,13 @@ export class EditBuchungComponent implements OnInit {
           beschreibung: this.oldBuchung!.data.beschreibung,
           betrag: this.oldBuchung!.data.betrag,
           title: this.oldBuchung!.data.title,
-          time: this.oldBuchung!.data.time
+          time: this.oldBuchung!.data.time,
+          buchungsKategorie: this.oldBuchung!.data.buchungsKategorie
         }
       });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
+    this.kategorien = this.dataProvider.getBuchungsKategorien();
     this.updateDate();
   }
 
@@ -142,6 +145,10 @@ export class EditBuchungComponent implements OnInit {
     this.updateSaveButton();
   }
 
+  onBuchungsKategorieChanged() {
+    this.updateSaveButton();
+  }
+
   onApzClicked() {
     //this.buchung()!.apz = !this.buchung()?.apz;
     //this.updateSaveButton();
@@ -152,7 +159,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private hasBuchungChanged() {
-    return !(this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
+    return !(this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
   }
 
   private isSaveAble() {
