@@ -97,9 +97,9 @@ export class UserData {
     }
 
     currentData.dbVersion = currentDbVersion;
-    //return currentData as SavedData;
+    return currentData as SavedData;
 
-    return this.getLongTestData();
+    //return this.getLongTestData();
 
 
   }
@@ -160,36 +160,37 @@ export class UserData {
 // Dynamisch jeden Tag jedes Monats im Jahr 2024 mit mindestens einer Buchung initialisieren
     const year = 2024;
 
-    for (let month = 0; month < 12; month++) {
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+    for(let year = 2024; year < 2040; year++) {
+      for (let month = 0; month < 12; month++) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      // Monat in `savedMonths` hinzufügen
-      testSavedData.savedMonths.push({
-        date: new Date(year, month),
-        totalBudget: 3000,
-        sparen: 500,
-        uebernommeneStandardFixkostenEintraege: [],
-        specialFixkostenEintraege: [],
-      });
+        // Monat in `savedMonths` hinzufügen
+        testSavedData.savedMonths.push({
+          date: new Date(year, month),
+          totalBudget: 3000,
+          sparen: 500,
+          uebernommeneStandardFixkostenEintraege: [],
+          specialFixkostenEintraege: [],
+        });
 
-      for (let day = 1; day <= daysInMonth; day++) {
-        const currentDate = new Date(year, month, day);
-        const dailyBuchung: IBuchung = {
-          id: testSavedData.buchungen.length + 1, // Fortlaufende ID
-          data: {
-            date: currentDate,
-            time: "12:00",
-            title: `Test-Buchung ${currentDate.toDateString()}`,
-            betrag: Math.floor(Math.random() * 100) + 1, // Zufälliger Betrag zwischen 1 und 100
-            beschreibung: `Beschreibung für ${currentDate.toDateString()}`,
-            buchungsKategorie: (day % 3) + 1, // Kategorie zyklisch (1, 2, 3)
-          },
-        };
+        for (let day = 1; day <= daysInMonth; day++) {
+          const currentDate = new Date(year, month, day);
+          const dailyBuchung: IBuchung = {
+            id: testSavedData.buchungen.length + 1, // Fortlaufende ID
+            data: {
+              date: currentDate,
+              time: "12:00",
+              title: `Test-Buchung ${currentDate.toDateString()}`,
+              betrag: Math.floor(Math.random() * 100) + 1, // Zufälliger Betrag zwischen 1 und 100
+              beschreibung: `Beschreibung für ${currentDate.toDateString()}`,
+              buchungsKategorie: (day % 3) + 1, // Kategorie zyklisch (1, 2, 3)
+            },
+          };
 
-        // Buchung in das Buchungen-Array hinzufügen
-        testSavedData.buchungen.push(dailyBuchung);
+          // Buchung in das Buchungen-Array hinzufügen
+          testSavedData.buchungen.push(dailyBuchung);
+        }
       }
-
     }
     return testSavedData;
   }

@@ -32,3 +32,12 @@
 .budget__month-right {
   border-left: 1px solid black;
 }
+
+.keine-eintraege {
+  height: calc(100vh - 120px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
+}

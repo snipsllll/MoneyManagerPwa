@@ -70,6 +70,10 @@ export class AuswertungenComponent implements OnInit{
     this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
   }
 
+  doesMonthExist() {
+    return this.dataProvider.checkIfMonthExistsForDay(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
+  }
+
   onMonthPrevClicked() {
     if(this.selectedMonthIndex() > 0
     ) {
@@ -192,8 +196,13 @@ export class AuswertungenComponent implements OnInit{
 
   getAusgabenForMonatProtagKategorisiertCVM(date?: Date) {
     const kategorien = this.dataProvider.getBuchungsKategorien();
-    const kategorienNamen = this.dataProvider.getBuchungsKategorienNamen();
     const month = this.dataProvider.getMonthByDate(date ?? new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+    if(!month) {
+      return [{
+        datasets: [],
+        labels: []
+      }]
+    }
     const alleBuchungenInMonth = this.dataProvider.getAlleBuchungenForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
     const viewModelList: BarChartViewModel[] = [];
 

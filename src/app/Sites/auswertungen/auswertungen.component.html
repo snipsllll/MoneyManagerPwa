@@ -11,12 +11,14 @@
       >
     </div>
   </div>
-  <div class="charts">
+  <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
     <div>
       <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
     </div>
     <div *ngFor="let CVM of ausgabenForMonatProTagKategorisiertCVM">
-      <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
+      @if(CVM.labels.length > 0) {
+        <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
+      }
     </div>
     <div>
       <app-bar-chart [chartId]="'chart2'" [viewModel]="totalBudgetCVMForMonthsInYear"></app-bar-chart>
@@ -26,3 +28,9 @@
     </div>
   </div>
 </div>
+
+<ng-template #keineDaten>
+  <div class="keine-eintraege">
+    keine Daten vorhanden
+  </div>
+</ng-template>

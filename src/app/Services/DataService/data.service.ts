@@ -1,7 +1,7 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {Day, Month, SavedData, Week} from "../../Models/Interfaces";
-import {IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
+import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -116,13 +116,28 @@ export class DataService {
   private updateBuchungenForMonth(date: Date) { //TODO testen
     const month = this.getMonthByDate(date);
 
-    /*Algorithm start*/
-    month.weeks!.forEach(week => {
+    // Zuerst die Buchungen in eine Map umwandeln, wobei das Datum der Schlüssel ist
+    const buchungenMap = new Map<string, IBuchung[]>();
+
+    // Daten einmal durchgehen und in der Map organisieren
+    this.userData.buchungen.forEach(buchung => {
+      const buchungDateStr = buchung.data.date?.toLocaleDateString();
+      if (buchungDateStr) {
+        if (!buchungenMap.has(buchungDateStr)) {
+          buchungenMap.set(buchungDateStr, []);
+        }
+        buchungenMap.get(buchungDateStr)!.push(buchung);
+      }
+    });
+
+    // Jetzt durch die Wochen und Tage des Monats gehen und Buchungen zuweisen
+    month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        day.buchungen = this.userData.buchungen.filter(buchung => buchung.data.date?.toLocaleDateString() === day.date.toLocaleDateString());
-      })
-    })
-    /*Algorithm end*/
+        const dayDateStr = day.date.toLocaleDateString();
+        // Buchungen direkt aus der Map holen
+        day.buchungen = buchungenMap.get(dayDateStr) || [];
+      });
+    });
 
     this.setMonth(month);
   }
