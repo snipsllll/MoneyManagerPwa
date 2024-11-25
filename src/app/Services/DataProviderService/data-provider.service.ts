@@ -280,6 +280,12 @@ export class DataProviderService {
     return this.dataService.userData.buchungsKategorien;
   }
 
+  getBuchungsKategorieNameById(id: number) {
+    const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
+    return kategorie ? kategorie.name : 'Kategorie nicht gefunden';
+
+  }
+
   private getDictForDayBudgetsInMonth(monthDate: Date) {
     const month = this.getMonthByDate(monthDate);
 

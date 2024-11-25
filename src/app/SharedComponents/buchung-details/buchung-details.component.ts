@@ -17,7 +17,7 @@ export class BuchungDetailsComponent implements OnInit{
   buchung? = signal<IBuchung | undefined>(undefined);
   titelVorhanden = false;
 
-  constructor(private dataChangeService: DataChangeService, private navigationService: NavigationService, private dialogService: DialogService, private router: Router, private route: ActivatedRoute, private dataProvider: DataProviderService) {
+  constructor(private dataChangeService: DataChangeService, private navigationService: NavigationService, private dialogService: DialogService, private router: Router, private route: ActivatedRoute, public dataProvider: DataProviderService) {
 
   }
 
