@@ -28,6 +28,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searchbox.component';
 import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component';
 import { BuchungskategorienDialogComponent } from './SharedComponents/buchungskategorien-dialog/buchungskategorien-dialog.component';
+import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { BuchungskategorienDialogComponent } from './SharedComponents/buchungska
     EinstellungenComponent,
     SearchboxComponent,
     MonatFixkostenDialogComponent,
-    BuchungskategorienDialogComponent
+    BuchungskategorienDialogComponent,
+    BarChartComponent
   ],
     imports: [
         BrowserModule,

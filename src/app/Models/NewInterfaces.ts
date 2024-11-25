@@ -76,3 +76,9 @@ export interface ISparschweinEintragData {
   wunschlistenId?: number;
   vonMonat?: boolean;
 }
+
+export interface BarChartViewModel {
+  labels: string[]; // Labels für die x-Achse
+  data: number[];   // Werte für die Balken
+  backgroundColors?: string[]; // Optionale Farben für die Balken
+}

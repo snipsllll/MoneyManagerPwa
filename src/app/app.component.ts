@@ -5,6 +5,7 @@ import {environment} from "../environments/environment";
 import {SwUpdate} from "@angular/service-worker";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DataService} from "./Services/DataService/data.service";
+import {BarChartViewModel} from "./Models/NewInterfaces";
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,12 @@ export class AppComponent implements OnInit{
   constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService, private dataService: DataService) {
 
   }
+
+  chartViewModel: BarChartViewModel = {
+    labels: ['Januar', 'Februar', 'März', 'April'],
+    data: [10, 20, 30, 40],
+    backgroundColors: ['red', 'blue', 'green', 'orange']
+  };
 
   ngOnInit() {
     if(this.inProduction)
