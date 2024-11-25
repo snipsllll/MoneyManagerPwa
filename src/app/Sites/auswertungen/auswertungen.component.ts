@@ -14,6 +14,7 @@ export class AuswertungenComponent implements OnInit{
   ausgabenProTagCVM!: BarChartViewModel;
   totalBudgetCVMForMonthsInYear!: BarChartViewModel;
   nichtAusgegebenesGeldCVMForMonthsInYear!: BarChartViewModel;
+  ausgabenForMonatProTagKategorisiertCVM!: BarChartViewModel[];
 
   selectedMonth = computed(() =>{
     switch(this.selectedMonthIndex()){
@@ -59,12 +60,14 @@ export class AuswertungenComponent implements OnInit{
     this.ausgabenProTagCVM = this.getDailyAusgabenCVMForMonth();
     this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear();
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
+    this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM();
   }
 
   update() {
     this.ausgabenProTagCVM = this.getDailyAusgabenCVMForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
     this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
+    this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
   }
 
   onMonthPrevClicked() {
@@ -112,7 +115,7 @@ export class AuswertungenComponent implements OnInit{
     })
 
     let chartViewModel: BarChartViewModel = {
-      labels: Array.from({ length: 30 }, (_, i) => `Tag ${i + 1}`), // Labels von "Tag 1" bis "Tag 30"
+      labels: Array.from({ length: month.daysInMonth! }, (_, i) => `Tag ${i + 1}`), // Labels von "Tag 1" bis "Tag 30"
       datasets: [
         {
           label: 'Ausgaben pro Tag',
@@ -185,5 +188,43 @@ export class AuswertungenComponent implements OnInit{
     };
 
     return chartViewModel;
+  }
+
+  getAusgabenForMonatProtagKategorisiertCVM(date?: Date) {
+    const kategorien = this.dataProvider.getBuchungsKategorien();
+    const kategorienNamen = this.dataProvider.getBuchungsKategorienNamen();
+    const month = this.dataProvider.getMonthByDate(date ?? new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+    const alleBuchungenInMonth = this.dataProvider.getAlleBuchungenForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+    const viewModelList: BarChartViewModel[] = [];
+
+    kategorien.forEach(kategorie => {
+      const filteredBuchungen = alleBuchungenInMonth.filter(buchung => buchung.data.buchungsKategorie === kategorie.id);
+      const data: number[] = []
+      const labels = Array.from({ length: month.daysInMonth! }, (_, i) => `Tag ${i + 1}`);
+
+
+      for(let i = 0; i < month.daysInMonth!; i++) {
+        data.push(0);
+      }
+
+      filteredBuchungen.forEach(buchung => {
+        data[buchung.data.date.getDate()] += buchung.data.betrag!;
+      })
+
+      const barChartViewModel: BarChartViewModel = {
+        labels: labels,
+        datasets: [
+          {
+            label: `Ausgaben für ${kategorie.name}:`,
+            data: data,
+            backgroundColor: 'rgba(67,182,255,0.6)'
+          }
+        ]
+      }
+
+      viewModelList.push(barChartViewModel);
+    })
+
+    return viewModelList
   }
 }

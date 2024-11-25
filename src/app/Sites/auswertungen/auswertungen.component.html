@@ -11,13 +11,18 @@
       >
     </div>
   </div>
-  <div>
-    <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
-  </div>
-  <div>
-    <app-bar-chart [chartId]="'chart2'" [viewModel]="totalBudgetCVMForMonthsInYear"></app-bar-chart>
-  </div>
-  <div>
-    <app-bar-chart [chartId]="'chart3'" [viewModel]="nichtAusgegebenesGeldCVMForMonthsInYear"></app-bar-chart>
+  <div class="charts">
+    <div>
+      <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
+    </div>
+    <div *ngFor="let CVM of ausgabenForMonatProTagKategorisiertCVM">
+      <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
+    </div>
+    <div>
+      <app-bar-chart [chartId]="'chart2'" [viewModel]="totalBudgetCVMForMonthsInYear"></app-bar-chart>
+    </div>
+    <div>
+      <app-bar-chart [chartId]="'chart3'" [viewModel]="nichtAusgegebenesGeldCVMForMonthsInYear"></app-bar-chart>
+    </div>
   </div>
 </div>
