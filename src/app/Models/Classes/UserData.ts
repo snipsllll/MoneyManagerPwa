@@ -7,6 +7,7 @@ import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 export class UserData {
 
   public buchungen: IBuchung[] = [];
+  public buchungsKategorien: { id: number; name: string }[] = [];
   public months: Month[] = [];
   public standardFixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
@@ -26,16 +27,45 @@ export class UserData {
     this.loadDataFromStorage();
   }
 
+  addKategorie(name: string): void {
+    const newId = this.buchungsKategorien.length
+      ? Math.max(...this.buchungsKategorien.map(k => k.id)) + 1
+      : 1; // Neue ID generieren
+    this.buchungsKategorien.push({ id: newId, name });
+    this.save();
+  }
+
+  // Entfernt eine Kategorie anhand ihrer ID
+  removeKategorie(id: number): void {
+    this.buchungsKategorien = this.buchungsKategorien.filter(k => k.id !== id);
+    this.save();
+  }
+
+  // Bearbeitet eine bestehende Kategorie
+  editKategorie(id: number, newName: string): void {
+    const kategorie = this.buchungsKategorien.find(k => k.id === id);
+    if (kategorie) {
+      kategorie.name = newName;
+    }
+    this.save();
+  }
+
+  // Gibt alle Kategorienamen als Array von Strings zurück
+  getKategorienNamen(): string[] {
+    return this.buchungsKategorien.map(k => k.name);
+  }
+
   loadDataFromStorage() {
     let loadedData: any = this._fileEngine.load();
-    let savedData = this.checkForDbUpdates(loadedData);
+    let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
-    this.buchungen = savedData.buchungen;
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
-    this.sparschweinEintraege = savedData.sparEintraege;
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
-    this.settings = savedData.settings;
+    this.buchungen = savedData.buchungen ?? [];
+    this.buchungsKategorien = savedData.buchungsKategorien ?? [];
+    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
+    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
+    this.sparschweinEintraege = savedData.sparEintraege ?? [];
+    this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.settings = savedData.settings ?? this.getDefaultSettings();
   }
 
   save(savedData?: SavedData) {
@@ -62,8 +92,34 @@ export class UserData {
       currentData = this.convertFixkostenToStandardFixkosten(currentData);
     }
 
+    if(currentData.dbVersion < 3) {
+      currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
+    }
+
     currentData.dbVersion = currentDbVersion;
     return currentData as SavedData;
+  }
+
+  private addEmptyKategorieZuAllenBuchungen(data: any) {
+    let buchungen = data.buchungen.map((buchung: any) => ({
+      id: buchung.id,
+      data: {
+        date: buchung.date,
+        beschreibung: buchung.beschreibung,
+        betrag: buchung.betrag,
+        title: buchung.title,
+        time: buchung.time,
+        buchungsKategorie: undefined
+      }
+    }))
+
+    const { buchungen: _, ...rest } = data;
+
+    return {
+      buchungen: buchungen,
+      dbVersion: 3,
+      ...rest
+    };
   }
 
   private convertFixkostenToStandardFixkosten(data: any) {
@@ -222,6 +278,7 @@ export class UserData {
   deleteAllData() {
     this._fileEngine.save({
       buchungen: [],
+      buchungsKategorien: [],
       settings: {
         toHighBuchungenEnabled: true,
         wunschlistenFilter: {
@@ -243,6 +300,7 @@ export class UserData {
   getSavedData(): SavedData {
     const savedData: SavedData = {
       buchungen: [],
+      buchungsKategorien: [],
       savedMonths: [],
       standardFixkostenEintraege: [],
       sparEintraege: [],
@@ -255,6 +313,7 @@ export class UserData {
     }
 
     savedData.buchungen = this.buchungen;
+    savedData.buchungsKategorien = this.buchungsKategorien;
     savedData.standardFixkostenEintraege = this.standardFixkostenEintraege;
     savedData.sparEintraege = this.sparschweinEintraege;
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
@@ -271,6 +330,18 @@ export class UserData {
     })
 
     return savedData;
+  }
+
+  private getDefaultSettings(): Settings {
+    return {
+      toHighBuchungenEnabled: true,
+      wunschlistenFilter: {
+        selectedFilter: '',
+        gekaufteEintraegeAusblenden: false
+      },
+      tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+      topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+    };
   }
 
   private convertSavedMonthsToMonths(savedMonths: SavedMonth[]): Month[] {

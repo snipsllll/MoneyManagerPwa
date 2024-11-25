@@ -20,6 +20,7 @@ export interface IBuchungData {
   title: string
   betrag: number | null
   beschreibung?: string
+  buchungsKategorie?: number;
 }
 
 export interface IMonthFixkostenEintrag {

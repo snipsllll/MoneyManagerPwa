@@ -166,6 +166,10 @@ export class DataChangeService {
     this.dataService.update();
   }
 
+  addKategorie(name: string) {
+    this.dataService.userData.addKategorie(name);
+  }
+
 
   private getNextFreeBuchungId() {
     let freeId = 1;

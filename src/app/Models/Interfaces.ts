@@ -52,6 +52,7 @@ export interface BudgetInfosForMonth {
 
 export interface SavedData {
   buchungen: IBuchung[];
+  buchungsKategorien: { id: number; name: string }[];
   savedMonths: SavedMonth[];
   standardFixkostenEintraege: IFixkostenEintrag[];
   sparEintraege: ISparschweinEintrag[];
