@@ -19,7 +19,8 @@ export enum SideNavElements {
   fixkosten,
   sparschwein,
   wunschliste,
-  einstellungen
+  einstellungen,
+  auswertungen
 }
 
 export enum Sites {

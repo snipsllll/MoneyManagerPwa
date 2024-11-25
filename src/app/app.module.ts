@@ -29,6 +29,7 @@ import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searc
 import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component';
 import { BuchungskategorienDialogComponent } from './SharedComponents/buchungskategorien-dialog/buchungskategorien-dialog.component';
 import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.component';
+import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.compon
     SearchboxComponent,
     MonatFixkostenDialogComponent,
     BuchungskategorienDialogComponent,
-    BarChartComponent
+    BarChartComponent,
+    AuswertungenComponent
   ],
     imports: [
         BrowserModule,

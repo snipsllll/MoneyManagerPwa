@@ -19,6 +19,10 @@
     <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.wunschliste" (click)="onWunschlisteClicked()">
       Wunschliste
     </div>
+    <hr class="side-nav__hr">
+    <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.auswertungen" (click)="onAuswertungenClicked()">
+      Auswertungen
+    </div>
   </div>
   <div class="side-nav__bottom">
     <div class="side-nav__element" [class.selected]="sideNavService.selectedElement === SideNavElements.einstellungen" (click)="onEinstellungenClicked()">
