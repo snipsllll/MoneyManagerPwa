@@ -166,8 +166,16 @@ export class DataChangeService {
     this.dataService.update();
   }
 
-  addKategorie(name: string) {
+  addBuchungsKategorie(name: string) {
     this.dataService.userData.addKategorie(name);
+  }
+
+  deleteBuchungsKategorie(id: number) {
+    this.dataService.userData.removeKategorie(id);
+  }
+
+  editBuchungsKategorie(id: number, name: string) {
+    this.dataService.userData.editKategorie(id, name);
   }
 
 

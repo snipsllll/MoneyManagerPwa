@@ -271,6 +271,9 @@ export class DataProviderService {
       fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true)
     }
   }
+  getBuchungsKategorienNamen() {
+    return this.dataService.userData.getKategorienNamen();
+  }
 
   private getDictForDayBudgetsInMonth(monthDate: Date) {
     const month = this.getMonthByDate(monthDate);
