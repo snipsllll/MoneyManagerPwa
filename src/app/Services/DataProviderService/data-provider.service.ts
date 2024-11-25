@@ -130,6 +130,22 @@ export class DataProviderService {
     return days;
   }
 
+  getAlleBuchungenForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    const alleBuchungen: IBuchung[] = [];
+
+    month.weeks?.forEach(week => {
+      week.days?.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          alleBuchungen.push(buchung);
+        })
+      })
+    });
+
+    return alleBuchungen;
+  }
+
   getAvailableMoneyForDay(dayDate: Date): number {
     const month = this.getMonthByDate(dayDate);
     const x = this.getDictForDayBudgetsInMonth(dayDate);
@@ -283,7 +299,11 @@ export class DataProviderService {
   getBuchungsKategorieNameById(id: number) {
     const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
     return kategorie ? kategorie.name : 'Kategorie nicht gefunden';
+  }
 
+  getAllMonthsForYear(year: number) {
+    const months = this.dataService.userData.months;
+    return months.filter(month => month.startDate.getFullYear() === year);
   }
 
   private getDictForDayBudgetsInMonth(monthDate: Date) {

@@ -29,12 +29,6 @@ export class AppComponent implements OnInit{
 
   }
 
-  chartViewModel: BarChartViewModel = {
-    labels: ['Januar', 'Februar', 'März', 'April'],
-    data: [10, 20, 30, 40],
-    backgroundColors: ['red', 'blue', 'green', 'orange']
-  };
-
   ngOnInit() {
     if(this.inProduction)
     this.router.navigate(['/'])

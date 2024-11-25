@@ -78,7 +78,10 @@ export interface ISparschweinEintragData {
 }
 
 export interface BarChartViewModel {
-  labels: string[]; // Labels für die x-Achse
-  data: number[];   // Werte für die Balken
-  backgroundColors?: string[]; // Optionale Farben für die Balken
+  labels: string[]; // Labels für die x-Achse (z. B. Monate)
+  datasets: {        // Datensätze mit Werten und Farben
+    label: string;   // Name des Datensatzes (z. B. "Umsatz" oder "Gewinn")
+    data: number[];  // Werte für jeden Balken in der Kategorie
+    backgroundColor: string; // Farbe für die Balken dieses Datensatzes
+  }[];
 }

@@ -1,3 +1,12 @@
 <div class="auswertungen">
   <app-top-bar></app-top-bar>
+  <div>
+    <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
+  </div>
+  <div>
+    <app-bar-chart [chartId]="'chart2'" [viewModel]="totalBudgetCVMForMonthsInYear"></app-bar-chart>
+  </div>
+  <div>
+    <app-bar-chart [chartId]="'chart3'" [viewModel]="nichtAusgegebenesGeldCVMForMonthsInYear"></app-bar-chart>
+  </div>
 </div>
