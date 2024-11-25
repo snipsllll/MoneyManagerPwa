@@ -105,11 +105,11 @@ export class UserData {
     let buchungen = data.buchungen.map((buchung: any) => ({
       id: buchung.id,
       data: {
-        date: buchung.date,
-        beschreibung: buchung.beschreibung,
-        betrag: buchung.betrag,
-        title: buchung.title,
-        time: buchung.time,
+        date: buchung.data.date,
+        beschreibung: buchung.data.beschreibung,
+        betrag: buchung.data.betrag,
+        title: buchung.data.title,
+        time: buchung.data.time,
         buchungsKategorie: undefined
       }
     }))
