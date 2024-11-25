@@ -21,6 +21,7 @@ export class CreateBuchungComponent {
   selectedDate?: string;
   showBetragWarning = false;
   betragWarnung = '';
+  kategorien!: { id: number, name: string }[];
 
   isSearchboxVisible = signal<boolean>(false);
   isSaveButtonDisabled = signal<boolean>(true);
@@ -47,6 +48,11 @@ export class CreateBuchungComponent {
     this.oldBuchung = this.getNewEmptyBuchung(date);
 
     this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
+    this.kategorien = this.dataProvider.getBuchungsKategorien();
+  }
+
+  onKategorieChanged(): void {
+
   }
 
   onSearchClicked() {
@@ -64,6 +70,7 @@ export class CreateBuchungComponent {
     this.buchung.title = item.data.title;
     this.buchung.betrag = item.data.betrag;
     this.buchung.beschreibung = item.data.beschreibung;
+    this.buchung.buchungsKategorie = item.data.buchungsKategorie;
   }
 
   onSaveClicked() {
@@ -177,7 +184,7 @@ export class CreateBuchungComponent {
   }
 
   private isBuchungEmpty() {
-    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time)
+    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === undefined)
   }
 
   private isSaveAble() {

@@ -4,7 +4,7 @@
     <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
         monat: <b class="red"
-                  [class.green]="availableMoneyCapped().availableForMonth > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2)}}
+                  [class.green]="availableMoneyCapped().availableForMonth > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2) }}
         €</b>
       </div>
       <div class="ce__budget-eintrag">
@@ -72,16 +72,19 @@
         </div>
         <input type="time" [(ngModel)]="buchung.time" (change)="onTimeChange($event)" class="create-eintrag__data">
       </div>
-      <!-- Keine APZ mehr -->
-
-      <!--
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz" *ngIf="!isSearchboxVisible()">
-        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          Kategorie:
         </div>
+        <select class="betrag-input-wrapper create-eintrag__data" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()">
+          <option
+            *ngFor="let kategorie of kategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.name }}
+          </option>
+        </select>
       </div>
-      -->
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
