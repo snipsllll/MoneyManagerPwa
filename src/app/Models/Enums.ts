@@ -70,7 +70,8 @@ export enum BarChartValueOptions {
   'Restgeld',
   'Ausgaben',
   'Sparen',
-  'TotalBudget'
+  'TotalBudget',
+  'DifferenzZuDaySollBudget'
 }
 
 export enum BarChartFilterOptions {

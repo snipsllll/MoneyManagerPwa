@@ -248,6 +248,13 @@ export class DataProviderService {
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
             valueOption: BarChartValueOptions.Restgeld
+          },
+          {
+            title: 'Differenz zum Soll',
+            eintragBeschreibung: 'Ausgaben (in Euro)',
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
+            filter: [],
+            valueOption: BarChartValueOptions.DifferenzZuDaySollBudget
           }
         ]
       }

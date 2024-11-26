@@ -124,6 +124,10 @@ export class AuswertungenComponent implements OnInit {
                 break;
               case BarChartValueOptions.TotalBudget:
                 data.push(month.totalBudget ?? 0);
+                break;
+              case BarChartValueOptions.DifferenzZuDaySollBudget:
+                throw new Error('alleMonateImJahr darf nicht mit differenzZuDaySollBudget verwendet werden!');
+                break;
             }
           } else {
             data.push(0);
@@ -163,7 +167,6 @@ export class AuswertungenComponent implements OnInit {
               for (let i = 0; i < month.daysInMonth!; i++) {
                 ausgabeGesammt += alleAusgabenDays[i];
                 const today = new Date();
-                console.log(today.getDate())
                 if(today.getDate() - 1 < i) {
                   data[i] = 0;
                 } else {
@@ -176,6 +179,31 @@ export class AuswertungenComponent implements OnInit {
               break;
             case BarChartValueOptions.TotalBudget:
               data.push(month.totalBudget ?? 0);
+              break;
+            case BarChartValueOptions.DifferenzZuDaySollBudget:
+              const filteredBuchungenDif = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+              let alleAusgabenDaysDif: number[] = [];
+
+              for (let i = 0; i < month.daysInMonth!; i++) {
+                alleAusgabenDaysDif.push(0);
+                data.push(0);
+              }
+
+              console.log(alleAusgabenDaysDif)
+
+              filteredBuchungenDif.forEach(buchung => {
+                alleAusgabenDaysDif[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+              })
+
+              for (let i = 0; i < month.daysInMonth!; i++) {
+                const today = new Date();
+                if(today.getDate() - 1 < i) {
+                  data[i] = 0;
+                } else {
+                  data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
+                }
+              }
+              break;
           }
         } else {
           data.push(0);
