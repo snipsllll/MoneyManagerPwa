@@ -155,6 +155,7 @@ export class AuswertungenComponent implements OnInit {
     }
 
     return {
+      diagramLabel: diagrammData.title,
       labels: labels,
       datasets: [{
         label: diagrammData.title,
@@ -190,13 +191,14 @@ export class AuswertungenComponent implements OnInit {
     this.update();
   }
 
-  getDailyAusgabenCVMForMonth(date ?: Date) {
+  getDailyAusgabenCVMForMonth(date ?: Date): BarChartViewModel {
     date = date ?? new Date();
     const month = this.dataProvider.getMonthByDate(date);
 
     let data: number[] = [];
     if (!month) {
       return {
+        diagramLabel: '',
         datasets: [],
         labels: []
       }
@@ -213,6 +215,7 @@ export class AuswertungenComponent implements OnInit {
     })
 
     let chartViewModel: BarChartViewModel = {
+      diagramLabel: `Ausgaben für ${this.selectedMonth()}, ${this.selectedYear}`,
       labels: Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`), // Labels von "Tag 1" bis "Tag 30"
       datasets: [
         {
@@ -240,6 +243,7 @@ export class AuswertungenComponent implements OnInit {
     }
 
     let chartViewModel: BarChartViewModel = {
+      diagramLabel: `TotalBudgets für ${this.selectedYear}`,
       labels: [
         'Januar', 'Februar', 'März', 'April',
         'Mai', 'Juni', 'Juli', 'August',
@@ -271,6 +275,7 @@ export class AuswertungenComponent implements OnInit {
     }
 
     let chartViewModel: BarChartViewModel = {
+      diagramLabel: `Gespartes Geld für ${this.selectedYear}`,
       labels: [
         'Januar', 'Februar', 'März', 'April',
         'Mai', 'Juni', 'Juli', 'August',
@@ -288,11 +293,12 @@ export class AuswertungenComponent implements OnInit {
     return chartViewModel;
   }
 
-  getAusgabenForMonatProtagKategorisiertCVM(date ?: Date) {
+  getAusgabenForMonatProtagKategorisiertCVM(date ?: Date): BarChartViewModel[] {
     const kategorien = this.dataProvider.getBuchungsKategorien();
     const month = this.dataProvider.getMonthByDate(date ?? new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
     if (!month) {
       return [{
+        diagramLabel: '',
         datasets: [],
         labels: []
       }]
@@ -315,6 +321,7 @@ export class AuswertungenComponent implements OnInit {
       })
 
       const barChartViewModel: BarChartViewModel = {
+        diagramLabel: `Ausgaben für ${this.selectedMonth()}, ${this.selectedYear} (${kategorie.name}`,
         labels: labels,
         datasets: [
           {

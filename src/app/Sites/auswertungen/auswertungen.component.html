@@ -21,14 +21,23 @@
     </select>
   </div>
   <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
-    <div>
-      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart1" *ngIf="chart1"></app-bar-chart>
+    <div class="diagram-wrapper" *ngIf="chart1">
+      <div class="diagram-label">
+        {{ chart1.diagramLabel }}:
+      </div>
+      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart1"></app-bar-chart>
     </div>
-    <div>
-      <app-bar-chart [chartId]="'chart2'" [viewModel]="chart2" *ngIf="chart2"></app-bar-chart>
+    <div class="diagram-wrapper" *ngIf="chart2">
+      <div class="diagram-label">
+        {{ chart2.diagramLabel }}:
+      </div>
+      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart2"></app-bar-chart>
     </div>
-    <div>
-      <app-bar-chart [chartId]="'chart3'" [viewModel]="chart3" *ngIf="chart3"></app-bar-chart>
+    <div class="diagram-wrapper" *ngIf="chart3">
+      <div class="diagram-label">
+        {{ chart3.diagramLabel }}:
+      </div>
+      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart3"></app-bar-chart>
     </div>
   </div>
 </div>

@@ -78,6 +78,7 @@ export interface ISparschweinEintragData {
 }
 
 export interface BarChartViewModel {
+  diagramLabel: string;
   labels: string[]; // Labels für die x-Achse (z. B. Monate)
   datasets: {        // Datensätze mit Werten und Farben
     label: string;   // Name des Datensatzes (z. B. "Umsatz" oder "Gewinn")
@@ -98,6 +99,7 @@ export interface IAuswertungsLayoutData {
 
 export interface IDiagrammData {
   title: string;
+  eintragBeschreibung: string;
   xAchsenSkalierung: XAchsenSkalierungsOptionen;
   valueOption: BarChartValueOptions;
   filter: {filter: BarChartFilterOptions, value: any}[];

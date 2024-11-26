@@ -236,7 +236,8 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat',
         diagramme: [
           {
-            title: 'Ausgaben (in Euro)',
+            title: 'Ausgaben-Verhalten für Monat',
+            eintragBeschreibung: 'Ausgaben (in Euro)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
             valueOption: BarChartValueOptions.Ausgaben
@@ -251,7 +252,8 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat (kategorie: aaa)',
         diagramme: [
           {
-            title: 'diagram 1',
+            title: 'Ausgaben-Verhalten für Monat (kategorie: aaa)',
+            eintragBeschreibung: 'Ausgaben (aaa)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [
               {
@@ -271,7 +273,8 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat (wochentag: Montag)',
         diagramme: [
           {
-            title: 'diagram 1',
+            title: 'Ausgaben-Verhalten für Monat (wochentag: Montag)',
+            eintragBeschreibung: 'Ausgaben',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [
               {
@@ -291,7 +294,8 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat (kategorie: bbb)',
         diagramme: [
           {
-            title: 'diagram 1',
+            title: 'Ausgaben-Verhalten für Monat (kategorie: bbb)',
+            eintragBeschreibung: 'Ausgaben (bbb)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [
               {
@@ -311,13 +315,15 @@ export class DataProviderService {
         titel: 'Sparenübersicht für Jahr',
         diagramme: [
           {
-            title: 'diagram 1',
+            title: 'Geplante Sparbeträge',
+            eintragBeschreibung: 'Sparen-Betrag',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
             filter: [],
             valueOption: BarChartValueOptions.Sparen
           },
           {
-            title: 'diagram 1',
+            title: 'Tatsächlich gespart',
+            eintragBeschreibung: 'Restgeld',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
             filter: [],
             valueOption: BarChartValueOptions.Restgeld
