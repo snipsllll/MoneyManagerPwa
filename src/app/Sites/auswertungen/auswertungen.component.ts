@@ -23,7 +23,7 @@ export class AuswertungenComponent implements OnInit {
   ausgabenForMonatProTagKategorisiertCVM!: BarChartViewModel[];
   layoutOptions!: IAuswertungsLayout[]
 
-  selectedLayout: string = '';
+  selectedLayout: string = 'Ausgaben-Verhalten für Monat';
 
   selectedMonth = computed(() => {
     switch (this.selectedMonthIndex()) {
@@ -71,6 +71,7 @@ export class AuswertungenComponent implements OnInit {
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
     this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM();
     this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
+    this.updateLayout();
   }
 
   update() {
@@ -81,7 +82,7 @@ export class AuswertungenComponent implements OnInit {
     this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
   }
 
-  onLayoutChanged() {
+  updateLayout() {
     const layout = this.layoutOptions.find(option => option.data.titel === this.selectedLayout);
     if (!layout) {
       console.log('hinzufügen wurde geclickt');
@@ -141,7 +142,7 @@ export class AuswertungenComponent implements OnInit {
       case XAchsenSkalierungsOptionen.alleTageImMonat:
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
         const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
-        labels = Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`);
+        labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}.${this.selectedMonthIndex() + 1}`);
 
         for (let i = 0; i < month.daysInMonth!; i++) {
           data.push(0);
