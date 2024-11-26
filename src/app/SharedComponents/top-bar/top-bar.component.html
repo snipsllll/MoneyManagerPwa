@@ -12,7 +12,7 @@
       </div>
 
     </div>
-    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && !availableMoney().noData  && dataProvider.getSettings().topBarAnzeigeEinstellung !== TopBarBudgetOptions.leer">
+    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && title !== 'AUSWERTUNGEN' && !availableMoney().noData  && dataProvider.getSettings().topBarAnzeigeEinstellung !== TopBarBudgetOptions.leer">
       <div class="top-bar__budget"
            (click)="toggleDropdown()"
            (touchstart)="onTouchStart()"
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
-         (click)="toggleDropdown()" *ngIf="!availableMoneyCapped().noData">
+         (click)="toggleDropdown()" *ngIf="isDropdownEnabled()">
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           monat:

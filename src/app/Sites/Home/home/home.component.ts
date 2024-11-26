@@ -11,12 +11,11 @@ import {NavigationService} from "../../../Services/NavigationService/navigation.
 })
 export class HomeComponent  implements OnInit{
   constructor(private navigationService: NavigationService, private router: Router, private topbarService: TopbarService) {
-
-    console.log(1)
   }
 
   ngOnInit() {
     this.topbarService.title.set('HOME');
+    this.topbarService.isDropDownDisabled = false;
     this.navigationService.previousRoute = Sites.home;
   }
 

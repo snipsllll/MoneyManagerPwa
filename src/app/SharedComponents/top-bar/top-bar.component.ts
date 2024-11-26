@@ -48,6 +48,23 @@ export class TopBarComponent implements OnInit {
     console.log(this.dataService.userData)
   }
 
+  isDropdownEnabled() {
+    if(this.title === 'EINSTELLUNGEN')
+      return false;
+    if(this.title === 'WUNSCHLISTE')
+      return false;
+    if(this.title === 'SPARSCHWEIN')
+      return false;
+    if(this.title === 'AUSWERTUNGEN')
+      return false;
+    if(this.availableMoney().noData)
+      return false;
+    if(this.dataProvider.getSettings().topBarAnzeigeEinstellung === TopBarBudgetOptions.leer)
+      return false;
+
+    return true
+  }
+
   getDaysLeftText(): string | undefined {
     switch (this.dataProvider.getSettings().topBarAnzeigeEinstellung) {
       case TopBarBudgetOptions.monat:
