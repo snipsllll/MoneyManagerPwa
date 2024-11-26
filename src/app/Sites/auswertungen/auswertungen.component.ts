@@ -4,6 +4,7 @@ import {BarChartViewModel, IAuswertungsLayout, IDiagrammData} from "../../Models
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-auswertungen',
@@ -53,7 +54,7 @@ export class AuswertungenComponent implements OnInit {
 
   selectedYear = signal<number>(new Date().getFullYear());
 
-  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private topbarService: TopbarService) {
+  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private topbarService: TopbarService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -90,7 +91,7 @@ export class AuswertungenComponent implements OnInit {
   }
 
   onEditLayoutsButtonClicked() {
-    console.log(1)
+    this.dialogService.showAuswertungenDialog()
   }
 
   getSelectedLayoutOptionIndex() {
@@ -166,12 +167,7 @@ export class AuswertungenComponent implements OnInit {
               let ausgabeGesammt = 0;
               for (let i = 0; i < month.daysInMonth!; i++) {
                 ausgabeGesammt += alleAusgabenDays[i];
-                const today = new Date();
-                if(today.getDate() - 1 < i) {
-                  data[i] = 0;
-                } else {
-                  data[i] = month.budget! - ausgabeGesammt;
-                }
+                data[i] = month.budget! - ausgabeGesammt;
               }
               break;
             case BarChartValueOptions.Sparen:
@@ -197,11 +193,7 @@ export class AuswertungenComponent implements OnInit {
 
               for (let i = 0; i < month.daysInMonth!; i++) {
                 const today = new Date();
-                if(today.getDate() - 1 < i) {
-                  data[i] = 0;
-                } else {
-                  data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
-                }
+                data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
               }
               break;
           }

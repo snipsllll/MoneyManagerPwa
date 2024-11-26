@@ -26,6 +26,7 @@ export class ListElementComponent implements OnInit{
   }
 
   onMenuClicked() {
+    console.log(1)
     this.isMenuVisible.set(!this.isMenuVisible());
   }
 

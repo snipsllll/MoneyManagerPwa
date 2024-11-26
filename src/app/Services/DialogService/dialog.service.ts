@@ -9,6 +9,8 @@ import {MonatFixkostenDialogViewModel} from "../../Models/ViewModels/MonatFixkos
 import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
 import {DataProviderService} from "../DataProviderService/data-provider.service";
 import {DataChangeService} from "../DataChangeService/data-change.service";
+import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenDialogViewModel";
+import {IAuswertungsLayout} from "../../Models/NewInterfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,9 @@ export class DialogService {
 
   isBuchungsKategorienDialogVisible = false;
   buchungsKategorienDialogViewModel?: BuchungsKategorienDialogViewModel;
+
+  isAuswertungenDialogVisible = false;
+  auswertungenDialogViewModel?: AuswertungenDialogViewModel;
 
   constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
@@ -69,6 +74,22 @@ export class DialogService {
         this.isBuchungsKategorienDialogVisible = false;
       }
     }
+  }
+
+  showAuswertungenDialog() {
+    this.isAuswertungenDialogVisible = true;
+    this.auswertungenDialogViewModel = {
+      elemente: this.dataProvider.getAuswertungsLayouts(),
+      onAbortClicked: () => {
+        console.log('abort clicked')
+        this.isAuswertungenDialogVisible = false;
+      },
+      onSaveClicked: (elemente: IAuswertungsLayout[]) => {
+        console.log('save clicked')
+        this.isAuswertungenDialogVisible = false;
+      }
+    }
+    console.log(this.dataProvider.getAuswertungsLayouts())
   }
 }
 

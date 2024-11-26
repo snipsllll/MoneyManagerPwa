@@ -30,6 +30,7 @@ import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkoste
 import { BuchungskategorienDialogComponent } from './SharedComponents/buchungskategorien-dialog/buchungskategorien-dialog.component';
 import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.component';
 import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.component';
+import { AuswertungenDialogComponent } from './SharedComponents/auswertungen-dialog/auswertungen-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.compone
     MonatFixkostenDialogComponent,
     BuchungskategorienDialogComponent,
     BarChartComponent,
-    AuswertungenComponent
+    AuswertungenComponent,
+    AuswertungenDialogComponent
   ],
     imports: [
         BrowserModule,

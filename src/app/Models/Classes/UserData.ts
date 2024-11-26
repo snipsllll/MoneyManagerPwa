@@ -92,20 +92,45 @@ export class UserData {
       ? currentData = data
       : currentData = {dbVersion: 0, ...data};
 
-    if (currentData.dbVersion < 1) {
-      currentData = this.convertToVersion1(currentData);
+    try {
+      if (currentData.dbVersion < 1) {
+        currentData = this.convertToVersion1(currentData);
+      }
+
+      if (currentData.dbVersion < 2) {
+        currentData = this.convertFixkostenToStandardFixkosten(currentData);
+      }
+
+      if (currentData.dbVersion < 3) {
+        currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
+      }
+
+      currentData.dbVersion = currentDbVersion;
+      return currentData as SavedData;
+    } catch (e) {
+      console.log(e)
+      return {
+        buchungen: [],
+        buchungsKategorien: [],
+        auswertungsLayouts: [],
+        settings: {
+          toHighBuchungenEnabled: true,
+          wunschlistenFilter: {
+            selectedFilter: '',
+            gekaufteEintraegeAusblenden: false
+          },
+          tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+          topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+        },
+        wunschlistenEintraege: [],
+        sparEintraege: [],
+        standardFixkostenEintraege: [],
+        savedMonths: [],
+        dbVersion: currentDbVersion
+      }
     }
 
-    if (currentData.dbVersion < 2) {
-      currentData = this.convertFixkostenToStandardFixkosten(currentData);
-    }
 
-    if (currentData.dbVersion < 3) {
-      currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
-    }
-
-    currentData.dbVersion = currentDbVersion;
-    return currentData as SavedData;
 
     //return this.getLongTestData();
 
@@ -273,7 +298,7 @@ export class UserData {
 
   private convertToVersion1(datax: any): any {
     // Umwandlung der Buchungen
-    let buchungen = datax.buchungen.map((buchung: any) => ({
+    let buchungen = !datax.buchungen ? [] : datax.buchungen.map((buchung: any) => ({
       id: buchung.id,
       data: {
         date: buchung.date,
@@ -285,7 +310,7 @@ export class UserData {
     }));
 
     // Umwandlung der fixKosten
-    let fixkosten = datax.fixKosten.map((fixkosteneintrag: any) => ({
+    let fixkosten = !datax.fixKosten ? [] : datax.fixKosten.map((fixkosteneintrag: any) => ({
       id: fixkosteneintrag.id,
       data: {
         betrag: fixkosteneintrag.betrag,
@@ -295,7 +320,7 @@ export class UserData {
     }));
 
     // Umwandlung der savedMonths
-    let savedMonths = datax.savedMonths.map((month: any) => ({
+    let savedMonths = !datax.savedMonths ? [] : datax.savedMonths.map((month: any) => ({
       date: month.date,
       totalBudget: month.totalBudget,
       sparen: month.sparen,
@@ -321,7 +346,7 @@ export class UserData {
     }
 
     // Umwandlung der sparEintraege
-    let sparEintraege: SparEintragV0[] = datax.sparEintraege.map((sparEintrag: any) => ({
+    let sparEintraege: SparEintragV0[] = !datax.sparEintraege ? [] : datax.sparEintraege.map((sparEintrag: any) => ({
       id: sparEintrag.id,
       data: {
         betrag: sparEintrag.betrag,
@@ -335,7 +360,7 @@ export class UserData {
     sparEintraege = sparEintraege.filter(eintrag => eintrag.data.vonMonat !== true)
 
     // Umwandlung der wunschlistenEintraege
-    let wunschlistenEintraege = datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
+    let wunschlistenEintraege =  !datax.wunschlistenEintraege ? [] :datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
       id: wunschlisteEintrag.id,
       data: {
         betrag: wunschlisteEintrag.betrag,
@@ -360,7 +385,10 @@ export class UserData {
       settings: {
         toHighBuchungenEnabled: true,
         showDaySpend: true,
-        wunschllistenFilter: datax.settings.wunschllistenFilter
+        wunschllistenFilter: datax.settings.wunschllistenFilter ?? {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        }
       },
       dbVersion: 1,
       ...rest
