@@ -11,15 +11,21 @@
       >
     </div>
   </div>
-  <div class="einstellungen__multi-select-wrapper">
-    <div class="einstellungen__label-multi-select">
+  <div class="auswertungen__layout-selection--wrapper">
+    <div class="einstellungen__multi-select-wrapper">
+      <div class="einstellungen__label-multi-select">
 
+      </div>
+      <select class="einstellungen__multi-select" [(ngModel)]="selectedLayout" (change)="updateLayout()">
+        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions"> {{ option.data.titel }} </option>
+        <option class="einstellungen__multi-select--option">- hinzufügen -</option>
+      </select>
     </div>
-    <select class="einstellungen__multi-select" [(ngModel)]="selectedLayout" (change)="updateLayout()">
-      <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions"> {{ option.data.titel }} </option>
-      <option class="einstellungen__multi-select--option">- hinzufügen -</option>
-    </select>
+    <div class=" button">
+      <img src="assets/edit.png" class="auswertungen__edit-button-icon">
+    </div>
   </div>
+
   <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
     <div class="diagram-wrapper" *ngIf="chart1">
       <div class="diagram-label">

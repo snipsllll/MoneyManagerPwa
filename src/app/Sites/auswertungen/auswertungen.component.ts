@@ -16,11 +16,6 @@ export class AuswertungenComponent implements OnInit {
   chart1?: BarChartViewModel;
   chart2?: BarChartViewModel;
   chart3?: BarChartViewModel;
-
-  ausgabenProTagCVM!: BarChartViewModel;
-  totalBudgetCVMForMonthsInYear!: BarChartViewModel;
-  nichtAusgegebenesGeldCVMForMonthsInYear!: BarChartViewModel;
-  ausgabenForMonatProTagKategorisiertCVM!: BarChartViewModel[];
   layoutOptions!: IAuswertungsLayout[]
 
   selectedLayout: string = 'Ausgaben-Verhalten für Monat';
@@ -66,20 +61,13 @@ export class AuswertungenComponent implements OnInit {
     this.topbarService.title.set('AUSWERTUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.ausgabenProTagCVM = this.getDailyAusgabenCVMForMonth();
-    this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear();
-    this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
-    this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM();
     this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
     this.updateLayout();
   }
 
   update() {
-    this.ausgabenProTagCVM = this.getDailyAusgabenCVMForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
-    this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
-    this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
-    this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
     this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
+    this.updateLayout();
   }
 
   updateLayout() {
@@ -142,7 +130,7 @@ export class AuswertungenComponent implements OnInit {
       case XAchsenSkalierungsOptionen.alleTageImMonat:
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
         const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
-        labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}.${this.selectedMonthIndex() + 1}`);
+        labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}.${this.selectedMonth()}`);
 
         for (let i = 0; i < month.daysInMonth!; i++) {
           data.push(0);

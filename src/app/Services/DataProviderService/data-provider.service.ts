@@ -236,7 +236,7 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat',
         diagramme: [
           {
-            title: 'Ausgaben-Verhalten für Monat',
+            title: 'Ausgaben von dem Tag',
             eintragBeschreibung: 'Ausgaben (in Euro)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],

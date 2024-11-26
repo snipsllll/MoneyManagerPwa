@@ -43,14 +43,13 @@
 }
 
 .einstellungen__multi-select-wrapper {
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .einstellungen__multi-select {
-  margin-left: 20px;
+  margin: 0 3px 0 20px;
   font-size: 16px;
   height: 40px;
   padding-left: 10px;
@@ -58,7 +57,6 @@
   border-radius: 5px;
   background-color: #d2e5ef;
   width: 250px;
-  margin-right: 3px;
 }
 
 .einstellungen__multi-select--option {
@@ -73,11 +71,40 @@
 }
 
 .diagram-wrapper {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 5px;
 }
 
 .diagram-label {
   color: #1e2c68;
   font-size: 18px;
+}
+
+.auswertungen__layout-selection--wrapper {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.button {
+  margin:0 3px 0 5px;
+  font-size: 16px;
+  height: 40px;
+  padding: 0 5px;
+  border: #191f3e solid 1px;
+  border-radius: 5px;
+  background-color: #d2e5ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:active {
+  background-color: #a4ceec;
+}
+
+.auswertungen__edit-button-icon {
+  height: 30px;
+  width: 30px;
 }
