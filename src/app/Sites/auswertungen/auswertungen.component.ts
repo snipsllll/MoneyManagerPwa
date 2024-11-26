@@ -1,8 +1,9 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
-import {BarChartViewModel} from "../../Models/NewInterfaces";
+import {BarChartViewModel, IAuswertungsLayout} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
-import {Budget} from "@angular-devkit/build-angular";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
+import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Component({
   selector: 'app-auswertungen',
@@ -19,6 +20,7 @@ export class AuswertungenComponent implements OnInit{
   totalBudgetCVMForMonthsInYear!: BarChartViewModel;
   nichtAusgegebenesGeldCVMForMonthsInYear!: BarChartViewModel;
   ausgabenForMonatProTagKategorisiertCVM!: BarChartViewModel[];
+  layoutOptions!: IAuswertungsLayout[]
 
   selectedLayout: string = '';
 
@@ -56,7 +58,7 @@ export class AuswertungenComponent implements OnInit{
 
   selectedYear = signal<number>(new Date().getFullYear());
 
-  constructor(private dataProvider: DataProviderService, private topbarService: TopbarService) {
+  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private topbarService: TopbarService) {
   }
 
   ngOnInit() {
@@ -67,6 +69,7 @@ export class AuswertungenComponent implements OnInit{
     this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear();
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
     this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM();
+    this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
   }
 
   update() {
@@ -74,23 +77,13 @@ export class AuswertungenComponent implements OnInit{
     this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
     this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+    this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
   }
 
   onLayoutChanged() {
-    switch (this.selectedLayout) {
-      case 'Ausgaben-Verhalten für Monat':
-        this.chart1 = this.getDailyAusgabenCVMForMonth();
-        this.chart2 = undefined;
-        this.chart3 = undefined;
-        break;
-      case 'Sparen-Übersicht für Jahr':
-        this.chart1 = this.getTotalBudgetCVMForMonthsInYear();
-        this.chart2 = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
-        this.chart3 = undefined;
-        break;
-      case '- hinzufügen -':
-        console.log(3)
-        break;
+    const layout = this.layoutOptions.find(option => option.data.titel === this.selectedLayout);
+    if(!layout) {
+      console.log('hinzufügen wurde geclickt');
     }
   }
 

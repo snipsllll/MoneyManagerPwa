@@ -93,7 +93,12 @@ export interface IAuswertungsLayout {
 
 export interface IAuswertungsLayoutData {
   titel: string;
+  diagramme: IDiagrammData[];
+}
+
+export interface IDiagrammData {
   xAchsenSkalierung: XAchsenSkalierungsOptionen;
   valueOption: BarChartValueOptions;
   filter: BarChartFilterOptions[];
+
 }

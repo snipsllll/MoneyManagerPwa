@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
 import {
+  IAuswertungsLayout,
   IBuchung,
-  IDay,
-  IFixkostenEintrag,
-  IMonth, IMonthFixkostenEintrag,
+  IMonthFixkostenEintrag,
   ISparschweinEintrag,
   IWunschlistenEintrag
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {Months} from "../../Models/Enums";
+import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -228,7 +227,43 @@ export class DataProviderService {
     }
   }
   getAuswertungsLayouts() {
-    return this.dataService.userData.auswertungsLayouts;
+    const auswertungsLayouts: IAuswertungsLayout[] = [];
+
+    auswertungsLayouts.push({
+      id: -1,
+      data: {
+        titel: 'Ausgaben-Verhalten für Monat',
+        diagramme: [
+          {
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
+            filter: [],
+            valueOption: BarChartValueOptions.Ausgaben
+          }
+        ]
+      }
+    })
+
+    auswertungsLayouts.push({
+      id: -1,
+      data: {
+        titel: 'Sparenübersicht für Jahr',
+        diagramme: [
+          {
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
+            filter: [],
+            valueOption: BarChartValueOptions.Sparen
+          }
+        ]
+      }
+    })
+
+    const manuelleLayouts = this.dataService.userData.auswertungsLayouts;
+
+    manuelleLayouts.forEach(layout => {
+      auswertungsLayouts.push(layout);
+    })
+
+    return auswertungsLayouts;
   }
 
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {

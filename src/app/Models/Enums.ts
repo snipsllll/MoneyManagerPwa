@@ -62,15 +62,15 @@ export enum TagesAnzeigeOptions {
 }
 
 export enum XAchsenSkalierungsOptionen {
-  'alle Monate im Jahr',
-  'alle Tage im Monat'
+  'alleMonateImJahr',
+  'alleTageImMonat'
 }
 
 export enum BarChartValueOptions {
   'Restgeld',
   'Ausgaben',
   'Sparen',
-  'Total Budget'
+  'TotalBudget'
 }
 
 export enum BarChartFilterOptions {
