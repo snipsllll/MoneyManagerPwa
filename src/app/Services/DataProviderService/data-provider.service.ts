@@ -241,69 +241,13 @@ export class DataProviderService {
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
             valueOption: BarChartValueOptions.Ausgaben
-          }
-        ]
-      }
-    })
-
-    auswertungsLayouts.push({
-      id: -1,
-      data: {
-        titel: 'Ausgaben-Verhalten für Monat (kategorie: aaa)',
-        diagramme: [
+          },
           {
-            title: 'Ausgaben-Verhalten für Monat (kategorie: aaa)',
-            eintragBeschreibung: 'Ausgaben (aaa)',
+            title: 'Restgeld für Monat',
+            eintragBeschreibung: 'Ausgaben (in Euro)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [
-              {
-                filter: BarChartFilterOptions.Kategorien,
-                value: 1
-              }
-            ],
-            valueOption: BarChartValueOptions.Ausgaben
-          }
-        ]
-      }
-    })
-
-    auswertungsLayouts.push({
-      id: -1,
-      data: {
-        titel: 'Ausgaben-Verhalten für Monat (wochentag: Montag)',
-        diagramme: [
-          {
-            title: 'Ausgaben-Verhalten für Monat (wochentag: Montag)',
-            eintragBeschreibung: 'Ausgaben',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [
-              {
-                filter: BarChartFilterOptions.Wochentag,
-                value: 1
-              }
-            ],
-            valueOption: BarChartValueOptions.Ausgaben
-          }
-        ]
-      }
-    })
-
-    auswertungsLayouts.push({
-      id: -1,
-      data: {
-        titel: 'Ausgaben-Verhalten für Monat (kategorie: bbb)',
-        diagramme: [
-          {
-            title: 'Ausgaben-Verhalten für Monat (kategorie: bbb)',
-            eintragBeschreibung: 'Ausgaben (bbb)',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [
-              {
-                filter: BarChartFilterOptions.Kategorien,
-                value: 2
-              }
-            ],
-            valueOption: BarChartValueOptions.Ausgaben
+            filter: [],
+            valueOption: BarChartValueOptions.Restgeld
           }
         ]
       }

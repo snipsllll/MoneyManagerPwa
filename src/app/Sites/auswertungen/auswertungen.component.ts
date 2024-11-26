@@ -1,10 +1,9 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
-import {BarChartViewModel, IAuswertungsLayout, IBuchung, IDiagrammData} from "../../Models/NewInterfaces";
+import {BarChartViewModel, IAuswertungsLayout, IDiagrammData} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
-import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
-import {switchAll} from "rxjs";
+import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Component({
   selector: 'app-auswertungen',
@@ -78,16 +77,20 @@ export class AuswertungenComponent implements OnInit {
     }
 
     this.chart1 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[0]);
-    if(layout.data.diagramme[1]){
+    if (layout.data.diagramme[1]) {
       this.chart2 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[1]);
     } else {
       this.chart2 = undefined;
     }
-    if(layout.data.diagramme[2]){
+    if (layout.data.diagramme[2]) {
       this.chart3 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[2]);
     } else {
       this.chart3 = undefined;
     }
+  }
+
+  onEditLayoutsButtonClicked() {
+    console.log(1)
   }
 
   getSelectedLayoutOptionIndex() {
@@ -129,16 +132,55 @@ export class AuswertungenComponent implements OnInit {
         break;
       case XAchsenSkalierungsOptionen.alleTageImMonat:
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
-        const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
         labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}.${this.selectedMonth()}`);
 
-        for (let i = 0; i < month.daysInMonth!; i++) {
+        if (month) {
+          switch (diagrammData.valueOption) {
+            case BarChartValueOptions.Ausgaben:
+              const filteredBuchungenAusgaben = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+              for (let i = 0; i < month.daysInMonth!; i++) {
+                data.push(0);
+              }
+
+              filteredBuchungenAusgaben.forEach(buchung => {
+                data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+              })
+              break;
+            case BarChartValueOptions.Restgeld:
+              const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+              let alleAusgabenDays: number[] = [];
+
+              for (let i = 0; i < month.daysInMonth!; i++) {
+                data.push(0);
+                alleAusgabenDays[i] = 0;
+              }
+
+              filteredBuchungen.forEach(buchung => {
+                alleAusgabenDays[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+              })
+
+              let ausgabeGesammt = 0;
+              for (let i = 0; i < month.daysInMonth!; i++) {
+                ausgabeGesammt += alleAusgabenDays[i];
+                const today = new Date();
+                console.log(today.getDate())
+                if(today.getDate() - 1 < i) {
+                  data[i] = 0;
+                } else {
+                  data[i] = month.budget! - ausgabeGesammt;
+                }
+              }
+              break;
+            case BarChartValueOptions.Sparen:
+              data.push(month.sparen ?? 0);
+              break;
+            case BarChartValueOptions.TotalBudget:
+              data.push(month.totalBudget ?? 0);
+          }
+        } else {
           data.push(0);
         }
 
-        filteredBuchungen.forEach(buchung => {
-          data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
-        })
         break;
     }
 
@@ -177,152 +219,5 @@ export class AuswertungenComponent implements OnInit {
       this.selectedYear.set(this.selectedYear() + 1);
     }
     this.update();
-  }
-
-  getDailyAusgabenCVMForMonth(date ?: Date): BarChartViewModel {
-    date = date ?? new Date();
-    const month = this.dataProvider.getMonthByDate(date);
-
-    let data: number[] = [];
-    if (!month) {
-      return {
-        diagramLabel: '',
-        datasets: [],
-        labels: []
-      }
-    }
-
-    month.weeks?.forEach(week => {
-      week.days.forEach(day => {
-        let ausgaben = 0;
-        day.buchungen?.forEach(buchung => {
-          ausgaben += buchung.data.betrag ?? 0;
-        })
-        data.push(ausgaben);
-      })
-    })
-
-    let chartViewModel: BarChartViewModel = {
-      diagramLabel: `Ausgaben für ${this.selectedMonth()}, ${this.selectedYear}`,
-      labels: Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`), // Labels von "Tag 1" bis "Tag 30"
-      datasets: [
-        {
-          label: 'Ausgaben pro Tag',
-          data: data,
-          backgroundColor: 'rgba(67,182,255,0.6)'
-        }
-      ],
-    };
-
-    return chartViewModel;
-  }
-
-  getTotalBudgetCVMForMonthsInYear(year ?: number) {
-    const data: number[] = [];
-
-    for (let i = 0; i < 12; i++) {
-      const date = new Date(year ?? new Date().getFullYear(), i, 1);
-      const month = this.dataProvider.getMonthByDate(date)
-      if (month) {
-        data.push(month!.totalBudget ?? 0)
-      } else {
-        data.push(0);
-      }
-    }
-
-    let chartViewModel: BarChartViewModel = {
-      diagramLabel: `TotalBudgets für ${this.selectedYear}`,
-      labels: [
-        'Januar', 'Februar', 'März', 'April',
-        'Mai', 'Juni', 'Juli', 'August',
-        'September', 'Oktober', 'November', 'Dezember'
-      ], // Labels von "Tag 1" bis "Tag 30"
-      datasets: [
-        {
-          label: 'Total Budget pro Monat',
-          data: data,
-          backgroundColor: 'rgba(67,182,255,0.6)'
-        }
-      ],
-    };
-
-    return chartViewModel;
-  }
-
-  getNichtAusgegebenesGeldCVMForMonthsInYear(year ?: number) {
-    const data: number[] = [];
-
-    for (let i = 0; i < 12; i++) {
-      const date = new Date(year ?? new Date().getFullYear(), i, 1);
-      const month = this.dataProvider.getMonthByDate(date)
-      if (month) {
-        data.push(month!.istBudget ?? 0)
-      } else {
-        data.push(0);
-      }
-    }
-
-    let chartViewModel: BarChartViewModel = {
-      diagramLabel: `Gespartes Geld für ${this.selectedYear}`,
-      labels: [
-        'Januar', 'Februar', 'März', 'April',
-        'Mai', 'Juni', 'Juli', 'August',
-        'September', 'Oktober', 'November', 'Dezember'
-      ], // Labels von "Tag 1" bis "Tag 30"
-      datasets: [
-        {
-          label: 'Übriges Geld pro Monat',
-          data: data,
-          backgroundColor: 'rgba(67,182,255,0.6)'
-        }
-      ],
-    };
-
-    return chartViewModel;
-  }
-
-  getAusgabenForMonatProtagKategorisiertCVM(date ?: Date): BarChartViewModel[] {
-    const kategorien = this.dataProvider.getBuchungsKategorien();
-    const month = this.dataProvider.getMonthByDate(date ?? new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
-    if (!month) {
-      return [{
-        diagramLabel: '',
-        datasets: [],
-        labels: []
-      }]
-    }
-    const alleBuchungenInMonth = this.dataProvider.getAlleBuchungenForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
-    const viewModelList: BarChartViewModel[] = [];
-
-    kategorien.forEach(kategorie => {
-      const filteredBuchungen = alleBuchungenInMonth.filter(buchung => buchung.data.buchungsKategorie === kategorie.id);
-      const data: number[] = []
-      const labels = Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`);
-
-
-      for (let i = 0; i < month.daysInMonth!; i++) {
-        data.push(0);
-      }
-
-      filteredBuchungen.forEach(buchung => {
-        data[buchung.data.date.getDate()] += buchung.data.betrag!;
-      })
-
-      const barChartViewModel: BarChartViewModel = {
-        diagramLabel: `Ausgaben für ${this.selectedMonth()}, ${this.selectedYear} (${kategorie.name}`,
-        labels: labels,
-        datasets: [
-          {
-            label: `Ausgaben für ${kategorie.name}:`,
-            data: data,
-            backgroundColor: 'rgba(67,182,255,0.6)'
-          }
-        ]
-      }
-
-      viewModelList.push(barChartViewModel);
-    })
-
-    return viewModelList
   }
 }

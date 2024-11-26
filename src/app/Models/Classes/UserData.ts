@@ -378,6 +378,7 @@ export class UserData {
     this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
     this.sparschweinEintraege = savedData.sparEintraege;
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
+    this.auswertungsLayouts = savedData.auswertungsLayouts;
     this.settings = savedData.settings;
   }
 
