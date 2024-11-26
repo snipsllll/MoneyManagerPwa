@@ -136,7 +136,7 @@ export class AuswertungenComponent implements OnInit {
         break;
       case XAchsenSkalierungsOptionen.alleTageImMonat:
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
-        labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}.${this.selectedMonth()}`);
+        labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}`);
 
         if (month) {
           switch (diagrammData.valueOption) {
@@ -218,7 +218,7 @@ export class AuswertungenComponent implements OnInit {
       datasets: [{
         label: diagrammData.title,
         data: data,
-        backgroundColor: 'rgba(67,182,255,0.6)'
+        backgroundColor: diagrammData.barColor ?? 'rgba(67,182,255,0.6)'
       }]
     }
   }

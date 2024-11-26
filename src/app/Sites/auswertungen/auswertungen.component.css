@@ -1,6 +1,6 @@
 .charts {
   overflow-y: scroll;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 180px);
 }
 .budget__month-select {
   height: 50px;
