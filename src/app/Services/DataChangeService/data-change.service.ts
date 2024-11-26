@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
+  IAuswertungsLayout,
+  IAuswertungsLayoutData,
   IBuchung,
   IBuchungData,
   IFixkostenEintrag,
@@ -32,6 +34,26 @@ export class DataChangeService {
 
   deleteBuchung(buchungId: number) {
     this.dataService.userData.buchungen.splice(this.getIndexOfBuchungById(buchungId), 1);
+    this.dataService.update();
+  }
+
+  addAuswertungsLayout(auswertungsLayoutData: IAuswertungsLayoutData): void {
+    const newAuswertungsLayout: IAuswertungsLayout = {
+      id: this.getNextFreeAuswertungLayoutId(),
+      data: auswertungsLayoutData
+    };
+
+    this.dataService.userData.auswertungsLayouts.push(newAuswertungsLayout);
+    this.dataService.update();
+  }
+
+  editAuswertungsLayout(editedAuswertungsLayout: IAuswertungsLayout): void {
+    this.dataService.userData.auswertungsLayouts[this.getIndexOfAuswertungsLayoutById(editedAuswertungsLayout.id)] = editedAuswertungsLayout;
+    this.dataService.update();
+  }
+
+  deleteAuswertungsLayout(auswertungsLayoutId: number) {
+    this.dataService.userData.auswertungsLayouts.splice(this.getIndexOfAuswertungsLayoutById(auswertungsLayoutId), 1);
     this.dataService.update();
   }
 
@@ -195,6 +217,18 @@ export class DataChangeService {
     return freeId;
   }
 
+  private getNextFreeAuswertungLayoutId() {
+    let freeId = 1;
+    for (let i = 0; i < this.dataService.userData.auswertungsLayouts.length; i++) {
+      if (this.dataService.userData.auswertungsLayouts.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private getNextFreeFixkostenEintragId() {
     let freeId = 1;
     const alleEintraege = this.getAlleFixkostenEintraege();
@@ -234,6 +268,10 @@ export class DataChangeService {
 
   private getIndexOfBuchungById(id: number) {
     return this.dataService.userData.buchungen.findIndex(eintrag => eintrag.id === id);
+  }
+
+  private getIndexOfAuswertungsLayoutById(id: number) {
+    return this.dataService.userData.auswertungsLayouts.findIndex(eintrag => eintrag.id === id);
   }
 
   private getIndexOfFixkostenEintragById(id: number) {

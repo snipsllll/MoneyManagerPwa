@@ -227,6 +227,9 @@ export class DataProviderService {
       noData: false
     }
   }
+  getAuswertungsLayouts() {
+    return this.dataService.userData.auswertungsLayouts;
+  }
 
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
     const availableMoney = this.getAvailableMoney(dayDate);
