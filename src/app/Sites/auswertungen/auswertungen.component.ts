@@ -11,10 +11,16 @@ import {Budget} from "@angular-devkit/build-angular";
 })
 export class AuswertungenComponent implements OnInit{
 
+  chart1?: BarChartViewModel;
+  chart2?: BarChartViewModel;
+  chart3?: BarChartViewModel;
+
   ausgabenProTagCVM!: BarChartViewModel;
   totalBudgetCVMForMonthsInYear!: BarChartViewModel;
   nichtAusgegebenesGeldCVMForMonthsInYear!: BarChartViewModel;
   ausgabenForMonatProTagKategorisiertCVM!: BarChartViewModel[];
+
+  selectedLayout: string = '';
 
   selectedMonth = computed(() =>{
     switch(this.selectedMonthIndex()){
@@ -68,6 +74,24 @@ export class AuswertungenComponent implements OnInit{
     this.totalBudgetCVMForMonthsInYear = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
     this.nichtAusgegebenesGeldCVMForMonthsInYear = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
     this.ausgabenForMonatProTagKategorisiertCVM = this.getAusgabenForMonatProtagKategorisiertCVM(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
+  }
+
+  onLayoutChanged() {
+    switch (this.selectedLayout) {
+      case 'Ausgaben-Verhalten für Monat':
+        this.chart1 = this.getDailyAusgabenCVMForMonth();
+        this.chart2 = undefined;
+        this.chart3 = undefined;
+        break;
+      case 'Sparen-Übersicht für Jahr':
+        this.chart1 = this.getTotalBudgetCVMForMonthsInYear();
+        this.chart2 = this.getNichtAusgegebenesGeldCVMForMonthsInYear();
+        this.chart3 = undefined;
+        break;
+      case '- hinzufügen -':
+        console.log(3)
+        break;
+    }
   }
 
   doesMonthExist() {

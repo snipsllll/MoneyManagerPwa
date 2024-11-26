@@ -11,23 +11,36 @@
       >
     </div>
   </div>
+  <div class="einstellungen__multi-select-wrapper">
+    <div class="einstellungen__label-multi-select">
+
+    </div>
+    <select class="einstellungen__multi-select" [(ngModel)]="selectedLayout" (change)="onLayoutChanged()">
+      <option class="einstellungen__multi-select--option">Ausgaben-Verhalten für Monat</option>
+      <option class="einstellungen__multi-select--option">Sparen-Übersicht für Jahr</option>
+      <option class="einstellungen__multi-select--option">- hinzufügen -</option>
+    </select>
+  </div>
   <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
     <div>
-      <app-bar-chart [chartId]="'chart1'" [viewModel]="ausgabenProTagCVM"></app-bar-chart>
-    </div>
-    <div *ngFor="let CVM of ausgabenForMonatProTagKategorisiertCVM">
-      @if(CVM.labels.length > 0) {
-        <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
-      }
+      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart1" *ngIf="chart1"></app-bar-chart>
     </div>
     <div>
-      <app-bar-chart [chartId]="'chart2'" [viewModel]="totalBudgetCVMForMonthsInYear"></app-bar-chart>
+      <app-bar-chart [chartId]="'chart2'" [viewModel]="chart2" *ngIf="chart2"></app-bar-chart>
     </div>
     <div>
-      <app-bar-chart [chartId]="'chart3'" [viewModel]="nichtAusgegebenesGeldCVMForMonthsInYear"></app-bar-chart>
+      <app-bar-chart [chartId]="'chart3'" [viewModel]="chart3" *ngIf="chart3"></app-bar-chart>
     </div>
   </div>
 </div>
+
+<!--
+<div *ngFor="let CVM of ausgabenForMonatProTagKategorisiertCVM">
+  @if(CVM.labels.length > 0) {
+    <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
+  }
+</div>
+-->
 
 <ng-template #keineDaten>
   <div class="keine-eintraege">

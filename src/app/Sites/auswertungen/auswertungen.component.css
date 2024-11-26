@@ -41,3 +41,31 @@
   align-items: center;
   color: lightgrey;
 }
+
+.einstellungen__multi-select-wrapper {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.einstellungen__multi-select {
+  margin-left: 20px;
+  font-size: 16px;
+  height: 25px;
+  border: #070e2e solid 1px;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+  width: 250px;
+}
+
+.einstellungen__multi-select--option {
+  font-size: 12px;
+}
+
+.einstellungen__label-multi-select {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #323232;
+  margin-left: 7px;
+}
