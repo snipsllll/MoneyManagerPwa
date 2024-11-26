@@ -85,24 +85,19 @@ export class AuswertungenComponent implements OnInit {
     const layout = this.layoutOptions.find(option => option.data.titel === this.selectedLayout);
     if (!layout) {
       console.log('hinzufügen wurde geclickt');
+      return;
     }
 
-    if (layout?.id === -1) {
-      this.chart1 = this.getDailyAusgabenCVMForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
-      this.chart2 = undefined;
-      this.chart3 = undefined;
-    } else if (layout?.id === -2) {
-      this.chart1 = this.getTotalBudgetCVMForMonthsInYear(this.selectedYear());
-      this.chart2 = this.getNichtAusgegebenesGeldCVMForMonthsInYear(this.selectedYear());
-      this.chart3 = undefined;
+    this.chart1 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[0]);
+    if(layout.data.diagramme[1]){
+      this.chart2 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[1]);
     } else {
-      let layout = this.layoutOptions[this.getSelectedLayoutOptionIndex() ?? 0];
-
-      this.chart1 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[0]);
-      if(layout.data.diagramme[1])
-        this.chart2 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[1]);
-      if(layout.data.diagramme[2])
-        this.chart3 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[2]);
+      this.chart2 = undefined;
+    }
+    if(layout.data.diagramme[2]){
+      this.chart3 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[2]);
+    } else {
+      this.chart3 = undefined;
     }
   }
 
@@ -142,31 +137,21 @@ export class AuswertungenComponent implements OnInit {
             data.push(0);
           }
         }
-
         break;
       case XAchsenSkalierungsOptionen.alleTageImMonat:
-        labels = Array.from({length: 31}, (_, i) => `Tag ${i + 1}`);
-        const alleBuchungenInMonth = this.dataProvider.getAlleBuchungenForMonth(new Date(this.selectedYear(), this.selectedMonthIndex(), 1));
-        let filteredBuchungen: IBuchung[] = [];
-
-        diagrammData.filter.forEach(filter => {
-          switch (filter.filter) {
-            case BarChartFilterOptions.Kategorien:
-              filteredBuchungen = alleBuchungenInMonth.filter(buchung => buchung.data.buchungsKategorie === filter.value);
-              break;
-            case BarChartFilterOptions.Wochentag:
-              filteredBuchungen = alleBuchungenInMonth.filter(buchung => buchung.data.date.getDay() === filter.value);
-          }
-        })
-
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
+        labels = Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`);
+        console.log(labels)
+        const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+        console.log(filteredBuchungen)
+
 
         for (let i = 0; i < month.daysInMonth!; i++) {
           data.push(0);
         }
 
         filteredBuchungen.forEach(buchung => {
-          data[buchung.data.date.getDate()] += buchung.data.betrag!;
+          data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
         })
         break;
     }

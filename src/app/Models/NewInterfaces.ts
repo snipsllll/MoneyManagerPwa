@@ -101,5 +101,4 @@ export interface IDiagrammData {
   xAchsenSkalierung: XAchsenSkalierungsOptionen;
   valueOption: BarChartValueOptions;
   filter: {filter: BarChartFilterOptions, value: any}[];
-
 }

@@ -70,9 +70,9 @@ export class DataProviderService {
       }
     })
 
-    let alleEintraege =  b.concat(a);
+    let alleEintraege = b.concat(a);
 
-    if(onlyIncluded) {
+    if (onlyIncluded) {
       alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);
     }
 
@@ -97,7 +97,7 @@ export class DataProviderService {
 
   getBuchungById(buchungsId: number) {
     const buchung = this.dataService.userData.buchungen.find(buchung => buchung.id === buchungsId);
-    if(buchung && buchung.data.buchungsKategorie === undefined) {
+    if (buchung && buchung.data.buchungsKategorie === undefined) {
       buchung.id = 0;
     }
     return buchung;
@@ -226,6 +226,7 @@ export class DataProviderService {
       noData: false
     }
   }
+
   getAuswertungsLayouts() {
     const auswertungsLayouts: IAuswertungsLayout[] = [];
 
@@ -238,6 +239,66 @@ export class DataProviderService {
             title: 'diagram 1',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
+            valueOption: BarChartValueOptions.Ausgaben
+          }
+        ]
+      }
+    })
+
+    auswertungsLayouts.push({
+      id: -1,
+      data: {
+        titel: 'Ausgaben-Verhalten für Monat (kategorie: aaa)',
+        diagramme: [
+          {
+            title: 'diagram 1',
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
+            filter: [
+              {
+                filter: BarChartFilterOptions.Kategorien,
+                value: 1
+              }
+            ],
+            valueOption: BarChartValueOptions.Ausgaben
+          }
+        ]
+      }
+    })
+
+    auswertungsLayouts.push({
+      id: -1,
+      data: {
+        titel: 'Ausgaben-Verhalten für Monat (wochentag: Montag)',
+        diagramme: [
+          {
+            title: 'diagram 1',
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
+            filter: [
+              {
+                filter: BarChartFilterOptions.Wochentag,
+                value: 1
+              }
+            ],
+            valueOption: BarChartValueOptions.Ausgaben
+          }
+        ]
+      }
+    })
+
+    auswertungsLayouts.push({
+      id: -1,
+      data: {
+        titel: 'Ausgaben-Verhalten für Monat (kategorie: bbb)',
+        diagramme: [
+          {
+            title: 'diagram 1',
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
+            filter: [
+              {
+                filter: BarChartFilterOptions.Kategorien,
+                value: 2
+              }
+            ],
             valueOption: BarChartValueOptions.Ausgaben
           }
         ]
@@ -274,8 +335,62 @@ export class DataProviderService {
     return auswertungsLayouts;
   }
 
-  getAusgabenForMonth(date: Date, filter?: {filter: BarChartFilterOptions, value: any}[]) {
-    return 987384567;
+  getAusgabenForMonth(date: Date, filter?: { filter: BarChartFilterOptions, value: any }[]) {
+    const filteredBuchungen = this.getAlleBuchungenForMonthFiltered(date, filter);
+    let summe = 0;
+
+    filteredBuchungen.forEach(buchung => {
+      summe += buchung.data.betrag ?? 0;
+    })
+
+    return summe;
+  }
+
+  getAlleBuchungenForMonthFiltered(date: Date, filter?: { filter: BarChartFilterOptions, value: any }[]) {
+    const month = this.getMonthByDate(date);
+    let filteredBuchungen: IBuchung[] = [];
+
+    if (filter && filter.length > 0) {
+
+      month.weeks?.forEach(week => {
+        week.days.forEach(day => {
+          day.buchungen?.forEach(buchung => {
+            let passtBuchung = true;
+            filter?.forEach(filter => {
+              if(!this.passtBuchungZuFilter(buchung, filter)){
+                passtBuchung = false;
+              }
+            })
+            if(passtBuchung) {
+              filteredBuchungen.push(buchung)
+            }
+          })
+        })
+      })
+      return filteredBuchungen;
+    }
+
+    const buchungen: IBuchung[] = [];
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        day.buchungen?.forEach(buchung => {
+          buchungen.push(buchung);
+        })
+      })
+    })
+
+    return buchungen;
+  }
+
+  passtBuchungZuFilter(buchung: IBuchung, filter: { filter: BarChartFilterOptions, value: any }) {
+    switch(filter.filter) {
+      case BarChartFilterOptions.Kategorien:
+        return +(buchung.data.buchungsKategorie)! === filter.value;
+        break;
+      case BarChartFilterOptions.Wochentag:
+        return buchung.data.date.getDay() === filter.value;
+        break;
+    }
   }
 
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
@@ -346,13 +461,13 @@ export class DataProviderService {
   }
 
   getBuchungsKategorienMitEmpty() {
-    const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as {id: number, name: string}[];
+    const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
     x.push({id: 0, name: ''})
     return x;
   }
 
   getBuchungsKategorien() {
-    return  this.utils.clone(this.dataService.userData.buchungsKategorien) as {id: number, name: string}[];
+    return this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
   }
 
   getBuchungsKategorieNameById(id: number) {
