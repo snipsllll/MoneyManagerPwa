@@ -60,3 +60,20 @@ export enum TagesAnzeigeOptions {
   RestMonat,
   leer
 }
+
+export enum XAchsenSkalierungsOptionen {
+  'alle Monate im Jahr',
+  'alle Tage im Monat'
+}
+
+export enum BarChartValueOptions {
+  'Restgeld',
+  'Ausgaben',
+  'Sparen',
+  'Total Budget'
+}
+
+export enum BarChartFilterOptions {
+  'Kategorien',
+  'Wochentag'
+}

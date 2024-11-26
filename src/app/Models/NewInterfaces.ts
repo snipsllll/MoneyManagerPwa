@@ -1,4 +1,4 @@
-import {Months} from "./Enums";
+import {BarChartFilterOptions, BarChartValueOptions, Months, XAchsenSkalierungsOptionen} from "./Enums";
 
 export interface IMonth {
   month: Months;
@@ -84,4 +84,16 @@ export interface BarChartViewModel {
     data: number[];  // Werte für jeden Balken in der Kategorie
     backgroundColor: string; // Farbe für die Balken dieses Datensatzes
   }[];
+}
+
+export interface IAuswertungsLayout {
+  id: number;
+  data: IAuswertungsLayoutData;
+}
+
+export interface IAuswertungsLayoutData {
+  titel: string;
+  xAchsenSkalierung: XAchsenSkalierungsOptionen;
+  valueOption: BarChartValueOptions;
+  filter: BarChartFilterOptions[];
 }

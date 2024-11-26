@@ -1,4 +1,5 @@
 import {
+  IAuswertungsLayout,
   IBuchung,
   IFixkostenEintrag,
   IMonthFixkostenEintrag,
@@ -57,6 +58,7 @@ export interface SavedData {
   standardFixkostenEintraege: IFixkostenEintrag[];
   sparEintraege: ISparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
+  auswertungsLayouts: IAuswertungsLayout[];
   settings: Settings;
   dbVersion: number;
 }

@@ -1,6 +1,12 @@
 import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
+import {
+  IAuswertungsLayout,
+  IBuchung,
+  IFixkostenEintrag,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 
@@ -12,6 +18,7 @@ export class UserData {
   public standardFixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
+  public auswertungsLayouts: IAuswertungsLayout[] = [];
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
@@ -65,6 +72,7 @@ export class UserData {
     this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
     this.sparschweinEintraege = savedData.sparEintraege ?? [];
     this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
   }
 
@@ -113,6 +121,7 @@ export class UserData {
         {id: 3, name: "Freizeit"},
       ],
       savedMonths: [],
+      auswertungsLayouts: [],
       standardFixkostenEintraege: [
         {
           id: 1,
@@ -376,6 +385,7 @@ export class UserData {
     this._fileEngine.save({
       buchungen: [],
       buchungsKategorien: [],
+      auswertungsLayouts: [],
       settings: {
         toHighBuchungenEnabled: true,
         wunschlistenFilter: {
@@ -398,6 +408,7 @@ export class UserData {
     const savedData: SavedData = {
       buchungen: [],
       buchungsKategorien: [],
+      auswertungsLayouts: [],
       savedMonths: [],
       standardFixkostenEintraege: [],
       sparEintraege: [],
@@ -414,6 +425,7 @@ export class UserData {
     savedData.standardFixkostenEintraege = this.standardFixkostenEintraege;
     savedData.sparEintraege = this.sparschweinEintraege;
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
+    savedData.auswertungsLayouts = this.auswertungsLayouts;
     savedData.settings = this.settings;
 
     this.months.forEach(month => {
