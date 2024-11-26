@@ -11,6 +11,7 @@ import {DataProviderService} from "../DataProviderService/data-provider.service"
 import {DataChangeService} from "../DataChangeService/data-change.service";
 import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenDialogViewModel";
 import {IAuswertungsLayout} from "../../Models/NewInterfaces";
+import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,9 @@ export class DialogService {
   isAuswertungenDialogVisible = false;
   auswertungenDialogViewModel?: AuswertungenDialogViewModel;
 
+  isCreateAuswertungsLayoutDialogVisible = false;
+  createAuswertungsLayoutDialogViewModel?: CreateAuswertungsLayoutDialogViewModel;
+
   constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
 
@@ -57,6 +61,11 @@ export class DialogService {
   showMonatFixkostenDialog(monatFixkostenDialogViewModel: MonatFixkostenDialogViewModel) {
     this.isMonatFixkostenDialogVisible = true;
     this.monatFixkostenDialogViewModel = monatFixkostenDialogViewModel;
+  }
+
+  showCreateAuswertungsLayoutDialog(viewModel: CreateAuswertungsLayoutDialogViewModel) {
+    this.isCreateAuswertungsLayoutDialogVisible = true;
+    this.createAuswertungsLayoutDialogViewModel = viewModel;
   }
 
   showBuchungsKategorienDialog() {

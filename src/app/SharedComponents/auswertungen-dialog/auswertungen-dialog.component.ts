@@ -63,13 +63,7 @@ export class AuswertungenDialogComponent {
   }
 
   onPlusClicked() {
-    const createDialogViewModel: CreateDialogViewModel = {
-      onSaveClick: this.onCreateSaveClicked,
-      onCancelClick: this.onCreateCancelClicked,
-      isBetragAusgeblendet: true,
-      isBeschreibungAusgeblendet: true
-    }
-    this.dialogService.showCreateDialog(createDialogViewModel);
+    this.dialogService.showCreateAuswertungsLayoutDialog({});
   }
 
   getViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {

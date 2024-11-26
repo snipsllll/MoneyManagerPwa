@@ -1,0 +1,19 @@
+<div class="create-dialog__wrapper">
+  <div class="create-dialog floating-box">
+    <div class="create-dialog__content">
+      <div class="create-dialog__bottom-buttons-wrapper">
+        <div class="create-dialog__bottom-button" (click)="onCancelClicked()">
+          abbrechen
+        </div>
+        <div class="create-dialog__bottom-button" [class.disabled]="false"  (click)="onSaveClicked()">
+          speichern
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="create-dialog__background">
+
+  </div>
+</div>

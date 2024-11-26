@@ -31,6 +31,7 @@ import { BuchungskategorienDialogComponent } from './SharedComponents/buchungska
 import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.component';
 import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.component';
 import { AuswertungenDialogComponent } from './SharedComponents/auswertungen-dialog/auswertungen-dialog.component';
+import { CreateAuswertungsLayoutDialogComponent } from './SharedComponents/create-auswertungs-layout-dialog/create-auswertungs-layout-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { AuswertungenDialogComponent } from './SharedComponents/auswertungen-dia
     BuchungskategorienDialogComponent,
     BarChartComponent,
     AuswertungenComponent,
-    AuswertungenDialogComponent
+    AuswertungenDialogComponent,
+    CreateAuswertungsLayoutDialogComponent
   ],
     imports: [
         BrowserModule,
