@@ -140,11 +140,8 @@ export class AuswertungenComponent implements OnInit {
         break;
       case XAchsenSkalierungsOptionen.alleTageImMonat:
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
-        labels = Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`);
-        console.log(labels)
         const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
-        console.log(filteredBuchungen)
-
+        labels = Array.from({length: month.daysInMonth!}, (_, i) => `Tag ${i + 1}`);
 
         for (let i = 0; i < month.daysInMonth!; i++) {
           data.push(0);
