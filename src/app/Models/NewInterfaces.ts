@@ -97,8 +97,9 @@ export interface IAuswertungsLayoutData {
 }
 
 export interface IDiagrammData {
+  title: string;
   xAchsenSkalierung: XAchsenSkalierungsOptionen;
   valueOption: BarChartValueOptions;
-  filter: BarChartFilterOptions[];
+  filter: {filter: BarChartFilterOptions, value: any}[];
 
 }

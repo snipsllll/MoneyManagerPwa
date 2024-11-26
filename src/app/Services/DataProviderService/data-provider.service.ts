@@ -9,7 +9,7 @@ import {
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -235,6 +235,7 @@ export class DataProviderService {
         titel: 'Ausgaben-Verhalten für Monat',
         diagramme: [
           {
+            title: 'diagram 1',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
             valueOption: BarChartValueOptions.Ausgaben
@@ -244,14 +245,21 @@ export class DataProviderService {
     })
 
     auswertungsLayouts.push({
-      id: -1,
+      id: -2,
       data: {
         titel: 'Sparenübersicht für Jahr',
         diagramme: [
           {
+            title: 'diagram 1',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
             filter: [],
             valueOption: BarChartValueOptions.Sparen
+          },
+          {
+            title: 'diagram 1',
+            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
+            filter: [],
+            valueOption: BarChartValueOptions.Restgeld
           }
         ]
       }
@@ -264,6 +272,10 @@ export class DataProviderService {
     })
 
     return auswertungsLayouts;
+  }
+
+  getAusgabenForMonth(date: Date, filter?: {filter: BarChartFilterOptions, value: any}[]) {
+    return 987384567;
   }
 
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
