@@ -67,7 +67,7 @@ export class EditBuchungComponent implements OnInit {
       });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
-    this.kategorien = this.dataProvider.getBuchungsKategorien();
+    this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
     this.updateDate();
   }
 

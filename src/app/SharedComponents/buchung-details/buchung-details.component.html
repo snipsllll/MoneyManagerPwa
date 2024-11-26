@@ -43,7 +43,7 @@
           Kategorie
         </div>
         <div class="create-eintrag__data">
-          {{ buchung()!.data.buchungsKategorie ? dataProvider.getBuchungsKategorieNameById(+(buchung()!.data.buchungsKategorie!)) : '---'}}
+          {{ dataProvider.getBuchungsKategorieNameById(+(buchung()!.data.buchungsKategorie!)) }}
         </div>
       </div>
       <hr class="hr-details">

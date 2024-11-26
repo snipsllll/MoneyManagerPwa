@@ -364,6 +364,7 @@ export class UserData {
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
     this.buchungen = savedData.buchungen;
+    this.buchungsKategorien = savedData.buchungsKategorien;
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
     this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
     this.sparschweinEintraege = savedData.sparEintraege;

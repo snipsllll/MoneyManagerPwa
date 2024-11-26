@@ -48,7 +48,7 @@ export class CreateBuchungComponent {
     this.oldBuchung = this.getNewEmptyBuchung(date);
 
     this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
-    this.kategorien = this.dataProvider.getBuchungsKategorien();
+    this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
   }
 
   onKategorieChanged(): void {
@@ -199,14 +199,14 @@ export class CreateBuchungComponent {
     this.isSaveButtonDisabled.set(this.isSaveAble());
   }
 
-  private getNewEmptyBuchung(date: Date) {
+  private getNewEmptyBuchung(date: Date): IBuchungData {
     return {
       title: '',
       betrag: null,
       date: date,
       time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
-      beschreibung: '',
-      apz: false
+      buchungsKategorie: 0,
+      beschreibung: ''
     };
   }
 

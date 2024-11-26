@@ -97,7 +97,11 @@ export class DataProviderService {
   }
 
   getBuchungById(buchungsId: number) {
-    return this.dataService.userData.buchungen.find(buchung => buchung.id === buchungsId);
+    const buchung = this.dataService.userData.buchungen.find(buchung => buchung.id === buchungsId);
+    if(buchung && buchung.data.buchungsKategorie === undefined) {
+      buchung.id = 0;
+    }
+    return buchung;
   }
 
   getDayByeDate(date: Date): Day | undefined {
@@ -291,13 +295,19 @@ export class DataProviderService {
     return this.dataService.userData.getKategorienNamen();
   }
 
+  getBuchungsKategorienMitEmpty() {
+    const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as {id: number, name: string}[];
+    x.push({id: 0, name: ''})
+    return x;
+  }
+
   getBuchungsKategorien() {
-    return this.dataService.userData.buchungsKategorien;
+    return  this.utils.clone(this.dataService.userData.buchungsKategorien) as {id: number, name: string}[];
   }
 
   getBuchungsKategorieNameById(id: number) {
     const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
-    return kategorie ? kategorie.name : 'Kategorie nicht gefunden';
+    return kategorie ? kategorie.name : '---';
   }
 
   getAllMonthsForYear(year: number) {

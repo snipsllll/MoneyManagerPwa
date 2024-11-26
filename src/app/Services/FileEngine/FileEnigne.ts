@@ -1,6 +1,5 @@
 import {environment} from "../../../environments/environment";
 import {SavedData} from "../../Models/Interfaces";
-import {IBuchung} from "../../Models/NewInterfaces";
 
 
 export class FileEngine {
@@ -14,8 +13,13 @@ export class FileEngine {
   }
 
   save(savedData: SavedData) {
-    if(!this.isInProduction.production) {
-      const blob = new Blob([JSON.stringify(savedData)], {type: 'text/plain'});
+    console.log(savedData)
+    if (!this.isInProduction.production) {
+      // JSON.stringify mit Einrückung für lesbares JSON
+      const readableJson = JSON.stringify(savedData, null, 2);
+
+      // JSON als Blob speichern
+      const blob = new Blob([readableJson], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -24,14 +28,15 @@ export class FileEngine {
       window.URL.revokeObjectURL(url);
 
       try {
-        localStorage.setItem('savedText', JSON.stringify(savedData));
+        // Lesbares JSON in localStorage speichern
+        localStorage.setItem('savedText', readableJson);
       } catch (e) {
         console.error('Fehler beim Speichern in localStorage:', e);
       }
     } else {
+      // Production: Kompaktes JSON speichern
       localStorage.setItem('savedValue', JSON.stringify(savedData) ?? 'lol');
     }
-
   }
 
   load(): SavedData {

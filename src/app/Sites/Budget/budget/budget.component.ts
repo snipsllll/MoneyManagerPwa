@@ -158,5 +158,6 @@ export class BudgetComponent  implements OnInit{
         startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
       })
     });
+    console.log(this.data())
   }
 }
