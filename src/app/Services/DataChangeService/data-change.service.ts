@@ -204,6 +204,16 @@ export class DataChangeService {
     this.dataService.userData.buchungsKategorien = [];
   }
 
+  editAuswertungsLayouts(elemente: IAuswertungsLayout[]) {
+    elemente.forEach(element => {
+      this.dataService.userData.auswertungsLayouts = [];
+      if(element.id > 0) {
+        this.dataService.userData.auswertungsLayouts.push(element);
+      }
+    });
+    this.dataService.update();
+  }
+
 
   private getNextFreeBuchungId() {
     let freeId = 1;

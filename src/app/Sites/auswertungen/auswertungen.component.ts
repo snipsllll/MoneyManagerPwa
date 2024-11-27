@@ -63,6 +63,7 @@ export class AuswertungenComponent implements OnInit {
     this.topbarService.isDropDownDisabled = true;
     this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
     this.updateLayout();
+    console.log(this.layoutOptions)
   }
 
   update() {

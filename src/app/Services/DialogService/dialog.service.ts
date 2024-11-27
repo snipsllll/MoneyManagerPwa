@@ -96,6 +96,7 @@ export class DialogService {
       onSaveClicked: (elemente: IAuswertungsLayout[]) => {
         console.log('save clicked')
         this.isAuswertungenDialogVisible = false;
+        this.dataChangeService.editAuswertungsLayouts(elemente);
       }
     }
     console.log(this.dataProvider.getAuswertungsLayouts())

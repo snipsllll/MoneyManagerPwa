@@ -17,6 +17,7 @@
   width: 90%;
   margin: auto;
   padding: 15px 5px;
+  background-color: #67a4cd !important;
 }
 
 .create-dialog__background {
@@ -91,6 +92,7 @@
   border-radius: 10px;
   background-color: #ffffff;
   padding: 10px;
+  overflow-y: scroll;
 }
 
 .diagram-plus-button-wrapper {
@@ -107,6 +109,9 @@
   height: 40px;
   width: 40px;
   border: 1px solid black;
-  border-radius: 5px;
-  font-size: 20px;
+  border-radius: 10px;
+  font-size: 30px;
+  margin-top: -10px;
+  background-color: #29508a;
+  color: white;
 }

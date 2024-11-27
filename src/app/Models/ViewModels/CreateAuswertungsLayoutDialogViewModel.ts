@@ -1,6 +1,6 @@
 import {DiagramDetailsViewModel} from "./DiagramDetailsViewModel";
 
 export interface CreateAuswertungsLayoutDialogViewModel {
-  titel?: string;
+  title?: string;
   diagramme?: DiagramDetailsViewModel[];
 }

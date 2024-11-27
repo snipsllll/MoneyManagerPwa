@@ -1,0 +1,45 @@
+<div class="diagram-details floating-box">
+  <div class="diagram-details__top">
+    <input class="diagram-details__titel" [(ngModel)]="viewModel.title" placeholder="Diagram Titel">
+    <img src="assets/delete.png" class="diagram-details__delete-button" (click)="onDeleteClicked()">
+  </div>
+  <hr class="diagram-details__hr">
+  <div class="diagram-details__bottom">
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
+        Wert:
+      </div>
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.wert">
+        <option *ngFor="let option of wertOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
+        X-Achse:
+      </div>
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.xAchse">
+        <option *ngFor="let option of xAchseOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
+        Filter:
+      </div>
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.filter">
+        <option *ngFor="let option of filterOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
+        Farbe:
+      </div>
+      <input type="color" class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.color">
+    </div>
+  </div>
+</div>

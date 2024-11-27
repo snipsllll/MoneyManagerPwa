@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, signal} from '@angular/core';
 import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
@@ -6,8 +6,10 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {ListElementData, ListElementSettings, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
-import {IAuswertungsLayout} from "../../Models/NewInterfaces";
+import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/NewInterfaces";
 import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenDialogViewModel";
+import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-auswertungen-dialog',
@@ -16,16 +18,36 @@ import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenD
 })
 export class AuswertungenDialogComponent {
   @Input() viewModel!: AuswertungenDialogViewModel;
-  newEintrag!: { id: number, name: string };
-
-  constructor(private dialogService: DialogService, public dataService: DataService) {
+  isCreateLayoutDiologVisible = signal<boolean>(false);
+  emptyCreateLayoutDialogViewModel = {
+    title: '',
+    diagramme: undefined
   }
 
-  ngOnInit() {
-    this.newEintrag = {
-      id: -1,
-      name: ''
+  constructor(private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
+  }
+
+  onCreateDialogSaveClicked(createLayoutViewModel: CreateAuswertungsLayoutDialogViewModel) {
+    const newLayoutData: IAuswertungsLayoutData = {
+      titel: createLayoutViewModel.title ?? '',
+      diagramme: createLayoutViewModel.diagramme!.map((diagram) => ({
+        title: diagram.title ?? '',
+        filter: [{
+          filter: diagram.filter!,
+          value: ''
+        }],
+        barColor: diagram.color ?? 'red',
+        eintragBeschreibung: '',
+        valueOption: diagram.wert!,
+        xAchsenSkalierung: diagram.xAchse!,
+      }))
     }
+    const newLayout: IAuswertungsLayout = {
+      id: this.getNextFreeAuswertungsLayoutId(),
+      data: newLayoutData
+    }
+    this.viewModel.elemente.push(newLayout);
+    this.isCreateLayoutDiologVisible.set(false);
   }
 
   onCancelClicked() {
@@ -63,7 +85,7 @@ export class AuswertungenDialogComponent {
   }
 
   onPlusClicked() {
-    this.dialogService.showCreateAuswertungsLayoutDialog({});
+    this.isCreateLayoutDiologVisible.set(true);
   }
 
   getViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {
@@ -106,10 +128,6 @@ export class AuswertungenDialogComponent {
     }
     this.viewModel.elemente.push(newEintrag);
     console.log(this.viewModel)
-    this.newEintrag = {
-      id: -1,
-      name: ''
-    }
   }
 
   onCreateCancelClicked = () => {
@@ -159,5 +177,25 @@ export class AuswertungenDialogComponent {
   }
 
   onEditCancelClicked = () => {
+  }
+
+  private getNextFreeAuswertungsLayoutId() {
+    let freeId = 1;
+    for (let i = 0; i < this.viewModel.elemente!.length; i++) {
+      if (this.viewModel.elemente!.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
+  private getEnumValueByKey(enumKey: string, enumObj: any): number | undefined {
+    // Überprüft, ob der Schlüssel existiert
+    if (enumKey in enumObj) {
+      return enumObj[enumKey as keyof typeof enumObj];
+    }
+    return undefined; // Falls der Schlüssel ungültig ist
   }
 }

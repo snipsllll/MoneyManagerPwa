@@ -1,0 +1,56 @@
+.diagram-details {
+  padding: 10px;
+  margin: 0 0 20px 0;
+}
+
+.diagram-details__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.diagram-details__titel {
+  line-height: 40px;
+  flex-grow: 1;
+  padding: 0 0 0 5px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom: none;
+  font-size: 20px;
+}
+
+.diagram-details__delete-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0 5px 5px;
+  height: 30px;
+  width: 30px;
+}
+
+.diagram-details__hr {
+  margin-top: 0;
+  margin-bottom: 10px;
+  border: 1px solid black;
+}
+
+.diagram-details__bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100px;
+}
+
+.diagram-details__bottom-eintrag {
+  display: flex;
+  justify-content: space-between;
+}
+
+.diagram-details__bottom-eintrag-label {
+  line-height: 20px;
+}
+
+.diagram-details__bottom-eintrag-data {
+  width: 200px;
+  max-height: 40px;
+}
