@@ -5,6 +5,7 @@ import {DataProviderService} from "../../Services/DataProviderService/data-provi
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-auswertungen',
@@ -16,7 +17,10 @@ export class AuswertungenComponent implements OnInit {
   chart1?: BarChartViewModel;
   chart2?: BarChartViewModel;
   chart3?: BarChartViewModel;
-  layoutOptions!: IAuswertungsLayout[]
+  layoutOptions = computed<IAuswertungsLayout[]>(() => {
+    this.dataService.updated();
+    return this.dataProvider.getAuswertungsLayouts();
+  })
 
   selectedLayout: string = 'Ausgaben-Verhalten für Monat';
 
@@ -54,25 +58,23 @@ export class AuswertungenComponent implements OnInit {
 
   selectedYear = signal<number>(new Date().getFullYear());
 
-  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private topbarService: TopbarService, private dialogService: DialogService) {
+  constructor(private dataService: DataService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private topbarService: TopbarService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.topbarService.title.set('AUSWERTUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
     this.updateLayout();
     console.log(this.layoutOptions)
   }
 
   update() {
-    this.layoutOptions = this.dataProvider.getAuswertungsLayouts();
     this.updateLayout();
   }
 
   updateLayout() {
-    const layout = this.layoutOptions.find(option => option.data.titel === this.selectedLayout);
+    const layout = this.layoutOptions().find(option => option.data.titel === this.selectedLayout);
     if (!layout) {
       console.log('hinzufügen wurde geclickt');
       return;
@@ -96,7 +98,7 @@ export class AuswertungenComponent implements OnInit {
   }
 
   getSelectedLayoutOptionIndex() {
-    return this.layoutOptions.findIndex(option => option.data.titel === this.selectedLayout);
+    return this.layoutOptions().findIndex(option => option.data.titel === this.selectedLayout);
   }
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
