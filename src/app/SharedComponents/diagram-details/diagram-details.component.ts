@@ -10,6 +10,7 @@ import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen}
 export class DiagramDetailsComponent {
   @Input() viewModel!: DiagramDetailsViewModel;
   @Output() deleteClicked = new EventEmitter();
+  @Output() updated = new EventEmitter();
 
   // Extrahiere die Enum-Schlüssel für das Dropdown
   wertOptions = Object.keys(BarChartValueOptions).filter(key => isNaN(Number(key)));
@@ -23,6 +24,10 @@ export class DiagramDetailsComponent {
 
   onDeleteClicked() {
     this.deleteClicked.emit(this.viewModel.id);
+  }
+
+  sendUpdate() {
+    this.updated.emit(this.viewModel);
   }
 
 

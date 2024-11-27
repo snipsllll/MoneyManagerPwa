@@ -205,8 +205,9 @@ export class DataChangeService {
   }
 
   editAuswertungsLayouts(elemente: IAuswertungsLayout[]) {
+    console.log(elemente)
+    this.dataService.userData.auswertungsLayouts = [];
     elemente.forEach(element => {
-      this.dataService.userData.auswertungsLayouts = [];
       if(element.id > 0) {
         this.dataService.userData.auswertungsLayouts.push(element);
       }

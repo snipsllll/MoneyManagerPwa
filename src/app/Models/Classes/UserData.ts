@@ -64,6 +64,7 @@ export class UserData {
 
   loadDataFromStorage() {
     let loadedData: any = this._fileEngine.load();
+    console.log(loadedData)
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
     this.buchungen = savedData.buchungen ?? [];
@@ -397,6 +398,7 @@ export class UserData {
 
   private reload() {
     let loadedData: any = this._fileEngine.load();
+    console.log(loadedData)
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
@@ -434,6 +436,7 @@ export class UserData {
   }
 
   getSavedData(): SavedData {
+    console.log(this.auswertungsLayouts)
     const savedData: SavedData = {
       buchungen: [],
       buchungsKategorien: [],

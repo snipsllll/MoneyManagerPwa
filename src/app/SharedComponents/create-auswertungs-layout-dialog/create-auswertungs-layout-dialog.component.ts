@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
@@ -12,6 +12,7 @@ import {XAchsenSkalierungsOptionen} from "../../Models/Enums";
 export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   @Input() viewModel!: CreateAuswertungsLayoutDialogViewModel;
   @Output() saveClicked = new EventEmitter();
+  isSaveEnabled = signal<boolean>(true);
 
   constructor(public dialogService: DialogService) {
     if(!this.viewModel) {
@@ -26,12 +27,20 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   ngOnInit() {
     if (!this.viewModel.diagramme) {
       this.viewModel.diagramme = [];
+      this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
+  }
+
+  update(viewModel: DiagramDetailsViewModel) {
+    this.updateIsSaveEnabled();
   }
 
   protected onCreateDiagramDeleteClicked(id: number) {
     console.log(76767)
     this.viewModel.diagramme?.splice(this.viewModel.diagramme?.findIndex(diagram => diagram.id === id), 1);
+    if(this.viewModel.diagramme?.length === 0) {
+      this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
+    }
   }
 
   protected onCancelClicked() {
@@ -39,25 +48,43 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   }
 
   protected onSaveClicked() {
-    this.viewModel.diagramme?.forEach(diagram => {
-      switch(diagram.xAchse) {
-        case XAchsenSkalierungsOptionen.alleTageImMonat:
-          diagram.xAchse = XAchsenSkalierungsOptionen.alleTageImMonat
-          break;
-        case XAchsenSkalierungsOptionen.alleMonateImJahr:
-          diagram.xAchse = XAchsenSkalierungsOptionen.alleMonateImJahr
-          break;
-      }
-      //diagram.xAchse = XAchsenSkalierungsOptionen[diagram.xAchse!]
-    })
-    console.log(this.viewModel)
-    this.saveClicked.emit(this.viewModel);
-    this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
+    if(this.isSaveEnabled()) {
+      this.viewModel.diagramme?.forEach(diagram => {
+        switch(diagram.xAchse) {
+          case XAchsenSkalierungsOptionen.alleTageImMonat:
+            diagram.xAchse = XAchsenSkalierungsOptionen.alleTageImMonat
+            break;
+          case XAchsenSkalierungsOptionen.alleMonateImJahr:
+            diagram.xAchse = XAchsenSkalierungsOptionen.alleMonateImJahr
+            break;
+        }
+        //diagram.xAchse = XAchsenSkalierungsOptionen[diagram.xAchse!]
+      })
+      console.log(this.viewModel)
+      this.saveClicked.emit(this.viewModel);
+      this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
+    }
+
   }
 
   protected onPlusClicked() {
     this.viewModel.diagramme!.push(this.getNewEmptyDiagramDetailsViewModel());
     console.log(this.viewModel)
+  }
+
+  updateIsSaveEnabled() {
+    let enabled = true;
+
+    this.viewModel.diagramme?.forEach(diagram => {
+      if(!diagram.xAchse) {
+        enabled = false;
+      }
+      if(!diagram.wert) {
+        enabled = false;
+      }
+    });
+
+    this.isSaveEnabled.set(enabled);
   }
 
   private getNewEmptyDiagramDetailsViewModel(): DiagramDetailsViewModel {
