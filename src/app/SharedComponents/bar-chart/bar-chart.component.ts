@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
-import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Chart, ChartConfiguration, registerables} from 'chart.js';
 import {BarChartViewModel} from "../../Models/NewInterfaces";
 
 @Component({

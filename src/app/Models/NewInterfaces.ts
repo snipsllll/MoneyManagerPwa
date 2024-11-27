@@ -1,7 +1,6 @@
 import {
   BarChartFilterOptions,
   BarChartValueOptions,
-  Color,
   HorizontalelinieOptions,
   Months,
   XAchsenSkalierungsOptionen

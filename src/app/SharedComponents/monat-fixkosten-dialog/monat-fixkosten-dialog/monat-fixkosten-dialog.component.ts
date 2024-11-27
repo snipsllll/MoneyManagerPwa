@@ -1,9 +1,6 @@
-import {Component, computed, Input, OnInit, signal} from '@angular/core';
+import {Component, computed, Input, OnInit} from '@angular/core';
 import {IFixkostenEintrag, IFixkostenEintragData, IMonthFixkostenEintrag} from "../../../Models/NewInterfaces";
-import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
-import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {
