@@ -87,6 +87,7 @@ export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
   grayedOut?: boolean;
+  isEditButton?: boolean;
 }
 
 export interface AvailableMoney {

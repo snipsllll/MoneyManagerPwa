@@ -16,6 +16,9 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   isSaveEnabled = signal<boolean>(true);
 
   constructor(public dialogService: DialogService) {
+  }
+
+  ngOnInit() {
     if(!this.viewModel) {
       this.viewModel = {
         title: '',
@@ -23,9 +26,6 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
       }
     }
     console.log(this.viewModel)
-  }
-
-  ngOnInit() {
     if (!this.viewModel.diagramme) {
       this.viewModel.diagramme = [];
       this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());

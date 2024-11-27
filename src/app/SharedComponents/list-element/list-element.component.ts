@@ -15,6 +15,7 @@ export class ListElementComponent implements OnInit{
   @Input() viewModel!: ListElementViewModel;
   isExpanded: boolean = false;
   @Output() onElementClicked = new EventEmitter();
+  @Output() onEditClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
   menuItems?: MenuItem[];
   ut: UT = new UT();
@@ -35,6 +36,9 @@ export class ListElementComponent implements OnInit{
   onMenuEintragClicked(menuItem: MenuItem) {
     if(!menuItem.grayedOut){
       this.isMenuVisible.set(false);
+      if(menuItem.isEditButton) {
+        this.onEditClicked.emit(this.viewModel);
+      }
       menuItem.onClick(this.viewModel.data);
     }
   }

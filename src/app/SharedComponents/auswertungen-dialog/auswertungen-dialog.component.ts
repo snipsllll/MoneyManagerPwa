@@ -1,16 +1,17 @@
 import {Component, Input, signal} from '@angular/core';
-import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
-import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
-import {ListElementData, ListElementSettings, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
-import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
+import {CreateDialogEintrag} from "../../Models/ViewModels/CreateDialogViewModel";
+import {ListElementData, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
+import {EditDialogData} from "../../Models/ViewModels/EditDialogViewModel";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/NewInterfaces";
 import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenDialogViewModel";
 import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
+import {XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Component({
   selector: 'app-auswertungen-dialog',
@@ -24,6 +25,10 @@ export class AuswertungenDialogComponent {
     title: '',
     diagramme: undefined
   }
+
+  selectedLayout?: IAuswertungsLayout;
+  createMode: boolean = false;
+  selectedElementToEdit?: CreateAuswertungsLayoutDialogViewModel;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
   }
@@ -131,6 +136,80 @@ export class AuswertungenDialogComponent {
     return -1
   }
 
+  getStringByFilterWert(value: any): number {
+    switch (value) {
+      case 'Kategorien':
+        return 0;
+        break;
+      case 'Wochentag':
+        return 1;
+        break;
+    }
+    return -1;
+  }
+
+
+  getStringByWochentagWert(value: string): number {
+    switch (value) {
+      case 'Sonntag':
+        return 0;
+        break;
+      case 'Montag':
+        return 1;
+        break;
+      case 'Dienstag':
+        return 2;
+        break;
+      case 'Mitwoch':
+        return 3;
+        break;
+      case 'Donnerstag':
+        return 4;
+        break;
+      case 'Freitag':
+        return 5;
+        break;
+      case 'Samstag':
+        return 6;
+        break;
+    }
+
+    return -1;
+  }
+
+  getStringByWertWert(value: any): number {
+    switch(value) {
+      case  'Restgeld':
+        return 0
+        break;
+      case  'Ausgaben':
+        return 1
+        break;
+      case  'Sparen':
+        return 2
+        break;
+      case  'TotalBudget':
+        return 3
+        break;
+      case  'DifferenzZuDaySollBudget':
+        return 4
+        break;
+    }
+    return -1
+  }
+
+  getStringByXAchsenWert(value: any): XAchsenSkalierungsOptionen {
+    switch(value) {
+      case 0:
+        return XAchsenSkalierungsOptionen.alleTageImMonat;
+        break;
+      case 1:
+        return XAchsenSkalierungsOptionen.alleMonateImJahr;
+        break;
+    }
+    return XAchsenSkalierungsOptionen.alleTageImMonat;
+  }
+
   onCancelClicked() {
     if (this.checkHasChanged()) {
       const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -166,34 +245,69 @@ export class AuswertungenDialogComponent {
   }
 
   onPlusClicked() {
+    this.createMode = true;
     this.isCreateLayoutDiologVisible.set(true);
   }
 
   getViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {
-    const settings: ListElementSettings = {
-      doMenuExist: eintrag.id > 0,
-      isDarker: eintrag.id < 0,
-      doDetailsExist: false
+    return {
+      data: {
+        id: eintrag.id,
+        title: eintrag.data.titel,
+        menuItems: [
+          {
+            label: 'bearbeiten',
+            onClick: this.onEditClicked,
+            isEditButton: true
+          },
+          {
+            label: 'löschen',
+            onClick: this.onDeleteClicked
+          }
+        ]
+      },
+      settings: {
+        isDarker: eintrag.id < 0,
+        doMenuExist: eintrag.id > 0
+      }
     }
+  }
 
-    const data: ListElementData = {
-      id: eintrag.id,
-      title: eintrag.data.titel,
-      menuItems: [
-        {
-          label: 'bearbeiten',
-          onClick: this.onEditClicked
+  onListElemEditClicked(eintrag: ListElementViewModel) {
+    console.log(this.viewModel.elemente);
+    console.log(eintrag)
+    this.createMode = false;
+    this.selectedLayout = this.viewModel.elemente.find(layout => layout.id === eintrag.data.id);
+
+    this.selectedElementToEdit = this.getLayoutViewModel(this.selectedLayout!);
+
+    this.isCreateLayoutDiologVisible.set(true);
+  }
+
+  getLayoutViewModel(eintrag: IAuswertungsLayout): CreateAuswertungsLayoutDialogViewModel {
+    console.log(eintrag)
+    const diagramme: DiagramDetailsViewModel[] = []
+
+    eintrag.data.diagramme.forEach(diagram => {
+      const diagramDetailsViewModel: DiagramDetailsViewModel = {
+        id: -1,
+        filter: {
+          filter: diagram.filter[0].filter,
+          value: diagram.filter[0].value
         },
-        {
-          label: 'löschen',
-          onClick: this.onDeleteClicked
-        }
-      ]
-    }
+        wert: diagram.valueOption,
+        xAchse: this.getStringByXAchsenWert(diagram.xAchsenSkalierung),
+        title: diagram.title,
+        color: diagram.barColor
+      }
+
+      diagramme.push(diagramDetailsViewModel)
+    })
+
 
     return {
-      settings: settings,
-      data: data
+      title: eintrag.data.titel,
+      diagramme: diagramme
     }
   }
 
