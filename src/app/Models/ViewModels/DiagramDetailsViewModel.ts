@@ -12,4 +12,5 @@ export interface DiagramDetailsViewModel {
   color?: string;
   showHorizontaleLinie?: boolean;
   horizontaleLinie?: string;
+  horizontaleLinieZahl?: number;
 }

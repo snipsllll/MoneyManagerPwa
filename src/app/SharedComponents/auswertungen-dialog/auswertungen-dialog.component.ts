@@ -52,7 +52,8 @@ export class AuswertungenDialogComponent {
         valueOption: this.getWertWertByString(diagram.wert),
         xAchsenSkalierung: this.getXAchsenWertByString(diagram.xAchse),
         showHorizontaleLinie: diagram.showHorizontaleLinie,
-        horizontaleLinie: this.getHorizontaleLinieWertByString(diagram.horizontaleLinie)
+        horizontaleLinie: this.getHorizontaleLinieWertByString(diagram.horizontaleLinie),
+        horizontaleLinieZahl: diagram.horizontaleLinieZahl
       }))
     }
     const newLayout: IAuswertungsLayout = {
@@ -60,7 +61,7 @@ export class AuswertungenDialogComponent {
       data: newLayoutData
     }
 
-    if(this.createMode) {
+    if (this.createMode) {
       this.viewModel.elemente.push(newLayout);
     } else {
       this.viewModel.elemente[this.viewModel.elemente.findIndex(element => element.id === createLayoutViewModel.id!)] = newLayout;
@@ -81,19 +82,27 @@ export class AuswertungenDialogComponent {
     return foundItem ? foundItem.name : '';
   }
 
-  getHorizontaleLinieWertByString(value: any): number{
+  getHorizontaleLinieWertByString(value: any): number {
     switch (value) {
       case 'daySollBudget':
         return 0;
+        break;
+      case 'zahl':
+        return 1;
+        break;
     }
 
     return -1;
   }
 
-  getStringByHorizontaleLinieWert(value: any): string{
+  getStringByHorizontaleLinieWert(value: any): string {
     switch (value) {
       case 0:
         return 'daySollBudget';
+        break;
+      case 1:
+        return 'zahl';
+        break;
     }
 
     return '';
@@ -141,7 +150,7 @@ export class AuswertungenDialogComponent {
   }
 
   getWertWertByString(value: any): number {
-    switch(value) {
+    switch (value) {
       case  'Restgeld':
         return 0
         break;
@@ -162,7 +171,7 @@ export class AuswertungenDialogComponent {
   }
 
   getXAchsenWertByString(value: any): number {
-    switch(value) {
+    switch (value) {
       case  'alleMonateImJahr':
         return 0
         break;
@@ -215,7 +224,7 @@ export class AuswertungenDialogComponent {
   }
 
   getStringByWertWert(value: any): string {
-    switch(value) {
+    switch (value) {
       case 0:
         return 'Restgeld';
         break;
@@ -226,17 +235,17 @@ export class AuswertungenDialogComponent {
         return 'Sparen';
         break;
       case 3:
-        return  'TotalBudget';
+        return 'TotalBudget';
         break;
       case 4:
-        return  'DifferenzZuDaySollBudget';
+        return 'DifferenzZuDaySollBudget';
         break;
     }
     return '';
   }
 
   getStringByXAchsenWert(value: any): string {
-    switch(value) {
+    switch (value) {
       case 0:
         return 'alleMonateImJahr';
         break;
@@ -334,7 +343,8 @@ export class AuswertungenDialogComponent {
         title: diagram.title,
         color: diagram.barColor ?? '#43B6FF99',
         showHorizontaleLinie: diagram.showHorizontaleLinie,
-        horizontaleLinie: this.getStringByHorizontaleLinieWert(diagram.horizontaleLinie)
+        horizontaleLinie: this.getStringByHorizontaleLinieWert(diagram.horizontaleLinie),
+        horizontaleLinieZahl: diagram.horizontaleLinieZahl
       }
 
       diagramme.push(diagramDetailsViewModel)
@@ -353,9 +363,7 @@ export class AuswertungenDialogComponent {
       id: 0,
       data: {
         titel: '',
-        diagramme: [
-
-        ]
+        diagramme: []
       }
     }
     this.viewModel.elemente.push(newEintrag);
@@ -399,9 +407,7 @@ export class AuswertungenDialogComponent {
       id: eintrag.id,
       data: {
         titel: '',
-        diagramme: [
-
-        ]
+        diagramme: []
       }
     }
 

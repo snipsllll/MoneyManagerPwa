@@ -101,6 +101,7 @@ export class AuswertungenComponent implements OnInit {
   }
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
+    console.log(diagrammData)
     let labels;
     const data: number[] = [];
     switch (diagrammData.xAchsenSkalierung) {
@@ -210,10 +211,14 @@ export class AuswertungenComponent implements OnInit {
       switch(diagrammData.horizontaleLinie) {
         case HorizontalelinieOptions.daySollBudget:
           horizontaleLinieWert = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1)).dailyBudget ?? 0;
-          if(horizontaleLinieWert === 0) {
-            showHorizontaleLinie = false;
-          }
+          break;
+        case HorizontalelinieOptions.zahl :
+          horizontaleLinieWert = diagrammData.horizontaleLinieZahl ?? 0;
       }
+    }
+
+    if(horizontaleLinieWert === 0) {
+      showHorizontaleLinie = false;
     }
 
     return {

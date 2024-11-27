@@ -68,6 +68,12 @@
         <option></option>
       </select>
     </div>
+    <div class="diagram-details__bottom-eintrag-eingerueckt-2" *ngIf="viewModel.showHorizontaleLinie && viewModel.horizontaleLinie === 'zahl'">
+      <div class="diagram-details__bottom-eintrag-label">
+        Zahl:
+      </div>
+      <input type="number" class="diagram-details__bottom-eintrag-data-small" [(ngModel)]="viewModel.horizontaleLinieZahl">
+    </div>
     <div class="diagram-details__bottom-eintrag">
       <div class="diagram-details__bottom-eintrag-label">
         Farbe:
