@@ -1,0 +1,30 @@
+
+
+.diagram-wrapper {
+  margin-bottom: 20px;
+  padding: 5px;
+}
+
+.diagram-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.diagram-label {
+  color: #1e2c68;
+  font-size: 18px;
+}
+
+.diagram-info-button {
+  margin-left: 5px;
+  height: 15px;
+  width: 15px;
+  border: 1px solid gray;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e3e3e3;
+  font-size: 12px;
+}
