@@ -37,8 +37,8 @@
 
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
     <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
-    <div *ngFor="let menuItem of viewModel.data.menuItems; let last = last">
-      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut" (click)="onMenuEintragClicked(menuItem)">
+    <div *ngFor="let menuItem of menuItems; let last = last">
+      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut ?? false" (click)="onMenuEintragClicked(menuItem)">
         {{ menuItem.label }}
       </div>
       <hr *ngIf="!last" class="list-element__menu-dividing-line">

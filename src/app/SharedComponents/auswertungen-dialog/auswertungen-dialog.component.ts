@@ -164,7 +164,8 @@ export class AuswertungenDialogComponent {
 
   getViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {
     const settings: ListElementSettings = {
-      doMenuExist: true,
+      doMenuExist: eintrag.id > 0,
+      isDarker: eintrag.id < 0,
       doDetailsExist: false
     }
 
@@ -205,10 +206,11 @@ export class AuswertungenDialogComponent {
   }
 
   onCreateCancelClicked = () => {
-
+    this.isCreateLayoutDiologVisible.set(false);
   }
 
   onEditClicked = (eintrag: ListElementData) => {
+    /*
     const editDialogViewModel: EditDialogViewModel = {
       data: {
         title: eintrag.title,
@@ -219,7 +221,7 @@ export class AuswertungenDialogComponent {
       isZusatzAusgeblendet: true,
       isBetragAusgeblendet: true
     }
-    this.dialogService.showEditDialog(editDialogViewModel);
+    this.dialogService.showEditDialog(editDialogViewModel);*/
   }
 
   onDeleteClicked = (x: EditDialogData) => {

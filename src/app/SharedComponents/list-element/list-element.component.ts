@@ -16,17 +16,19 @@ export class ListElementComponent implements OnInit{
   isExpanded: boolean = false;
   @Output() onElementClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
+  menuItems?: MenuItem[];
   ut: UT = new UT();
 
   constructor() {
+    console.log(this.viewModel)
   }
 
   ngOnInit() {
-
+    console.log(this.viewModel);
+    this.menuItems = this.viewModel.data.menuItems;
   }
 
   onMenuClicked() {
-    console.log(1)
     this.isMenuVisible.set(!this.isMenuVisible());
   }
 

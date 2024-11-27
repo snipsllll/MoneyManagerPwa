@@ -42,6 +42,7 @@
 <app-create-auswertungs-layout-dialog
   [viewModel]="emptyCreateLayoutDialogViewModel"
   (saveClicked)="onCreateDialogSaveClicked($event)"
+  (cancelClicked)="onCreateCancelClicked()"
   *ngIf="isCreateLayoutDiologVisible()">
 
 </app-create-auswertungs-layout-dialog>

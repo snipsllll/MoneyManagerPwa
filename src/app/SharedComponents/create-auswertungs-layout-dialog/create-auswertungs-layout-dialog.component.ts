@@ -12,6 +12,7 @@ import {XAchsenSkalierungsOptionen} from "../../Models/Enums";
 export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   @Input() viewModel!: CreateAuswertungsLayoutDialogViewModel;
   @Output() saveClicked = new EventEmitter();
+  @Output() cancelClicked = new EventEmitter();
   isSaveEnabled = signal<boolean>(true);
 
   constructor(public dialogService: DialogService) {
@@ -45,6 +46,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onCancelClicked() {
     this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
+    this.cancelClicked.emit()
   }
 
   protected onSaveClicked() {
