@@ -21,11 +21,10 @@ export class ListElementComponent implements OnInit{
   ut: UT = new UT();
 
   constructor() {
-    console.log(this.viewModel)
+
   }
 
   ngOnInit() {
-    console.log(this.viewModel);
     this.menuItems = this.viewModel.data.menuItems;
   }
 

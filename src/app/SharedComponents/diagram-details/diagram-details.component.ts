@@ -24,7 +24,6 @@ export class DiagramDetailsComponent {
   constructor(private dataProvider: DataProviderService) {
     this.filterOptionKategorien = this.dataProvider.getBuchungsKategorienNamen();
     this.filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
-    console.log(888)
   }
 
   onDeleteClicked() {

@@ -284,7 +284,6 @@ export class DataProviderService {
     })
 
     const manuelleLayouts = this.dataService.userData.auswertungsLayouts;
-    console.log(manuelleLayouts)
 
     manuelleLayouts.forEach(layout => {
       auswertungsLayouts.push(layout);

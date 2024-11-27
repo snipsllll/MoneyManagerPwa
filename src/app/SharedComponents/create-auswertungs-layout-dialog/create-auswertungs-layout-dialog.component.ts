@@ -26,19 +26,19 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
         diagramme: []
       }
     }
-    console.log(this.viewModel)
     if (!this.viewModel.diagramme) {
       this.viewModel.diagramme = [];
       this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
+    console.log(this.viewModel);
   }
 
-  update(viewModel: DiagramDetailsViewModel) {
-    this.updateIsSaveEnabled();
+  update(viewModel?: DiagramDetailsViewModel) {
+    console.log(this.viewModel);
+    //this.updateIsSaveEnabled();
   }
 
   protected onCreateDiagramDeleteClicked(id: number) {
-    console.log(76767)
     this.viewModel.diagramme?.splice(this.viewModel.diagramme?.findIndex(diagram => diagram.id === id), 1);
     if(this.viewModel.diagramme?.length === 0) {
       this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
@@ -52,18 +52,6 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onSaveClicked() {
     if(this.isSaveEnabled()) {
-      this.viewModel.diagramme?.forEach(diagram => {
-        switch(diagram.xAchse) {
-          case XAchsenSkalierungsOptionen.alleTageImMonat:
-            diagram.xAchse = XAchsenSkalierungsOptionen.alleTageImMonat
-            break;
-          case XAchsenSkalierungsOptionen.alleMonateImJahr:
-            diagram.xAchse = XAchsenSkalierungsOptionen.alleMonateImJahr
-            break;
-        }
-        //diagram.xAchse = XAchsenSkalierungsOptionen[diagram.xAchse!]
-      })
-      console.log(this.viewModel)
       this.saveClicked.emit(this.viewModel);
       this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
     }
@@ -72,7 +60,6 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onPlusClicked() {
     this.viewModel.diagramme!.push(this.getNewEmptyDiagramDetailsViewModel());
-    console.log(this.viewModel)
   }
 
   updateIsSaveEnabled() {

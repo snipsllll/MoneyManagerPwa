@@ -66,7 +66,6 @@ export class AuswertungenComponent implements OnInit {
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
     this.updateLayout();
-    console.log(this.layoutOptions)
   }
 
   update() {
@@ -76,7 +75,6 @@ export class AuswertungenComponent implements OnInit {
   updateLayout() {
     const layout = this.layoutOptions().find(option => option.data.titel === this.selectedLayout);
     if (!layout) {
-      console.log('hinzufügen wurde geclickt');
       return;
     }
 
@@ -102,7 +100,6 @@ export class AuswertungenComponent implements OnInit {
   }
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
-    console.log(diagrammData)
     let labels;
     const data: number[] = [];
     switch (diagrammData.xAchsenSkalierung) {
@@ -188,8 +185,6 @@ export class AuswertungenComponent implements OnInit {
                 alleAusgabenDaysDif.push(0);
                 data.push(0);
               }
-
-              console.log(alleAusgabenDaysDif)
 
               filteredBuchungenDif.forEach(buchung => {
                 alleAusgabenDaysDif[buchung.data.date.getDate() - 1] += buchung.data.betrag!;

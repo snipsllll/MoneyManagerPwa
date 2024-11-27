@@ -3,11 +3,11 @@ import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen}
 export interface DiagramDetailsViewModel {
   id?: number;
   title?: string;
-  wert?: BarChartValueOptions;
+  wert?: string;
   filter: {
     filter?: any,
     value?: any;
   };
-  xAchse?: XAchsenSkalierungsOptionen;
+  xAchse?: string;
   color?: string;
 }

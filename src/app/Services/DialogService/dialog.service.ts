@@ -99,7 +99,6 @@ export class DialogService {
         this.dataChangeService.editAuswertungsLayouts(elemente);
       }
     }
-    console.log(this.dataProvider.getAuswertungsLayouts())
   }
 }
 
