@@ -100,6 +100,7 @@ export class AuswertungenComponent implements OnInit {
   }
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
+    console.log(diagrammData)
     let labels;
     const data: number[] = [];
     switch (diagrammData.xAchsenSkalierung) {

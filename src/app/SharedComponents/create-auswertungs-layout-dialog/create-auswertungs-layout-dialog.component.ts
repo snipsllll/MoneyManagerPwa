@@ -40,8 +40,17 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onSaveClicked() {
     this.viewModel.diagramme?.forEach(diagram => {
+      switch(diagram.xAchse) {
+        case XAchsenSkalierungsOptionen.alleTageImMonat:
+          diagram.xAchse = XAchsenSkalierungsOptionen.alleTageImMonat
+          break;
+        case XAchsenSkalierungsOptionen.alleMonateImJahr:
+          diagram.xAchse = XAchsenSkalierungsOptionen.alleMonateImJahr
+          break;
+      }
       //diagram.xAchse = XAchsenSkalierungsOptionen[diagram.xAchse!]
     })
+    console.log(this.viewModel)
     this.saveClicked.emit(this.viewModel);
     this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
   }

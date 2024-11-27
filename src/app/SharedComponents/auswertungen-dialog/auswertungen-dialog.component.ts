@@ -32,14 +32,11 @@ export class AuswertungenDialogComponent {
       titel: createLayoutViewModel.title ?? '',
       diagramme: createLayoutViewModel.diagramme!.map((diagram) => ({
         title: diagram.title ?? '',
-        filter: [{
-          filter: diagram.filter!,
-          value: ''
-        }],
+        filter: [],
         barColor: diagram.color ?? 'red',
         eintragBeschreibung: '',
-        valueOption: diagram.wert!,
-        xAchsenSkalierung: diagram.xAchse!,
+        valueOption: this.getWertWertByString(diagram.wert),
+        xAchsenSkalierung: this.getXAchsenWertByString(diagram.xAchse),
       }))
     }
     const newLayout: IAuswertungsLayout = {
@@ -48,6 +45,39 @@ export class AuswertungenDialogComponent {
     }
     this.viewModel.elemente.push(newLayout);
     this.isCreateLayoutDiologVisible.set(false);
+  }
+
+  getWertWertByString(value: any): number {
+    switch(value) {
+      case  'Restgeld':
+        return 0
+        break;
+      case  'Ausgaben':
+        return 1
+        break;
+      case  'Sparen':
+        return 2
+        break;
+      case  'TotalBudget':
+        return 3
+        break;
+      case  'DifferenzZuDaySollBudget':
+        return 4
+        break;
+    }
+    return -1
+  }
+
+  getXAchsenWertByString(value: any): number {
+    switch(value) {
+      case  'alleMonateImJahr':
+        return 0
+        break;
+      case  'alleTageImMonat':
+        return 1
+        break;
+    }
+    return -1
   }
 
   onCancelClicked() {
