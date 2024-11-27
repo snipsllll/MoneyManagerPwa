@@ -55,9 +55,9 @@
       <div class="diagram-details__bottom-eintrag-label">
         Richtlinie?
       </div>
-      <input type="checkbox" class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.showHorizontaleLinie">
+      <input type="checkbox" class="diagram-details__bottom-eintrag-data diagram-details__bottom-eintrag-data-checkbox" [(ngModel)]="viewModel.showHorizontaleLinie">
     </div>
-    <div class="diagram-details__bottom-eintrag-eingerueckt">
+    <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.showHorizontaleLinie">
       <div class="diagram-details__bottom-eintrag-label">
         Wert:
       </div>

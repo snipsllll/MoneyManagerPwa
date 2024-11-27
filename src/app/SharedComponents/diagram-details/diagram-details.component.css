@@ -54,10 +54,20 @@
 .diagram-details__bottom-eintrag-data {
   width: 200px;
   max-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.diagram-details__bottom-eintrag-data-checkbox {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
 }
 
 .diagram-details__bottom-eintrag-eingerueckt {
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
+  margin-top: 5px;
 }
