@@ -42,7 +42,7 @@ export class AuswertungenDialogComponent {
     const newLayoutData: IAuswertungsLayoutData = {
       titel: createLayoutViewModel.title ?? '',
       diagramme: createLayoutViewModel.diagramme!.map((diagram) => ({
-        title: diagram.title ?? '',
+        title: diagram.title ?? `neues Diagram`,
         filter: [{
           filter: this.getFilterWertByString(diagram.filter.filter),
           value: diagram.filter.filter === 'Wochentag' ? this.getWochentagWertByString(diagram.filter.value) : this.getKategorieWertByString(diagram.filter.value)
@@ -59,6 +59,10 @@ export class AuswertungenDialogComponent {
     const newLayout: IAuswertungsLayout = {
       id: createLayoutViewModel.id ?? this.getNextFreeAuswertungsLayoutId(),
       data: newLayoutData
+    }
+
+    if(newLayout.data.titel === '') {
+      newLayout.data.titel =  `neues Layout ${newLayout.id}`;
     }
 
     if (this.createMode) {

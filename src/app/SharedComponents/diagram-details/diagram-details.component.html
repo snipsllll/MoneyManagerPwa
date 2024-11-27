@@ -33,10 +33,10 @@
         <option *ngFor="let option of filterOptions" [value]="option">
           {{ option }}
         </option>
-        <option></option>
+        <option>--kein Filter--</option>
       </select>
     </div>
-    <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.filter.filter">
+    <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.filter.filter && viewModel.filter.filter !== '--kein Filter--'">
       <div class="diagram-details__bottom-eintrag-label">
         Wert:*
       </div>
@@ -52,8 +52,8 @@
       </select>
     </div>
     <div class="diagram-details__bottom-eintrag">
-      <div class="diagram-details__bottom-eintrag-label">
-        Richtlinie?
+      <div class="diagram-details__bottom-eintrag-label-checkbox">
+        Leitlinie anzeigen?
       </div>
       <input type="checkbox" class="diagram-details__bottom-eintrag-data diagram-details__bottom-eintrag-data-checkbox" [(ngModel)]="viewModel.showHorizontaleLinie">
     </div>
@@ -65,7 +65,6 @@
         <option *ngFor="let option of horizontaleLinieOptions" [value]="option">
           {{ option }}
         </option>
-        <option></option>
       </select>
     </div>
     <div class="diagram-details__bottom-eintrag-eingerueckt-2" *ngIf="viewModel.showHorizontaleLinie && viewModel.horizontaleLinie === 'zahl'">

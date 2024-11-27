@@ -51,6 +51,10 @@
   line-height: 20px;
 }
 
+.diagram-details__bottom-eintrag-label-checkbox {
+  width: fit-content;
+}
+
 .diagram-details__bottom-eintrag-data {
   width: 200px;
   max-height: 40px;

@@ -85,7 +85,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
       wert: undefined,
       title: undefined,
       filter: {
-        filter: undefined,
+        filter: '--kein Filter--',
         value: undefined
       },
       xAchse: undefined
