@@ -10,6 +10,7 @@ import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/NewInterf
 import {AuswertungenDialogViewModel} from "../../Models/ViewModels/AuswertungenDialogViewModel";
 import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 
 @Component({
   selector: 'app-auswertungen-dialog',
@@ -24,7 +25,7 @@ export class AuswertungenDialogComponent {
     diagramme: undefined
   }
 
-  constructor(private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
+  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
   }
 
   onCreateDialogSaveClicked(createLayoutViewModel: CreateAuswertungsLayoutDialogViewModel) {
@@ -34,7 +35,7 @@ export class AuswertungenDialogComponent {
         title: diagram.title ?? '',
         filter: [{
           filter: this.getFilterWertByString(diagram.filter.filter),
-          value: diagram.filter.filter === 'Wochentag' ? this.getWochentagWertByString(diagram.filter.value) : diagram.filter.value
+          value: diagram.filter.filter === 'Wochentag' ? this.getWochentagWertByString(diagram.filter.value) : this.getKategorieWertByString(diagram.filter.value)
         }],
         barColor: diagram.color ?? 'red',
         eintragBeschreibung: '',
@@ -48,6 +49,12 @@ export class AuswertungenDialogComponent {
     }
     this.viewModel.elemente.push(newLayout);
     this.isCreateLayoutDiologVisible.set(false);
+  }
+
+  getKategorieWertByString(value: any) {
+    const kategorien = this.dataProvider.getBuchungsKategorien();
+    const foundItem = kategorien.find(item => item.name === value);
+    return foundItem ? foundItem.id : -1;
   }
 
   getFilterWertByString(value: any): number {
