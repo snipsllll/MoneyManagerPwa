@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/c
 import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
-import {XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 
 @Component({
   selector: 'app-create-auswertungs-layout-dialog',
