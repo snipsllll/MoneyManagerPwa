@@ -46,11 +46,11 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
 
               ctx.save();
               ctx.beginPath();
-              ctx.strokeStyle = 'red';
-              ctx.lineWidth = 2;
-              ctx.setLineDash([5, 5]); // Optional: gestrichelte Linie
-              ctx.moveTo(chart.chartArea.left, yValue);
-              ctx.lineTo(chart.chartArea.right, yValue);
+              ctx.strokeStyle = 'red'; // Farbe der Linie
+              ctx.lineWidth = 0.7; // Dünne Linie
+              ctx.setLineDash([]); // Solide Linie, keine gestrichelten Segmente
+              ctx.moveTo(chart.chartArea.left, yValue); // Startpunkt
+              ctx.lineTo(chart.chartArea.right, yValue); // Endpunkt
               ctx.stroke();
               ctx.restore();
             }
