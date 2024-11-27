@@ -66,7 +66,6 @@ export class AuswertungenComponent implements OnInit {
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
     this.updateLayout();
-    console.log(this.layoutOptions())
   }
 
   update() {
@@ -101,7 +100,6 @@ export class AuswertungenComponent implements OnInit {
   }
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
-    console.log(diagrammData)
     let labels;
     const data: number[] = [];
     switch (diagrammData.xAchsenSkalierung) {
@@ -121,7 +119,15 @@ export class AuswertungenComponent implements OnInit {
                 data.push(this.dataProvider.getAusgabenForMonth(month.startDate, diagrammData.filter) ?? 0);
                 break;
               case BarChartValueOptions.Restgeld:
-                data.push(month.istBudget ?? 0);
+                const x = this.dataProvider.getAlleSparschweinEintraege();
+                let summeSparschweinEinAuszahlungen = 0;
+                x.forEach(eintrag => {
+                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear()) {
+                    summeSparschweinEinAuszahlungen += eintrag.data.betrag;
+                  }
+                })
+
+                data.push((month.istBudget ?? 0) + summeSparschweinEinAuszahlungen);
                 break;
               case BarChartValueOptions.Sparen:
                 data.push(month.sparen ?? 0);
@@ -174,7 +180,16 @@ export class AuswertungenComponent implements OnInit {
               }
               break;
             case BarChartValueOptions.Sparen:
-              data.push(month.sparen ?? 0);
+              const x = this.dataProvider.getAlleSparschweinEintraege();
+              for( let day=0; day<month.daysInMonth!; day++) {
+                let summeAusEinzahlung = 0;
+                x.forEach(eintrag => {
+                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear() && eintrag.data.date.getDate() - 1 === day) {
+                    summeAusEinzahlung += eintrag.data.betrag;
+                  }
+                })
+                data.push(summeAusEinzahlung);
+              }
               break;
             case BarChartValueOptions.TotalBudget:
               data.push(month.totalBudget ?? 0);

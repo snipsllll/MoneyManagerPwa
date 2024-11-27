@@ -100,13 +100,11 @@ export class BuchungskategorienDialogComponent {
   }
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
-    console.log(eintrag)
     const newEintrag: { id: number, name: string } = {
       id: 0,
       name: eintrag.title ?? ''
     }
     this.viewModel.elemente.push(newEintrag);
-    console.log(this.viewModel)
     this.newEintrag = {
       id: -1,
       name: ''

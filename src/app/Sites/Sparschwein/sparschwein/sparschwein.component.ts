@@ -175,7 +175,6 @@ export class SparschweinComponent implements OnInit{
             date: eintrag.date!
           }
         };
-        console.log(editedSparschweinEintrag)
         this.dataChangeService.editSparschweinEintrag(editedSparschweinEintrag)
       },
       onCancelClick: () => {

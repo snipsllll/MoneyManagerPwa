@@ -431,7 +431,6 @@ export class UserData {
   }
 
   getSavedData(): SavedData {
-    console.log(this.auswertungsLayouts)
     const savedData: SavedData = {
       buchungen: [],
       buchungsKategorien: [],

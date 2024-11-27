@@ -76,7 +76,6 @@ export class EinstellungenComponent implements OnInit{
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          console.log(fileContent)
           this.dataService.userData.save(JSON.parse(fileContent));
           this.dataService.update();
           this.update();

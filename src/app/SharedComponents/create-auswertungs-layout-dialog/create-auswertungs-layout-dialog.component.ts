@@ -30,11 +30,9 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
       this.viewModel.diagramme = [];
       this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
-    console.log(this.viewModel);
   }
 
   update(viewModel?: DiagramDetailsViewModel) {
-    console.log(this.viewModel);
     //this.updateIsSaveEnabled();
   }
 
@@ -52,7 +50,6 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onSaveClicked() {
     if(this.isSaveEnabled()) {
-      console.log(this.viewModel)
       this.saveClicked.emit(this.viewModel);
       this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
     }

@@ -73,7 +73,6 @@ export class DataChangeService {
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IMonthFixkostenEintrag[]) {
-    console.log(elemente)
     this.dataService.createNewMonthIfNecessary(date);
     const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
     if(month === undefined) {
@@ -205,7 +204,6 @@ export class DataChangeService {
   }
 
   editAuswertungsLayouts(elemente: IAuswertungsLayout[]) {
-    console.log(elemente)
     this.dataService.userData.auswertungsLayouts = [];
     elemente.forEach(element => {
       if(element.id > 0) {

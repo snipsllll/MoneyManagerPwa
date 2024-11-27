@@ -226,7 +226,6 @@ export class WunschlisteComponent implements OnInit{
         erstelltAm: eintrag.erstelltAm!
       }
     }
-    console.log(newWunschlistenEintrag)
     if(this.kannKaufen(newWunschlistenEintrag)){
       this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
       this.dataChangeService.addSparschweinEintrag({

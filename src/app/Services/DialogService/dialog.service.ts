@@ -90,11 +90,9 @@ export class DialogService {
     this.auswertungenDialogViewModel = {
       elemente: this.dataProvider.getAuswertungsLayouts(),
       onAbortClicked: () => {
-        console.log('abort clicked')
         this.isAuswertungenDialogVisible = false;
       },
       onSaveClicked: (elemente: IAuswertungsLayout[]) => {
-        console.log('save clicked')
         this.isAuswertungenDialogVisible = false;
         this.dataChangeService.editAuswertungsLayouts(elemente);
       }
