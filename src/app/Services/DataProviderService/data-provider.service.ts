@@ -355,6 +355,7 @@ export class DataProviderService {
         return buchung.data.date.getDay() === filter.value;
         break;
     }
+    return true;
   }
 
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {

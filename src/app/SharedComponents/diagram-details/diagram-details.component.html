@@ -53,6 +53,23 @@
     </div>
     <div class="diagram-details__bottom-eintrag">
       <div class="diagram-details__bottom-eintrag-label">
+        Richtlinie?
+      </div>
+      <input type="checkbox" class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.showHorizontaleLinie">
+    </div>
+    <div class="diagram-details__bottom-eintrag-eingerueckt">
+      <div class="diagram-details__bottom-eintrag-label">
+        Wert:
+      </div>
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.horizontaleLinie">
+        <option *ngFor="let option of horizontaleLinieOptions" [value]="option">
+          {{ option }}
+        </option>
+        <option></option>
+      </select>
+    </div>
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
         Farbe:
       </div>
       <input type="color" class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.color">

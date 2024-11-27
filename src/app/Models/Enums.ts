@@ -80,5 +80,5 @@ export enum BarChartFilterOptions {
 }
 
 export enum HorizontalelinieOptions {
-  daySollBudget
+  'daySollBudget'
 }

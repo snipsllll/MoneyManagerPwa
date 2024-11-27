@@ -52,6 +52,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
 
   protected onSaveClicked() {
     if(this.isSaveEnabled()) {
+      console.log(this.viewModel)
       this.saveClicked.emit(this.viewModel);
       this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
     }

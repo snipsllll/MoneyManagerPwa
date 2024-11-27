@@ -10,4 +10,6 @@ export interface DiagramDetailsViewModel {
   };
   xAchse?: string;
   color?: string;
+  showHorizontaleLinie?: boolean;
+  horizontaleLinie?: string;
 }

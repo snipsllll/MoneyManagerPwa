@@ -1,6 +1,11 @@
 import {Component, EventEmitter, Input, input, Output} from '@angular/core';
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
-import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {
+  BarChartFilterOptions,
+  BarChartValueOptions,
+  HorizontalelinieOptions,
+  XAchsenSkalierungsOptionen
+} from "../../Models/Enums";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 
 @Component({
@@ -18,6 +23,7 @@ export class DiagramDetailsComponent {
 
   xAchseOptions = Object.keys(XAchsenSkalierungsOptionen).filter(key => isNaN(Number(key)));
   filterOptions = Object.keys(BarChartFilterOptions).filter(key => isNaN(Number(key)));
+  horizontaleLinieOptions = Object.keys(HorizontalelinieOptions).filter(key => isNaN(Number(key)));
   filterOptionWochentage: string[] = [];
   filterOptionKategorien: string[] = [];
 

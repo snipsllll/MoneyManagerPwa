@@ -66,6 +66,7 @@ export class AuswertungenComponent implements OnInit {
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
     this.updateLayout();
+    console.log(this.layoutOptions())
   }
 
   update() {

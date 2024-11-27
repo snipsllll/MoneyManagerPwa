@@ -51,6 +51,8 @@ export class AuswertungenDialogComponent {
         eintragBeschreibung: '',
         valueOption: this.getWertWertByString(diagram.wert),
         xAchsenSkalierung: this.getXAchsenWertByString(diagram.xAchse),
+        showHorizontaleLinie: diagram.showHorizontaleLinie,
+        horizontaleLinie: this.getHorizontaleLinieWertByString(diagram.horizontaleLinie)
       }))
     }
     const newLayout: IAuswertungsLayout = {
@@ -77,6 +79,24 @@ export class AuswertungenDialogComponent {
     const kategorien = this.dataProvider.getBuchungsKategorien();
     const foundItem = kategorien.find(item => item.id === value);
     return foundItem ? foundItem.name : '';
+  }
+
+  getHorizontaleLinieWertByString(value: any): number{
+    switch (value) {
+      case 'daySollBudget':
+        return 0;
+    }
+
+    return -1;
+  }
+
+  getStringByHorizontaleLinieWert(value: any): string{
+    switch (value) {
+      case 0:
+        return 'daySollBudget';
+    }
+
+    return '';
   }
 
   getFilterWertByString(value: any): number {
@@ -312,7 +332,9 @@ export class AuswertungenDialogComponent {
         wert: this.getStringByWertWert(diagram.valueOption),
         xAchse: this.getStringByXAchsenWert(diagram.xAchsenSkalierung),
         title: diagram.title,
-        color: diagram.barColor ?? '#43B6FF99'
+        color: diagram.barColor ?? '#43B6FF99',
+        showHorizontaleLinie: diagram.showHorizontaleLinie,
+        horizontaleLinie: this.getStringByHorizontaleLinieWert(diagram.horizontaleLinie)
       }
 
       diagramme.push(diagramDetailsViewModel)
