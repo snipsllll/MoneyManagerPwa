@@ -312,7 +312,7 @@ export class AuswertungenDialogComponent {
         wert: this.getStringByWertWert(diagram.valueOption),
         xAchse: this.getStringByXAchsenWert(diagram.xAchsenSkalierung),
         title: diagram.title,
-        color: diagram.barColor
+        color: diagram.barColor ?? '#43B6FF99'
       }
 
       diagramme.push(diagramDetailsViewModel)

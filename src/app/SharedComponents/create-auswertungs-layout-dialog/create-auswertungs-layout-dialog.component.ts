@@ -80,7 +80,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   private getNewEmptyDiagramDetailsViewModel(): DiagramDetailsViewModel {
     return {
       id: this.getNextFreeDiagramId(),
-      color: '',
+      color: '#43B6FF99',
       wert: undefined,
       title: undefined,
       filter: {

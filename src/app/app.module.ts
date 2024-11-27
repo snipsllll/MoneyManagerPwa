@@ -33,6 +33,7 @@ import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.compone
 import { AuswertungenDialogComponent } from './SharedComponents/auswertungen-dialog/auswertungen-dialog.component';
 import { CreateAuswertungsLayoutDialogComponent } from './SharedComponents/create-auswertungs-layout-dialog/create-auswertungs-layout-dialog.component';
 import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diagram-details.component";
+import { MmBarChartComponent } from './SharedComponents/mm-bar-chart/mm-bar-chart.component';
 
 @NgModule({
     declarations: [
@@ -64,7 +65,8 @@ import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diag
         AuswertungenDialogComponent,
         CreateAuswertungsLayoutDialogComponent,
         DiagramDetailsComponent,
-        DiagramDetailsComponent
+        DiagramDetailsComponent,
+        MmBarChartComponent
     ],
     imports: [
         BrowserModule,

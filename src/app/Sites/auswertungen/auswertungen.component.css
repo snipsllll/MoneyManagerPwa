@@ -70,16 +70,6 @@
   margin-left: 7px;
 }
 
-.diagram-wrapper {
-  margin-bottom: 20px;
-  padding: 5px;
-}
-
-.diagram-label {
-  color: #1e2c68;
-  font-size: 18px;
-}
-
 .auswertungen__layout-selection--wrapper {
   display: flex;
   justify-content: right;

@@ -87,6 +87,8 @@ export class UserData {
   }
 
   private checkForDbUpdates(data: any): SavedData {
+    //return this.getLongTestData();
+
     let currentData: any;
 
     data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
@@ -130,12 +132,6 @@ export class UserData {
         dbVersion: currentDbVersion
       }
     }
-
-
-
-    //return this.getLongTestData();
-
-
   }
 
   getLongTestData() {
@@ -195,8 +191,8 @@ export class UserData {
 // Dynamisch jeden Tag jedes Monats im Jahr 2024 mit mindestens einer Buchung initialisieren
     const year = 2024;
 
-    for(let year = 2024; year < 2040; year++) {
-      for (let month = 0; month < 12; month++) {
+    for(let year = 2024; year < 2025; year++) {
+      for (let month = 8; month < 12; month++) {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         // Monat in `savedMonths` hinzufügen

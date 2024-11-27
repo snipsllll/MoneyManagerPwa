@@ -3,7 +3,7 @@ import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {BarChartViewModel, IAuswertungsLayout, IDiagrammData} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
-import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {BarChartValueOptions, HorizontalelinieOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
 
@@ -203,13 +203,27 @@ export class AuswertungenComponent implements OnInit {
         break;
     }
 
+    let horizontaleLinieWert: number | undefined;
+    let showHorizontaleLinie = diagrammData.showHorizontaleLinie;
+    if(diagrammData.showHorizontaleLinie && diagrammData.horizontaleLinie !== undefined) {
+      switch(diagrammData.horizontaleLinie) {
+        case HorizontalelinieOptions.daySollBudget:
+          horizontaleLinieWert = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1)).dailyBudget ?? 0;
+          if(horizontaleLinieWert === 0) {
+            showHorizontaleLinie = false;
+          }
+      }
+    }
+
     return {
       diagramLabel: diagrammData.title,
       labels: labels,
       datasets: [{
         label: diagrammData.title,
         data: data,
-        backgroundColor: diagrammData.barColor ?? 'rgba(67,182,255,0.6)'
+        backgroundColor: diagrammData.barColor ?? 'rgba(67,182,255,0.6)',
+        horizontaleLinie: horizontaleLinieWert,
+        showHorizontaleLinie: showHorizontaleLinie
       }]
     }
   }

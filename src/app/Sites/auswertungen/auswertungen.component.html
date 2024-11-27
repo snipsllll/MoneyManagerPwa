@@ -26,24 +26,9 @@
   </div>
 
   <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
-    <div class="diagram-wrapper" *ngIf="chart1">
-      <div class="diagram-label">
-        {{ chart1.diagramLabel }}:
-      </div>
-      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart1"></app-bar-chart>
-    </div>
-    <div class="diagram-wrapper" *ngIf="chart2">
-      <div class="diagram-label">
-        {{ chart2.diagramLabel }}:
-      </div>
-      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart2"></app-bar-chart>
-    </div>
-    <div class="diagram-wrapper" *ngIf="chart3">
-      <div class="diagram-label">
-        {{ chart3.diagramLabel }}:
-      </div>
-      <app-bar-chart [chartId]="'chart1'" [viewModel]="chart3"></app-bar-chart>
-    </div>
+    <app-mm-bar-chart *ngIf="chart1" [chart]="chart1"></app-mm-bar-chart>
+    <app-mm-bar-chart *ngIf="chart2" [chart]="chart2"></app-mm-bar-chart>
+    <app-mm-bar-chart *ngIf="chart3" [chart]="chart3"></app-mm-bar-chart>
   </div>
 </div>
 

@@ -78,3 +78,7 @@ export enum BarChartFilterOptions {
   'Kategorien',
   'Wochentag'
 }
+
+export enum HorizontalelinieOptions {
+  daySollBudget
+}

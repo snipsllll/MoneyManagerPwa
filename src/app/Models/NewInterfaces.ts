@@ -1,4 +1,11 @@
-import {BarChartFilterOptions, BarChartValueOptions, Color, Months, XAchsenSkalierungsOptionen} from "./Enums";
+import {
+  BarChartFilterOptions,
+  BarChartValueOptions,
+  Color,
+  HorizontalelinieOptions,
+  Months,
+  XAchsenSkalierungsOptionen
+} from "./Enums";
 
 export interface IMonth {
   month: Months;
@@ -84,6 +91,8 @@ export interface BarChartViewModel {
     label: string;   // Name des Datensatzes (z. B. "Umsatz" oder "Gewinn")
     data: number[];  // Werte für jeden Balken in der Kategorie
     backgroundColor: string; // Farbe für die Balken dieses Datensatzes
+    horizontaleLinie?: number; // Wert für die horizontale Linie
+    showHorizontaleLinie?: boolean; // Ob die Linie angezeigt werden soll
   }[];
 }
 
@@ -104,4 +113,6 @@ export interface IDiagrammData {
   xAchsenSkalierung: XAchsenSkalierungsOptionen;
   valueOption: BarChartValueOptions;
   filter: {filter: BarChartFilterOptions, value: any}[];
+  horizontaleLinie?: HorizontalelinieOptions; // Wert für die horizontale Linie
+  showHorizontaleLinie?: boolean; // Ob die Linie angezeigt werden soll
 }

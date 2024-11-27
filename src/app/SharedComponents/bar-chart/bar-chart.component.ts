@@ -31,8 +31,33 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
   }
 
   private renderChart(): void {
-    const context = this.chartCanvas.nativeElement.getContext('2d'); // Sichere Verwendung von ViewChild
+    const context = this.chartCanvas.nativeElement.getContext('2d');
     if (context) {
+      const horizontalLinePlugin = {
+        id: 'horizontalLinePlugin',
+        afterDatasetsDraw: (chart: Chart) => {
+          const ctx = chart.ctx;
+          const datasets = this.viewModel.datasets;
+
+          datasets.forEach(dataset => {
+            if (dataset.showHorizontaleLinie && dataset.horizontaleLinie !== undefined) {
+              const yScale = chart.scales['y'];
+              const yValue = yScale.getPixelForValue(dataset.horizontaleLinie);
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.strokeStyle = 'red';
+              ctx.lineWidth = 2;
+              ctx.setLineDash([5, 5]); // Optional: gestrichelte Linie
+              ctx.moveTo(chart.chartArea.left, yValue);
+              ctx.lineTo(chart.chartArea.right, yValue);
+              ctx.stroke();
+              ctx.restore();
+            }
+          });
+        },
+      };
+
       const config: ChartConfiguration = {
         type: 'bar',
         data: {
@@ -51,7 +76,13 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
               position: 'top',
             },
           },
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
         },
+        plugins: [horizontalLinePlugin], // Plugin hier registrieren
       };
 
       this.chart = new Chart(context, config);

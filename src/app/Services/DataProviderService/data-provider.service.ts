@@ -9,7 +9,12 @@ import {
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {BarChartFilterOptions, BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {
+  BarChartFilterOptions,
+  BarChartValueOptions,
+  HorizontalelinieOptions,
+  XAchsenSkalierungsOptionen
+} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -240,7 +245,9 @@ export class DataProviderService {
             eintragBeschreibung: 'Ausgaben (in Euro)',
             xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
             filter: [],
-            valueOption: BarChartValueOptions.Ausgaben
+            valueOption: BarChartValueOptions.Ausgaben,
+            horizontaleLinie: HorizontalelinieOptions.daySollBudget,
+            showHorizontaleLinie: true
           },
           {
             title: 'Restgeld für Monat',
