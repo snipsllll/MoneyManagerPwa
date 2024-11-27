@@ -74,7 +74,7 @@
   display: flex;
   justify-content: right;
   align-items: center;
-  padding: 5px 0;
+  padding: 7px 0;
 }
 
 .button {
@@ -97,4 +97,12 @@
 .auswertungen__edit-button-icon {
   height: 30px;
   width: 30px;
+}
+
+.auswertungen__edit-button {
+  height: 38px !important;
+  width: 38px !important;
+  padding: 0 !important;
+  margin-left: 7px;
+  margin-right: 5px;
 }

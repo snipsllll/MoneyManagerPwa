@@ -76,7 +76,7 @@
         <div class="create-eintrag__label-multi-select">
           Kategorie:
         </div>
-        <select class="betrag-input-wrapper create-eintrag__data" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()">
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()">
           <option
             *ngFor="let kategorie of kategorien"
             class=""

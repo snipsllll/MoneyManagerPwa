@@ -227,7 +227,6 @@ export class UserData {
   }
 
   private addEmptyKategorieZuAllenBuchungen(data: any) {
-    console.log(data.buchungen)
     let buchungen = data.buchungen.map((buchung: any) => ({
       id: buchung.id,
       data: {
