@@ -186,7 +186,7 @@ export class AuswertungenDialogComponent {
     return -1
   }
 
-  getStringByFilterWert(value: any): string {
+  getStringByFilterWert(value: any) {
     switch (value) {
       case 0:
         return 'Kategorien';
@@ -195,7 +195,7 @@ export class AuswertungenDialogComponent {
         return 'Wochentag';
         break;
     }
-    return '';
+    return undefined;
   }
 
 
@@ -339,7 +339,7 @@ export class AuswertungenDialogComponent {
       const diagramDetailsViewModel: DiagramDetailsViewModel = {
         id: -1,
         filter: {
-          filter: this.getStringByFilterWert(diagram.filter[0].filter),
+          filter: this.getStringByFilterWert(diagram.filter[0].filter) ?? '--kein Filter--',
           value: diagram.filter[0].filter === 1 ? this.getStringByWochentagWert(diagram.filter[0].value) : this.getStringByKategorieWert(diagram.filter[0].value)
         },
         wert: this.getStringByWertWert(diagram.valueOption),

@@ -7,20 +7,20 @@
   <div class="diagram-details__bottom">
     <div class="diagram-details__bottom-eintrag">
       <div class="diagram-details__bottom-eintrag-label">
-        Wert*:
+        X-Achse:
       </div>
-      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.wert">
-        <option *ngFor="let option of wertOptions" [value]="option">
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.xAchse">
+        <option *ngFor="let option of xAchseOptions" [value]="option">
           {{ option }}
         </option>
       </select>
     </div>
     <div class="diagram-details__bottom-eintrag">
       <div class="diagram-details__bottom-eintrag-label">
-        X-Achse*:
+        Y-Achse:
       </div>
-      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.xAchse">
-        <option *ngFor="let option of xAchseOptions" [value]="option">
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.wert">
+        <option *ngFor="let option of wertOptions" [value]="option">
           {{ option }}
         </option>
       </select>
@@ -38,7 +38,7 @@
     </div>
     <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.filter.filter && viewModel.filter.filter !== '--kein Filter--'">
       <div class="diagram-details__bottom-eintrag-label">
-        Wert:*
+        Wert:
       </div>
       <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.filter.value" *ngIf="viewModel.filter.filter === filterOptions[0]">
         <option *ngFor="let option of filterOptionKategorien" [value]="option" >

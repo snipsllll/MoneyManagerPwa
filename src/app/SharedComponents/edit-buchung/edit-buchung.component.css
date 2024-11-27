@@ -246,3 +246,13 @@ hr {
 .betrag-input {
   width: 115px;
 }
+
+.create-eintrag__data-kategorie {
+  height: 23px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  width: 135px;
+  text-align: end;
+  padding: 0 5px 0 0;
+}

@@ -150,6 +150,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       betrag: 0,
       zusatz: ''
     }
+    this.dataService.update()
   }
 
   onCreateCancelClicked = () => {
@@ -176,6 +177,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
         this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
+        this.dataService.update()
       },
       onCancelClicked: () => {
       }
@@ -205,6 +207,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     }
 
     this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === newFixKostenEintrag.id)] = newFixKostenEintrag;
+    this.dataService.update();
   }
 
   onEditCancelClicked = () => {
