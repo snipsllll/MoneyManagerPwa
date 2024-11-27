@@ -12,6 +12,10 @@ import {DataChangeService} from "../../Services/DataChangeService/data-change.se
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
 import {XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {
+  CreateAuswertungsLayoutDialogComponent
+} from "../create-auswertungs-layout-dialog/create-auswertungs-layout-dialog.component";
+import {create} from "lodash";
 
 @Component({
   selector: 'app-auswertungen-dialog',
@@ -22,6 +26,7 @@ export class AuswertungenDialogComponent {
   @Input() viewModel!: AuswertungenDialogViewModel;
   isCreateLayoutDiologVisible = signal<boolean>(false);
   emptyCreateLayoutDialogViewModel = {
+    id: undefined,
     title: '',
     diagramme: undefined
   }
@@ -49,10 +54,16 @@ export class AuswertungenDialogComponent {
       }))
     }
     const newLayout: IAuswertungsLayout = {
-      id: this.getNextFreeAuswertungsLayoutId(),
+      id: createLayoutViewModel.id ?? this.getNextFreeAuswertungsLayoutId(),
       data: newLayoutData
     }
-    this.viewModel.elemente.push(newLayout);
+
+    if(this.createMode) {
+      this.viewModel.elemente.push(newLayout);
+    } else {
+      this.viewModel.elemente[this.viewModel.elemente.findIndex(element => element.id === createLayoutViewModel.id!)] = newLayout;
+    }
+
     this.isCreateLayoutDiologVisible.set(false);
   }
 
@@ -306,6 +317,7 @@ export class AuswertungenDialogComponent {
 
 
     return {
+      id: eintrag.id,
       title: eintrag.data.titel,
       diagramme: diagramme
     }

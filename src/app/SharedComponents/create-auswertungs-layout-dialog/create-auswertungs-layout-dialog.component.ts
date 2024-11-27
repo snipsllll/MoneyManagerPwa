@@ -21,6 +21,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   ngOnInit() {
     if(!this.viewModel) {
       this.viewModel = {
+        id: undefined,
         title: '',
         diagramme: []
       }
