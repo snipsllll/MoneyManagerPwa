@@ -4,7 +4,10 @@ export interface DiagramDetailsViewModel {
   id?: number;
   title?: string;
   wert?: BarChartValueOptions;
-  filter?: BarChartFilterOptions;
+  filter: {
+    filter?: any,
+    value?: any;
+  };
   xAchse?: XAchsenSkalierungsOptionen;
   color?: string;
 }

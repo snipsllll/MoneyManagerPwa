@@ -32,7 +32,10 @@ export class AuswertungenDialogComponent {
       titel: createLayoutViewModel.title ?? '',
       diagramme: createLayoutViewModel.diagramme!.map((diagram) => ({
         title: diagram.title ?? '',
-        filter: [],
+        filter: [{
+          filter: this.getFilterWertByString(diagram.filter.filter),
+          value: diagram.filter.filter === 'Wochentag' ? this.getWochentagWertByString(diagram.filter.value) : diagram.filter.value
+        }],
         barColor: diagram.color ?? 'red',
         eintragBeschreibung: '',
         valueOption: this.getWertWertByString(diagram.wert),
@@ -45,6 +48,47 @@ export class AuswertungenDialogComponent {
     }
     this.viewModel.elemente.push(newLayout);
     this.isCreateLayoutDiologVisible.set(false);
+  }
+
+  getFilterWertByString(value: any): number {
+    switch (value) {
+      case 'Kategorien':
+        return 0;
+        break;
+      case 'Wochentag':
+        return 1;
+        break;
+    }
+    return -1;
+  }
+
+
+  getWochentagWertByString(value: string): number {
+    switch (value) {
+      case 'Sonntag':
+        return 0;
+        break;
+      case 'Montag':
+        return 1;
+        break;
+      case 'Dienstag':
+        return 2;
+        break;
+      case 'Mitwoch':
+        return 3;
+        break;
+      case 'Donnerstag':
+        return 4;
+        break;
+      case 'Freitag':
+        return 5;
+        break;
+      case 'Samstag':
+        return 6;
+        break;
+    }
+
+    return -1;
   }
 
   getWertWertByString(value: any): number {

@@ -1,6 +1,7 @@
 .diagram-details {
   padding: 10px;
   margin: 0 0 20px 0;
+  height: fit-content
 }
 
 .diagram-details__top {
@@ -30,7 +31,6 @@
 
 .diagram-details__hr {
   margin-top: 0;
-  margin-bottom: 10px;
   border: 1px solid black;
 }
 
@@ -38,12 +38,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100px;
 }
 
 .diagram-details__bottom-eintrag {
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
 }
 
 .diagram-details__bottom-eintrag-label {
@@ -53,4 +53,10 @@
 .diagram-details__bottom-eintrag-data {
   width: 200px;
   max-height: 40px;
+}
+
+.diagram-details__bottom-eintrag-eingerueckt {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
 }
