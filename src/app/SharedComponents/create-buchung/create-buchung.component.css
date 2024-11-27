@@ -6,11 +6,11 @@
 }
 
 .red {
-  color: red !important;
+  color: red ;
 }
 
 .green {
-  color: green;
+  color: green !important;
 }
 
 .create-eintrag__back-button-wrapper {
@@ -168,6 +168,16 @@
   border: none;
   border-bottom: black solid 1px;
   width: 130px;
+  text-align: end;
+  padding: 0 5px 0 0;
+}
+
+.create-eintrag__data-kategorie {
+  height: 23px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  width: 135px;
   text-align: end;
   padding: 0 5px 0 0;
 }

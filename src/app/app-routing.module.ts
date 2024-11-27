@@ -10,6 +10,7 @@ import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einstellungen.component";
+import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'sparschwein', component: SparschweinComponent},
   {path: 'wunschliste', component: WunschlisteComponent},
   {path: 'spinning-fish', component: SpinningFishComponent},
+  {path: 'auswertungen', component: AuswertungenComponent},
   {path: 'einstellungen', component: EinstellungenComponent}
 ];
 

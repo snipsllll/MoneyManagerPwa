@@ -18,4 +18,28 @@
 
     </app-create-dialog>
   }
+
+  @if (dialogService.isMonatFixkostenDialogVisible) {
+    <app-monat-fixkosten-dialog [viewModel]="dialogService.monatFixkostenDialogViewModel!">
+
+    </app-monat-fixkosten-dialog>
+  }
+
+  @if (dialogService.isBuchungsKategorienDialogVisible) {
+    <app-buchungskategorien-dialog [viewModel]="dialogService.buchungsKategorienDialogViewModel!">
+
+    </app-buchungskategorien-dialog>
+  }
+
+  @if (dialogService.isAuswertungenDialogVisible) {
+    <app-auswertungen-dialog [viewModel]="dialogService.auswertungenDialogViewModel!">
+
+    </app-auswertungen-dialog>
+  }
+
+  @if (dialogService.isCreateAuswertungsLayoutDialogVisible) {
+    <app-create-auswertungs-layout-dialog [viewModel]="dialogService.createAuswertungsLayoutDialogViewModel!">
+
+    </app-create-auswertungs-layout-dialog>
+  }
 </div>

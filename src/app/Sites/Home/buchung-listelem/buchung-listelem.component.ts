@@ -1,12 +1,13 @@
 import {Component, Input, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Buchung} from "../../../Models/Interfaces";
 import {NavigationService} from "../../../Services/NavigationService/navigation.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../../Models/Classes/UT";
+import {IBuchung} from "../../../Models/NewInterfaces";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-buchung-listelem',
@@ -14,13 +15,13 @@ import {UT} from "../../../Models/Classes/UT";
   styleUrl: './buchung-listelem.component.css'
 })
 export class BuchungListelemComponent implements OnInit{
-  @Input() buchung!: Buchung;
+  @Input() buchung!: IBuchung;
   @Input() first?: boolean;
   @Input() last?: boolean;
   showMenu = signal<boolean>(false);
   ut: UT = new UT();
 
-  constructor(private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
+  constructor(private dataChangeService: DataChangeService, private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
 
   }
 
@@ -33,7 +34,6 @@ export class BuchungListelemComponent implements OnInit{
   }
 
   onBuchungClicked(buchungsId: number) {
-    if(!this.buchung.spe)
     this.router.navigate(['/buchungDetails', buchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
@@ -49,7 +49,7 @@ export class BuchungListelemComponent implements OnInit{
       message: 'Willst du die Buchung wirklich löschen? Sie kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.dataService.deleteBuchung(this.buchung.id!);
+        this.dataChangeService.deleteBuchung(this.buchung.id!);
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;

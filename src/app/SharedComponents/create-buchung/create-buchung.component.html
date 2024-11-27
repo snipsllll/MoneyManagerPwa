@@ -1,20 +1,20 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="isAvailableMoneyValid(); else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
       <div class="ce__budget-eintrag">
-        monat: <b class="green"
-                  [class.red]="availableMoney().availableForMonth < 0">{{ utils.toFixedDown(availableMoney().availableForMonth, 2) ?? '???' }}
+        monat: <b class="red"
+                  [class.green]="availableMoneyCapped().availableForMonth > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2) }}
         €</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green"
-                  [class.red]="availableMoney().availableForWeek < 0">{{ utils.toFixedDown(availableMoney().availableForWeek, 2) ?? '???' }}
+        woche: <b class="red"
+                  [class.green]="availableMoneyCapped().availableForWeek > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForWeek, 2) }}
         €</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green"
-                [class.red]="availableMoney().availableForDay < 0">{{ utils.toFixedDown(availableMoney().availableForDay, 2) ?? '???' }}
+        tag: <b class="red"
+                [class.green]="availableMoneyCapped().availableForDay > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForDay, 2) }}
         €</b>
       </div>
     </div>
@@ -32,8 +32,9 @@
         } @else {
           <div class="create-eintrag__search-box-wrapper">
             <div class="create-eintrag__search-box">
-              <app-searchbox [items]="buchungen" [filterField]="'title'"
-                             (itemSelected)="onItemSelected($event)"></app-searchbox>
+              <app-searchbox [items]="buchungen" [filterField]="'data.title'"
+                             (itemSelected)="onItemSelected($event)">
+              </app-searchbox>
             </div>
             <img src="assets/close.png" class="create-eintrag__search-box-x-button" alt="x"
                  (click)="onSearchboxCloseClicked()"/>
@@ -71,11 +72,18 @@
         </div>
         <input type="time" [(ngModel)]="buchung.time" (change)="onTimeChange($event)" class="create-eintrag__data">
       </div>
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung.apz" class="create-eintrag__data-apz" *ngIf="!isSearchboxVisible()">
-        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          Kategorie:
         </div>
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()">
+          <option
+            *ngFor="let kategorie of kategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.name }}
+          </option>
+        </select>
       </div>
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">

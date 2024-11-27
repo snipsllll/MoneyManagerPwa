@@ -21,4 +21,14 @@ export class UT {
     // Rückgabewert zusammenstellen
     return +(numberVorKomma + "." + numberNachKomma);
   }
+
+  clone<T>(object: T) {
+    return JSON.parse(JSON.stringify(object), (key, value) => {
+    // Prüfen, ob der Wert ein ISO-8601 Datum ist
+    if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
+      return new Date(value); // Wenn ja, in ein Date-Objekt konvertieren
+    }
+    return value; // Ansonsten den Wert unverändert zurückgeben
+  });
+  }
 }

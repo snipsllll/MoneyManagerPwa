@@ -26,31 +26,48 @@ import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning
 import { EinstellungenComponent } from './Sites/Einstellungen/einstellungen/einstellungen.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SearchboxComponent } from './SharedComponents/Searchbox/searchbox/searchbox.component';
+import { MonatFixkostenDialogComponent } from './SharedComponents/monat-fixkosten-dialog/monat-fixkosten-dialog/monat-fixkosten-dialog.component';
+import { BuchungskategorienDialogComponent } from './SharedComponents/buchungskategorien-dialog/buchungskategorien-dialog.component';
+import { BarChartComponent } from './SharedComponents/bar-chart/bar-chart.component';
+import { AuswertungenComponent } from './Sites/auswertungen/auswertungen.component';
+import { AuswertungenDialogComponent } from './SharedComponents/auswertungen-dialog/auswertungen-dialog.component';
+import { CreateAuswertungsLayoutDialogComponent } from './SharedComponents/create-auswertungs-layout-dialog/create-auswertungs-layout-dialog.component';
+import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diagram-details.component";
+import { MmBarChartComponent } from './SharedComponents/mm-bar-chart/mm-bar-chart.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    BuchungenListDayComponent,
-    BudgetComponent,
-    ConfirmDialogComponent,
-    CreateBuchungComponent,
-    EditBuchungComponent,
-    FixKostenComponent,
-    BuchungListelemComponent,
-    BuchungenListComponent,
-    SideNavComponent,
-    TopBarComponent,
-    BuchungDetailsComponent,
-    SparschweinComponent,
-    ListElementComponent,
-    EditDialogComponent,
-    CreateDialogComponent,
-    WunschlisteComponent,
-    SpinningFishComponent,
-    EinstellungenComponent,
-    SearchboxComponent
-  ],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        BuchungenListDayComponent,
+        BudgetComponent,
+        ConfirmDialogComponent,
+        CreateBuchungComponent,
+        EditBuchungComponent,
+        FixKostenComponent,
+        BuchungListelemComponent,
+        BuchungenListComponent,
+        SideNavComponent,
+        TopBarComponent,
+        BuchungDetailsComponent,
+        SparschweinComponent,
+        ListElementComponent,
+        EditDialogComponent,
+        CreateDialogComponent,
+        WunschlisteComponent,
+        SpinningFishComponent,
+        EinstellungenComponent,
+        SearchboxComponent,
+        MonatFixkostenDialogComponent,
+        BuchungskategorienDialogComponent,
+        BarChartComponent,
+        AuswertungenComponent,
+        AuswertungenDialogComponent,
+        CreateAuswertungsLayoutDialogComponent,
+        DiagramDetailsComponent,
+        DiagramDetailsComponent,
+        MmBarChartComponent
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,

@@ -2,7 +2,8 @@ import {Component, computed, Input} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
 import {UT} from "../../../Models/Classes/UT";
 import {DataService} from "../../../Services/DataService/data.service";
-import {SettingsService} from "../../../Services/SettingsService/settings.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {TagesAnzeigeOptions} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-buchungen-list-day',
@@ -12,13 +13,58 @@ import {SettingsService} from "../../../Services/SettingsService/settings.servic
 export class BuchungenListDayComponent {
   @Input() day!: Day;
 
-  availableMoneyForDay = computed(() => {
+  ausgabenForDay = computed(() => {
     this.dataService.updated();
-    return this.dataService.getAvailableMoneyForDay(this.day.date)
+    const day = this.dataProvider.getDayByeDate(this.day.date);
+    let ausgaben = 0;
+    day?.buchungen?.forEach(buchung => {
+      ausgaben += buchung.data.betrag!;
+    })
+    return ausgaben;
   })
 
   ut: UT = new UT();
 
-  constructor(private dataService: DataService, public settingsService: SettingsService) {
+  constructor(public dataProvider: DataProviderService, private dataService: DataService) {
   }
+
+  getTagesAnzeigeText() {
+    switch (this.dataProvider.getSettings().tagesAnzeigeOption) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        return `-${this.ut.toFixedDown(this.ausgabenForDay(), 2)}€`
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+          return `${this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDayFromSoll(this.day.date), 2)}€`
+          break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+          return `${this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)}€`;
+          break;
+      case TagesAnzeigeOptions.RestMonat:
+        return 'not implemented yet' //`${this.ut.toFixedDown(this.dataProvider.getAvailableMoney(this.day.date).availableForMonth, 2)}€`
+        break;
+      default:
+          return undefined;
+          break;
+    }
+  }
+
+  getTagesAnzeigeBudget(): number {
+    switch (this.dataProvider.getSettings().tagesAnzeigeOption) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        return this.ut.toFixedDown(this.ausgabenForDay(), 2)!
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDayFromSoll(this.day.date), 2)!
+        break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoneyForDay(this.day.date), 2)!
+        break;
+      case TagesAnzeigeOptions.RestMonat:
+        return this.ut.toFixedDown(this.dataProvider.getAvailableMoney(this.day.date).availableForMonth, 2)!
+        break;
+    }
+    return 0;
+  }
+
+  protected readonly TagesAnzeigeOptions = TagesAnzeigeOptions;
 }

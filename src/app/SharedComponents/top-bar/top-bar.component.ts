@@ -2,9 +2,10 @@ import {Component, computed, OnInit} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {SideNavService} from "../../Services/SideNavService/side-nav.service";
-import {DayIstBudgetViewModel} from "../../Models/ViewModels/DayIstBudgetViewModel";
 import {Router} from "@angular/router";
 import {UT} from "../../Models/Classes/UT";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {TopBarBudgetOptions} from "../../Models/Enums";
 
 @Component({
   selector: 'app-top-bar',
@@ -16,12 +17,17 @@ export class TopBarComponent implements OnInit {
   title?: string;
   availableMoney = computed(() => {
     this.dataService.updated();
-    return this.dataService.getAvailableMoney(new Date())
+    return this.dataProvider.getAvailableMoney(new Date())
+  })
+
+  availableMoneyCapped = computed(() => {
+    this.dataService.updated();
+    return this.dataProvider.getAvailableMoneyCapped(new Date())
   })
 
   ut: UT = new UT();
 
-  constructor(private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(public dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
 
@@ -40,7 +46,79 @@ export class TopBarComponent implements OnInit {
 
   test() {
     console.log(this.dataService.userData)
-    console.log(this.dataService.userData.months())
+  }
+
+  isDropdownEnabled() {
+    if(this.title === 'EINSTELLUNGEN')
+      return false;
+    if(this.title === 'WUNSCHLISTE')
+      return false;
+    if(this.title === 'SPARSCHWEIN')
+      return false;
+    if(this.title === 'AUSWERTUNGEN')
+      return false;
+    if(this.availableMoney().noData)
+      return false;
+    if(this.dataProvider.getSettings().topBarAnzeigeEinstellung === TopBarBudgetOptions.leer)
+      return false;
+
+    return true
+  }
+
+  getDaysLeftText(): string | undefined {
+    switch (this.dataProvider.getSettings().topBarAnzeigeEinstellung) {
+      case TopBarBudgetOptions.monat:
+        return 'für diesen Monat';
+        break;
+      case TopBarBudgetOptions.woche:
+        return 'für diese Woche';
+        break;
+      case TopBarBudgetOptions.tag:
+        return 'für Heute';
+        break;
+      default:
+        return undefined;
+        break;
+    }
+    /*
+    const daysLeft = this.dataProvider.getAnzahlDaysLeftForMonth(new Date());
+    return daysLeft === 1
+      ? "für 1 Tag"
+      : `für ${daysLeft} Tage`*/
+  }
+
+  getSelectedtTopBarBudget() {
+    switch (this.dataProvider.getSettings().topBarAnzeigeEinstellung) {
+      case TopBarBudgetOptions.monat:
+        return this.ut.toFixedDown(this.availableMoney()!.availableForMonth, 2);
+        break;
+      case TopBarBudgetOptions.woche:
+        return this.ut.toFixedDown(this.availableMoney()!.availableForWeek, 2);
+        break;
+      case TopBarBudgetOptions.tag:
+        return this.ut.toFixedDown(this.availableMoney()!.availableForDay, 2);
+        break;
+      default:
+        return undefined;
+        break;
+    }
+  }
+
+  getSelectedtTopBarBudgetCapped() {
+    switch (this.dataProvider.getSettings().topBarAnzeigeEinstellung) {
+      case TopBarBudgetOptions.monat:
+        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForMonth, 2);
+        break;
+      case TopBarBudgetOptions.woche:
+        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForWeek, 2);
+        break;
+      case TopBarBudgetOptions.tag:
+        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForDay, 2);
+        break;
+      default:
+        return undefined;
+        break;
+    }
   }
 
   private pressTimer: any;
@@ -59,4 +137,6 @@ export class TopBarComponent implements OnInit {
     // Timer abbrechen, wenn der Button nicht 5 Sekunden lang gedrückt wurde
     clearTimeout(this.pressTimer);
   }
+
+  protected readonly TopBarBudgetOptions = TopBarBudgetOptions;
 }

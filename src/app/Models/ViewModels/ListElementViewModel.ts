@@ -7,7 +7,7 @@ export interface ListElementViewModel{
 }
 
 export interface ListElementData {
-  betrag: number,
+  betrag?: number,
   title: string,
   zusatz?: string,
   details?: string,
@@ -17,6 +17,9 @@ export interface ListElementData {
   date?: Date;
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;
+  wunschId?: number;
+  isStandardFixkostenEintrag?: boolean;
+  isExcluded?: boolean;
 }
 
 export interface ListElementSettings {

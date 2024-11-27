@@ -3,7 +3,10 @@ import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
-import {SettingsService} from "../../../Services/SettingsService/settings.service";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {SavedData} from "../../../Models/Interfaces";
+import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-einstellungen',
@@ -13,18 +16,25 @@ import {SettingsService} from "../../../Services/SettingsService/settings.servic
 export class EinstellungenComponent implements OnInit{
 
   @ViewChild('fileInput') fileInput: any;
-  isShowDayDiffChecked!: boolean;
   isEnableToHighBuchungenChecked!: boolean;
+  topBarAnzeigeOption!: string;
+  tagesAnzeigeOption!: string;
 
-  constructor(public settingsService: SettingsService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+    this.update();
   }
 
   ngOnInit() {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
-    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
+  }
+
+  update() {
+    const settings = this.dataProvider.getSettings();
+    this.isEnableToHighBuchungenChecked = settings.toHighBuchungenEnabled !== undefined ? settings.toHighBuchungenEnabled : false;
+    this.topBarAnzeigeOption = this.getTopBarOptionByNumber(settings.topBarAnzeigeEinstellung);
+    this.tagesAnzeigeOption = this.getTagesAnzeigeOptionByNumber(settings.tagesAnzeigeOption);
   }
 
   onAlleDatenLoeschenClicked() {
@@ -32,7 +42,9 @@ export class EinstellungenComponent implements OnInit{
     title: 'Alle Daten löschen?',
     message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
     onConfirmClicked: () => {
-      this.dataService.save({savedMonths: [], fixKosten: [], sparEintraege: [], wunschlistenEintraege: [], buchungen: [], settings: {wunschllistenFilter: {selectedFilter: '', gekaufteEintraegeAusblenden: false},showDayDifferenceInHome: false}})
+      this.dataService.userData.deleteAllData();
+      this.dataService.update();
+      this.update();
       this.dialogService.isConfirmDialogVisible = false;
     },
     onCancelClicked: () => {
@@ -64,7 +76,10 @@ export class EinstellungenComponent implements OnInit{
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.save(JSON.parse(fileContent));
+          console.log(fileContent)
+          this.dataService.userData.save(JSON.parse(fileContent));
+          this.dataService.update();
+          this.update();
           this.dialogService.isConfirmDialogVisible = false;
         },
         onCancelClicked: () => {
@@ -80,7 +95,7 @@ export class EinstellungenComponent implements OnInit{
 
   exportFile(): void {
     // Inhalt der Datei
-    const fileContent = JSON.stringify(this.dataService.getSavedData());
+    const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
     // Erstelle ein Blob-Objekt mit dem Textinhalt und dem MIME-Typ
     const blob = new Blob([fileContent], { type: 'text/plain' });
@@ -101,7 +116,7 @@ export class EinstellungenComponent implements OnInit{
       const handle = await (window as any).showDirectoryPicker();
 
       // Inhalt der Datei
-      const fileContent = JSON.stringify(this.dataService.getSavedData());
+      const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
       // Erstelle die Datei im ausgewählten Ordner
       const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });
@@ -117,13 +132,100 @@ export class EinstellungenComponent implements OnInit{
     }
   }
 
-  onDayDiffClicked() {
-    this.settingsService.setShowDayDifferenceInHome(!this.settingsService.getShowDayDifferenceInHome());
-    this.isShowDayDiffChecked = this.settingsService.getShowDayDifferenceInHome();
+  onZuVielErlaubtClicked() {
+    this.dataChangeService.setSettingEnableToHighBuchungen(!this.dataProvider.getSettings().toHighBuchungenEnabled);
+    this.isEnableToHighBuchungenChecked = this.dataProvider.getSettings().toHighBuchungenEnabled;
   }
 
-  onZuVielErlaubtClicked() {
-    this.settingsService.setIsToHighBuchungenEnabled(!this.settingsService.getIsToHighBuchungenEnabled());
-    this.isEnableToHighBuchungenChecked = this.settingsService.getIsToHighBuchungenEnabled();
+  onAnzeigeObenRechtsChanged() {
+    let option = 0;
+
+    switch (this.topBarAnzeigeOption) {
+      case 'Restgeld für Monat':
+        option = TopBarBudgetOptions.monat;
+        break;
+      case 'Restgeld für Woche':
+        option = TopBarBudgetOptions.woche;
+        break;
+      case 'Restgeld für Tag':
+        option = TopBarBudgetOptions.tag;
+        break;
+      case 'Ausblenden':
+        option = TopBarBudgetOptions.leer;
+        break;
+    }
+    this.dataChangeService.setTopBarAnzeigeOption(option);
+  }
+
+  getTopBarOptionByNumber(option: number | undefined) {
+    let text = '';
+
+    switch (option) {
+      case TopBarBudgetOptions.monat:
+        text = 'Restgeld für Monat';
+        break;
+      case TopBarBudgetOptions.woche:
+        text = 'Restgeld für Woche';
+        break;
+      case TopBarBudgetOptions.tag:
+        text = 'Restgeld für Tag';
+        break;
+      case TopBarBudgetOptions.leer:
+        text = 'Ausblenden';
+        break;
+    }
+
+    return text;
+  }
+
+  onTagesAnzeigeChanged() {
+    let option = 0;
+
+    switch (this.tagesAnzeigeOption) {
+      case 'Ausgaben':
+        option = TagesAnzeigeOptions.Tagesausgaben;
+        break;
+      case 'Restgeld für Tag (soll)':
+        option = TagesAnzeigeOptions.RestbetragVonSollBudget;
+        break;
+      case 'Restgeld für Tag (ist)':
+        option = TagesAnzeigeOptions.RestbetragVonIstBetrag;
+        break;
+      case 'Restgeld für Monat':
+        option = TagesAnzeigeOptions.RestMonat;
+        break;
+      case 'Ausblenden':
+        option = TagesAnzeigeOptions.leer;
+        break;
+    }
+    this.dataChangeService.setTagesAnzeigeOption(option);
+  }
+
+  getTagesAnzeigeOptionByNumber(option: number | undefined) {
+    let text = '';
+
+    switch (option) {
+      case TagesAnzeigeOptions.Tagesausgaben:
+        text = 'Ausgaben';
+        break;
+      case TagesAnzeigeOptions.RestbetragVonSollBudget:
+        text = 'Restgeld für Tag (soll)';
+        break;
+      case TagesAnzeigeOptions.RestbetragVonIstBetrag:
+        text = 'Restgeld für Tag (ist)';
+        break;
+      case TagesAnzeigeOptions.RestMonat:
+        text = 'Restgeld für Monat';
+        break;
+      case TagesAnzeigeOptions.leer:
+        text = 'Ausblenden';
+        break;
+    }
+
+    return text;
+  }
+
+  onKatVerwaltenClicked() {
+    this.dialogService.showBuchungsKategorienDialog();
   }
 }

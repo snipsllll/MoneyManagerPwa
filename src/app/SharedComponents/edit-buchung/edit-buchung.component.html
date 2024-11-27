@@ -1,15 +1,15 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="availableMoney().availableForMonth && availableMoney().availableForWeek && availableMoney().availableForDay; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="availableMoney().availableForMonth! < 0">{{ getAvailableMoneyMonth() ?? '???' }}€</b>
+        monat: <b class="red" [class.green]="availableMoneyCapped().availableForMonth! > 0">{{ getAvailableMoneyMonth() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="availableMoney().availableForWeek!< 0">{{ getAvailableMoneyWeek() ?? '???' }}€</b>
+        woche: <b class="red" [class.green]="availableMoneyCapped().availableForWeek! > 0">{{ getAvailableMoneyWeek() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="availableMoney().availableForDay!< 0">{{ getAvailableMoneyDay() ?? '???' }}€</b>
+        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDay! > 0">{{ getAvailableMoneyDay() }}€</b>
       </div>
     </div>
     <div class="create-eintrag__top-spacer">
@@ -18,19 +18,19 @@
   </div>
   <div class="create-eintrag__content" *ngIf="buchung() !== undefined">
     <div class="create-eintrag__top-content">
-      <input type="text" [(ngModel)]="buchung()!.title" maxlength="25" class="create-eintrag__title" autofocus placeholder="Titel"
+      <input type="text" [(ngModel)]="buchung()!.data.title" maxlength="25" class="create-eintrag__title" autofocus placeholder="Titel"
              (ngModelChange)="onTitleChanged()" onfocus="this.select()">
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
-          der Betrag darf nicht 0 betragen!
+          {{ betragWarnung }}
         </div>
         <div class="create-eintrag__betrag-wrapper">
           <div class="create-eintrag__label">
             Betrag:
           </div>
           <div class="betrag-input-wrapper">
-            <input type="number" [(ngModel)]="buchung()!.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
+            <input type="number" [(ngModel)]="buchung()!.data.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
             <div class="betrag-euro-zeichen">
               €
             </div>
@@ -48,20 +48,27 @@
         <div class="create-eintrag__label">
           Uhrzeit:
         </div>
-        <input type="time" [(ngModel)]="buchung()!.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
+        <input type="time" [(ngModel)]="buchung()!.data.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
       </div>
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung()!.apz" class="create-eintrag__data-apz" (ngModelChange)="onValueChange()">
-        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          Kategorie:
         </div>
+        <select class="betrag-input-wrapper create-eintrag__data" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()">
+          <option
+            *ngFor="let kategorie of kategorien"
+            class="multiselect-option"
+            [value]="kategorie.id">
+            {{ kategorie.name }}
+          </option>
+        </select>
       </div>
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
           Beschreibung:
         </div>
-        <textarea [(ngModel)]="buchung()!.beschreibung"
+        <textarea [(ngModel)]="buchung()!.data.beschreibung"
                   class="create-eintrag__data create-eintrag__beschreibung-data" (ngModelChange)="onBeschreibungChanged()">
 
         </textarea>

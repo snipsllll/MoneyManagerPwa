@@ -2,13 +2,8 @@
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
       <input type="text" class="edit-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()" onfocus="this.select()">
-      @if (viewModel.data.id !== undefined) {
-        <div class="edit-dialog__id">
-          (ID: {{viewModel.data.id}})
-        </div>
-      }
       <hr class="edit-dialog__hr-title">
-      <div class="edit-dialog__betrag-wrapper">
+      <div class="edit-dialog__betrag-wrapper" *ngIf="!viewModel.isBetragAusgeblendet">
         <div class="edit-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
           der Betrag darf nicht 0 betragen!
         </div>
@@ -32,7 +27,7 @@
           vom heutigen Budget abziehen
         </div>
       </div>
-      <div class="edit-dialog__beschreibung-wrapper">
+      <div class="edit-dialog__beschreibung-wrapper" *ngIf="!viewModel.isZusatzAusgeblendet">
         <div class="edit-dialog__label edit-dialog__beschreibung-label">
           Zusatz:
         </div>

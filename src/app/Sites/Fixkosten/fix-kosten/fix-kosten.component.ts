@@ -1,5 +1,4 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
-import {FixKostenEintrag} from "../../../Models/Interfaces";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DataService} from "../../../Services/DataService/data.service";
@@ -11,6 +10,9 @@ import {
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -20,20 +22,22 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 export class FixKostenComponent  implements OnInit{
   elements = computed(() => {
     this.dataService.updated();
-    return this.dataService.userData.fixKosten;
+    return this.dataService.userData.standardFixkostenEintraege;
   })
   summe = computed(() => {
     this.dataService.updated();
     let summe = 0;
-    this.elements().forEach(element => {
-      summe += element.betrag;
-    })
+    if(this.elements()) {
+      this.elements().forEach(element => {
+        summe += element.data.betrag;
+      })
+    }
     return summe;
   })
   selectedElement = signal<number>(-1);
-  newFixKostenEintrag!: FixKostenEintrag;
+  newFixKostenEintrag!: IFixkostenEintragData;
 
-  constructor(private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
+  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
   }
 
   ngOnInit() {
@@ -55,17 +59,17 @@ export class FixKostenComponent  implements OnInit{
     this.dialogService.showCreateDialog(createDialogViewModel);
   }
 
-  getViewModel(eintrag: FixKostenEintrag): ListElementViewModel {
+  getViewModel(eintrag: IFixkostenEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doMenuExist: true,
       doDetailsExist: true,
     }
 
     const data: ListElementData = {
-      betrag: eintrag.betrag,
-      title: eintrag.title,
-      zusatz: eintrag.zusatz,
       id: eintrag.id,
+      betrag: eintrag.data.betrag,
+      title: eintrag.data.title,
+      zusatz: eintrag.data.zusatz,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -85,12 +89,12 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
-    const newFixkostenEintrag: FixKostenEintrag = {
+    const newFixkostenEintrag: IFixkostenEintragData = {
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       zusatz: eintrag.zusatz
     }
-    this.dataService.addFixKostenEintrag(newFixkostenEintrag);
+    this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
@@ -102,13 +106,13 @@ export class FixKostenComponent  implements OnInit{
 
   }
 
-  onEditClicked = (eintrag: FixKostenEintrag) => {
+  onEditClicked = (eintrag: ListElementData) => {
     const editDialogViewModel: EditDialogViewModel = {
       data: {
         betrag: eintrag.betrag,
         title: eintrag.title,
         zusatz: eintrag.zusatz,
-        id: eintrag.id
+        id: eintrag.id!
       },
       onSaveClick: this.onEditSaveClicked,
       onCancelClick: this.onEditCancelClicked
@@ -121,7 +125,7 @@ export class FixKostenComponent  implements OnInit{
       title: 'Eintrag Löschen?',
       message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.dataService.deleteFixKostenEintrag(eintrag.id!);
+        this.dataChangeService.deleteFixkostenEintrag(eintrag.id!);
       },
       onCancelClicked: () => {}
     }
@@ -130,14 +134,16 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {
-    const newFixKostenEintrag: FixKostenEintrag = {
-      betrag: eintrag.betrag,
-      title: eintrag.title ?? 'ohne Titel',
-      zusatz: eintrag.zusatz,
-      id: eintrag.id
+    const newFixKostenEintrag: IFixkostenEintrag = {
+      id: eintrag.id,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'ohne Titel',
+        zusatz: eintrag.zusatz
+      }
     }
 
-    this.dataService.editFixKostenEintrag(newFixKostenEintrag);
+    this.dataChangeService.editFixkostenEintrag(newFixKostenEintrag);
   }
 
   onEditCancelClicked = () => {}

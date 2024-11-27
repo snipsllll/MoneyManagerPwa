@@ -5,18 +5,10 @@
   <div class="create-eintrag__content" *ngIf="buchung !== undefined; else noEintrag">
     <div class="create-eintrag__top-content">
       <div class="create-eintrag__title" *ngIf="titelVorhanden">
-        {{buchung()?.title}}
+        {{buchung()!.data.title}}
       </div>
       <div class="create-eintrag__title-unbenannt" *ngIf="!titelVorhanden">
         Unbenannt
-      </div>
-      <div class="eintrag-details__id-wrapper">
-        <div>
-          (ID:
-        </div>
-        <div class="eintrag-details__data eintrag-details__id-data">
-          {{ buchung()?.id }})
-        </div>
       </div>
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
@@ -25,7 +17,7 @@
             Betrag:
           </div>
           <div class="create-eintrag__data">
-            {{buchung()?.betrag}}€
+            {{buchung()!.data.betrag}}€
           </div>
         </div>
       </div>
@@ -35,7 +27,7 @@
           Datum:
         </div>
         <div class="create-eintrag__data">
-          {{buchung()!.date.toLocaleDateString()}}
+          {{buchung()!.data.date.toLocaleDateString()}}
         </div>
       </div>
       <div class="create-eintrag__uhrzeit-wrapper">
@@ -43,13 +35,15 @@
           Uhrzeit:
         </div>
         <div class="create-eintrag__data">
-          {{buchung()?.time}}
+          {{buchung()!.data.time}}
         </div>
       </div>
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung()!.apz" class="create-eintrag__data-apz" [disabled]="true">
-        <div class="create-eintrag__label-apz">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__uhrzeit-wrapper">
+        <div class="create-eintrag__label">
+          Kategorie
+        </div>
+        <div class="create-eintrag__data">
+          {{ dataProvider.getBuchungsKategorieNameById(+(buchung()!.data.buchungsKategorie!)) }}
         </div>
       </div>
       <hr class="hr-details">
@@ -58,7 +52,7 @@
           Beschreibung:
         </div>
         <div class="create-eintrag__data create-eintrag__beschreibung-data">
-          {{ buchung()?.beschreibung }}
+          {{ buchung()!.data.beschreibung !== "" ? buchung()!.data.beschreibung : '-- keine Beschreibung --' }}
         </div>
       </div>
     </div>

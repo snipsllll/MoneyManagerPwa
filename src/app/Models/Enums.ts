@@ -19,7 +19,8 @@ export enum SideNavElements {
   fixkosten,
   sparschwein,
   wunschliste,
-  einstellungen
+  einstellungen,
+  auswertungen
 }
 
 export enum Sites {
@@ -43,4 +44,42 @@ export enum Color {
   red,
   green,
   black
+}
+
+export enum TopBarBudgetOptions {
+  monat,
+  woche,
+  tag,
+  leer
+}
+
+export enum TagesAnzeigeOptions {
+  Tagesausgaben,
+  RestbetragVonSollBudget,
+  RestbetragVonIstBetrag,
+  RestMonat,
+  leer
+}
+
+export enum XAchsenSkalierungsOptionen {
+  'alleMonateImJahr',
+  'alleTageImMonat'
+}
+
+export enum BarChartValueOptions {
+  'Restgeld',
+  'Ausgaben',
+  'Sparen',
+  'TotalBudget',
+  'DifferenzZuDaySollBudget'
+}
+
+export enum BarChartFilterOptions {
+  'Kategorien',
+  'Wochentag'
+}
+
+export enum HorizontalelinieOptions {
+  'daySollBudget',
+  'zahl'
 }

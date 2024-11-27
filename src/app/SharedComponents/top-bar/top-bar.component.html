@@ -7,41 +7,50 @@
           <b>{{ title }} </b>
         </div>
         <div class="top-bar__version">
-          (alpha)
+          (develop)
         </div>
       </div>
 
     </div>
-    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN'">
-      <div class="top-bar__budget" *ngIf="availableMoney()!.availableForDay !== undefined" (click)="toggleDropdown()"
-           (touchstart)="onTouchStart()" (touchend)="onTouchEnd()" (touchcancel)="onTouchEnd()">
-        <b class="darkgreen"
-           [class.darkred]="availableMoney()!.availableForDay < 0">{{ ut.toFixedDown(availableMoney()!.availableForDay, 2) }}€</b>
+    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && title !== 'AUSWERTUNGEN' && !availableMoney().noData  && dataProvider.getSettings().topBarAnzeigeEinstellung !== TopBarBudgetOptions.leer">
+      <div class="top-bar__budget"
+           (click)="toggleDropdown()"
+           (touchstart)="onTouchStart()"
+           (touchend)="onTouchEnd()"
+           (touchcancel)="onTouchEnd()">
+        <div>
+          <b class="darkgreen" [class.darkred]="getSelectedtTopBarBudgetCapped() !== undefined && getSelectedtTopBarBudgetCapped()! === 0">
+            {{ getSelectedtTopBarBudgetCapped() }}€
+          </b>
+          <div class="top-bar__tage-left">
+            {{ getDaysLeftText() }}
+          </div>
+        </div>
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"
-         (click)="toggleDropdown()">
+         (click)="toggleDropdown()" *ngIf="isDropdownEnabled()">
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           monat:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForMonth !== undefined; else blackContent"
-           [class.red]="+(availableMoney()!.availableForMonth) < 0">{{ ut.toFixedDown(availableMoney()!.availableForMonth, 2) }}€</b>
+        <b class="red top-bar__budget-eintrag-data" *ngIf="availableMoneyCapped()!.availableForMonth !== undefined; else blackContent"
+           [class.green]="+(availableMoneyCapped()!.availableForMonth) > 0">{{ ut.toFixedDown(availableMoneyCapped()!.availableForMonth, 2) }}€</b>
 
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           woche:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForWeek !== undefined; else blackContent"
-                  [class.red]="+(availableMoney()!.availableForWeek!) < 0">{{ ut.toFixedDown(availableMoney()!.availableForWeek!, 2) }}€</b>
+        <b class="red top-bar__budget-eintrag-data" *ngIf="availableMoneyCapped()!.availableForWeek !== undefined; else blackContent"
+                  [class.green]="+(availableMoneyCapped()!.availableForWeek!) > 0">{{ ut.toFixedDown(availableMoneyCapped()!.availableForWeek!, 2) }}€</b>
       </div>
       <div class="top-bar__budget-eintrag-wrapper">
         <div class="top-bar__budget-eintrag-label">
           heute:
         </div>
-        <b class="green top-bar__budget-eintrag-data" *ngIf="availableMoney()!.availableForDay !== undefined; else blackContent"
-                  [class.red]="+(availableMoney()!.availableForDay!) < 0">{{ ut.toFixedDown(availableMoney()!.availableForDay!, 2) }}€</b>
+        <b class="red top-bar__budget-eintrag-data" *ngIf="availableMoneyCapped()!.availableForDay !== undefined; else blackContent"
+                  [class.green]="+(availableMoneyCapped()!.availableForDay!) > 0">{{ ut.toFixedDown(availableMoneyCapped()!.availableForDay!, 2) }}€</b>
       </div>
     </div>
   </div>

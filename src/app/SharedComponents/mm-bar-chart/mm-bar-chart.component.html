@@ -1,0 +1,13 @@
+<div class="diagram-wrapper" *ngIf="chart">
+  <div class="diagram-top">
+    <div class="diagram-label">
+      {{ chart.diagramLabel }}:
+    </div>
+    <!--
+    <div class="diagram-info-button">
+      i
+    </div>
+    -->
+  </div>
+  <app-bar-chart [chartId]="chart.diagramLabel" [viewModel]="chart"></app-bar-chart>
+</div>

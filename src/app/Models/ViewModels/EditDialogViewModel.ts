@@ -3,13 +3,15 @@ export interface EditDialogViewModel {
   onSaveClick: (editDialogData: EditDialogData) => void;
   onCancelClick: () => void;
   istVonHeuteAbzeihenVisible?: boolean;
+  isBetragAusgeblendet?: boolean;
+  isZusatzAusgeblendet?: boolean;
 }
 
 export interface EditDialogData {
   title?: string;
-  betrag: number;
+  betrag?: number;
   zusatz?: string;
-  id?: number;
+  id: number;
   date?: Date;
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;

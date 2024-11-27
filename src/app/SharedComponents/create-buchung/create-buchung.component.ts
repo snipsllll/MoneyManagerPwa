@@ -2,10 +2,11 @@ import {Component, computed, signal} from '@angular/core';
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {Router} from "@angular/router";
-import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
-import {SettingsService} from "../../Services/SettingsService/settings.service";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
+import {IBuchung, IBuchungData} from "../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-create-buchung',
@@ -13,38 +14,45 @@ import {SettingsService} from "../../Services/SettingsService/settings.service";
   styleUrl: './create-buchung.component.css'
 })
 export class CreateBuchungComponent {
-  buchung!: Buchung;
-  oldBuchung!: Buchung;
-  buchungen: Buchung[] = []; //für Searchbox
+  buchung!: IBuchungData;
+  oldBuchung!: IBuchungData;
+  buchungen: IBuchung[] = []; //für Searchbox
 
   selectedDate?: string;
   showBetragWarning = false;
   betragWarnung = '';
+  kategorien!: { id: number, name: string }[];
 
   isSearchboxVisible = signal<boolean>(false);
   isSaveButtonDisabled = signal<boolean>(true);
   dateUpdated = signal<number>(0);
 
-  availableMoney = computed(() => {
+  availableMoneyCapped = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    return this.dataService.getAvailableMoney(this.buchung.date)
+    return this.dataProvider.getAvailableMoneyCapped(this.buchung.date)
   })
 
   utils: UT = new UT();
 
-  constructor(private settingsService: SettingsService,
+  constructor(private dataProvider: DataProviderService,
+              private dataChangeService: DataChangeService,
               private dataService: DataService,
               public dialogService: DialogService,
               private router: Router)
   {
-    this.buchungen = this.dataService.userData.buchungen.alleBuchungen;
+    this.buchungen = this.dataService.userData.buchungen;
 
     const date = new Date();
     this.buchung = this.getNewEmptyBuchung(date);
     this.oldBuchung = this.getNewEmptyBuchung(date);
 
     this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
+    this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
+  }
+
+  onKategorieChanged(): void {
+
   }
 
   onSearchClicked() {
@@ -55,28 +63,26 @@ export class CreateBuchungComponent {
     this.isSearchboxVisible.set(false);
   }
 
-  onItemSelected(item: Buchung) {
+  onItemSelected(item: IBuchung) {
     this.isSearchboxVisible.set(false);
     this.isSaveButtonDisabled.set(false);
 
-    this.buchung.title = item.title;
-    this.buchung.apz = item.apz;
-    this.buchung.betrag = item.betrag;
-    this.buchung.beschreibung = item.beschreibung;
+    this.buchung.title = item.data.title;
+    this.buchung.betrag = item.data.betrag;
+    this.buchung.beschreibung = item.data.beschreibung;
+    this.buchung.buchungsKategorie = item.data.buchungsKategorie;
   }
 
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.apz
-          ? this.buchung.betrag! > this.availableMoney().availableForMonth
-          : this.buchung.betrag! > this.availableMoney().availableForDay
+        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDay
 
-        if (!isBetragZuHoch) {
-          this.dataService.addBuchung(this.buchung);
+        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
+          this.dataChangeService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         } else {
-          if (this.settingsService.getIsToHighBuchungenEnabled()) {
+          if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
               title: 'Betrag ist zu hoch',
               message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
@@ -84,7 +90,7 @@ export class CreateBuchungComponent {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                this.dataService.addBuchung(this.buchung);
+                this.dataChangeService.addBuchung(this.buchung);
                 this.dialogService.isConfirmDialogVisible = false;
                 this.router.navigate(['/']);
               }
@@ -174,11 +180,11 @@ export class CreateBuchungComponent {
   }
 
   onApzClicked() {
-    this.buchung.apz = !this.buchung.apz;
+    //this.buchung.apz = !this.buchung.apz;
   }
 
   private isBuchungEmpty() {
-    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time)
+    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === undefined)
   }
 
   private isSaveAble() {
@@ -193,18 +199,18 @@ export class CreateBuchungComponent {
     this.isSaveButtonDisabled.set(this.isSaveAble());
   }
 
-  private getNewEmptyBuchung(date: Date) {
+  private getNewEmptyBuchung(date: Date): IBuchungData {
     return {
       title: '',
       betrag: null,
       date: date,
       time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
-      beschreibung: '',
-      apz: false
+      buchungsKategorie: 0,
+      beschreibung: ''
     };
   }
 
   protected isAvailableMoneyValid() {
-    return this.availableMoney().availableForDay && this.availableMoney().availableForWeek && this.availableMoney().availableForWeek
+    return this.availableMoneyCapped().availableForDay && this.availableMoneyCapped().availableForWeek && this.availableMoneyCapped().availableForWeek
   }
 }
