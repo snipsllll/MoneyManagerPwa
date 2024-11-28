@@ -15,7 +15,7 @@ export class DiagramDetailsComponent implements OnInit{
   presetDiagrammeList: IDiagrammData[] = [];
   diagrammAuswahlList: string[] = [];
   xAchseAuswahlList = ['Alle tage im Monat', 'alle Monate im Jahr'];
-  yAchseAuswahlList = ['Ausgaben', 'Restgeld', 'Sparen', 'TotalBudget', 'Differenz zum daily Budget']
+  yAchseAuswahlList = ['Ausgaben', 'Restgeld', 'Sparen', 'TotalBudget', 'Differenz zum daily Budget', 'ist Budget']
   filterTypeAuswahlList = ['nach Kategorie', 'nach Wochentag', '--kein Filter--'];
   filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
   lineTypeAuswahlList = ['daily Budget', 'benutzerdefiniert', '--keine Linie--'];

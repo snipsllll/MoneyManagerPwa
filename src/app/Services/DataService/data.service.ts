@@ -258,6 +258,9 @@ export class DataService {
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         day.istBudget = +(day.budget!);
+        day.buchungen?.forEach(buchung => {
+          day.istBudget! -= buchung.data.betrag ?? 0;
+        })
       })
     })
     /*Algorithm end*/

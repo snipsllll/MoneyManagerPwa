@@ -6,6 +6,7 @@ import {DataChangeService} from "../../Services/DataChangeService/data-change.se
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
 import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {Day} from "../../Models/Interfaces";
 
 @Component({
   selector: 'app-auswertungen',
@@ -134,6 +135,9 @@ export class AuswertungenComponent implements OnInit {
               case 'Differenz zum daily Budget':
                 throw new Error('alleMonateImJahr darf nicht mit differenzZuDaySollBudget verwendet werden!');
                 break;
+              case 'ist Budget':
+                data.push(month.istBudget ?? 0);
+                break;
             }
           } else {
             data.push(0);
@@ -207,6 +211,21 @@ export class AuswertungenComponent implements OnInit {
                 const today = new Date();
                 data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
               }
+              break;
+            case 'ist Budget':
+              const allDaysInMonth: Day[] = [];
+
+              month.weeks?.forEach((week) => {
+                week.days.forEach(day => {
+                  allDaysInMonth.push(day);
+                })
+              })
+
+              console.log(allDaysInMonth)
+
+              allDaysInMonth.forEach(day => {
+                data.push(day.istBudget ?? 0);
+              })
               break;
           }
         } else {

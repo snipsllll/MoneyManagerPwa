@@ -349,6 +349,14 @@ export class DataProviderService {
       yAchse: 'Restgeld' //BarChartValueOptions.Restgeld
     });
 
+    diagramme.push({
+      selectedDiagramType: '',
+      diagramTitle: 'Ist Budget Pro Tag',
+      balkenBeschriftung: 'IstBudget',
+      xAchse: 'Alle tage im Monat',
+      yAchse: 'ist Budget'
+    })
+
     return diagramme;
   }
 
