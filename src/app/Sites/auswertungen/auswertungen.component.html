@@ -16,8 +16,8 @@
       <div class="einstellungen__label-multi-select">
 
       </div>
-      <select class="einstellungen__multi-select" [(ngModel)]="selectedLayout" (change)="updateLayout()">
-        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions()"> {{ option.data.titel }} </option>
+      <select class="einstellungen__multi-select" [(ngModel)]="selectedLayoutString" (change)="updateLayout()">
+        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions()"> {{ option.data.layoutTitle}} </option>
       </select>
     </div>
     <div class="button auswertungen__edit-button">
@@ -26,9 +26,9 @@
   </div>
 
   <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
-    <app-mm-bar-chart *ngIf="chart1" [chart]="chart1"></app-mm-bar-chart>
-    <app-mm-bar-chart *ngIf="chart2" [chart]="chart2"></app-mm-bar-chart>
-    <app-mm-bar-chart *ngIf="chart3" [chart]="chart3"></app-mm-bar-chart>
+    <div *ngFor="let chart of selectedLayoutCharts">
+      <app-mm-bar-chart *ngIf="chart" [chart]="chart"></app-mm-bar-chart>
+    </div>
   </div>
 </div>
 

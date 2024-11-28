@@ -1,14 +1,9 @@
 import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {
-  IAuswertungsLayout,
-  IBuchung,
-  IFixkostenEintrag,
-  ISparschweinEintrag,
-  IWunschlistenEintrag
-} from "../NewInterfaces";
+import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
+import {IAuswertungsLayout} from "../Auswertungen-Interfaces";
 
 export class UserData {
 
@@ -187,9 +182,6 @@ export class UserData {
       },
       dbVersion: 1,
     };
-
-// Dynamisch jeden Tag jedes Monats im Jahr 2024 mit mindestens einer Buchung initialisieren
-    const year = 2024;
 
     for(let year = 2024; year < 2025; year++) {
       for (let month = 8; month < 12; month++) {

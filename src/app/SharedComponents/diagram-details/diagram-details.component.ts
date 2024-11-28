@@ -1,46 +1,61 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
-import {
-  BarChartFilterOptions,
-  BarChartValueOptions,
-  HorizontalelinieOptions,
-  XAchsenSkalierungsOptionen
-} from "../../Models/Enums";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {IDiagramm, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-diagram-details',
   templateUrl: './diagram-details.component.html',
   styleUrl: './diagram-details.component.css'
 })
-export class DiagramDetailsComponent {
-  @Input() viewModel!: DiagramDetailsViewModel;
+export class DiagramDetailsComponent implements OnInit{
+  @Input() viewModel!: IDiagramm;
   @Output() deleteClicked = new EventEmitter();
   @Output() updated = new EventEmitter();
 
-  // Extrahiere die Enum-Schlüssel für das Dropdown
-  wertOptions = Object.keys(BarChartValueOptions).filter(key => isNaN(Number(key)));
-
-  xAchseOptions = Object.keys(XAchsenSkalierungsOptionen).filter(key => isNaN(Number(key)));
-  filterOptions = Object.keys(BarChartFilterOptions).filter(key => isNaN(Number(key)));
-  horizontaleLinieOptions = Object.keys(HorizontalelinieOptions).filter(key => isNaN(Number(key)));
-  filterOptionWochentage: string[] = [];
+  presetDiagrammeList: IDiagrammData[] = [];
+  diagrammAuswahlList: string[] = [];
+  xAchseAuswahlList = ['Alle tage im Monat', 'alle Monate im Jahr'];
+  yAchseAuswahlListTag = ['Ausgaben', 'Restgeld pro Tag', 'Restgeld für Monat', 'von Wunschliste gekauft', 'ins Sparschwein eingezahlt', 'Differenz zum daily Budget']
+  yAchseAuswahlListMonat = ['Ausgaben', 'Restgeld', 'geplanter Sparbetrag', 'totalBudget', 'monatliches Budget', 'daily Budget', /*'summe der Fixkosten',*/ 'von Wunschliste gekauft', 'ins Sparschwein eingezahlt', 'gespart']
+  filterTypeAuswahlList = ['nach Kategorie', 'nach Wochentag', '--kein Filter--'];
+  filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  lineTypeAuswahlList = ['daily Budget', 'benutzerdefiniert', '--keine Linie--'];
   filterOptionKategorien: string[] = [];
+  benutzerdefiniert = false;
 
   constructor(private dataProvider: DataProviderService) {
+  }
+
+  ngOnInit() {
+    this.presetDiagrammeList = this.dataProvider.getPresetDiagramme();
+    this.presetDiagrammeList.forEach(diagram => {
+      this.diagrammAuswahlList.push(diagram.diagramTitle);
+    })
+    this.diagrammAuswahlList.push('benutzerdefiniert')
     this.filterOptionKategorien = this.dataProvider.getBuchungsKategorienNamen();
-    this.filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+    this.update();
   }
 
   onDeleteClicked() {
     this.deleteClicked.emit(this.viewModel.id);
   }
 
-  sendUpdate() {
-    this.updated.emit(this.viewModel);
+  onDiagramTypeChanged() {
+    if(this.viewModel.data.selectedDiagramType !== 'benutzerdefiniert') {
+      let selectedDiagram = this.presetDiagrammeList.find(diagram => this.viewModel.data.selectedDiagramType === diagram.diagramTitle)!;
+      selectedDiagram.selectedDiagramType = this.viewModel.data.selectedDiagramType;
+      this.viewModel.data = selectedDiagram;
+      this.update();
+    }
   }
 
+  update() {
+    this.viewModel.data.lineOption = this.viewModel.data.lineOption ?? {lineType: '', lineValue: 0};
+    this.viewModel.data.lineOption.lineType = this.viewModel.data.lineOption.lineType ?? '';
+    this.viewModel.data.lineOption.lineValue = this.viewModel.data.lineOption.lineValue ?? 0;
 
-  protected readonly XAchsenSkalierungsOptionen = XAchsenSkalierungsOptionen;
-  protected readonly BarChartFilterOptions = BarChartFilterOptions;
+    this.viewModel.data.filterOption = this.viewModel.data.filterOption ?? {filter: '--kein Filter--', value: undefined};
+    this.viewModel.data.filterOption.filter = this.viewModel.data.filterOption.filter ?? '--kein Filter--';
+    this.viewModel.data.filterOption.value = this.viewModel.data.filterOption.value ?? '';
+  }
 }

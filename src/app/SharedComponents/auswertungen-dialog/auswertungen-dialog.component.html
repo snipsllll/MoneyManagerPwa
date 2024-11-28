@@ -4,7 +4,7 @@
       <div class="monat-fixkosten-dialog__list">
         <div *ngIf="viewModel.elemente.length > 0; else keineEintraege">
           <div *ngFor="let element of viewModel.elemente">
-            <app-list-element [viewModel]="getViewModel(element)" (onEditClicked)="this.onListElemEditClicked($event)"></app-list-element>
+            <app-list-element [viewModel]="getListElementViewModel(element)" (onEditClicked)="this.onListElemEditClicked($event)"></app-list-element>
           </div>
           <div style="height: calc(100vh - 70px - 190px)"></div>
         </div>
@@ -35,7 +35,7 @@
 </div>
 
 <app-create-auswertungs-layout-dialog
-  [viewModel]="createMode ? emptyCreateLayoutDialogViewModel : selectedElementToEdit ?? emptyCreateLayoutDialogViewModel"
+  [viewModel]="createMode ? emptyCreateLayoutDialogViewModel : selectedLayout ?? emptyCreateLayoutDialogViewModel"
   (saveClicked)="onCreateDialogSaveClicked($event)"
   (cancelClicked)="onCreateCancelClicked()"
   *ngIf="isCreateLayoutDiologVisible()">

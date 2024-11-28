@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  IAuswertungsLayout,
-  IAuswertungsLayoutData,
   IBuchung,
   IBuchungData,
   IFixkostenEintrag,
-  IFixkostenEintragData, IMonthFixkostenEintrag, ISparschweinEintrag, ISparschweinEintragData,
-  IWunschlistenEintrag, IWunschlistenEintragData
+  IFixkostenEintragData,
+  IMonthFixkostenEintrag,
+  ISparschweinEintrag,
+  ISparschweinEintragData,
+  IWunschlistenEintrag,
+  IWunschlistenEintragData
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
+import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'

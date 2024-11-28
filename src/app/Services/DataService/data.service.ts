@@ -1,6 +1,6 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
-import {Day, Month, SavedData, Week} from "../../Models/Interfaces";
+import {Day, Month, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 
 @Injectable({
@@ -258,6 +258,9 @@ export class DataService {
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         day.istBudget = +(day.budget!);
+        day.buchungen?.forEach(buchung => {
+          day.istBudget! -= buchung.data.betrag ?? 0;
+        })
       })
     })
     /*Algorithm end*/

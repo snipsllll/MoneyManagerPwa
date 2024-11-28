@@ -1,11 +1,12 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
-import {BarChartViewModel, IAuswertungsLayout, IDiagrammData} from "../../Models/NewInterfaces";
+import {BarChartViewModel} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
-import {BarChartValueOptions, HorizontalelinieOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
+import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {Day} from "../../Models/Interfaces";
 
 @Component({
   selector: 'app-auswertungen',
@@ -13,16 +14,13 @@ import {DataService} from "../../Services/DataService/data.service";
   styleUrl: './auswertungen.component.css'
 })
 export class AuswertungenComponent implements OnInit {
-
-  chart1?: BarChartViewModel;
-  chart2?: BarChartViewModel;
-  chart3?: BarChartViewModel;
   layoutOptions = computed<IAuswertungsLayout[]>(() => {
     this.dataService.updated();
     return this.dataProvider.getAuswertungsLayouts();
   })
 
-  selectedLayout: string = 'Ausgaben-Verhalten für Monat';
+  selectedLayoutString: string = 'Ausgaben-Verhalten für Monat';
+  selectedLayoutCharts: BarChartViewModel[] = [];
 
   selectedMonth = computed(() => {
     switch (this.selectedMonthIndex()) {
@@ -73,37 +71,26 @@ export class AuswertungenComponent implements OnInit {
   }
 
   updateLayout() {
-    const layout = this.layoutOptions().find(option => option.data.titel === this.selectedLayout);
+    const layout = this.layoutOptions().find(option => option.data.layoutTitle === this.selectedLayoutString);
     if (!layout) {
       return;
     }
 
-    this.chart1 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[0]);
-    if (layout.data.diagramme[1]) {
-      this.chart2 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[1]);
-    } else {
-      this.chart2 = undefined;
-    }
-    if (layout.data.diagramme[2]) {
-      this.chart3 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[2]);
-    } else {
-      this.chart3 = undefined;
-    }
+    this.selectedLayoutCharts = [];
+    layout.data.diagramme.forEach(diagram => {
+      this.selectedLayoutCharts.push(this.getBarChartViewModelFromDiagrammData(diagram.data));
+    })
   }
 
   onEditLayoutsButtonClicked() {
     this.dialogService.showAuswertungenDialog()
   }
 
-  getSelectedLayoutOptionIndex() {
-    return this.layoutOptions().findIndex(option => option.data.titel === this.selectedLayout);
-  }
-
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
-    let labels;
+    let labels: string[] = [];
     const data: number[] = [];
-    switch (diagrammData.xAchsenSkalierung) {
-      case XAchsenSkalierungsOptionen.alleMonateImJahr:
+    switch (diagrammData.xAchse) {
+      case 'alle Monate im Jahr':
         labels = [
           'Januar', 'Februar', 'März', 'April',
           'Mai', 'Juni', 'Juli', 'August',
@@ -114,11 +101,11 @@ export class AuswertungenComponent implements OnInit {
           const date = new Date(this.selectedYear() ?? new Date().getFullYear(), i, 1);
           const month = this.dataProvider.getMonthByDate(date)
           if (month) {
-            switch (diagrammData.valueOption) {
-              case BarChartValueOptions.Ausgaben:
-                data.push(this.dataProvider.getAusgabenForMonth(month.startDate, diagrammData.filter) ?? 0);
+            switch (diagrammData.yAchse) {
+              case 'Ausgaben':
+                data.push(this.dataProvider.getAusgabenForMonth(month.startDate, diagrammData.filterOption) ?? 0);
                 break;
-              case BarChartValueOptions.Restgeld:
+              case 'ins Sparschwein eingezahlt':
                 const x = this.dataProvider.getAlleSparschweinEintraege();
                 let summeSparschweinEinAuszahlungen = 0;
                 x.forEach(eintrag => {
@@ -127,16 +114,46 @@ export class AuswertungenComponent implements OnInit {
                   }
                 })
 
-                data.push((month.istBudget ?? 0) + summeSparschweinEinAuszahlungen);
+                data.push(summeSparschweinEinAuszahlungen);
                 break;
-              case BarChartValueOptions.Sparen:
+              case 'gespart':
+                const x1 = this.dataProvider.getAlleSparschweinEintraege();
+                let summeSparschweinEinAuszahlungen1 = 0;
+                x1.forEach(eintrag => {
+                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear()) {
+                    summeSparschweinEinAuszahlungen1 += eintrag.data.betrag;
+                  }
+                })
+
+                data.push((month.istBudget ?? 0) + summeSparschweinEinAuszahlungen1);
+                break;
+              case 'Restgeld':
+                data.push(month.istBudget ?? 0);
+                break;
+              case 'geplanter Sparbetrag':
                 data.push(month.sparen ?? 0);
                 break;
-              case BarChartValueOptions.TotalBudget:
+              case 'totalBudget':
                 data.push(month.totalBudget ?? 0);
                 break;
-              case BarChartValueOptions.DifferenzZuDaySollBudget:
-                throw new Error('alleMonateImJahr darf nicht mit differenzZuDaySollBudget verwendet werden!');
+              case 'monatliches Budget':
+                data.push(month.budget ?? 0);
+                break;
+              case 'daily Budget':
+                data.push(month.dailyBudget ?? 0);
+                break;
+              case 'summe der Fixkosten':
+                console.log('summe der Fixkosten ist noch nicht implementiert für alleMonateFürJahr');
+                data.push(0);
+                break;
+              case 'von Wunschliste gekauft':
+                const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.getMonth() === month.startDate.getMonth() && eintrag.data.gekauftAm?.getFullYear() === month.startDate.getFullYear());
+                let summe = 0;
+                gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
+                  summe += eintrag.data.betrag;
+                })
+                data.push(summe);
                 break;
             }
           } else {
@@ -144,14 +161,22 @@ export class AuswertungenComponent implements OnInit {
           }
         }
         break;
-      case XAchsenSkalierungsOptionen.alleTageImMonat:
+      case 'Alle tage im Monat':
         const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
         labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}`);
 
         if (month) {
-          switch (diagrammData.valueOption) {
-            case BarChartValueOptions.Ausgaben:
-              const filteredBuchungenAusgaben = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+          const allDaysInMonthx: Day[] = [];
+
+          month.weeks?.forEach((week) => {
+            week.days.forEach(day => {
+              allDaysInMonthx.push(day);
+            })
+          })
+
+          switch (diagrammData.yAchse) {
+            case 'Ausgaben':
+              const filteredBuchungenAusgaben = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);
               for (let i = 0; i < month.daysInMonth!; i++) {
                 data.push(0);
               }
@@ -160,8 +185,8 @@ export class AuswertungenComponent implements OnInit {
                 data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
               })
               break;
-            case BarChartValueOptions.Restgeld:
-              const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+            case 'Restgeld für Monat':
+              const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);
               let alleAusgabenDays: number[] = [];
 
               for (let i = 0; i < month.daysInMonth!; i++) {
@@ -179,7 +204,12 @@ export class AuswertungenComponent implements OnInit {
                 data[i] = month.budget! - ausgabeGesammt;
               }
               break;
-            case BarChartValueOptions.Sparen:
+            case 'Restgeld pro Tag':
+              allDaysInMonthx.forEach(day => {
+                data.push(day.istBudget ?? 0);
+              })
+              break;
+            case 'ins Sparschwein eingezahlt':
               const x = this.dataProvider.getAlleSparschweinEintraege();
               for( let day=0; day<month.daysInMonth!; day++) {
                 let summeAusEinzahlung = 0;
@@ -191,11 +221,19 @@ export class AuswertungenComponent implements OnInit {
                 data.push(summeAusEinzahlung);
               }
               break;
-            case BarChartValueOptions.TotalBudget:
-              data.push(month.totalBudget ?? 0);
+            case 'von Wunschliste gekauft':
+              const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
+              allDaysInMonthx.forEach(day => {
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.toLocaleDateString() === day.date.toLocaleDateString());
+                let summe = 0;
+                gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
+                  summe += eintrag.data.betrag;
+                })
+                data.push(summe);
+              })
               break;
-            case BarChartValueOptions.DifferenzZuDaySollBudget:
-              const filteredBuchungenDif = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filter);
+            case 'Differenz zum daily Budget':
+              const filteredBuchungenDif = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);
               let alleAusgabenDaysDif: number[] = [];
 
               for (let i = 0; i < month.daysInMonth!; i++) {
@@ -208,7 +246,6 @@ export class AuswertungenComponent implements OnInit {
               })
 
               for (let i = 0; i < month.daysInMonth!; i++) {
-                const today = new Date();
                 data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
               }
               break;
@@ -221,14 +258,14 @@ export class AuswertungenComponent implements OnInit {
     }
 
     let horizontaleLinieWert: number | undefined;
-    let showHorizontaleLinie = diagrammData.showHorizontaleLinie;
-    if(diagrammData.showHorizontaleLinie && diagrammData.horizontaleLinie !== undefined) {
-      switch(diagrammData.horizontaleLinie) {
-        case HorizontalelinieOptions.daySollBudget:
+    let showHorizontaleLinie = diagrammData.lineOption !== undefined;
+    if(showHorizontaleLinie) {
+      switch(diagrammData.lineOption?.lineType) {
+        case 'daily Budget':
           horizontaleLinieWert = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1)).dailyBudget ?? 0;
           break;
-        case HorizontalelinieOptions.zahl :
-          horizontaleLinieWert = diagrammData.horizontaleLinieZahl ?? 0;
+        case 'benutzerdefiniert' :
+          horizontaleLinieWert = diagrammData.lineOption?.lineValue ?? 0;
       }
     }
 
@@ -237,12 +274,12 @@ export class AuswertungenComponent implements OnInit {
     }
 
     return {
-      diagramLabel: diagrammData.title,
+      diagramLabel: diagrammData.diagramTitle,
       labels: labels,
       datasets: [{
-        label: diagrammData.title,
+        label: diagrammData.balkenBeschriftung !== '' ? diagrammData.balkenBeschriftung : diagrammData.yAchse,
         data: data,
-        backgroundColor: diagrammData.barColor ?? 'rgba(67,182,255,0.6)',
+        backgroundColor: diagrammData.balkenColor ?? 'rgba(67,182,255,0.6)',
         horizontaleLinie: horizontaleLinieWert,
         showHorizontaleLinie: showHorizontaleLinie
       }]
