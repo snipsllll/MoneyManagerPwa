@@ -371,6 +371,22 @@ export class DataProviderService {
       yAchse: 'ins Sparschwein eingezahlt'
     });
 
+    diagramme.push({
+      selectedDiagramType: 'Kategorien Ausgaben für Monat',
+      diagramTitle: 'Kategorien Ausgaben für Monat',
+      balkenBeschriftung: 'Betrag (in Euro)',
+      xAchse: 'Kategorien',
+      yAchse: 'Monat'
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'Kategorien Ausgaben für Jahr',
+      diagramTitle: 'Kategorien Ausgaben für Jahr',
+      balkenBeschriftung: 'Betrag (in Euro)',
+      xAchse: 'Kategorien',
+      yAchse: 'Jahr'
+    });
+
     return diagramme;
   }
 
