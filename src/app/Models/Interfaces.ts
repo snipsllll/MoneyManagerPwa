@@ -61,6 +61,18 @@ export interface SavedData {
   auswertungsLayouts: IAuswertungsLayout[];
   settings: Settings;
   dbVersion: number;
+  geplanteAusgaben: IGeplanteAusgabe[];
+}
+
+export interface IGeplanteAusgabe {
+  id: number;
+  data: IGeplanteAusgabeData;
+}
+
+export interface IGeplanteAusgabeData {
+  title: string;
+  betrag: number;
+  beschreibung?: string;
 }
 
 export interface Settings {

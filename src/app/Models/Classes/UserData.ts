@@ -1,4 +1,4 @@
-import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
+import {Day, IGeplanteAusgabe, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
@@ -14,6 +14,7 @@ export class UserData {
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
   public auswertungsLayouts: IAuswertungsLayout[] = [];
+  public geplanteAusgaben: IGeplanteAusgabe[] = [];
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
@@ -70,6 +71,7 @@ export class UserData {
     this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
     this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgaben = savedData.geplanteAusgaben ?? [];
   }
 
   save(savedData?: SavedData) {
@@ -124,6 +126,7 @@ export class UserData {
         sparEintraege: [],
         standardFixkostenEintraege: [],
         savedMonths: [],
+        geplanteAusgaben: [],
         dbVersion: currentDbVersion
       }
     }
@@ -181,6 +184,7 @@ export class UserData {
         tagesAnzeigeOption: undefined,
       },
       dbVersion: 1,
+      geplanteAusgaben: []
     };
 
     for(let year = 2024; year < 2025; year++) {
@@ -417,6 +421,7 @@ export class UserData {
       sparEintraege: [],
       standardFixkostenEintraege: [],
       savedMonths: [],
+      geplanteAusgaben: [],
       dbVersion: currentDbVersion
     });
     this.reload();
@@ -424,18 +429,19 @@ export class UserData {
 
   getSavedData(): SavedData {
     const savedData: SavedData = {
+      auswertungsLayouts: [],
       buchungen: [],
       buchungsKategorien: [],
-      auswertungsLayouts: [],
+      dbVersion: currentDbVersion,
+      geplanteAusgaben: [],
       savedMonths: [],
-      standardFixkostenEintraege: [],
-      sparEintraege: [],
-      wunschlistenEintraege: [],
       settings: {
         wunschlistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
         toHighBuchungenEnabled: false
       },
-      dbVersion: currentDbVersion
+      sparEintraege: [],
+      standardFixkostenEintraege: [],
+      wunschlistenEintraege: [],
     }
 
     savedData.buchungen = this.buchungen;
@@ -445,6 +451,7 @@ export class UserData {
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
     savedData.auswertungsLayouts = this.auswertungsLayouts;
     savedData.settings = this.settings;
+    savedData.geplanteAusgaben = this.geplanteAusgaben;
 
     this.months.forEach(month => {
       savedData.savedMonths.push({
