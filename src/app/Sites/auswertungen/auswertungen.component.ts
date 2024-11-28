@@ -105,7 +105,7 @@ export class AuswertungenComponent implements OnInit {
               case 'Ausgaben':
                 data.push(this.dataProvider.getAusgabenForMonth(month.startDate, diagrammData.filterOption) ?? 0);
                 break;
-              case 'ins Sparschwein eingezahlt':
+              case 'Veränderung im Sparschwein':
                 const x = this.dataProvider.getAlleSparschweinEintraege();
                 let summeSparschweinEinAuszahlungen = 0;
                 x.forEach(eintrag => {
@@ -210,7 +210,7 @@ export class AuswertungenComponent implements OnInit {
                   data.push(this.dataProvider.getAvailableMoneyForDay(day.date) ?? 0);
               })
               break;
-            case 'ins Sparschwein eingezahlt':
+            case 'Veränderung im Sparschwein':
               const x = this.dataProvider.getAlleSparschweinEintraege();
               for( let day=0; day<month.daysInMonth!; day++) {
                 let summeAusEinzahlung = 0;

@@ -190,7 +190,6 @@ export class DataProviderService {
         }
       })
     })
-    console.log(notSpendMoney);
     return notSpendMoney;
   }
 

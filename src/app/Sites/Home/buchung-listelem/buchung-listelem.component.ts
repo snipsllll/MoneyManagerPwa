@@ -1,9 +1,7 @@
 import {Component, Input, OnInit, signal} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {NavigationService} from "../../../Services/NavigationService/navigation.service";
+import {Router} from "@angular/router";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {DataService} from "../../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../../Models/Classes/UT";
 import {IBuchung} from "../../../Models/NewInterfaces";
@@ -21,7 +19,7 @@ export class BuchungListelemComponent implements OnInit{
   showMenu = signal<boolean>(false);
   ut: UT = new UT();
 
-  constructor(private dataChangeService: DataChangeService, private navigationService: NavigationService, public topbarService: TopbarService, private route: ActivatedRoute, private dataService: DataService, private router: Router, private dialogService: DialogService) {
+  constructor(private dataChangeService: DataChangeService, public topbarService: TopbarService, private router: Router, private dialogService: DialogService) {
 
   }
 
