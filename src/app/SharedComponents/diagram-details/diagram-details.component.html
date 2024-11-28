@@ -9,7 +9,7 @@
       <div class="diagram-details__bottom-eintrag-label">
         Diagram
       </div>
-      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.selectedDiagramType">
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.selectedDiagramType" (ngModelChange)="onDiagramTypeChanged()">
         <option *ngFor="let option of diagrammAuswahlList" [value]="option">
           {{ option }}
         </option>

@@ -16,10 +16,10 @@ export interface IAuswertungsLayoutData {
 
 export interface IDiagramm {
   id: number;
-  data: NewIDiagrammData;
+  data: IDiagrammData;
 }
 
-export interface NewIDiagrammData {
+export interface IDiagrammData {
   selectedDiagramType: string;
   diagramTitle: string;
   balkenBeschriftung: string;

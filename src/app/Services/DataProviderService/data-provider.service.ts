@@ -3,7 +3,7 @@ import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEint
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout, IDiagramm, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -279,7 +279,6 @@ export class DataProviderService {
               xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
               yAchse: 'Sparen' //BarChartValueOptions.Sparen
             }
-
           },
           {
             id: -5,
@@ -302,6 +301,55 @@ export class DataProviderService {
     })
 
     return auswertungsLayouts;
+  }
+
+  getPresetDiagramme(): IDiagrammData[] {
+    let diagramme: IDiagrammData[] = [];
+
+    diagramme.push({
+      selectedDiagramType: 'benutzerdefiniert',
+      diagramTitle: 'Ausgaben von dem Tag',
+      balkenBeschriftung: 'Ausgaben (in Euro)',
+      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
+      yAchse: 'Ausgaben', //BarChartValueOptions.Ausgaben,
+      lineOption: {
+        lineType: 'daily Budget'
+      }
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'benutzerdefiniert',
+      diagramTitle: 'Restgeld für Monat',
+      balkenBeschriftung: 'Ausgaben (in Euro)',
+      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
+      yAchse: 'Restgeld', //BarChartValueOptions.Restgeld
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'benutzerdefiniert',
+      diagramTitle: 'Differenz zum Soll',
+      balkenBeschriftung: 'Ausgaben (in Euro)',
+      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
+      yAchse: 'Differenz zum daily Budget' //BarChartValueOptions.DifferenzZuDaySollBudget
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'benutzerdefiniert',
+      diagramTitle: 'Geplante Sparbeträge',
+      balkenBeschriftung: 'Sparen-Betrag',
+      xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
+      yAchse: 'Sparen' //BarChartValueOptions.Sparen
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'benutzerdefiniert',
+      diagramTitle: 'Tatsächlich gespart',
+      balkenBeschriftung: 'Restgeld',
+      xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
+      yAchse: 'Restgeld' //BarChartValueOptions.Restgeld
+    });
+
+    return diagramme;
   }
 
   getAusgabenForMonth(date: Date, filter?: { filter: string, value: any }) {
