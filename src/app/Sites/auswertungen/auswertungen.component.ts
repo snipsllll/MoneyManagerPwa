@@ -88,7 +88,8 @@ export class AuswertungenComponent implements OnInit {
 
   getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
     let labels: string[] = [];
-    const data: number[] = [];
+    let data: number[] = [];
+    const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
     switch (diagrammData.xAchse) {
       case 'alle Monate im Jahr':
         labels = [
@@ -99,7 +100,6 @@ export class AuswertungenComponent implements OnInit {
 
         for (let i = 0; i < 12; i++) {
           const date = new Date(this.selectedYear() ?? new Date().getFullYear(), i, 1);
-          const month = this.dataProvider.getMonthByDate(date)
           if (month) {
             switch (diagrammData.yAchse) {
               case 'Ausgaben':
@@ -162,7 +162,6 @@ export class AuswertungenComponent implements OnInit {
         }
         break;
       case 'Alle tage im Monat':
-        const month = this.dataProvider.getMonthByDate(new Date(this.selectedYear(), this.selectedMonthIndex(), 1))
         labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}`);
 
         if (month) {
@@ -254,7 +253,39 @@ export class AuswertungenComponent implements OnInit {
         } else {
           data.push(0);
         }
-
+        break;
+      case 'Kategorien':
+        labels = this.dataProvider.getBuchungsKategorienNamen();
+        switch (diagrammData.yAchse) {
+          case 'Monat':
+            let summenMonat: number[] = [];
+            this.dataProvider.getBuchungsKategorien().forEach(kategorie => {
+              summenMonat.push(0);
+            })
+            const alleBuchungenForMonth = this.dataProvider.getAlleBuchungenForMonth(month.startDate);
+            alleBuchungenForMonth.forEach(buchung => {
+              if(buchung.data.buchungsKategorie && buchung.data.buchungsKategorie > 0) {
+                summenMonat[buchung.data.buchungsKategorie - 1] += buchung.data.betrag ?? 0;
+              }
+            })
+            data = summenMonat;
+            break;
+          case 'Jahr':
+            let summenJahr: number[] = [];
+            this.dataProvider.getBuchungsKategorien().forEach(kategorie => {
+              summenJahr.push(0);
+            })
+            this.dataProvider.getAllMonthsForYear(this.selectedYear()).forEach(month => {
+              const alleBuchungenForMonth = this.dataProvider.getAlleBuchungenForMonth(month.startDate);
+              alleBuchungenForMonth.forEach(buchung => {
+                if(buchung.data.buchungsKategorie && buchung.data.buchungsKategorie > 0) {
+                  summenJahr[buchung.data.buchungsKategorie - 1] += buchung.data.betrag ?? 0;
+                }
+              })
+            });
+            data = summenJahr;
+            break;
+        }
         break;
     }
 
