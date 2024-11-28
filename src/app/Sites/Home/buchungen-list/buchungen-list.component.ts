@@ -13,7 +13,6 @@ export class BuchungenListComponent  implements OnInit{
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     this.dataService.updated();
-    console.log(this.dataProvider.getAllDays())
     return this.orderByDateDesc(this.dataProvider.getAllDays());
   })
 

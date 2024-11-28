@@ -412,7 +412,7 @@ export class UserData {
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.auswertungsLayouts = savedData.auswertungsLayouts;
     this.settings = savedData.settings;
-    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen;
+    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
   }
 
   deleteAllData() {

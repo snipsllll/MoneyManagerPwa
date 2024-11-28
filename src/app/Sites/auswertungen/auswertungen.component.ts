@@ -206,7 +206,8 @@ export class AuswertungenComponent implements OnInit {
               break;
             case 'Restgeld pro Tag':
               allDaysInMonthx.forEach(day => {
-                data.push(day.istBudget ?? 0);
+                if(day.date.getDate() <= new Date().getDate())
+                  data.push(this.dataProvider.getAvailableMoneyForDay(day.date) ?? 0);
               })
               break;
             case 'ins Sparschwein eingezahlt':

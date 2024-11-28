@@ -190,6 +190,7 @@ export class DataProviderService {
         }
       })
     })
+    console.log(notSpendMoney);
     return notSpendMoney;
   }
 
@@ -222,17 +223,16 @@ export class DataProviderService {
     const availableForDay = this.getAvailableMoneyForDay(dayDate);
     const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
 
-    let availableForWeek = 0;
+    let availableForWeek = availableForDay;
     let isDayReached = false;
     this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
-      if (day.date.getDate() === dayDate.getDate()) {
-        isDayReached = true;
-      }
       if (isDayReached) {
         availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
       }
+      if (day.date.getDate() === dayDate.getDate()) {
+        isDayReached = true;
+      }
     })
-    availableForWeek += availableForDay;
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
 

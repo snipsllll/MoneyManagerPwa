@@ -27,7 +27,6 @@ export class BuchungListelemComponent implements OnInit{
 
   ngOnInit() {
     this.topbarService.isDropDownDisabled = false;
-    console.log(this.buchung)
   }
 
   onMenuButtonClicked() {
