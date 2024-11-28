@@ -95,6 +95,14 @@
           {{ ut.toFixedDown(data().dayBudget!, 2) }}€
         </div>
       </div>
+      <div class="budget__element-wrapper" *ngIf="data().geplanteAusgabenRestgeld !== undefined">
+        <div class="budget__element-label">
+          geplante Ausgaben Restgeld:
+        </div>
+        <div class="budget__element-data">
+          {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
+        </div>
+      </div>
     </div>
   </div>
 

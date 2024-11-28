@@ -502,8 +502,24 @@ export class DataProviderService {
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
       fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true),
       geplanteAusgabenSumme: this.getGeplanteAusgabenSummeForMonth(month),
-      geplanteAusgaben: this.getGeplanteAusgabenEintraegeForMonth(month.startDate)
+      geplanteAusgaben: this.getGeplanteAusgabenEintraegeForMonth(month.startDate),
+      geplanteAusgabenRestgeld: this.getGeplanteAusgabenRestgeldForMonth(month)
     }
+  }
+
+  getGeplanteAusgabenRestgeldForMonth(month: Month): number {
+    const geplantBetrag = this.getGeplanteAusgabenSummeForMonth(month);
+    const ausgabenSumme = this.getAusgegebenesGeldVonGeplantenAusgabenForMonth(month);
+
+    return geplantBetrag - ausgabenSumme;
+  }
+
+  getAusgegebenesGeldVonGeplantenAusgabenForMonth(month: Month): number {
+    let ausgabenSumme = 0;
+    this.getGeplanteAusgabenBuchungForMonth(month)?.forEach(eintrag => {
+      ausgabenSumme += eintrag.data.betrag ?? 0;
+    })
+    return ausgabenSumme;
   }
 
   getBuchungsKategorienNamen() {

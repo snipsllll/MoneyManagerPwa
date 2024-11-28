@@ -53,6 +53,7 @@ export interface BudgetInfosForMonth {
   fixKostenGesperrt?: boolean;
   geplanteAusgabenSumme?: number;
   geplanteAusgaben?: IGeplanteAusgabe[];
+  geplanteAusgabenRestgeld?: number;
 }
 
 export interface SavedData {
