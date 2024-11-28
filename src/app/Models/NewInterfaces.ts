@@ -94,25 +94,3 @@ export interface BarChartViewModel {
     showHorizontaleLinie?: boolean; // Ob die Linie angezeigt werden soll
   }[];
 }
-
-export interface IAuswertungsLayout {
-  id: number;
-  data: IAuswertungsLayoutData;
-}
-
-export interface IAuswertungsLayoutData {
-  titel: string;
-  diagramme: IDiagrammData[];
-}
-
-export interface IDiagrammData {
-  title: string;
-  barColor?: string;
-  eintragBeschreibung: string;
-  xAchsenSkalierung: XAchsenSkalierungsOptionen;
-  valueOption: BarChartValueOptions;
-  filter: {filter: BarChartFilterOptions, value: any}[];
-  horizontaleLinie?: HorizontalelinieOptions; // Wert für die horizontale Linie
-  showHorizontaleLinie?: boolean; // Ob die Linie angezeigt werden soll
-  horizontaleLinieZahl?: number;
-}

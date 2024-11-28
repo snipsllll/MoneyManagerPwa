@@ -3,6 +3,7 @@ import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/Cr
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
 import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
+import {NewIAuswertungsLayout, NewIDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-create-auswertungs-layout-dialog',
@@ -10,7 +11,7 @@ import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enu
   styleUrl: './create-auswertungs-layout-dialog.component.css'
 })
 export class CreateAuswertungsLayoutDialogComponent implements OnInit{
-  @Input() viewModel!: CreateAuswertungsLayoutDialogViewModel;
+  @Input() viewModel!: NewIAuswertungsLayout; //CreateAuswertungsLayoutDialogViewModel;
   @Output() saveClicked = new EventEmitter();
   @Output() cancelClicked = new EventEmitter();
   isSaveEnabled = signal<boolean>(true);
@@ -21,14 +22,16 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   ngOnInit() {
     if(!this.viewModel) {
       this.viewModel = {
-        id: undefined,
-        title: '',
-        diagramme: []
+        id: this.getNextFreeDiagramId(),
+        data: {
+          layoutTitle: '',
+          diagramme: []
+        }
       }
     }
-    if (!this.viewModel.diagramme) {
-      this.viewModel.diagramme = [];
-      this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
+    if (!this.viewModel.data.diagramme) {
+      this.viewModel.data.diagramme = [];
+      this.viewModel.data.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
   }
 
@@ -37,9 +40,9 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   }
 
   protected onCreateDiagramDeleteClicked(id: number) {
-    this.viewModel.diagramme?.splice(this.viewModel.diagramme?.findIndex(diagram => diagram.id === id), 1);
-    if(this.viewModel.diagramme?.length === 0) {
-      this.viewModel.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
+    this.viewModel.data.diagramme?.splice(this.viewModel.data.diagramme?.findIndex(diagram => diagram.id === id), 1);
+    if(this.viewModel.data.diagramme?.length === 0) {
+      this.viewModel.data.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
   }
 
@@ -57,17 +60,17 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   }
 
   protected onPlusClicked() {
-    this.viewModel.diagramme!.push(this.getNewEmptyDiagramDetailsViewModel());
+    this.viewModel.data.diagramme!.push(this.getNewEmptyDiagramDetailsViewModel());
   }
 
   updateIsSaveEnabled() {
     let enabled = true;
 
-    this.viewModel.diagramme?.forEach(diagram => {
-      if(!diagram.xAchse) {
+    this.viewModel.data.diagramme?.forEach(diagram => {
+      if(!diagram.data.xAchse) {
         enabled = false;
       }
-      if(!diagram.wert) {
+      if(!diagram.data.yAchse) {
         enabled = false;
       }
     });
@@ -75,24 +78,26 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
     this.isSaveEnabled.set(enabled);
   }
 
-  private getNewEmptyDiagramDetailsViewModel(): DiagramDetailsViewModel {
+  private getNewEmptyDiagramDetailsViewModel(): NewIDiagramm {
     return {
       id: this.getNextFreeDiagramId(),
-      color: '#43B6FF99',
-      wert: undefined,
-      title: undefined,
-      filter: {
-        filter: '--kein Filter--',
-        value: undefined
-      },
-      xAchse: undefined
+      data: {
+        diagramTitle: '',
+        balkenBeschriftung: '',
+        xAchse: '',
+        yAchse: '',
+        filterOption: {
+          filter: '--kein Filter--',
+          value: undefined
+        }
+      }
     }
   }
 
   private getNextFreeDiagramId() {
     let freeId = 1;
-    for (let i = 0; i < this.viewModel.diagramme!.length; i++) {
-      if (this.viewModel.diagramme!.find(x => x.id === freeId) === undefined) {
+    for (let i = 0; i < this.viewModel.data.diagramme!.length; i++) {
+      if (this.viewModel.data.diagramme!.find(x => x.id === freeId) === undefined) {
         return freeId;
       } else {
         freeId++;

@@ -1,5 +1,4 @@
 import {
-  IAuswertungsLayout,
   IBuchung,
   IFixkostenEintrag,
   IMonthFixkostenEintrag,
@@ -7,6 +6,7 @@ import {
   IWunschlistenEintrag
 } from "./NewInterfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "./Enums";
+import {NewIAuswertungsLayout} from "./Auswertungen-Interfaces";
 
 export interface Month {
   totalBudget?: number;
@@ -58,7 +58,7 @@ export interface SavedData {
   standardFixkostenEintraege: IFixkostenEintrag[];
   sparEintraege: ISparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
-  auswertungsLayouts: IAuswertungsLayout[];
+  auswertungsLayouts: NewIAuswertungsLayout[];
   settings: Settings;
   dbVersion: number;
 }

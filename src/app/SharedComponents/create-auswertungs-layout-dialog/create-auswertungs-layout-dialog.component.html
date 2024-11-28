@@ -1,12 +1,12 @@
 <div class="create-dialog__wrapper">
   <div class="create-dialog floating-box">
     <div class="create-dialog__content">
-      <input (click)="update()" type="text" class="create-dialog__title" maxlength="25" autofocus placeholder="Layout Titel" [(ngModel)]="viewModel.title" onfocus="this.select()"><!--[(ngModel)]="" (ngModelChange)=""-->
+      <input (click)="update()" type="text" class="create-dialog__title" maxlength="25" autofocus placeholder="Layout Titel" [(ngModel)]="viewModel.data.layoutTitle" onfocus="this.select()"><!--[(ngModel)]="" (ngModelChange)=""-->
       <hr class="hr-title">
       <div class="create-layout-dialog__diagram-list">
         <app-diagram-details [viewModel]="diagram"
                              (deleteClicked)="onCreateDiagramDeleteClicked($event)"
-                             *ngFor="let diagram of viewModel.diagramme">
+                             *ngFor="let diagram of viewModel.data.diagramme">
         </app-diagram-details>
         <div class="diagram-plus-button-wrapper">
           <div class="diagram-plus-button" (click)="onPlusClicked()">

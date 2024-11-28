@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  IAuswertungsLayout,
-  IAuswertungsLayoutData,
   IBuchung,
   IBuchungData,
   IFixkostenEintrag,
-  IFixkostenEintragData, IMonthFixkostenEintrag, ISparschweinEintrag, ISparschweinEintragData,
-  IWunschlistenEintrag, IWunschlistenEintragData
+  IFixkostenEintragData,
+  IMonthFixkostenEintrag,
+  ISparschweinEintrag,
+  ISparschweinEintragData,
+  IWunschlistenEintrag,
+  IWunschlistenEintragData
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
+import {NewIAuswertungsLayout, NewIAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +40,8 @@ export class DataChangeService {
     this.dataService.update();
   }
 
-  addAuswertungsLayout(auswertungsLayoutData: IAuswertungsLayoutData): void {
-    const newAuswertungsLayout: IAuswertungsLayout = {
+  addAuswertungsLayout(auswertungsLayoutData: NewIAuswertungsLayoutData): void {
+    const newAuswertungsLayout: NewIAuswertungsLayout = {
       id: this.getNextFreeAuswertungLayoutId(),
       data: auswertungsLayoutData
     };
@@ -47,7 +50,7 @@ export class DataChangeService {
     this.dataService.update();
   }
 
-  editAuswertungsLayout(editedAuswertungsLayout: IAuswertungsLayout): void {
+  editAuswertungsLayout(editedAuswertungsLayout: NewIAuswertungsLayout): void {
     this.dataService.userData.auswertungsLayouts[this.getIndexOfAuswertungsLayoutById(editedAuswertungsLayout.id)] = editedAuswertungsLayout;
     this.dataService.update();
   }
@@ -203,7 +206,7 @@ export class DataChangeService {
     this.dataService.userData.buchungsKategorien = [];
   }
 
-  editAuswertungsLayouts(elemente: IAuswertungsLayout[]) {
+  editAuswertungsLayouts(elemente: NewIAuswertungsLayout[]) {
     this.dataService.userData.auswertungsLayouts = [];
     elemente.forEach(element => {
       if(element.id > 0) {

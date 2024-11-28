@@ -7,6 +7,7 @@ import {
   XAchsenSkalierungsOptionen
 } from "../../Models/Enums";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {NewIDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-diagram-details',
@@ -14,33 +15,33 @@ import {DataProviderService} from "../../Services/DataProviderService/data-provi
   styleUrl: './diagram-details.component.css'
 })
 export class DiagramDetailsComponent {
-  @Input() viewModel!: DiagramDetailsViewModel;
+  @Input() viewModel!: NewIDiagramm;
   @Output() deleteClicked = new EventEmitter();
   @Output() updated = new EventEmitter();
 
-  // Extrahiere die Enum-Schlüssel für das Dropdown
-  wertOptions = Object.keys(BarChartValueOptions).filter(key => isNaN(Number(key)));
-
-  xAchseOptions = Object.keys(XAchsenSkalierungsOptionen).filter(key => isNaN(Number(key)));
-  filterOptions = Object.keys(BarChartFilterOptions).filter(key => isNaN(Number(key)));
-  horizontaleLinieOptions = Object.keys(HorizontalelinieOptions).filter(key => isNaN(Number(key)));
-  filterOptionWochentage: string[] = [];
+  diagrammAuswahlList = ['Diagram 1', 'Diagram 2', 'Diagram 3', 'benutzerdefiniert'];
+  xAchseAuswahlList = ['alle Monate im Jahr', 'Alle tage im Monat'];
+  yAchseAuswahlList = ['Ausgaben', 'Restgeld', 'Sparen', 'TotalBudget', 'Differenz zum daily Budget']
+  filterTypeAuswahlList = ['nach Kategorie', 'nach Wochentag', '--kein Filter--'];
+  filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  lineTypeAuswahlList = ['daily Budget', 'benutzerdefiniert'];
+  selectedDiagramType: string = '';
   filterOptionKategorien: string[] = [];
+  benutzerdefiniert = false;
 
   constructor(private dataProvider: DataProviderService) {
     this.filterOptionKategorien = this.dataProvider.getBuchungsKategorienNamen();
-    this.filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+
+    this.viewModel.data.lineOption = this.viewModel.data.lineOption ?? {lineType: '', lineValue: 0};
+    this.viewModel.data.lineOption.lineType = this.viewModel.data.lineOption.lineType ?? '';
+    this.viewModel.data.lineOption.lineValue = this.viewModel.data.lineOption.lineValue ?? 0;
+
+    this.viewModel.data.filterOption = this.viewModel.data.filterOption ?? {filter: '--kein Filter--', value: undefined};
+    this.viewModel.data.filterOption.filter = this.viewModel.data.filterOption.filter ?? '--kein Filter--';
+    this.viewModel.data.filterOption.value = this.viewModel.data.filterOption.value ?? '';
   }
 
   onDeleteClicked() {
     this.deleteClicked.emit(this.viewModel.id);
   }
-
-  sendUpdate() {
-    this.updated.emit(this.viewModel);
-  }
-
-
-  protected readonly XAchsenSkalierungsOptionen = XAchsenSkalierungsOptionen;
-  protected readonly BarChartFilterOptions = BarChartFilterOptions;
 }

@@ -1,14 +1,9 @@
 import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {
-  IAuswertungsLayout,
-  IBuchung,
-  IFixkostenEintrag,
-  ISparschweinEintrag,
-  IWunschlistenEintrag
-} from "../NewInterfaces";
+import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
+import {NewIAuswertungsLayout} from "../Auswertungen-Interfaces";
 
 export class UserData {
 
@@ -18,7 +13,7 @@ export class UserData {
   public standardFixkostenEintraege: IFixkostenEintrag[] = [];
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
-  public auswertungsLayouts: IAuswertungsLayout[] = [];
+  public auswertungsLayouts: NewIAuswertungsLayout[] = [];
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,

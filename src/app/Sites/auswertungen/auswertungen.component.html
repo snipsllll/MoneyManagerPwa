@@ -17,7 +17,7 @@
 
       </div>
       <select class="einstellungen__multi-select" [(ngModel)]="selectedLayout" (change)="updateLayout()">
-        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions()"> {{ option.data.titel }} </option>
+        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions()"> {{ option.data.layoutTitle}} </option>
       </select>
     </div>
     <div class="button auswertungen__edit-button">

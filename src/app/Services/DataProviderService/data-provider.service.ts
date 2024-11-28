@@ -1,20 +1,9 @@
 import {Injectable} from '@angular/core';
-import {
-  IAuswertungsLayout,
-  IBuchung,
-  IMonthFixkostenEintrag,
-  ISparschweinEintrag,
-  IWunschlistenEintrag
-} from "../../Models/NewInterfaces";
+import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {
-  BarChartFilterOptions,
-  BarChartValueOptions,
-  HorizontalelinieOptions,
-  XAchsenSkalierungsOptionen
-} from "../../Models/Enums";
+import {NewIAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -233,35 +222,41 @@ export class DataProviderService {
   }
 
   getAuswertungsLayouts() {
-    const auswertungsLayouts: IAuswertungsLayout[] = [];
+    const auswertungsLayouts: NewIAuswertungsLayout[] = [];
 
     auswertungsLayouts.push({
       id: -1,
       data: {
-        titel: 'Ausgaben-Verhalten für Monat',
-        diagramme: [
+        layoutTitle: 'Ausgaben-Verhalten für Monat',
+        diagramme: [{
+          id: -1,
+          data: {
+            diagramTitle: 'Ausgaben von dem Tag',
+            balkenBeschriftung: 'Ausgaben (in Euro)',
+            xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
+            yAchse: 'Ausgaben', //BarChartValueOptions.Ausgaben,
+            lineOption: {
+              lineType: 'daily Budget'
+            }
+          }
+        },
           {
-            title: 'Ausgaben von dem Tag',
-            eintragBeschreibung: 'Ausgaben (in Euro)',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [],
-            valueOption: BarChartValueOptions.Ausgaben,
-            horizontaleLinie: HorizontalelinieOptions.daySollBudget,
-            showHorizontaleLinie: true
+            id: -2,
+            data: {
+              diagramTitle: 'Restgeld für Monat',
+              balkenBeschriftung: 'Ausgaben (in Euro)',
+              xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
+              yAchse: 'Restgeld', //BarChartValueOptions.Restgeld
+            }
           },
           {
-            title: 'Restgeld für Monat',
-            eintragBeschreibung: 'Ausgaben (in Euro)',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [],
-            valueOption: BarChartValueOptions.Restgeld
-          },
-          {
-            title: 'Differenz zum Soll',
-            eintragBeschreibung: 'Ausgaben (in Euro)',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleTageImMonat,
-            filter: [],
-            valueOption: BarChartValueOptions.DifferenzZuDaySollBudget
+            id: -3,
+            data: {
+              diagramTitle: 'Differenz zum Soll',
+              balkenBeschriftung: 'Ausgaben (in Euro)',
+              xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
+              yAchse: 'Differenz zum daily Budget' //BarChartValueOptions.DifferenzZuDaySollBudget
+            }
           }
         ]
       }
@@ -270,21 +265,26 @@ export class DataProviderService {
     auswertungsLayouts.push({
       id: -2,
       data: {
-        titel: 'Sparenübersicht für Jahr',
+        layoutTitle: 'Sparenübersicht für Jahr',
         diagramme: [
           {
-            title: 'Geplante Sparbeträge',
-            eintragBeschreibung: 'Sparen-Betrag',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
-            filter: [],
-            valueOption: BarChartValueOptions.Sparen
+            id: -4,
+            data: {
+              diagramTitle: 'Geplante Sparbeträge',
+              balkenBeschriftung: 'Sparen-Betrag',
+              xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
+              yAchse: 'Sparen' //BarChartValueOptions.Sparen
+            }
+
           },
           {
-            title: 'Tatsächlich gespart',
-            eintragBeschreibung: 'Restgeld',
-            xAchsenSkalierung: XAchsenSkalierungsOptionen.alleMonateImJahr,
-            filter: [],
-            valueOption: BarChartValueOptions.Restgeld
+            id: -5,
+            data: {
+              diagramTitle: 'Tatsächlich gespart',
+              balkenBeschriftung: 'Restgeld',
+              xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
+              yAchse: 'Restgeld' //BarChartValueOptions.Restgeld
+            }
           }
         ]
       }
@@ -299,7 +299,7 @@ export class DataProviderService {
     return auswertungsLayouts;
   }
 
-  getAusgabenForMonth(date: Date, filter?: { filter: BarChartFilterOptions, value: any }[]) {
+  getAusgabenForMonth(date: Date, filter?: { filter: string, value: any }) {
     const filteredBuchungen = this.getAlleBuchungenForMonthFiltered(date, filter);
     let summe = 0;
 
@@ -310,22 +310,15 @@ export class DataProviderService {
     return summe;
   }
 
-  getAlleBuchungenForMonthFiltered(date: Date, filter?: { filter: BarChartFilterOptions, value: any }[]) {
+  getAlleBuchungenForMonthFiltered(date: Date, filter?: { filter: string, value: any }) {
     const month = this.getMonthByDate(date);
     let filteredBuchungen: IBuchung[] = [];
 
-    if (filter && filter.length > 0) {
-
+    if (filter) {
       month.weeks?.forEach(week => {
         week.days.forEach(day => {
           day.buchungen?.forEach(buchung => {
-            let passtBuchung = true;
-            filter?.forEach(filter => {
-              if(!this.passtBuchungZuFilter(buchung, filter)){
-                passtBuchung = false;
-              }
-            })
-            if(passtBuchung) {
+            if (this.passtBuchungZuFilter(buchung, filter)) {
               filteredBuchungen.push(buchung)
             }
           })
@@ -346,12 +339,12 @@ export class DataProviderService {
     return buchungen;
   }
 
-  passtBuchungZuFilter(buchung: IBuchung, filter: { filter: BarChartFilterOptions, value: any }) {
-    switch(filter.filter) {
-      case BarChartFilterOptions.Kategorien:
+  passtBuchungZuFilter(buchung: IBuchung, filter: { filter: string, value: any }) {
+    switch (filter.filter) {
+      case 'nach Kategorie':
         return +(buchung.data.buchungsKategorie)! === filter.value;
         break;
-      case BarChartFilterOptions.Wochentag:
+      case 'nach Wochentag':
         return buchung.data.date.getDay() === filter.value;
         break;
     }
