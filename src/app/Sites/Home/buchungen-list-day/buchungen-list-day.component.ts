@@ -24,7 +24,10 @@ export class BuchungenListDayComponent implements OnInit{
     return ausgaben;
   })
 
-  alleDayBuchungen: IBuchung[] = []
+  alleDayBuchungen = computed(() => {
+    this.dataService.updated()
+    return (this.day.geplanteAusgabenBuchungen ?? []).concat(this.day.buchungen ?? [])
+  });
 
   ut: UT = new UT();
 
@@ -33,7 +36,6 @@ export class BuchungenListDayComponent implements OnInit{
 
   ngOnInit() {
     //TODO bei leerer this.day.buchungen verschwindet this.day.geplanteAusgabenBuchungen
-    this.alleDayBuchungen = (this.day.buchungen ?? []).concat(this.day.geplanteAusgabenBuchungen ?? []);
   }
 
   getTagesAnzeigeText() {

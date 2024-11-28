@@ -13,6 +13,7 @@ export class BuchungenListComponent  implements OnInit{
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     this.dataService.updated();
+    console.log(this.dataProvider.getAllDays())
     return this.orderByDateDesc(this.dataProvider.getAllDays());
   })
 
@@ -25,6 +26,7 @@ export class BuchungenListComponent  implements OnInit{
   }
 
   orderByDateDesc(array: Day[]) {
+    //TODO
     const rArray: Day[] = [];
     array.forEach(day => {
       day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())

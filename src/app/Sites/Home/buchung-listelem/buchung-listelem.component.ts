@@ -27,6 +27,7 @@ export class BuchungListelemComponent implements OnInit{
 
   ngOnInit() {
     this.topbarService.isDropDownDisabled = false;
+    console.log(this.buchung)
   }
 
   onMenuButtonClicked() {
@@ -58,7 +59,6 @@ export class BuchungListelemComponent implements OnInit{
         } else {
           this.dataChangeService.deleteBuchung(this.buchung.id!);
         }
-
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;

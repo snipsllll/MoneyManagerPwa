@@ -141,7 +141,7 @@ export class DataProviderService {
     months.forEach(month => {
       month.weeks?.forEach(week => {
         week.days.forEach(day => {
-          if (day.buchungen && day.buchungen.length > 0) {
+          if ((day.buchungen && day.buchungen.length > 0) || (day.geplanteAusgabenBuchungen && day.geplanteAusgabenBuchungen.length > 0)) {
             days.push(day);
           }
         })
