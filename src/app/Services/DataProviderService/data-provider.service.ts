@@ -347,10 +347,10 @@ export class DataProviderService {
   passtBuchungZuFilter(buchung: IBuchung, filter: { filter: string, value: any }) {
     switch (filter.filter) {
       case 'nach Kategorie':
-        return +(buchung.data.buchungsKategorie)! === filter.value;
+        return this.getBuchungsKategorieNameById(+(buchung.data.buchungsKategorie)!) === filter.value;
         break;
       case 'nach Wochentag':
-        return buchung.data.date.getDay() === filter.value;
+        return buchung.data.date.getDay() === this.getNumberFromWochentagString(filter.value);
         break;
     }
     return true;
@@ -535,5 +535,25 @@ export class DataProviderService {
     const yearText = month.startDate.getFullYear().toString();
 
     return `Restgeld von ${monthText} ${yearText}`;
+  }
+
+  getNumberFromWochentagString(value: string): number {
+    switch (value) {
+      case 'Sonntag':
+        return 1;
+      case 'Montag':
+        return 2;
+      case 'Dienstag':
+        return 3;
+      case 'Mitwoch':
+        return 4;
+      case 'Donnerstag':
+        return 5;
+      case 'Freitag':
+        return 6;
+      case 'Samstag':
+        return 7;
+    }
+    return -1;
   }
 }
