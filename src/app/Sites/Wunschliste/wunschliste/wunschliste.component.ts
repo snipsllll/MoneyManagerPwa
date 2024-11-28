@@ -57,7 +57,7 @@ export class WunschlisteComponent implements OnInit{
   getElements(selectedFilter?: string) {
     let allElements = this.dataProvider.getAlleWunschlistenEintraege();
     if(this.wirdGekauftesAusgeblendet()){
-      allElements = allElements.filter(element => element.data.gekauft === false);
+      allElements = allElements.filter(element => !element.data.gekauft);
     }
 
     switch (selectedFilter) {

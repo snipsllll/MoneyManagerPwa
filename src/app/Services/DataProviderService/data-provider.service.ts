@@ -3,7 +3,7 @@ import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEint
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {IAuswertungsLayout, IDiagramm, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -396,10 +396,8 @@ export class DataProviderService {
     switch (filter.filter) {
       case 'nach Kategorie':
         return this.getBuchungsKategorieNameById(+(buchung.data.buchungsKategorie)!) === filter.value;
-        break;
       case 'nach Wochentag':
         return buchung.data.date.getDay() === this.getNumberFromWochentagString(filter.value);
-        break;
     }
     return true;
   }
@@ -500,12 +498,6 @@ export class DataProviderService {
 
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
-        day.buchungen?.forEach(buchung => {
-          /*
-          if(buchung.apz) {
-            budget -= buchung.betrag!;
-          }*/
-        })
         dict[day.date.toLocaleDateString()] = budget / daysLeft;
         budget -= dict[day.date.toLocaleDateString()];
         daysLeft--;

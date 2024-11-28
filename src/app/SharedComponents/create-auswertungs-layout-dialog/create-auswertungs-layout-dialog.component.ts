@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import {DialogService} from "../../Services/DialogService/dialog.service";
-import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
 import {IAuswertungsLayout, IDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({

@@ -246,7 +246,6 @@ export class AuswertungenComponent implements OnInit {
               })
 
               for (let i = 0; i < month.daysInMonth!; i++) {
-                const today = new Date();
                 data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
               }
               break;

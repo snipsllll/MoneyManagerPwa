@@ -1,6 +1,6 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
-import {Day, Month, SavedData, Week} from "../../Models/Interfaces";
+import {Day, Month, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 
 @Injectable({

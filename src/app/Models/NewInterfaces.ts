@@ -1,10 +1,4 @@
-import {
-  BarChartFilterOptions,
-  BarChartValueOptions,
-  HorizontalelinieOptions,
-  Months,
-  XAchsenSkalierungsOptionen
-} from "./Enums";
+import {Months} from "./Enums";
 
 export interface IMonth {
   month: Months;
