@@ -32,12 +32,20 @@ export class AuswertungenDialogComponent {
 
   onCreateDialogSaveClicked(layout: IAuswertungsLayout) {
     if (this.createMode) {
+      console.log(layout)
       this.viewModel.elemente.push(layout);
     } else {
       this.viewModel.elemente[this.viewModel.elemente.findIndex(element => element.id === layout.id!)] = layout;
     }
 
     this.isCreateLayoutDiologVisible.set(false);
+    this.emptyCreateLayoutDialogViewModel = {
+      id: this.getNextFreeAuswertungsLayoutId(),
+      data: {
+        layoutTitle: '',
+        diagramme: []
+      }
+    }
   }
 
   onCancelClicked() {
@@ -61,7 +69,9 @@ export class AuswertungenDialogComponent {
 
   onPlusClicked() {
     this.createMode = true;
+    this.selectedLayout = undefined;
     this.isCreateLayoutDiologVisible.set(true);
+    console.log(this.emptyCreateLayoutDialogViewModel)
   }
 
   getListElementViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {

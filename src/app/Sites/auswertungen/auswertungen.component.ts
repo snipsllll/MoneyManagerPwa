@@ -14,16 +14,13 @@ import {Day} from "../../Models/Interfaces";
   styleUrl: './auswertungen.component.css'
 })
 export class AuswertungenComponent implements OnInit {
-
-  chart1?: BarChartViewModel;
-  chart2?: BarChartViewModel;
-  chart3?: BarChartViewModel;
   layoutOptions = computed<IAuswertungsLayout[]>(() => {
     this.dataService.updated();
     return this.dataProvider.getAuswertungsLayouts();
   })
 
-  selectedLayout: string = 'Ausgaben-Verhalten für Monat';
+  selectedLayoutString: string = 'Ausgaben-Verhalten für Monat';
+  selectedLayoutCharts: BarChartViewModel[] = [];
 
   selectedMonth = computed(() => {
     switch (this.selectedMonthIndex()) {
@@ -74,22 +71,15 @@ export class AuswertungenComponent implements OnInit {
   }
 
   updateLayout() {
-    const layout = this.layoutOptions().find(option => option.data.layoutTitle === this.selectedLayout);
+    const layout = this.layoutOptions().find(option => option.data.layoutTitle === this.selectedLayoutString);
     if (!layout) {
       return;
     }
 
-    this.chart1 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[0].data);
-    if (layout.data.diagramme[1]) {
-      this.chart2 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[1].data);
-    } else {
-      this.chart2 = undefined;
-    }
-    if (layout.data.diagramme[2]) {
-      this.chart3 = this.getBarChartViewModelFromDiagrammData(layout.data.diagramme[2].data);
-    } else {
-      this.chart3 = undefined;
-    }
+    this.selectedLayoutCharts = [];
+    layout.data.diagramme.forEach(diagram => {
+      this.selectedLayoutCharts.push(this.getBarChartViewModelFromDiagrammData(diagram.data));
+    })
   }
 
   onEditLayoutsButtonClicked() {
@@ -115,7 +105,7 @@ export class AuswertungenComponent implements OnInit {
               case 'Ausgaben':
                 data.push(this.dataProvider.getAusgabenForMonth(month.startDate, diagrammData.filterOption) ?? 0);
                 break;
-              case 'Restgeld':
+              case 'ins Sparschwein eingezahlt':
                 const x = this.dataProvider.getAlleSparschweinEintraege();
                 let summeSparschweinEinAuszahlungen = 0;
                 x.forEach(eintrag => {
@@ -124,19 +114,39 @@ export class AuswertungenComponent implements OnInit {
                   }
                 })
 
-                data.push((month.istBudget ?? 0) + summeSparschweinEinAuszahlungen);
+                data.push(summeSparschweinEinAuszahlungen);
                 break;
-              case 'Sparen':
+              case 'gespart':
+                const x1 = this.dataProvider.getAlleSparschweinEintraege();
+                let summeSparschweinEinAuszahlungen1 = 0;
+                x1.forEach(eintrag => {
+                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear()) {
+                    summeSparschweinEinAuszahlungen1 += eintrag.data.betrag;
+                  }
+                })
+
+                data.push((month.istBudget ?? 0) + summeSparschweinEinAuszahlungen1);
+                break;
+              case 'Restgeld':
+                data.push(month.istBudget ?? 0);
+                break;
+              case 'geplanter Sparbetrag':
                 data.push(month.sparen ?? 0);
                 break;
-              case 'TotalBudget':
+              case 'totalBudget':
                 data.push(month.totalBudget ?? 0);
                 break;
-              case 'Differenz zum daily Budget':
-                throw new Error('alleMonateImJahr darf nicht mit differenzZuDaySollBudget verwendet werden!');
+              case 'monatliches Budget':
+                data.push(month.budget ?? 0);
                 break;
-              case 'ist Budget':
-                data.push(month.istBudget ?? 0);
+              case 'daily Budget':
+                data.push(month.dailyBudget ?? 0);
+                break;
+              case 'summe der Fixkosten':
+                throw new Error('summe der Fixkosten ist noch nicht implementiert für alleMonateFürJahr');
+                break;
+              case 'von Wunschliste gekauft':
+                throw new Error('von Wunschliste gekauft ist noch nicht implementiert für alleMonateFürJahr');
                 break;
             }
           } else {
@@ -149,6 +159,14 @@ export class AuswertungenComponent implements OnInit {
         labels = Array.from({length: month.daysInMonth!}, (_, i) => `${i + 1}`);
 
         if (month) {
+          const allDaysInMonthx: Day[] = [];
+
+          month.weeks?.forEach((week) => {
+            week.days.forEach(day => {
+              allDaysInMonthx.push(day);
+            })
+          })
+
           switch (diagrammData.yAchse) {
             case 'Ausgaben':
               const filteredBuchungenAusgaben = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);

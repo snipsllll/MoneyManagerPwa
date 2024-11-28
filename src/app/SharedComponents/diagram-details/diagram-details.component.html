@@ -30,8 +30,13 @@
         <div class="diagram-details__bottom-eintrag-label">
           Y-Achse:
         </div>
-        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse">
-          <option *ngFor="let option of yAchseAuswahlList" [value]="option">
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse" *ngIf="viewModel.data.xAchse === 'Alle tage im Monat'">
+          <option *ngFor="let option of yAchseAuswahlListTag" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse" *ngIf="viewModel.data.xAchse === 'alle Monate im Jahr'">
+          <option *ngFor="let option of yAchseAuswahlListMonat" [value]="option">
             {{ option }}
           </option>
         </select>
