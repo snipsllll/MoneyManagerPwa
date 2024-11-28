@@ -5,7 +5,7 @@ import {DataProviderService} from "../../Services/DataProviderService/data-provi
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
-import {NewIAuswertungsLayout, NewIDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-auswertungen',
@@ -17,7 +17,7 @@ export class AuswertungenComponent implements OnInit {
   chart1?: BarChartViewModel;
   chart2?: BarChartViewModel;
   chart3?: BarChartViewModel;
-  layoutOptions = computed<NewIAuswertungsLayout[]>(() => {
+  layoutOptions = computed<IAuswertungsLayout[]>(() => {
     this.dataService.updated();
     return this.dataProvider.getAuswertungsLayouts();
   })
@@ -95,7 +95,7 @@ export class AuswertungenComponent implements OnInit {
     this.dialogService.showAuswertungenDialog()
   }
 
-  getBarChartViewModelFromDiagrammData(diagrammData: NewIDiagrammData): BarChartViewModel {
+  getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
     let labels: string[] = [];
     const data: number[] = [];
     switch (diagrammData.xAchse) {

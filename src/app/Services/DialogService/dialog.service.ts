@@ -7,7 +7,7 @@ import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/Buchung
 import {DataProviderService} from "../DataProviderService/data-provider.service";
 import {DataChangeService} from "../DataChangeService/data-change.service";
 import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
-import {NewAuswertungenDialogViewModel, NewIAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class DialogService {
   buchungsKategorienDialogViewModel?: BuchungsKategorienDialogViewModel;
 
   isAuswertungenDialogVisible = false;
-  auswertungenDialogViewModel?: NewAuswertungenDialogViewModel;
+  auswertungenDialogViewModel?: AuswertungenDialogViewModel;
 
   isCreateAuswertungsLayoutDialogVisible = false;
   createAuswertungsLayoutDialogViewModel?: CreateAuswertungsLayoutDialogViewModel;
@@ -88,7 +88,7 @@ export class DialogService {
       onAbortClicked: () => {
         this.isAuswertungenDialogVisible = false;
       },
-      onSaveClicked: (elemente: NewIAuswertungsLayout[]) => {
+      onSaveClicked: (elemente: IAuswertungsLayout[]) => {
         this.isAuswertungenDialogVisible = false;
         this.dataChangeService.editAuswertungsLayouts(elemente);
       }

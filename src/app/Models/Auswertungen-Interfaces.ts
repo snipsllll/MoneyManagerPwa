@@ -1,25 +1,25 @@
-export interface NewAuswertungenDialogViewModel {
-  elemente: NewIAuswertungsLayout[];
-  onSaveClicked: (data: NewIAuswertungsLayout[]) => void;
+export interface AuswertungenDialogViewModel {
+  elemente: IAuswertungsLayout[];
+  onSaveClicked: (data: IAuswertungsLayout[]) => void;
   onAbortClicked: () => void;
 }
 
-export interface NewIAuswertungsLayout {
+export interface IAuswertungsLayout {
   id: number;
-  data: NewIAuswertungsLayoutData;
+  data: IAuswertungsLayoutData;
 }
 
-export interface NewIAuswertungsLayoutData {
+export interface IAuswertungsLayoutData {
   layoutTitle: string;
-  diagramme: NewIDiagramm[];
+  diagramme: IDiagramm[];
 }
 
-export interface NewIDiagramm {
+export interface IDiagramm {
   id: number;
-  data: NewIDiagrammData;
+  data: IDiagrammData;
 }
 
-export interface NewIDiagrammData {
+export interface IDiagrammData {
   diagramTitle: string;
   balkenBeschriftung: string;
   xAchse: string;

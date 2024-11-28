@@ -3,7 +3,7 @@ import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/Cr
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
 import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
-import {NewIAuswertungsLayout, NewIDiagramm} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout, IDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-create-auswertungs-layout-dialog',
@@ -11,7 +11,7 @@ import {NewIAuswertungsLayout, NewIDiagramm} from "../../Models/Auswertungen-Int
   styleUrl: './create-auswertungs-layout-dialog.component.css'
 })
 export class CreateAuswertungsLayoutDialogComponent implements OnInit{
-  @Input() viewModel!: NewIAuswertungsLayout; //CreateAuswertungsLayoutDialogViewModel;
+  @Input() viewModel!: IAuswertungsLayout; //CreateAuswertungsLayoutDialogViewModel;
   @Output() saveClicked = new EventEmitter();
   @Output() cancelClicked = new EventEmitter();
   isSaveEnabled = signal<boolean>(true);
@@ -78,7 +78,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
     this.isSaveEnabled.set(enabled);
   }
 
-  private getNewEmptyDiagramDetailsViewModel(): NewIDiagramm {
+  private getNewEmptyDiagramDetailsViewModel(): IDiagramm {
     return {
       id: this.getNextFreeDiagramId(),
       data: {

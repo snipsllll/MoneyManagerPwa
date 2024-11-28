@@ -7,7 +7,7 @@ import {
   XAchsenSkalierungsOptionen
 } from "../../Models/Enums";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
-import {NewIDiagramm} from "../../Models/Auswertungen-Interfaces";
+import {IDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-diagram-details',
@@ -15,7 +15,7 @@ import {NewIDiagramm} from "../../Models/Auswertungen-Interfaces";
   styleUrl: './diagram-details.component.css'
 })
 export class DiagramDetailsComponent {
-  @Input() viewModel!: NewIDiagramm;
+  @Input() viewModel!: IDiagramm;
   @Output() deleteClicked = new EventEmitter();
   @Output() updated = new EventEmitter();
 

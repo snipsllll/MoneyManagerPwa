@@ -3,7 +3,7 @@ import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEint
 import {DataService} from "../DataService/data.service";
 import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
-import {NewIAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -222,7 +222,7 @@ export class DataProviderService {
   }
 
   getAuswertungsLayouts() {
-    const auswertungsLayouts: NewIAuswertungsLayout[] = [];
+    const auswertungsLayouts: IAuswertungsLayout[] = [];
 
     auswertungsLayouts.push({
       id: -1,

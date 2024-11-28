@@ -6,7 +6,7 @@ import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel
 import {EditDialogData} from "../../Models/ViewModels/EditDialogViewModel";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
-import {NewAuswertungenDialogViewModel, NewIAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-auswertungen-dialog',
@@ -14,9 +14,9 @@ import {NewAuswertungenDialogViewModel, NewIAuswertungsLayout} from "../../Model
   styleUrl: './auswertungen-dialog.component.css'
 })
 export class AuswertungenDialogComponent {
-  @Input() viewModel!: NewAuswertungenDialogViewModel;
+  @Input() viewModel!: AuswertungenDialogViewModel;
   isCreateLayoutDiologVisible = signal<boolean>(false);
-  emptyCreateLayoutDialogViewModel: NewIAuswertungsLayout = {
+  emptyCreateLayoutDialogViewModel: IAuswertungsLayout = {
     id: this.getNextFreeAuswertungsLayoutId(),
     data: {
       layoutTitle: '',
@@ -24,13 +24,13 @@ export class AuswertungenDialogComponent {
     }
   }
 
-  selectedLayout?: NewIAuswertungsLayout;
+  selectedLayout?: IAuswertungsLayout;
   createMode: boolean = false;
 
   constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
   }
 
-  onCreateDialogSaveClicked(layout: NewIAuswertungsLayout) {
+  onCreateDialogSaveClicked(layout: IAuswertungsLayout) {
     if (this.createMode) {
       this.viewModel.elemente.push(layout);
     } else {
@@ -64,7 +64,7 @@ export class AuswertungenDialogComponent {
     this.isCreateLayoutDiologVisible.set(true);
   }
 
-  getListElementViewModel(eintrag: NewIAuswertungsLayout): ListElementViewModel {
+  getListElementViewModel(eintrag: IAuswertungsLayout): ListElementViewModel {
     return {
       data: {
         id: eintrag.id,
