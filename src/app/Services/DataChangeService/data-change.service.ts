@@ -12,6 +12,7 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
+import {IGeplanteAusgabe} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +74,27 @@ export class DataChangeService {
   editFixkostenEintrag(editedFixkostenEintrag: IFixkostenEintrag): void {
     this.dataService.userData.standardFixkostenEintraege[this.getIndexOfFixkostenEintragById(editedFixkostenEintrag.id)] = editedFixkostenEintrag;
     this.dataService.update();
+  }
+
+  editGeplanteAusgabenEintraegeForMonth(date: Date, elemente: IGeplanteAusgabe[]) {
+    this.dataService.createNewMonthIfNecessary(date);
+    const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
+    if(month === undefined) {
+      throw new Error("error in dataChangeService editGeplanteAusgabenEintraegeForMonth: Month is undefined!");
+    }
+
+    month.geplanteAusgaben = [];
+
+    elemente.forEach(element => {
+      month.geplanteAusgaben?.push({
+        id: this.getNextFreeGeplanteAusgabeId(),
+        data: {
+          betrag: element.data.betrag,
+          title: element.data.title,
+          beschreibung: element.data.beschreibung
+        }
+      })
+    })
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IMonthFixkostenEintrag[]) {
@@ -254,6 +276,19 @@ export class DataChangeService {
     return freeId;
   }
 
+  private getNextFreeGeplanteAusgabeId() {
+    let freeId = 1;
+    const alleEintraege = this.getAlleGeplantenAusgaben();
+    for (let i = 0; i < alleEintraege.length; i++) {
+      if (alleEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private getNextFreeWunschlistenEintragId() {
     let freeId = 1;
     for (let i = 0; i < this.dataService.userData.wunschlistenEintraege.length; i++) {
@@ -321,6 +356,14 @@ export class DataChangeService {
     let eintraege = this.dataService.userData.standardFixkostenEintraege ?? [];
     this.dataService.userData.months.forEach(month => {
       eintraege = eintraege.concat(month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []);
+    })
+    return eintraege;
+  }
+
+  private getAlleGeplantenAusgaben(): IGeplanteAusgabe[] {
+    let eintraege: IGeplanteAusgabe[] = [];
+    this.dataService.userData.months.forEach(month => {
+      eintraege = eintraege.concat(month.geplanteAusgaben ? month.geplanteAusgaben : []);
     })
     return eintraege;
   }

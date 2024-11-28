@@ -73,6 +73,11 @@ export class DataProviderService {
     return alleEintraege;
   }
 
+  getGeplanteAusgabenEintraegeForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+    return month.geplanteAusgaben;
+  }
+
   getAnzahlDaysLeftForMonth(date: Date) {
     const month = this.getMonthByDate(date);
     return month.daysInMonth! - date.getDate();
@@ -424,6 +429,18 @@ export class DataProviderService {
     return summe;
   }
 
+  getGeplanteAusgabenSummeForMonth(month: Month) {
+    let summe = 0;
+    const eintraege = this.getGeplanteAusgabenEintraegeForMonth(month.startDate);
+    if (!eintraege)
+      return 0;
+
+    eintraege.forEach(eintrag => {
+      summe += eintrag.data.betrag;
+    })
+    return summe;
+  }
+
   checkIfMonthExistsForDay(date: Date) {
     return this.dataService.userData.months.findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
   }
@@ -461,7 +478,9 @@ export class DataProviderService {
       dayBudget: month.dailyBudget ?? 0,
       fixKostenSumme: this.getFixkostenSummeForMonth(month),
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true)
+      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true),
+      geplanteAusgabenSumme: this.getGeplanteAusgabenSummeForMonth(month),
+      geplanteAusgaben: this.getGeplanteAusgabenEintraegeForMonth(month.startDate)
     }
   }
 

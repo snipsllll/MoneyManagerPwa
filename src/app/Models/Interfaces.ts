@@ -51,6 +51,8 @@ export interface BudgetInfosForMonth {
   fixKostenSumme?: number;
   fixKostenEintraege?: IMonthFixkostenEintrag[];
   fixKostenGesperrt?: boolean;
+  geplanteAusgabenSumme?: number;
+  geplanteAusgaben?: IGeplanteAusgabe[];
 }
 
 export interface SavedData {
