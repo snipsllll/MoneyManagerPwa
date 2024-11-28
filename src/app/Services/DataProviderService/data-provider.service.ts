@@ -227,38 +227,38 @@ export class DataProviderService {
     auswertungsLayouts.push({
       id: -1,
       data: {
-        layoutTitle: 'Ausgaben-Verhalten für Monat',
-        diagramme: [{
-          id: -1,
-          data: {
-            selectedDiagramType: 'benutzerdefiniert',
-            diagramTitle: 'Restgeld für Monat',
-            balkenBeschriftung: 'Restgeld für Monat (in Euro)',
-            xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
-            yAchse: 'Restgeld für Monat', //BarChartValueOptions.Restgeld
-          }
-        },
-          {
+          layoutTitle: 'Ausgaben-Verhalten für Monat',
+          diagramme: [
+            {
+              id: -1,
+              data: {
+                selectedDiagramType: 'Ausgaben pro Tag',
+                diagramTitle: 'Ausgaben pro Tag',
+                balkenBeschriftung: 'Ausgaben (in Euro)',
+                xAchse: 'Alle tage im Monat',
+                yAchse: 'Ausgaben',
+                lineOption: {
+                  lineType: 'daily Budget'
+                }
+              }
+            },{
             id: -2,
             data: {
-              selectedDiagramType: 'benutzerdefiniert',
-              diagramTitle: 'Ausgaben von dem Tag',
-              balkenBeschriftung: 'Ausgaben (in Euro)',
-              xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
-              yAchse: 'Ausgaben', //BarChartValueOptions.Ausgaben,
-              lineOption: {
-                lineType: 'daily Budget'
-              }
+              selectedDiagramType: 'Restgeld für Monat',
+              diagramTitle: 'Restgeld für Monat',
+              balkenBeschriftung: 'Restgeld für Monat (in Euro)',
+              xAchse: 'Alle tage im Monat',
+              yAchse: 'Restgeld für Monat',
             }
           },
           {
             id: -3,
             data: {
-              selectedDiagramType: '',
-              diagramTitle: 'Restgeld für Tage',
+              selectedDiagramType: 'Restgeld für Tag',
+              diagramTitle: 'Restgeld für Tag',
               balkenBeschriftung: 'Restgeld für Tag (in Euro)',
               xAchse: 'Alle tage im Monat',
-              yAchse: 'ist Budget'
+              yAchse: 'Restgeld pro Tag'
             }
           }
         ]
@@ -273,21 +273,21 @@ export class DataProviderService {
           {
             id: -4,
             data: {
-              selectedDiagramType: 'benutzerdefiniert',
-              diagramTitle: 'Geplante Sparbeträge',
+              selectedDiagramType: 'Geplante Sparbeträge pro Monat',
+              diagramTitle: 'Geplante Sparbeträge pro Monat',
               balkenBeschriftung: 'Sparen-Betrag (in Euro)',
-              xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
-              yAchse: 'Restgeld' //BarChartValueOptions.Sparen
+              xAchse: 'alle Monate im Jahr',
+              yAchse: 'geplanter Sparbetrag'
             }
           },
           {
             id: -5,
             data: {
-              selectedDiagramType: 'benutzerdefiniert',
-              diagramTitle: 'Tatsächlich nicht ausgegebenes geld',
+              selectedDiagramType: 'Tatsächlich gespart pro Monat',
+              diagramTitle: 'Tatsächlich gespart pro Monat',
               balkenBeschriftung: 'Betrag (in Euro)',
-              xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleMonateImJahr,
-              yAchse: 'Restgeld' //BarChartValueOptions.Restgeld
+              xAchse: 'alle Monate im Jahr',
+              yAchse: 'ins Sparschwein eingezahlt'
             }
           }
         ]
@@ -307,55 +307,47 @@ export class DataProviderService {
     let diagramme: IDiagrammData[] = [];
 
     diagramme.push({
-      selectedDiagramType: 'benutzerdefiniert',
+      selectedDiagramType: 'Restgeld für Monat',
+      diagramTitle: 'Restgeld für Monat',
+      balkenBeschriftung: 'Restgeld für Monat (in Euro)',
+      xAchse: 'Alle tage im Monat',
+      yAchse: 'Restgeld für Monat',
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'Ausgaben pro Tag',
       diagramTitle: 'Ausgaben pro Tag',
       balkenBeschriftung: 'Ausgaben (in Euro)',
-      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
-      yAchse: 'Ausgaben', //BarChartValueOptions.Ausgaben,
+      xAchse: 'Alle tage im Monat',
+      yAchse: 'Ausgaben',
       lineOption: {
         lineType: 'daily Budget'
       }
     });
 
     diagramme.push({
-      selectedDiagramType: 'benutzerdefiniert',
-      diagramTitle: 'Restgeld für Monat pro Tag',
-      balkenBeschriftung: 'Restgeld für Monat (in Euro)',
-      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
-      yAchse: 'Restgeld', //BarChartValueOptions.Restgeld
-    });
-
-    diagramme.push({
-      selectedDiagramType: 'benutzerdefiniert',
-      diagramTitle: 'Differenz zum Soll',
-      balkenBeschriftung: 'Differenz zum Soll (in Euro)',
-      xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
-      yAchse: 'Differenz zum daily Budget' //BarChartValueOptions.DifferenzZuDaySollBudget
-    });
-
-    diagramme.push({
-      selectedDiagramType: 'benutzerdefiniert',
-      diagramTitle: 'Geplante Sparbeträge',
-      balkenBeschriftung: 'Betrag (in Euro)',
-      xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
-      yAchse: 'Sparen' //BarChartValueOptions.Sparen
-    });
-
-    diagramme.push({
-      selectedDiagramType: 'benutzerdefiniert',
-      diagramTitle: 'Ins Sparschwein eingezahltes Geld pro Monat',
-      balkenBeschriftung: 'Betrag (in Euro)',
-      xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
-      yAchse: 'Restgeld' //BarChartValueOptions.Restgeld
-    });
-
-    diagramme.push({
-      selectedDiagramType: '',
-      diagramTitle: 'Restgeld für Tag pro Tag',
-      balkenBeschriftung: 'Restgeld(IstBudget) (in Euro)',
+      selectedDiagramType: 'Restgeld für Tag',
+      diagramTitle: 'Restgeld für Tag',
+      balkenBeschriftung: 'Restgeld für Tag (in Euro)',
       xAchse: 'Alle tage im Monat',
-      yAchse: 'ist Budget'
-    })
+      yAchse: 'Restgeld pro Tag'
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'Geplante Sparbeträge pro Monat',
+      diagramTitle: 'Geplante Sparbeträge pro Monat',
+      balkenBeschriftung: 'Sparen-Betrag (in Euro)',
+      xAchse: 'alle Monate im Jahr',
+      yAchse: 'geplanter Sparbetrag'
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'Tatsächlich gespart pro Monat',
+      diagramTitle: 'Tatsächlich gespart pro Monat',
+      balkenBeschriftung: 'Betrag (in Euro)',
+      xAchse: 'alle Monate im Jahr',
+      yAchse: 'ins Sparschwein eingezahlt'
+    });
 
     return diagramme;
   }

@@ -223,7 +223,8 @@ export class WunschlisteComponent implements OnInit{
         zusatz: eintrag.zusatz,
         gekauft: true,
         date: eintrag.date!,
-        erstelltAm: eintrag.erstelltAm!
+        erstelltAm: eintrag.erstelltAm!,
+        gekauftAm: new Date()
       }
     }
     if(this.kannKaufen(newWunschlistenEintrag)){

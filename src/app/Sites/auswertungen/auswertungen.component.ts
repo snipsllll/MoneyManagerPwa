@@ -147,8 +147,13 @@ export class AuswertungenComponent implements OnInit {
                 data.push(0);
                 break;
               case 'von Wunschliste gekauft':
-                console.log('von Wunschliste gekauft ist noch nicht implementiert für alleMonateFürJahr');
-                data.push(0);
+                const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.getMonth() === month.startDate.getMonth() && eintrag.data.gekauftAm?.getFullYear() === month.startDate.getFullYear());
+                let summe = 0;
+                gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
+                  summe += eintrag.data.betrag;
+                })
+                data.push(summe);
                 break;
             }
           } else {
@@ -204,7 +209,7 @@ export class AuswertungenComponent implements OnInit {
                 data.push(day.istBudget ?? 0);
               })
               break;
-            case 'Sparen':
+            case 'ins Sparschwein eingezahlt':
               const x = this.dataProvider.getAlleSparschweinEintraege();
               for( let day=0; day<month.daysInMonth!; day++) {
                 let summeAusEinzahlung = 0;
@@ -216,8 +221,16 @@ export class AuswertungenComponent implements OnInit {
                 data.push(summeAusEinzahlung);
               }
               break;
-            case 'TotalBudget':
-              data.push(month.totalBudget ?? 0);
+            case 'von Wunschliste gekauft':
+              const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
+              allDaysInMonthx.forEach(day => {
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.toLocaleDateString() === day.date.toLocaleDateString());
+                let summe = 0;
+                gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
+                  summe += eintrag.data.betrag;
+                })
+                data.push(summe);
+              })
               break;
             case 'Differenz zum daily Budget':
               const filteredBuchungenDif = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);
@@ -236,21 +249,6 @@ export class AuswertungenComponent implements OnInit {
                 const today = new Date();
                 data[i] = month.dailyBudget! - alleAusgabenDaysDif[i];
               }
-              break;
-            case 'ist Budget':
-              const allDaysInMonth: Day[] = [];
-
-              month.weeks?.forEach((week) => {
-                week.days.forEach(day => {
-                  allDaysInMonth.push(day);
-                })
-              })
-
-              console.log(allDaysInMonth)
-
-              allDaysInMonth.forEach(day => {
-                data.push(day.istBudget ?? 0);
-              })
               break;
           }
         } else {
