@@ -143,10 +143,12 @@ export class AuswertungenComponent implements OnInit {
                 data.push(month.dailyBudget ?? 0);
                 break;
               case 'summe der Fixkosten':
-                throw new Error('summe der Fixkosten ist noch nicht implementiert für alleMonateFürJahr');
+                console.log('summe der Fixkosten ist noch nicht implementiert für alleMonateFürJahr');
+                data.push(0);
                 break;
               case 'von Wunschliste gekauft':
-                throw new Error('von Wunschliste gekauft ist noch nicht implementiert für alleMonateFürJahr');
+                console.log('von Wunschliste gekauft ist noch nicht implementiert für alleMonateFürJahr');
+                data.push(0);
                 break;
             }
           } else {
@@ -178,7 +180,7 @@ export class AuswertungenComponent implements OnInit {
                 data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
               })
               break;
-            case 'Restgeld':
+            case 'Restgeld für Monat':
               const filteredBuchungen = this.dataProvider.getAlleBuchungenForMonthFiltered(new Date(this.selectedYear(), this.selectedMonthIndex(), 1), diagrammData.filterOption);
               let alleAusgabenDays: number[] = [];
 
@@ -196,6 +198,11 @@ export class AuswertungenComponent implements OnInit {
                 ausgabeGesammt += alleAusgabenDays[i];
                 data[i] = month.budget! - ausgabeGesammt;
               }
+              break;
+            case 'Restgeld pro Tag':
+              allDaysInMonthx.forEach(day => {
+                data.push(day.istBudget ?? 0);
+              })
               break;
             case 'Sparen':
               const x = this.dataProvider.getAlleSparschweinEintraege();
@@ -273,7 +280,7 @@ export class AuswertungenComponent implements OnInit {
       diagramLabel: diagrammData.diagramTitle,
       labels: labels,
       datasets: [{
-        label: diagrammData.balkenBeschriftung,
+        label: diagrammData.balkenBeschriftung !== '' ? diagrammData.balkenBeschriftung : diagrammData.yAchse,
         data: data,
         backgroundColor: diagrammData.balkenColor ?? 'rgba(67,182,255,0.6)',
         horizontaleLinie: horizontaleLinieWert,

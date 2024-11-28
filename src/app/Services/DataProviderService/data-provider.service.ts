@@ -235,7 +235,7 @@ export class DataProviderService {
             diagramTitle: 'Restgeld für Monat',
             balkenBeschriftung: 'Restgeld für Monat (in Euro)',
             xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
-            yAchse: 'Restgeld', //BarChartValueOptions.Restgeld
+            yAchse: 'Restgeld für Monat', //BarChartValueOptions.Restgeld
           }
         },
           {
