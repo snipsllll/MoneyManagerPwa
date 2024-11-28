@@ -188,6 +188,7 @@ export class UserData {
         {
           id: 1,
           data: {
+            time: new Date().toLocaleTimeString(),
             betrag: 1,
             beschreibung: 'dfsafasd',
             date: new Date(),

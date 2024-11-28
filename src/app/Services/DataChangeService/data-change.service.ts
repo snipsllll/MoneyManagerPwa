@@ -12,7 +12,7 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
-import {IGeplanteAusgabe} from "../../Models/Interfaces";
+import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,27 @@ export class DataChangeService {
 
   deleteBuchung(buchungId: number) {
     this.dataService.userData.buchungen.splice(this.getIndexOfBuchungById(buchungId), 1);
+    this.dataService.update();
+  }
+
+  addGeplanteAusgabeBuchung(buchungData: IGeplanteAusgabenBuchungData): void {
+    console.log(565655)
+    const newGeplanteAusgabenBuchung: IGeplanteAusgabenBuchung = {
+      id: this.getNextFreeGeplanteAusgabenBuchungId(),
+      data: buchungData
+    };
+
+    this.dataService.userData.geplanteAusgabenBuchungen.push(newGeplanteAusgabenBuchung);
+    this.dataService.update();
+  }
+
+  editGeplanteAusgabeBuchung(editedGeplanteAusgabenBuchung: IGeplanteAusgabenBuchung): void {
+    this.dataService.userData.geplanteAusgabenBuchungen[this.getIndexOfGeplanteAusgabenBuchungById(editedGeplanteAusgabenBuchung.id)] = editedGeplanteAusgabenBuchung;
+    this.dataService.update();
+  }
+
+  deleteGeplanteAusgabeBuchung(id: number) {
+    this.dataService.userData.geplanteAusgabenBuchungen.splice(this.getIndexOfGeplanteAusgabenBuchungById(id), 1);
     this.dataService.update();
   }
 
@@ -251,6 +272,19 @@ export class DataChangeService {
     return freeId;
   }
 
+
+  private getNextFreeGeplanteAusgabenBuchungId() {
+    let freeId = 1;
+    for (let i = 0; i < this.dataService.userData.geplanteAusgabenBuchungen.length; i++) {
+      if (this.dataService.userData.geplanteAusgabenBuchungen.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private getNextFreeAuswertungLayoutId() {
     let freeId = 1;
     for (let i = 0; i < this.dataService.userData.auswertungsLayouts.length; i++) {
@@ -315,6 +349,10 @@ export class DataChangeService {
 
   private getIndexOfBuchungById(id: number) {
     return this.dataService.userData.buchungen.findIndex(eintrag => eintrag.id === id);
+  }
+
+  private getIndexOfGeplanteAusgabenBuchungById(id: number) {
+    return this.dataService.userData.geplanteAusgabenBuchungen.findIndex(eintrag => eintrag.id === id);
   }
 
   private getIndexOfAuswertungsLayoutById(id: number) {

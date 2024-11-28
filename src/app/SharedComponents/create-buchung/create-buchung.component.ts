@@ -79,7 +79,14 @@ export class CreateBuchungComponent {
         let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDay
 
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
-          this.dataChangeService.addBuchung(this.buchung);
+          console.log(77)
+          console.log(this.buchung.buchungsKategorie)
+          if(this.buchung.buchungsKategorie == -1) { // geplante ausgabe
+            console.log(88)
+            this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung);
+          } else {
+            this.dataChangeService.addBuchung(this.buchung);
+          }
           this.router.navigate(['/']);
         } else {
           if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
@@ -90,7 +97,12 @@ export class CreateBuchungComponent {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                this.dataChangeService.addBuchung(this.buchung);
+                if(this.buchung.buchungsKategorie == -1) { // geplante ausgabe
+                  this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung);
+                } else {
+                  this.dataChangeService.addBuchung(this.buchung);
+                }
+
                 this.dialogService.isConfirmDialogVisible = false;
                 this.router.navigate(['/']);
               }

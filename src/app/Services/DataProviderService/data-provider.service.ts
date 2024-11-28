@@ -102,6 +102,24 @@ export class DataProviderService {
     return buchung;
   }
 
+  getGeplanteAusgabenBuchungById(id: number): IBuchung {
+    const x = this.dataService.userData.geplanteAusgabenBuchungen.find(buchung => buchung.id === id);
+    if(!x) {
+      throw new Error(`geplanteAusgabenBuchung mit id: ${id} wurde nicht gefunden!`)
+    }
+    return {
+      id: x.id,
+      data: {
+        betrag: x?.data.betrag,
+        title: x?.data.title,
+        time: x?.data.time,
+        buchungsKategorie: -1,
+        date: x?.data.date,
+        beschreibung: x?.data.beschreibung
+      }
+    }
+  }
+
   getDayByeDate(date: Date): Day | undefined {
     const month = this.getMonthByDate(date);
     let selectedDay: Day | undefined = undefined;
@@ -441,6 +459,10 @@ export class DataProviderService {
     return summe;
   }
 
+  getGeplanteAusgabenBuchungForMonth(month: Month) {
+    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear())
+  }
+
   checkIfMonthExistsForDay(date: Date) {
     return this.dataService.userData.months.findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
   }
@@ -490,6 +512,7 @@ export class DataProviderService {
 
   getBuchungsKategorienMitEmpty() {
     const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
+    x.push({id: -1, name: 'geplante Ausgabe'})
     x.push({id: 0, name: ''})
     return x;
   }

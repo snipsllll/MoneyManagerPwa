@@ -39,7 +39,7 @@ export interface Day {
   budget?: number;
   istBudget?: number;
   buchungen?: IBuchung[];
-  geplanteAusgaben?: IGeplanteAusgabenBuchung[];
+  geplanteAusgabenBuchungen?: IGeplanteAusgabenBuchung[];
 }
 
 export interface BudgetInfosForMonth {
@@ -75,8 +75,9 @@ export interface IGeplanteAusgabenBuchung {
 
 export interface IGeplanteAusgabenBuchungData {
   date: Date;
+  time: string;
   title: string;
-  betrag: number;
+  betrag: number | null;
   beschreibung?: string;
 }
 

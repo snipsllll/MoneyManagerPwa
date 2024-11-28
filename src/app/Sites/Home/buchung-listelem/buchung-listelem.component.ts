@@ -33,13 +33,17 @@ export class BuchungListelemComponent implements OnInit{
     this.showMenu.set(!this.showMenu())
   }
 
-  onBuchungClicked(buchungsId: number) {
-    this.router.navigate(['/buchungDetails', buchungsId]);
+  onBuchungClicked(buchung: IBuchung) {
+    const buchungsId = buchung.data.buchungsKategorie == -1 ? 0 : buchung.id;
+    const geplanteAusgabenBuchungsId = buchung.data.buchungsKategorie == -1 ? buchung.id : 0;
+    this.router.navigate(['/buchungDetails', buchungsId, geplanteAusgabenBuchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
 
-  onEditButtonClicked(buchungsId: number) {
-    this.router.navigate(['/editBuchung', buchungsId]);
+  onEditButtonClicked(buchung: IBuchung) {
+    const buchungsId = buchung.data.buchungsKategorie == -1 ? 0 : buchung.id;
+    const geplanteAusgabenBuchungsId = buchung.data.buchungsKategorie == -1 ? buchung.id : 0;
+    this.router.navigate(['/editBuchung', buchungsId, geplanteAusgabenBuchungsId]);
   }
 
   onDeleteButtonClicked() {
@@ -49,7 +53,12 @@ export class BuchungListelemComponent implements OnInit{
       message: 'Willst du die Buchung wirklich löschen? Sie kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.dataChangeService.deleteBuchung(this.buchung.id!);
+        if(this.buchung.data.buchungsKategorie == -1) {
+          this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung.id);
+        } else {
+          this.dataChangeService.deleteBuchung(this.buchung.id!);
+        }
+
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;

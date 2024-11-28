@@ -52,8 +52,10 @@ export class EditBuchungComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
+      const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
 
-      this.oldBuchung = {...this.dataProvider.getBuchungById(buchungsId)!}
+      this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
+
       this.buchung?.set({
         id: this.oldBuchung!.id,
         data: {
@@ -62,7 +64,7 @@ export class EditBuchungComponent implements OnInit {
           betrag: this.oldBuchung!.data.betrag,
           title: this.oldBuchung!.data.title,
           time: this.oldBuchung!.data.time,
-          buchungsKategorie: this.oldBuchung!.data.buchungsKategorie
+          buchungsKategorie: +(this.oldBuchung!.data.buchungsKategorie)!
         }
       });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
@@ -74,9 +76,23 @@ export class EditBuchungComponent implements OnInit {
   onSaveClicked() {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0;
+        let isBetragZuHoch = this.isBetragZuHoch();
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
-          this.dataChangeService.editBuchung(this.buchung()!);
+          if(this.buchung()?.data.buchungsKategorie == -1) {
+            if(this.oldBuchung?.data.buchungsKategorie == -1) {
+              this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
+            } else {
+              this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
+              this.dataChangeService.deleteBuchung(this.buchung()!.id)
+            }
+          } else {
+            if(this.oldBuchung?.data.buchungsKategorie != -1) {
+              this.dataChangeService.editBuchung(this.buchung()!)
+            } else {
+              this.dataChangeService.addBuchung(this.buchung()!.data!)
+              this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
+            }
+          }
           this.router.navigate(['/']);
         } else {
           if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
@@ -87,7 +103,21 @@ export class EditBuchungComponent implements OnInit {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                this.dataChangeService.editBuchung(this.buchung()!);
+                if(this.buchung()?.data.buchungsKategorie == -1) {
+                  if(this.oldBuchung?.data.buchungsKategorie == -1) {
+                    this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
+                  } else {
+                    this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
+                    this.dataChangeService.deleteBuchung(this.buchung()!.id)
+                  }
+                } else {
+                  if(this.oldBuchung?.data.buchungsKategorie != -1) {
+                    this.dataChangeService.editBuchung(this.buchung()!)
+                  } else {
+                    this.dataChangeService.addBuchung(this.buchung()!.data!)
+                    this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
+                  }
+                }
                 this.dialogService.isConfirmDialogVisible = false;
                 this.router.navigate(['/']);
               }
@@ -104,6 +134,26 @@ export class EditBuchungComponent implements OnInit {
       this.betragWarnung = 'der Betrag darf nicht 0 betragen!'
       this.showBetragWarning = true;
     }
+  }
+
+  isBetragZuHoch() {
+    if(this.buchung()?.data.buchungsKategorie == -1) {
+      return !this.availableMoneyCapped().noData && this.getRestGeplantAusgabenSumme();
+    } else {
+      return !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0
+    }
+
+  }
+
+  getRestGeplantAusgabenSumme() {
+    let bereitsVerplant = 0;
+    const geplanteBuchungenForMonth = this.dataProvider.getGeplanteAusgabenBuchungForMonth(this.dataProvider.getMonthByDate(this.buchung()?.data.date!))
+
+    geplanteBuchungenForMonth.forEach(buchung => {
+      bereitsVerplant += buchung.data.betrag ?? 0;
+    })
+
+    return this.dataProvider.getGeplanteAusgabenSummeForMonth(this.dataProvider.getMonthByDate(this.buchung()?.data.date!)) - bereitsVerplant;
   }
 
   onCancelClicked() {
