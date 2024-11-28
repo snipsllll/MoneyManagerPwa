@@ -22,6 +22,7 @@ export interface Month {
   monatAbgeschlossen?: boolean;
   uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
   specialFixkostenEintraege?: IMonthFixkostenEintrag[];
+  geplanteAusgaben?: IGeplanteAusgabe[];
 }
 
 export interface Week {
@@ -38,6 +39,7 @@ export interface Day {
   budget?: number;
   istBudget?: number;
   buchungen?: IBuchung[];
+  geplanteAusgaben?: IGeplanteAusgabenBuchung[];
 }
 
 export interface BudgetInfosForMonth {
@@ -61,15 +63,16 @@ export interface SavedData {
   auswertungsLayouts: IAuswertungsLayout[];
   settings: Settings;
   dbVersion: number;
-  geplanteAusgaben: IGeplanteAusgabe[];
+  geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[];
 }
 
-export interface IGeplanteAusgabe {
+export interface IGeplanteAusgabenBuchung {
   id: number;
-  data: IGeplanteAusgabeData;
+  data: IGeplanteAusgabenBuchungData;
 }
 
-export interface IGeplanteAusgabeData {
+export interface IGeplanteAusgabenBuchungData {
+  date: Date;
   title: string;
   betrag: number;
   beschreibung?: string;
@@ -91,8 +94,20 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
+  geplanteAusgaben?: IGeplanteAusgabe[];
   uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
   specialFixkostenEintraege?: IMonthFixkostenEintrag[];
+}
+
+export interface IGeplanteAusgabe {
+  id: number;
+  data: IGeplanteAusgabeData;
+}
+
+export interface IGeplanteAusgabeData {
+  title: string;
+  betrag: number;
+  beschreibung?: string;
 }
 
 export interface MenuItem {
