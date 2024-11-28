@@ -522,6 +522,9 @@ export class DataProviderService {
   }
 
   getBuchungsKategorieNameById(id: number) {
+    if(id == -1) {
+      return 'geplante Ausgabe'
+    }
     const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
     return kategorie ? kategorie.name : '---';
   }
