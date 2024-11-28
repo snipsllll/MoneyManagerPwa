@@ -1,11 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
-import {
-  BarChartFilterOptions,
-  BarChartValueOptions,
-  HorizontalelinieOptions,
-  XAchsenSkalierungsOptionen
-} from "../../Models/Enums";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {IDiagramm} from "../../Models/Auswertungen-Interfaces";
 
@@ -14,22 +7,24 @@ import {IDiagramm} from "../../Models/Auswertungen-Interfaces";
   templateUrl: './diagram-details.component.html',
   styleUrl: './diagram-details.component.css'
 })
-export class DiagramDetailsComponent {
+export class DiagramDetailsComponent implements OnInit{
   @Input() viewModel!: IDiagramm;
   @Output() deleteClicked = new EventEmitter();
   @Output() updated = new EventEmitter();
 
   diagrammAuswahlList = ['Diagram 1', 'Diagram 2', 'Diagram 3', 'benutzerdefiniert'];
-  xAchseAuswahlList = ['alle Monate im Jahr', 'Alle tage im Monat'];
+  xAchseAuswahlList = ['Alle tage im Monat', 'alle Monate im Jahr'];
   yAchseAuswahlList = ['Ausgaben', 'Restgeld', 'Sparen', 'TotalBudget', 'Differenz zum daily Budget']
   filterTypeAuswahlList = ['nach Kategorie', 'nach Wochentag', '--kein Filter--'];
   filterOptionWochentage = ['Montag', 'Dienstag', 'Mitwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-  lineTypeAuswahlList = ['daily Budget', 'benutzerdefiniert'];
-  selectedDiagramType: string = '';
+  lineTypeAuswahlList = ['daily Budget', 'benutzerdefiniert', '--keine Linie--'];
   filterOptionKategorien: string[] = [];
   benutzerdefiniert = false;
 
   constructor(private dataProvider: DataProviderService) {
+  }
+
+  ngOnInit() {
     this.filterOptionKategorien = this.dataProvider.getBuchungsKategorienNamen();
 
     this.viewModel.data.lineOption = this.viewModel.data.lineOption ?? {lineType: '', lineValue: 0};

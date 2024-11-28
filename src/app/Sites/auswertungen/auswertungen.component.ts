@@ -5,7 +5,7 @@ import {DataProviderService} from "../../Services/DataProviderService/data-provi
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
-import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {IAuswertungsLayout, NewIDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-auswertungen',
@@ -95,7 +95,7 @@ export class AuswertungenComponent implements OnInit {
     this.dialogService.showAuswertungenDialog()
   }
 
-  getBarChartViewModelFromDiagrammData(diagrammData: IDiagrammData): BarChartViewModel {
+  getBarChartViewModelFromDiagrammData(diagrammData: NewIDiagrammData): BarChartViewModel {
     let labels: string[] = [];
     const data: number[] = [];
     switch (diagrammData.xAchse) {

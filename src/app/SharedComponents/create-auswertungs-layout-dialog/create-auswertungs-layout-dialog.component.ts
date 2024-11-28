@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
-import {CreateAuswertungsLayoutDialogViewModel} from "../../Models/ViewModels/CreateAuswertungsLayoutDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DiagramDetailsViewModel} from "../../Models/ViewModels/DiagramDetailsViewModel";
-import {BarChartValueOptions, XAchsenSkalierungsOptionen} from "../../Models/Enums";
 import {IAuswertungsLayout, IDiagramm} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
@@ -11,7 +9,7 @@ import {IAuswertungsLayout, IDiagramm} from "../../Models/Auswertungen-Interface
   styleUrl: './create-auswertungs-layout-dialog.component.css'
 })
 export class CreateAuswertungsLayoutDialogComponent implements OnInit{
-  @Input() viewModel!: IAuswertungsLayout; //CreateAuswertungsLayoutDialogViewModel;
+  @Input() viewModel!: IAuswertungsLayout;
   @Output() saveClicked = new EventEmitter();
   @Output() cancelClicked = new EventEmitter();
   isSaveEnabled = signal<boolean>(true);
@@ -20,6 +18,7 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   }
 
   ngOnInit() {
+    console.log(this.viewModel)
     if(!this.viewModel) {
       this.viewModel = {
         id: this.getNextFreeDiagramId(),
@@ -29,14 +28,10 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
         }
       }
     }
-    if (!this.viewModel.data.diagramme) {
+    if (!this.viewModel.data.diagramme || this.viewModel.data.diagramme.length === 0) {
       this.viewModel.data.diagramme = [];
       this.viewModel.data.diagramme.push(this.getNewEmptyDiagramDetailsViewModel());
     }
-  }
-
-  update(viewModel?: DiagramDetailsViewModel) {
-    //this.updateIsSaveEnabled();
   }
 
   protected onCreateDiagramDeleteClicked(id: number) {
@@ -47,41 +42,24 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
   }
 
   protected onCancelClicked() {
-    this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
     this.cancelClicked.emit()
   }
 
   protected onSaveClicked() {
     if(this.isSaveEnabled()) {
       this.saveClicked.emit(this.viewModel);
-      this.dialogService.isCreateAuswertungsLayoutDialogVisible = false;
     }
-
   }
 
   protected onPlusClicked() {
     this.viewModel.data.diagramme!.push(this.getNewEmptyDiagramDetailsViewModel());
   }
 
-  updateIsSaveEnabled() {
-    let enabled = true;
-
-    this.viewModel.data.diagramme?.forEach(diagram => {
-      if(!diagram.data.xAchse) {
-        enabled = false;
-      }
-      if(!diagram.data.yAchse) {
-        enabled = false;
-      }
-    });
-
-    this.isSaveEnabled.set(enabled);
-  }
-
   private getNewEmptyDiagramDetailsViewModel(): IDiagramm {
     return {
       id: this.getNextFreeDiagramId(),
       data: {
+        selectedDiagramType: '',
         diagramTitle: '',
         balkenBeschriftung: '',
         xAchse: '',
@@ -89,6 +67,10 @@ export class CreateAuswertungsLayoutDialogComponent implements OnInit{
         filterOption: {
           filter: '--kein Filter--',
           value: undefined
+        },
+        lineOption: {
+          lineType: '--keine Linie--',
+          lineValue: undefined
         }
       }
     }

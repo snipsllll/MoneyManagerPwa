@@ -4,7 +4,6 @@ import {DataService} from "../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData} from "../../Models/ViewModels/EditDialogViewModel";
-import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 
@@ -27,7 +26,8 @@ export class AuswertungenDialogComponent {
   selectedLayout?: IAuswertungsLayout;
   createMode: boolean = false;
 
-  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private dialogService: DialogService, public dataService: DataService) {
+  constructor(private dataProvider: DataProviderService,private dialogService: DialogService, public dataService: DataService) {
+    console.log(this.viewModel)
   }
 
   onCreateDialogSaveClicked(layout: IAuswertungsLayout) {
@@ -118,13 +118,17 @@ export class AuswertungenDialogComponent {
 
   private getNextFreeAuswertungsLayoutId() {
     let freeId = 1;
-    for (let i = 0; i < this.viewModel.elemente!.length; i++) {
-      if (this.viewModel.elemente!.find(x => x.id === freeId) === undefined) {
-        return freeId;
-      } else {
-        freeId++;
+    console.log(this.viewModel)
+    if(this.viewModel) {
+      for (let i = 0; i < this.viewModel.elemente?.length; i++) {
+        if (this.viewModel.elemente!.find(x => x.id === freeId) === undefined) {
+          return freeId;
+        } else {
+          freeId++;
+        }
       }
     }
+
     return freeId;
   }
 

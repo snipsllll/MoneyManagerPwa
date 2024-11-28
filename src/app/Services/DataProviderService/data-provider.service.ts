@@ -221,7 +221,7 @@ export class DataProviderService {
     }
   }
 
-  getAuswertungsLayouts() {
+  getAuswertungsLayouts(): IAuswertungsLayout[] {
     const auswertungsLayouts: IAuswertungsLayout[] = [];
 
     auswertungsLayouts.push({
@@ -231,6 +231,7 @@ export class DataProviderService {
         diagramme: [{
           id: -1,
           data: {
+            selectedDiagramType: 'benutzerdefiniert',
             diagramTitle: 'Ausgaben von dem Tag',
             balkenBeschriftung: 'Ausgaben (in Euro)',
             xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
@@ -243,6 +244,7 @@ export class DataProviderService {
           {
             id: -2,
             data: {
+              selectedDiagramType: 'benutzerdefiniert',
               diagramTitle: 'Restgeld für Monat',
               balkenBeschriftung: 'Ausgaben (in Euro)',
               xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat
@@ -252,6 +254,7 @@ export class DataProviderService {
           {
             id: -3,
             data: {
+              selectedDiagramType: 'benutzerdefiniert',
               diagramTitle: 'Differenz zum Soll',
               balkenBeschriftung: 'Ausgaben (in Euro)',
               xAchse: 'Alle tage im Monat', //XAchsenSkalierungsOptionen.alleTageImMonat,
@@ -270,6 +273,7 @@ export class DataProviderService {
           {
             id: -4,
             data: {
+              selectedDiagramType: 'benutzerdefiniert',
               diagramTitle: 'Geplante Sparbeträge',
               balkenBeschriftung: 'Sparen-Betrag',
               xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,
@@ -280,6 +284,7 @@ export class DataProviderService {
           {
             id: -5,
             data: {
+              selectedDiagramType: 'benutzerdefiniert',
               diagramTitle: 'Tatsächlich gespart',
               balkenBeschriftung: 'Restgeld',
               xAchse: 'alle Monate im Jahr', //XAchsenSkalierungsOptionen.alleMonateImJahr,

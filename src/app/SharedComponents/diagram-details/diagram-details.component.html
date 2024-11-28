@@ -9,13 +9,13 @@
       <div class="diagram-details__bottom-eintrag-label">
         Diagram
       </div>
-      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="selectedDiagramType">
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.selectedDiagramType">
         <option *ngFor="let option of diagrammAuswahlList" [value]="option">
           {{ option }}
         </option>
       </select>
     </div>
-    <div *ngIf="selectedDiagramType === 'benutzerdefiniert'">
+    <div *ngIf="viewModel.data.selectedDiagramType === 'benutzerdefiniert'">
       <div class="diagram-details__bottom-eintrag">
         <div class="diagram-details__bottom-eintrag-label">
           X-Achse:
@@ -44,7 +44,6 @@
           <option *ngFor="let option of filterTypeAuswahlList" [value]="option">
             {{ option }}
           </option>
-          <option>--kein Filter--</option>
         </select>
       </div>
       <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.data.filterOption!.filter !== '--kein Filter--'">
@@ -62,15 +61,9 @@
           </option>
         </select>
       </div>
-      <div class="diagram-details__bottom-eintrag">
-        <div class="diagram-details__bottom-eintrag-label-checkbox">
-          Leitlinie anzeigen?
-        </div>
-        <input type="checkbox" class="diagram-details__bottom-eintrag-data diagram-details__bottom-eintrag-data-checkbox" [(ngModel)]="viewModel.data.lineOption!.lineType">
-      </div>
-      <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="true">
+      <div class="diagram-details__bottom-eintrag" *ngIf="true">
         <div class="diagram-details__bottom-eintrag-label">
-          Wert:
+          Rote Linie:
         </div>
         <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.lineOption!.lineType">
           <option *ngFor="let option of lineTypeAuswahlList" [value]="option">
@@ -78,11 +71,11 @@
           </option>
         </select>
       </div>
-      <div class="diagram-details__bottom-eintrag-eingerueckt-2" *ngIf="viewModel.data.lineOption!.lineType === 'benutzerdefiniert'">
+      <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.data.lineOption!.lineType === 'benutzerdefiniert'">
         <div class="diagram-details__bottom-eintrag-label">
-          Zahl:
+          Wert:
         </div>
-        <input type="number" class="diagram-details__bottom-eintrag-data-small" [(ngModel)]="viewModel.data.lineOption!.lineValue">
+        <input type="number" class="diagram-details__bottom-eintrag-data-small" [(ngModel)]="viewModel.data.lineOption!.lineValue" onfocus="this.select()">
       </div>
       <div class="diagram-details__bottom-eintrag">
         <div class="diagram-details__bottom-eintrag-label">
