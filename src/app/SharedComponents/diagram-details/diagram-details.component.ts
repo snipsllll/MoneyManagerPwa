@@ -40,7 +40,6 @@ export class DiagramDetailsComponent implements OnInit{
   }
 
   onDiagramTypeChanged() {
-    console.log(this.viewModel.data.selectedDiagramType)
     if(this.viewModel.data.selectedDiagramType !== 'benutzerdefiniert') {
       let selectedDiagram = this.presetDiagrammeList.find(diagram => this.viewModel.data.selectedDiagramType === diagram.diagramTitle)!;
       selectedDiagram.selectedDiagramType = this.viewModel.data.selectedDiagramType;
