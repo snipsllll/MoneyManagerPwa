@@ -204,7 +204,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   protected getAvailableMoneyDay() {
-    const x = this.ut.toFixedDown(this.availableMoney().availableForDay! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
+    const x = this.ut.toFixedDown(this.availableMoney().availableForDayIst! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
     return x && x > 0 ? x : 0;
   }
 }

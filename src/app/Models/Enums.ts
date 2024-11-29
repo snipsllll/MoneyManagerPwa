@@ -49,7 +49,8 @@ export enum Color {
 export enum TopBarBudgetOptions {
   monat,
   woche,
-  tag,
+  tagIst,
+  tagSoll,
   leer
 }
 

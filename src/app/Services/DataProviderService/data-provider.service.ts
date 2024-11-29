@@ -192,12 +192,20 @@ export class DataProviderService {
       return {
         availableForMonth: -0,
         availableForWeek: -0,
-        availableForDay: -0,
+        availableForDayIst: -0,
+        availableForDaySoll: -0,
         noData: true
       };
     }
+
     const availableForDay = this.getAvailableMoneyForDay(dayDate);
     const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
+    let availableForDaySoll = daySollBudgets[dayDate.toLocaleDateString()];
+
+    let day = this.getDayByeDate(dayDate);
+    day?.buchungen?.forEach(buchung => {
+      availableForDaySoll -= buchung.data.betrag ?? 0;
+    })
 
     let availableForWeek = 0;
     let isDayReached = false;
@@ -214,9 +222,10 @@ export class DataProviderService {
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
 
     return {
-      availableForDay: availableForDay,
+      availableForDayIst: availableForDay,
       availableForWeek: availableForWeek,
       availableForMonth: availableForMonth,
+      availableForDaySoll: availableForDaySoll,
       noData: false
     }
   }
@@ -405,9 +414,10 @@ export class DataProviderService {
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
     const availableMoney = this.getAvailableMoney(dayDate);
 
-    availableMoney.availableForDay = availableMoney.availableForDay > 0 ? availableMoney.availableForDay : 0;
+    availableMoney.availableForDayIst = availableMoney.availableForDayIst > 0 ? availableMoney.availableForDayIst : 0;
     availableMoney.availableForWeek = availableMoney.availableForWeek > 0 ? availableMoney.availableForWeek : 0;
     availableMoney.availableForMonth = availableMoney.availableForMonth > 0 ? availableMoney.availableForMonth : 0;
+    availableMoney.availableForDaySoll = availableMoney.availableForDaySoll > 0 ? availableMoney.availableForDaySoll : 0;
 
     return availableMoney;
   }

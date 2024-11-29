@@ -9,7 +9,7 @@
         woche: <b class="red" [class.green]="availableMoneyCapped().availableForWeek! > 0">{{ getAvailableMoneyWeek() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDay! > 0">{{ getAvailableMoneyDay() }}€</b>
+        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDayIst! > 0">{{ getAvailableMoneyDay() }}€</b>
       </div>
     </div>
     <div class="create-eintrag__top-spacer">
