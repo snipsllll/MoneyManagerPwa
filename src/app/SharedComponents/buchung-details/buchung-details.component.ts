@@ -57,7 +57,6 @@ export class BuchungDetailsComponent implements OnInit{
 
   onEditClicked() {
     const buchungsId = this.buchung!()!.data.geplanteBuchung ? 0 : this.buchung!()!.id;
-    console.log(buchungsId)
     const geplanteAusgabenBuchungsId = this.buchung!()!.data.geplanteBuchung ? this.buchung!()!.id : 0;
     this.router.navigate(['/editBuchung', buchungsId, geplanteAusgabenBuchungsId]);
     this.navigationService.previousRoute = Sites.buchungDetails;

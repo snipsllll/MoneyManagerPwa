@@ -24,11 +24,9 @@ export class NavigationService {
         break;
       case Sites.buchungDetails:
         route = `/buchungDetails/${this.param1}/${this.param2}`;
-        console.log(route)
         break;
       case Sites.editBuchung:
         route = `/editBuchung/${this.param1}/${this.param2}`;
-        console.log(route)
         break;
       case Sites.createBuchung:
         route = '/createBuchung';
