@@ -602,6 +602,7 @@ export class DataProviderService {
   }
 
   getBuchungsKategorienMitEmpty() {
+    console.log(this.dataService.userData.buchungsKategorien)
     const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
     x.push({id: 0, name: ''})
     return x;

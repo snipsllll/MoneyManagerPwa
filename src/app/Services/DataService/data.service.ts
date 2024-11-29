@@ -16,6 +16,10 @@ export class DataService {
     this.update(false);
   }
 
+  triggerUpdated() {
+    this.updated.set(this.updated() + 1);
+  }
+
   update(safeAfterUpdate?: boolean) {
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
     if (!this.checkIfMonthExistsForDay(new Date())) {

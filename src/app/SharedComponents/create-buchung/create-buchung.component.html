@@ -84,11 +84,12 @@
         </div>
         <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()" *ngIf="!buchung.geplanteBuchung">
           <option
-            *ngFor="let kategorie of kategorien"
+            *ngFor="let kategorie of kategorien()"
             class=""
             [value]="kategorie.id">
             {{ kategorie.name }}
           </option>
+          <option [value]="-1">--bearbeiten--</option>
         </select>
         <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onplannedKategorieChanged()" *ngIf="buchung.geplanteBuchung">
           <option

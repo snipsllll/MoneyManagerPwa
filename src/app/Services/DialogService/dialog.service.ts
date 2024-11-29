@@ -7,6 +7,7 @@ import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/Buchung
 import {DataProviderService} from "../DataProviderService/data-provider.service";
 import {DataChangeService} from "../DataChangeService/data-change.service";
 import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {DataService} from "../DataService/data.service";
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class DialogService {
   isAuswertungenDialogVisible = false;
   auswertungenDialogViewModel?: AuswertungenDialogViewModel;
 
-  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
+  constructor(private dataService: DataService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
 
   showConfirmDialog(confirmDialogViewModel: ConfirmDialogViewModel) {
@@ -68,6 +69,7 @@ export class DialogService {
           this.dataChangeService.addBuchungsKategorie(element.name);
         });
         this.isBuchungsKategorienDialogVisible = false;
+        this.dataService.triggerUpdated();
       }
     }
   }

@@ -21,7 +21,10 @@ export class CreateBuchungComponent {
   selectedDate?: string;
   showBetragWarning = false;
   betragWarnung = '';
-  kategorien!: { id: number, name: string }[];
+  kategorien = computed<{ id: number, name: string }[]>(() => {
+    this.dataService.updated();
+    return this.dataProvider.getBuchungsKategorienMitEmpty();
+  }) ;
   geplanteAusgabenKategorien!: IGeplanteAusgabenKategorie[];
 
   isSearchboxVisible = signal<boolean>(false);
@@ -56,12 +59,14 @@ export class CreateBuchungComponent {
     this.oldBuchung = this.getNewEmptyBuchung(date);
 
     this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
-    this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
     this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.buchung.date);
   }
 
   onKategorieChanged(): void {
-
+    if(this.buchung.buchungsKategorie == -1) {
+      this.dialogService.showBuchungsKategorienDialog();
+      this.buchung.buchungsKategorie = 0;
+    }
   }
 
   onplannedKategorieChanged() {
