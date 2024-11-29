@@ -88,7 +88,10 @@ export class DataProviderService {
 
   getGeplanteAusgabenEintraegeForMonth(date: Date) {
     const month = this.getMonthByDate(date);
-    return month.geplanteAusgaben;
+    if(!month) {
+      return [];
+    }
+    return month.geplanteAusgaben ?? [];
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {
