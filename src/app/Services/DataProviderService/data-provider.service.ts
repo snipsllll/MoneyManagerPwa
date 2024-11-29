@@ -126,9 +126,10 @@ export class DataProviderService {
         betrag: x?.data.betrag,
         title: x?.data.title,
         time: x?.data.time,
-        buchungsKategorie: -1,
+        buchungsKategorie: x?.data.buchungsKategorie,
         date: x?.data.date,
-        beschreibung: x?.data.beschreibung
+        beschreibung: x?.data.beschreibung,
+        geplanteBuchung: true
       }
     }
   }

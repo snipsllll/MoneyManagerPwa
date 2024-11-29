@@ -5,7 +5,7 @@ import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
-import {IBuchung} from "../../Models/NewInterfaces";
+import {IBuchung, IGeplanteAusgabenKategorie} from "../../Models/NewInterfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
@@ -20,10 +20,12 @@ export class EditBuchungComponent implements OnInit {
   showBetragWarning = false;
   betragWarnung?: string;
   kategorien!: { id: number, name: string }[];
+  isGeplanteBuchungChecked!: boolean;
 
   buchung = signal<IBuchung | undefined>(undefined);
   dateUpdated = signal<number>(0);
   isSaveButtonDisabled = signal<boolean>(true);
+  geplanteAusgabenKategorien!: IGeplanteAusgabenKategorie[];
 
   availableMoneyCapped = computed(() => {
     this.dataService.updated();
@@ -35,6 +37,13 @@ export class EditBuchungComponent implements OnInit {
     this.dataService.updated();
     this.dateUpdated();
     return this.dataProvider.getAvailableMoney(this.buchung()!.data.date)
+  })
+
+  availableMonayForGeplanteAusgabenKategorien = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForDay(this.buchung()!.data.date);
+    return geplanteAusgabenRestgelder[geplanteAusgabenRestgelder.findIndex(eintrag => eintrag.id == this.buchung()!.data.buchungsKategorie)]
   })
 
   ut: UT = new UT();
@@ -55,8 +64,9 @@ export class EditBuchungComponent implements OnInit {
       const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
 
       this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
+      console.log(this.oldBuchung)
 
-      this.buchung?.set({
+      this.buchung.set({
         id: this.oldBuchung!.id,
         data: {
           date: new Date(this.oldBuchung!.data.date),
@@ -70,7 +80,15 @@ export class EditBuchungComponent implements OnInit {
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
     this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
+    console.log(this.kategorien)
+    this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.oldBuchung!.data.date);
+    this.isGeplanteBuchungChecked = this.oldBuchung!.data.geplanteBuchung!;
     this.updateDate();
+  }
+
+  onGeplanteBuchungChange(newValue: boolean) {
+    this.buchung()!.data.geplanteBuchung = newValue;
+    this.isGeplanteBuchungChecked = newValue;
   }
 
   onSaveClicked() {
@@ -78,15 +96,15 @@ export class EditBuchungComponent implements OnInit {
       if (!this.isSaveButtonDisabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
-          if(this.buchung()?.data.buchungsKategorie == -1) {
-            if(this.oldBuchung?.data.buchungsKategorie == -1) {
+          if(this.buchung()?.data.geplanteBuchung) {
+            if(this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
             } else {
               this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
               this.dataChangeService.deleteBuchung(this.buchung()!.id)
             }
           } else {
-            if(this.oldBuchung?.data.buchungsKategorie != -1) {
+            if(!this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editBuchung(this.buchung()!)
             } else {
               this.dataChangeService.addBuchung(this.buchung()!.data!)
@@ -103,15 +121,15 @@ export class EditBuchungComponent implements OnInit {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                if(this.buchung()?.data.buchungsKategorie == -1) {
-                  if(this.oldBuchung?.data.buchungsKategorie == -1) {
+                if(this.buchung()?.data.geplanteBuchung) {
+                  if(this.oldBuchung?.data.geplanteBuchung) {
                     this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
                   } else {
                     this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
                     this.dataChangeService.deleteBuchung(this.buchung()!.id)
                   }
                 } else {
-                  if(this.oldBuchung?.data.buchungsKategorie != -1) {
+                  if(!this.oldBuchung?.data.geplanteBuchung) {
                     this.dataChangeService.editBuchung(this.buchung()!)
                   } else {
                     this.dataChangeService.addBuchung(this.buchung()!.data!)
@@ -197,6 +215,10 @@ export class EditBuchungComponent implements OnInit {
 
   onBuchungsKategorieChanged() {
     this.updateSaveButton();
+  }
+
+  onplannedBuchungsKategorieChanged() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
   }
 
   onApzClicked() {

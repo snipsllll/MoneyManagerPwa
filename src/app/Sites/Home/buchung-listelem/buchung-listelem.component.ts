@@ -32,15 +32,15 @@ export class BuchungListelemComponent implements OnInit{
   }
 
   onBuchungClicked(buchung: IBuchung) {
-    const buchungsId = buchung.data.buchungsKategorie == -1 ? 0 : buchung.id;
-    const geplanteAusgabenBuchungsId = buchung.data.buchungsKategorie == -1 ? buchung.id : 0;
+    const buchungsId = buchung.data.geplanteBuchung ? 0 : buchung.id;
+    const geplanteAusgabenBuchungsId = buchung.data.geplanteBuchung ? buchung.id : 0;
     this.router.navigate(['/buchungDetails', buchungsId, geplanteAusgabenBuchungsId]);
     //this.navigationService.previousRoute = Sites.home;
   }
 
   onEditButtonClicked(buchung: IBuchung) {
-    const buchungsId = buchung.data.buchungsKategorie == -1 ? 0 : buchung.id;
-    const geplanteAusgabenBuchungsId = buchung.data.buchungsKategorie == -1 ? buchung.id : 0;
+    const buchungsId = buchung.data.geplanteBuchung ? 0 : buchung.id;
+    const geplanteAusgabenBuchungsId = buchung.data.geplanteBuchung ? buchung.id : 0;
     this.router.navigate(['/editBuchung', buchungsId, geplanteAusgabenBuchungsId]);
   }
 
