@@ -14,8 +14,8 @@ import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'buchungDetails/:buchungsId', component: BuchungDetailsComponent},
-  {path: 'editBuchung/:buchungsId', component: EditBuchungComponent},
+  {path: 'buchungDetails/:buchungsId/:geplanteAusgabenBuchungsId', component: BuchungDetailsComponent},
+  {path: 'editBuchung/:buchungsId/:geplanteAusgabenBuchungsId', component: EditBuchungComponent},
   {path: 'createBuchung', component: CreateBuchungComponent},
   {path: 'budget', component: BudgetComponent},
   {path: 'fixKosten', component: FixKostenComponent},

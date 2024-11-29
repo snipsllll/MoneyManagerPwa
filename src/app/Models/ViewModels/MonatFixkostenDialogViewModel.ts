@@ -4,6 +4,7 @@ export interface MonatFixkostenDialogViewModel {
   elemente: IMonthFixkostenEintrag[];
   onSaveClicked: (monatFixkostenDialogdata: MonatFixkostenDialogData) => void;
   onAbortClicked: () => void;
+  summeLabel: string;
 }
 
 export interface MonatFixkostenDialogData {

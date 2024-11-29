@@ -94,6 +94,14 @@
   padding: 0;
 }
 
+.create-eintrag__data-kategorie {
+  height: 23px;
+  border: none;
+  width: 230px;
+  text-align: end;
+  padding: 0;
+}
+
 .create-eintrag__beschreibung-wrapper {
   flex-grow: 1;
   display: flex;

@@ -21,6 +21,7 @@ export interface IBuchungData {
   betrag: number | null
   beschreibung?: string
   buchungsKategorie?: number;
+  geplanteBuchung?: boolean;
 }
 
 export interface IMonthFixkostenEintrag {
@@ -87,4 +88,10 @@ export interface BarChartViewModel {
     horizontaleLinie?: number; // Wert für die horizontale Linie
     showHorizontaleLinie?: boolean; // Ob die Linie angezeigt werden soll
   }[];
+}
+
+export interface IGeplanteAusgabenKategorie {
+  id: number;
+  title: string;
+  betrag: number;
 }

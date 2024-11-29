@@ -256,3 +256,9 @@ hr {
   text-align: end;
   padding: 0 5px 0 0;
 }
+
+.ce__budget-eintrag-planned {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
