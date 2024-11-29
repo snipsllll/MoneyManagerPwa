@@ -37,7 +37,7 @@ export class CreateBuchungComponent {
   availableMonayForGeplanteAusgabenKategorien = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForDay(this.buchung.date);
+    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForMonth(this.buchung.date);
     return geplanteAusgabenRestgelder[geplanteAusgabenRestgelder.findIndex(eintrag => eintrag.id == this.buchung.buchungsKategorie)]
   })
 

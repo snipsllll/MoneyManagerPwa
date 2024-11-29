@@ -464,7 +464,7 @@ export class DataProviderService {
     return availableMoney;
   }
 
-  getAvailableMoneyForGeplanteAusgabenKategorienForDay(date: Date): IGeplanteAusgabeRestgeld[] {
+  getAvailableMoneyForGeplanteAusgabenKategorienForMonth(date: Date): IGeplanteAusgabeRestgeld[] {
     const geplanteAusgaben: IGeplanteAusgabeRestgeld[] = [];
 
     const month = this.getMonthByDate(date);
@@ -564,7 +564,8 @@ export class DataProviderService {
       fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true),
       geplanteAusgabenSumme: this.getGeplanteAusgabenSummeForMonth(month),
       geplanteAusgaben: this.getGeplanteAusgabenEintraegeForMonth(month.startDate),
-      geplanteAusgabenRestgeld: this.getGeplanteAusgabenRestgeldForMonth(month)
+      geplanteAusgabenRestgeld: this.getGeplanteAusgabenRestgeldForMonth(month),
+      geplanteAusgabenKategorienRestgeld: this.getAvailableMoneyForGeplanteAusgabenKategorienForMonth(month.startDate),
     }
   }
 

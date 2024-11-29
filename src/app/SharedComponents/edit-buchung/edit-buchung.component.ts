@@ -42,7 +42,7 @@ export class EditBuchungComponent implements OnInit {
   availableMonayForGeplanteAusgabenKategorien = computed(() => {
     this.dataService.updated();
     this.dateUpdated();
-    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForDay(this.buchung()!.data.date);
+    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForMonth(this.buchung()!.data.date);
     return geplanteAusgabenRestgelder[geplanteAusgabenRestgelder.findIndex(eintrag => eintrag.id == this.buchung()!.data.buchungsKategorie)]
   })
 

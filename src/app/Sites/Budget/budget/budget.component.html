@@ -103,6 +103,17 @@
           {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
         </div>
       </div>
+      <div class="budget__fixkosten-details">
+        <div *ngFor="let eintrag of data().geplanteAusgabenKategorienRestgeld" class="budget__fixkosten-detail-wrapper">
+          <div class="budget__fixkosten-details-title">
+            - {{ eintrag.title }}
+          </div>
+          <div class="budget__fixkosten-details-betrag">
+            {{ eintrag.restgeldBetrag }}€
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 

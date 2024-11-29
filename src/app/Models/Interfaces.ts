@@ -1,6 +1,6 @@
 import {
   IBuchung,
-  IFixkostenEintrag,
+  IFixkostenEintrag, IGeplanteAusgabenKategorie,
   IMonthFixkostenEintrag,
   ISparschweinEintrag,
   IWunschlistenEintrag
@@ -54,6 +54,7 @@ export interface BudgetInfosForMonth {
   geplanteAusgabenSumme?: number;
   geplanteAusgaben?: IGeplanteAusgabe[];
   geplanteAusgabenRestgeld?: number;
+  geplanteAusgabenKategorienRestgeld?: IGeplanteAusgabeRestgeld[];
 }
 
 export interface SavedData {
