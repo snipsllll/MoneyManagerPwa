@@ -1,6 +1,6 @@
 import {
   IBuchung,
-  IFixkostenEintrag,
+  IFixkostenEintrag, IGeplanteAusgabenKategorie,
   IMonthFixkostenEintrag,
   ISparschweinEintrag,
   IWunschlistenEintrag
@@ -22,6 +22,7 @@ export interface Month {
   monatAbgeschlossen?: boolean;
   uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
   specialFixkostenEintraege?: IMonthFixkostenEintrag[];
+  geplanteAusgaben?: IGeplanteAusgabe[];
 }
 
 export interface Week {
@@ -38,6 +39,7 @@ export interface Day {
   budget?: number;
   istBudget?: number;
   buchungen?: IBuchung[];
+  geplanteAusgabenBuchungen?: IGeplanteAusgabenBuchung[];
 }
 
 export interface BudgetInfosForMonth {
@@ -49,6 +51,10 @@ export interface BudgetInfosForMonth {
   fixKostenSumme?: number;
   fixKostenEintraege?: IMonthFixkostenEintrag[];
   fixKostenGesperrt?: boolean;
+  geplanteAusgabenSumme?: number;
+  geplanteAusgaben?: IGeplanteAusgabe[];
+  geplanteAusgabenRestgeld?: number;
+  geplanteAusgabenKategorienRestgeld?: IGeplanteAusgabeRestgeld[];
 }
 
 export interface SavedData {
@@ -61,6 +67,21 @@ export interface SavedData {
   auswertungsLayouts: IAuswertungsLayout[];
   settings: Settings;
   dbVersion: number;
+  geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[];
+}
+
+export interface IGeplanteAusgabenBuchung {
+  id: number;
+  data: IGeplanteAusgabenBuchungData;
+}
+
+export interface IGeplanteAusgabenBuchungData {
+  date: Date;
+  time: string;
+  title: string;
+  betrag: number | null;
+  beschreibung?: string;
+  buchungsKategorie?: number;
 }
 
 export interface Settings {
@@ -79,8 +100,26 @@ export interface SavedMonth {
   date: Date;
   totalBudget: number;
   sparen: number;
+  geplanteAusgaben?: IGeplanteAusgabe[];
   uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
   specialFixkostenEintraege?: IMonthFixkostenEintrag[];
+}
+
+export interface IGeplanteAusgabe {
+  id: number;
+  data: IGeplanteAusgabeData;
+}
+
+export interface IGeplanteAusgabeData {
+  title: string;
+  betrag: number;
+  beschreibung?: string;
+}
+
+export interface IGeplanteAusgabeRestgeld {
+  id: number;
+  title: string;
+  restgeldBetrag: number;
 }
 
 export interface MenuItem {
@@ -93,6 +132,7 @@ export interface MenuItem {
 export interface AvailableMoney {
   availableForMonth: number;
   availableForWeek: number;
-  availableForDay: number;
+  availableForDayIst: number;
+  availableForDaySoll: number;
   noData: boolean;
 }

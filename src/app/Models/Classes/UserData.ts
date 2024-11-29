@@ -1,4 +1,4 @@
-import {Day, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
+import {Day, IGeplanteAusgabenBuchung, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
@@ -14,6 +14,7 @@ export class UserData {
   public sparschweinEintraege: ISparschweinEintrag[] = [];
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
   public auswertungsLayouts: IAuswertungsLayout[] = [];
+  public geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[] = [];
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
@@ -70,6 +71,7 @@ export class UserData {
     this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
     this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
   }
 
   save(savedData?: SavedData) {
@@ -124,6 +126,7 @@ export class UserData {
         sparEintraege: [],
         standardFixkostenEintraege: [],
         savedMonths: [],
+        geplanteAusgabenBuchungen: [],
         dbVersion: currentDbVersion
       }
     }
@@ -181,6 +184,18 @@ export class UserData {
         tagesAnzeigeOption: undefined,
       },
       dbVersion: 1,
+      geplanteAusgabenBuchungen: [
+        {
+          id: 1,
+          data: {
+            time: new Date().toLocaleTimeString(),
+            betrag: 1,
+            beschreibung: 'dfsafasd',
+            date: new Date(),
+            title: 'titel test'
+          }
+        }
+      ]
     };
 
     for(let year = 2024; year < 2025; year++) {
@@ -193,7 +208,7 @@ export class UserData {
           totalBudget: 3000,
           sparen: 500,
           uebernommeneStandardFixkostenEintraege: [],
-          specialFixkostenEintraege: [],
+          specialFixkostenEintraege: []
         });
 
         for (let day = 1; day <= daysInMonth; day++) {
@@ -397,6 +412,7 @@ export class UserData {
     this.wunschlistenEintraege = savedData.wunschlistenEintraege;
     this.auswertungsLayouts = savedData.auswertungsLayouts;
     this.settings = savedData.settings;
+    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
   }
 
   deleteAllData() {
@@ -417,6 +433,7 @@ export class UserData {
       sparEintraege: [],
       standardFixkostenEintraege: [],
       savedMonths: [],
+      geplanteAusgabenBuchungen: [],
       dbVersion: currentDbVersion
     });
     this.reload();
@@ -424,18 +441,19 @@ export class UserData {
 
   getSavedData(): SavedData {
     const savedData: SavedData = {
+      auswertungsLayouts: [],
       buchungen: [],
       buchungsKategorien: [],
-      auswertungsLayouts: [],
+      dbVersion: currentDbVersion,
+      geplanteAusgabenBuchungen: [],
       savedMonths: [],
-      standardFixkostenEintraege: [],
-      sparEintraege: [],
-      wunschlistenEintraege: [],
       settings: {
         wunschlistenFilter: {selectedFilter: "", gekaufteEintraegeAusblenden: true},
         toHighBuchungenEnabled: false
       },
-      dbVersion: currentDbVersion
+      sparEintraege: [],
+      standardFixkostenEintraege: [],
+      wunschlistenEintraege: [],
     }
 
     savedData.buchungen = this.buchungen;
@@ -445,6 +463,7 @@ export class UserData {
     savedData.wunschlistenEintraege = this.wunschlistenEintraege;
     savedData.auswertungsLayouts = this.auswertungsLayouts;
     savedData.settings = this.settings;
+    savedData.geplanteAusgabenBuchungen = this.geplanteAusgabenBuchungen;
 
     this.months.forEach(month => {
       savedData.savedMonths.push({
@@ -452,7 +471,8 @@ export class UserData {
         totalBudget: month.totalBudget ?? 0,
         sparen: month.sparen ?? 0,
         uebernommeneStandardFixkostenEintraege: month.uebernommeneStandardFixkostenEintraege,
-        specialFixkostenEintraege: month.specialFixkostenEintraege
+        specialFixkostenEintraege: month.specialFixkostenEintraege,
+        geplanteAusgaben: month.geplanteAusgaben
       })
     })
 
@@ -525,7 +545,8 @@ export class UserData {
           weeks: weeks,
           monatAbgeschlossen: abgeschlossen,
           uebernommeneStandardFixkostenEintraege: savedMonth.uebernommeneStandardFixkostenEintraege ?? [],
-          specialFixkostenEintraege: savedMonth.specialFixkostenEintraege ?? []
+          specialFixkostenEintraege: savedMonth.specialFixkostenEintraege ?? [],
+          geplanteAusgaben: savedMonth.geplanteAusgaben ?? []
         }
       )
     })

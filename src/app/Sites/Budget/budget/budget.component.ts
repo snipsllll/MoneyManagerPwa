@@ -24,6 +24,7 @@ export class BudgetComponent  implements OnInit{
   selectedYear = signal<number>(new Date().getFullYear());
 
   isFixkostenDetailsVisible = signal<boolean>(false);
+  isgeplanteAusgabenDetailsVisible = signal<boolean>(false);
 
   data = signal<BudgetInfosForMonth>({
     budget: 0,
@@ -111,6 +112,10 @@ export class BudgetComponent  implements OnInit{
     this.isFixkostenDetailsVisible.set(!this.isFixkostenDetailsVisible());
   }
 
+  onGeplanteAusgabenClicked() {
+    this.isgeplanteAusgabenDetailsVisible.set(!this.isgeplanteAusgabenDetailsVisible());
+  }
+
   getStartdateForSelectedMonth() {
     return new Date(this.selectedYear(), this.selectedMonthIndex(), 1);
   }
@@ -123,7 +128,18 @@ export class BudgetComponent  implements OnInit{
     const viewModel: MonatFixkostenDialogViewModel = {
       elemente: this.getFixkostenDialogElements(),
       onAbortClicked: this.onFixkostenAbortClicked,
-      onSaveClicked: this.onFixkostenSaveClicked
+      onSaveClicked: this.onFixkostenSaveClicked,
+      summeLabel: 'Fixkosten Summe:'
+    }
+    this.dialogService.showMonatFixkostenDialog(viewModel);
+  }
+
+  onGeplanteAusgabenEditClicked() {
+    const viewModel: MonatFixkostenDialogViewModel = {
+      elemente: this.getGeplanteAusgabenDialogElements(),
+      onAbortClicked: this.onGeplanteAusgabenAbortClicked,
+      onSaveClicked: this.onGeplanteAusgabenSaveClicked,
+      summeLabel: 'geplante Ausgaben Summe:'
     }
     this.dialogService.showMonatFixkostenDialog(viewModel);
   }
@@ -132,12 +148,26 @@ export class BudgetComponent  implements OnInit{
     return this.dataProvider.getFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [];
   }
 
+  getGeplanteAusgabenDialogElements() {
+    return this.dataProvider.getGeplanteAusgabenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [];
+  }
+
   onFixkostenAbortClicked = () => {
     this.dialogService.isMonatFixkostenDialogVisible = false;
   }
 
   onFixkostenSaveClicked = (data: MonatFixkostenDialogData) => {
     this.dataChangeService.editFixkostenEintraegeForMonth(this.getStartdateForSelectedMonth(), data.elemente);
+    this.dialogService.isMonatFixkostenDialogVisible = false;
+    this.update();
+  }
+
+  onGeplanteAusgabenAbortClicked = () => {
+    this.dialogService.isMonatFixkostenDialogVisible = false;
+  }
+
+  onGeplanteAusgabenSaveClicked = (data: MonatFixkostenDialogData) => {
+    this.dataChangeService.editGeplanteAusgabenEintraegeForMonth(this.getStartdateForSelectedMonth(), data.elemente);
     this.dialogService.isMonatFixkostenDialogVisible = false;
     this.update();
   }
@@ -154,6 +184,9 @@ export class BudgetComponent  implements OnInit{
       totalBudget: 0,
       sparen: 0,
       fixKostenSumme: this.dataProvider.getFixkostenSummeForMonth({
+        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
+      }),
+      geplanteAusgabenSumme: this.dataProvider.getGeplanteAusgabenSummeForMonth({
         startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
       })
     });

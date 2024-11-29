@@ -1,6 +1,6 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
-import {Day, Month, Week} from "../../Models/Interfaces";
+import {Day, IGeplanteAusgabenBuchung, Month, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 
 @Injectable({
@@ -25,6 +25,8 @@ export class DataService {
     /*Weird and crazy stuff beginns here*/
     this.userData.months.forEach(month => {
       this.updateBuchungenForMonth(month.startDate);
+
+      this.updateGeplanteAusgabenForMonth(month.startDate);
 
       this.updateFixkostenForMonth(month.startDate);
 
@@ -113,6 +115,35 @@ export class DataService {
     this.userData.months.push(month);
   }
 
+  private updateGeplanteAusgabenForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    // Zuerst die Buchungen in eine Map umwandeln, wobei das Datum der Schlüssel ist
+    const geplanteAusgabenMap = new Map<string, IGeplanteAusgabenBuchung[]>();
+
+    // Daten einmal durchgehen und in der Map organisieren
+    this.userData.geplanteAusgabenBuchungen.forEach(geplanteAusgabe => {
+      const geplanteAusgabenDateStr = geplanteAusgabe.data.date?.toLocaleDateString();
+      if (geplanteAusgabenDateStr) {
+        if (!geplanteAusgabenMap.has(geplanteAusgabenDateStr)) {
+          geplanteAusgabenMap.set(geplanteAusgabenDateStr, []);
+        }
+        geplanteAusgabenMap.get(geplanteAusgabenDateStr)!.push(geplanteAusgabe);
+      }
+    });
+
+    // Jetzt durch die Wochen und Tage des Monats gehen und Buchungen zuweisen
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        const dayDateStr = day.date.toLocaleDateString();
+        // Buchungen direkt aus der Map holen
+        day.geplanteAusgabenBuchungen = geplanteAusgabenMap.get(dayDateStr) || [];
+      });
+    });
+
+    this.setMonth(month);
+  }
+
   private updateBuchungenForMonth(date: Date) { //TODO testen
     const month = this.getMonthByDate(date);
 
@@ -191,7 +222,7 @@ export class DataService {
       return;
     }
 
-    month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixkostenSummeForMonth(month) ?? 0)) / month.daysInMonth);
+    month.dailyBudget = +((month.totalBudget - (month.sparen ?? 0) - (this.getFixkostenSummeForMonth(month) ?? 0) - (this.getGeplanteAusgabenSumme(month) ?? 0)) / month.daysInMonth);
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -205,7 +236,7 @@ export class DataService {
     }
 
     /*Algorithm start*/
-    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixkostenSummeForMonth(month) ?? 0));
+    month.budget = +(month.totalBudget - (month.sparen ?? 0) - (this.getFixkostenSummeForMonth(month) ?? 0) - (this.getGeplanteAusgabenSumme(month) ?? 0));
     /*Algorithm end*/
 
     this.setMonth(month);
@@ -341,6 +372,12 @@ export class DataService {
     return ausgabenSumme;
   }
 
+  private getGeplanteAusgabenEintraegeForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+
+    return month.geplanteAusgaben;
+  }
+
   private getFixkostenEintraegeForMonth(date: Date, onlyIncluded?: boolean) {
     const month = this.getMonthByDate(date);
 
@@ -376,6 +413,16 @@ export class DataService {
   private getFixkostenSummeForMonth(month: Month) {
     let summe = 0;
     const alleEintraege = this.getFixkostenEintraegeForMonth(month.startDate, true);
+    alleEintraege.forEach(eintrag => {
+      summe += eintrag.data.betrag;
+    })
+    return summe;
+  }
+
+
+  private getGeplanteAusgabenSumme(month: Month) {
+    let summe = 0;
+    const alleEintraege = this.getGeplanteAusgabenEintraegeForMonth(month.startDate) ?? [];
     alleEintraege.forEach(eintrag => {
       summe += eintrag.data.betrag;
     })

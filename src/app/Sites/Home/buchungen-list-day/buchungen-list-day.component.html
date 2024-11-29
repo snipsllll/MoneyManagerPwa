@@ -1,4 +1,4 @@
-<div class="buchungen-list-day" *ngIf="day.buchungen && day.buchungen.length > 0">
+<div class="buchungen-list-day" *ngIf="alleDayBuchungen() && alleDayBuchungen().length > 0">
   <div class="buchungen-list-day__date">
     <div class="day-label">
       {{day.date.toLocaleDateString()}}
@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="bld__box">
-    <div *ngFor="let buchung of day.buchungen; let i = index; let last = last, let first = first">
+    <div *ngFor="let buchung of alleDayBuchungen(); let i = index; let last = last, let first = first">
       <app-buchung-listelem [buchung]="buchung" [last]="last" [first]="first"></app-buchung-listelem>
       <hr class="hr" *ngIf="!last">
     </div>

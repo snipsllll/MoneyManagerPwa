@@ -1,7 +1,20 @@
 import {Injectable} from '@angular/core';
-import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../../Models/NewInterfaces";
+import {
+  IBuchung,
+  IGeplanteAusgabenKategorie,
+  IMonthFixkostenEintrag,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
-import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
+import {
+  AvailableMoney,
+  BudgetInfosForMonth,
+  Day, IGeplanteAusgabe,
+  IGeplanteAusgabenBuchung, IGeplanteAusgabeRestgeld,
+  Month,
+  Settings
+} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
 import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
@@ -73,6 +86,11 @@ export class DataProviderService {
     return alleEintraege;
   }
 
+  getGeplanteAusgabenEintraegeForMonth(date: Date) {
+    const month = this.getMonthByDate(date);
+    return month.geplanteAusgaben;
+  }
+
   getAnzahlDaysLeftForMonth(date: Date) {
     const month = this.getMonthByDate(date);
     return month.daysInMonth! - date.getDate();
@@ -97,6 +115,25 @@ export class DataProviderService {
     return buchung;
   }
 
+  getGeplanteAusgabenBuchungById(id: number): IBuchung {
+    const x = this.dataService.userData.geplanteAusgabenBuchungen.find(buchung => buchung.id === id);
+    if(!x) {
+      throw new Error(`geplanteAusgabenBuchung mit id: ${id} wurde nicht gefunden!`)
+    }
+    return {
+      id: x.id,
+      data: {
+        betrag: x?.data.betrag,
+        title: x?.data.title,
+        time: x?.data.time,
+        buchungsKategorie: x?.data.buchungsKategorie,
+        date: x?.data.date,
+        beschreibung: x?.data.beschreibung,
+        geplanteBuchung: true
+      }
+    }
+  }
+
   getDayByeDate(date: Date): Day | undefined {
     const month = this.getMonthByDate(date);
     let selectedDay: Day | undefined = undefined;
@@ -118,7 +155,7 @@ export class DataProviderService {
     months.forEach(month => {
       month.weeks?.forEach(week => {
         week.days.forEach(day => {
-          if (day.buchungen && day.buchungen.length > 0) {
+          if ((day.buchungen && day.buchungen.length > 0) || (day.geplanteAusgabenBuchungen && day.geplanteAusgabenBuchungen.length > 0)) {
             days.push(day);
           }
         })
@@ -192,31 +229,39 @@ export class DataProviderService {
       return {
         availableForMonth: -0,
         availableForWeek: -0,
-        availableForDay: -0,
+        availableForDayIst: -0,
+        availableForDaySoll: -0,
         noData: true
       };
     }
+
     const availableForDay = this.getAvailableMoneyForDay(dayDate);
     const daySollBudgets = this.getDictForDayBudgetsInMonth(dayDate);
+    let availableForDaySoll = daySollBudgets[dayDate.toLocaleDateString()];
 
-    let availableForWeek = 0;
+    let day = this.getDayByeDate(dayDate);
+    day?.buchungen?.forEach(buchung => {
+      availableForDaySoll -= buchung.data.betrag ?? 0;
+    })
+
+    let availableForWeek = availableForDay;
     let isDayReached = false;
     this.getMonthByDate(dayDate).weeks![this.getIndexOfWeekInMonth(dayDate)].days.forEach(day => {
-      if (day.date.getDate() === dayDate.getDate()) {
-        isDayReached = true;
-      }
       if (isDayReached) {
         availableForWeek += daySollBudgets[day.date.toLocaleDateString()];
       }
+      if (day.date.getDate() === dayDate.getDate()) {
+        isDayReached = true;
+      }
     })
-    availableForWeek += availableForDay;
 
     const availableForMonth = this.getMonthByDate(dayDate).istBudget!;
 
     return {
-      availableForDay: availableForDay,
+      availableForDayIst: availableForDay,
       availableForWeek: availableForWeek,
       availableForMonth: availableForMonth,
+      availableForDaySoll: availableForDaySoll,
       noData: false
     }
   }
@@ -349,6 +394,22 @@ export class DataProviderService {
       yAchse: 'ins Sparschwein eingezahlt'
     });
 
+    diagramme.push({
+      selectedDiagramType: 'Kategorien Ausgaben für Monat',
+      diagramTitle: 'Kategorien Ausgaben für Monat',
+      balkenBeschriftung: 'Betrag (in Euro)',
+      xAchse: 'Kategorien',
+      yAchse: 'Monat'
+    });
+
+    diagramme.push({
+      selectedDiagramType: 'Kategorien Ausgaben für Jahr',
+      diagramTitle: 'Kategorien Ausgaben für Jahr',
+      balkenBeschriftung: 'Betrag (in Euro)',
+      xAchse: 'Kategorien',
+      yAchse: 'Jahr'
+    });
+
     return diagramme;
   }
 
@@ -405,11 +466,44 @@ export class DataProviderService {
   getAvailableMoneyCapped(dayDate: Date): AvailableMoney {
     const availableMoney = this.getAvailableMoney(dayDate);
 
-    availableMoney.availableForDay = availableMoney.availableForDay > 0 ? availableMoney.availableForDay : 0;
+    availableMoney.availableForDayIst = availableMoney.availableForDayIst > 0 ? availableMoney.availableForDayIst : 0;
     availableMoney.availableForWeek = availableMoney.availableForWeek > 0 ? availableMoney.availableForWeek : 0;
     availableMoney.availableForMonth = availableMoney.availableForMonth > 0 ? availableMoney.availableForMonth : 0;
+    availableMoney.availableForDaySoll = availableMoney.availableForDaySoll > 0 ? availableMoney.availableForDaySoll : 0;
 
     return availableMoney;
+  }
+
+  getAvailableMoneyForGeplanteAusgabenKategorienForMonth(date: Date): IGeplanteAusgabeRestgeld[] {
+    const geplanteAusgaben: IGeplanteAusgabeRestgeld[] = [];
+
+    const month = this.getMonthByDate(date);
+    const geplanteAusgabenKategorien = this.getGeplanteAusgabenKategorienForMonth(date);
+
+    console.log(geplanteAusgabenKategorien)
+
+    geplanteAusgabenKategorien.forEach(geplanteAusgabenKategorie => {
+      geplanteAusgaben.push({
+        id: geplanteAusgabenKategorie.id,
+        restgeldBetrag: geplanteAusgabenKategorie.betrag,
+        title: geplanteAusgabenKategorie.title
+      })
+    })
+
+
+    month.weeks!.forEach(week => {
+      week.days.forEach(day => {
+        day.geplanteAusgabenBuchungen?.forEach(geplanteBuchung => {
+          let index = geplanteAusgaben.findIndex(eintrag => eintrag.id! ==  +(geplanteBuchung.data.buchungsKategorie!));
+          console.log(geplanteAusgaben[index])
+          console.log(geplanteBuchung)
+          geplanteAusgaben[index].restgeldBetrag -= geplanteBuchung.data.betrag ?? 0;
+        })
+      })
+    })
+
+
+    return geplanteAusgaben;
   }
 
   getFixkostenSummeForMonth(month: Month) {
@@ -422,6 +516,22 @@ export class DataProviderService {
       summe += eintrag.data.betrag;
     })
     return summe;
+  }
+
+  getGeplanteAusgabenSummeForMonth(month: Month) {
+    let summe = 0;
+    const eintraege = this.getGeplanteAusgabenEintraegeForMonth(month.startDate);
+    if (!eintraege)
+      return 0;
+
+    eintraege.forEach(eintrag => {
+      summe += eintrag.data.betrag;
+    })
+    return summe;
+  }
+
+  getGeplanteAusgabenBuchungForMonth(month: Month) {
+    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear())
   }
 
   checkIfMonthExistsForDay(date: Date) {
@@ -461,8 +571,27 @@ export class DataProviderService {
       dayBudget: month.dailyBudget ?? 0,
       fixKostenSumme: this.getFixkostenSummeForMonth(month),
       fixKostenGesperrt: month.monatAbgeschlossen ?? false,
-      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true)
+      fixKostenEintraege: this.getFixkostenEintraegeForMonth(month.startDate, true),
+      geplanteAusgabenSumme: this.getGeplanteAusgabenSummeForMonth(month),
+      geplanteAusgaben: this.getGeplanteAusgabenEintraegeForMonth(month.startDate),
+      geplanteAusgabenRestgeld: this.getGeplanteAusgabenRestgeldForMonth(month),
+      geplanteAusgabenKategorienRestgeld: this.getAvailableMoneyForGeplanteAusgabenKategorienForMonth(month.startDate),
     }
+  }
+
+  getGeplanteAusgabenRestgeldForMonth(month: Month): number {
+    const geplantBetrag = this.getGeplanteAusgabenSummeForMonth(month);
+    const ausgabenSumme = this.getAusgegebenesGeldVonGeplantenAusgabenForMonth(month);
+
+    return geplantBetrag - ausgabenSumme;
+  }
+
+  getAusgegebenesGeldVonGeplantenAusgabenForMonth(month: Month): number {
+    let ausgabenSumme = 0;
+    this.getGeplanteAusgabenBuchungForMonth(month)?.forEach(eintrag => {
+      ausgabenSumme += eintrag.data.betrag ?? 0;
+    })
+    return ausgabenSumme;
   }
 
   getBuchungsKategorienNamen() {
@@ -475,6 +604,22 @@ export class DataProviderService {
     return x;
   }
 
+  getGeplanteAusgabenKategorienForMonth(date: Date): IGeplanteAusgabenKategorie[] {
+    const month = this.getMonthByDate(date);
+
+    let geplanteAusgabenKategorien: IGeplanteAusgabenKategorie[] = [];
+
+    month.geplanteAusgaben?.forEach(geplanteAusgabe => {
+      geplanteAusgabenKategorien.push({
+        id: geplanteAusgabe.id,
+        title: geplanteAusgabe.data.title,
+        betrag: geplanteAusgabe.data.betrag
+      })
+    })
+
+    return geplanteAusgabenKategorien;
+  }
+
   getBuchungsKategorien() {
     return this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
   }
@@ -482,6 +627,16 @@ export class DataProviderService {
   getBuchungsKategorieNameById(id: number) {
     const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
     return kategorie ? kategorie.name : '---';
+  }
+
+  getplannedBuchungsKategorieNameById(id: number) {
+    const allePlannedAusgabenKategorien: IGeplanteAusgabenKategorie[] = [];
+    this.dataService.userData.months.forEach(month => {
+      allePlannedAusgabenKategorien.concat(this.getGeplanteAusgabenKategorienForMonth(month.startDate));
+    })
+
+    const kategorie = allePlannedAusgabenKategorien.find(k => k.id === id);
+    return kategorie ? kategorie.title : '---';
   }
 
   getAllMonthsForYear(year: number) {

@@ -12,6 +12,7 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
+import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +22,17 @@ export class DataChangeService {
   constructor(private dataService: DataService) { }
 
   addBuchung(buchungData: IBuchungData): void {
-    const newBuchung: IBuchung = {
-      id: this.getNextFreeBuchungId(),
-      data: buchungData
-    };
+    if(buchungData.geplanteBuchung) {
+      this.addGeplanteAusgabeBuchung(buchungData);
+    } else {
+      const newBuchung: IBuchung = {
+        id: this.getNextFreeBuchungId(),
+        data: buchungData
+      };
 
-    this.dataService.userData.buchungen.push(newBuchung);
-    this.dataService.update();
+      this.dataService.userData.buchungen.push(newBuchung);
+      this.dataService.update();
+    }
   }
 
   editBuchung(editedBuchung: IBuchung): void {
@@ -37,6 +42,26 @@ export class DataChangeService {
 
   deleteBuchung(buchungId: number) {
     this.dataService.userData.buchungen.splice(this.getIndexOfBuchungById(buchungId), 1);
+    this.dataService.update();
+  }
+
+  addGeplanteAusgabeBuchung(buchungData: IGeplanteAusgabenBuchungData): void {
+    const newGeplanteAusgabenBuchung: IGeplanteAusgabenBuchung = {
+      id: this.getNextFreeGeplanteAusgabenBuchungId(),
+      data: buchungData
+    };
+
+    this.dataService.userData.geplanteAusgabenBuchungen.push(newGeplanteAusgabenBuchung);
+    this.dataService.update();
+  }
+
+  editGeplanteAusgabeBuchung(editedGeplanteAusgabenBuchung: IGeplanteAusgabenBuchung): void {
+    this.dataService.userData.geplanteAusgabenBuchungen[this.getIndexOfGeplanteAusgabenBuchungById(editedGeplanteAusgabenBuchung.id)] = editedGeplanteAusgabenBuchung;
+    this.dataService.update();
+  }
+
+  deleteGeplanteAusgabeBuchung(id: number) {
+    this.dataService.userData.geplanteAusgabenBuchungen.splice(this.getIndexOfGeplanteAusgabenBuchungById(id), 1);
     this.dataService.update();
   }
 
@@ -73,6 +98,27 @@ export class DataChangeService {
   editFixkostenEintrag(editedFixkostenEintrag: IFixkostenEintrag): void {
     this.dataService.userData.standardFixkostenEintraege[this.getIndexOfFixkostenEintragById(editedFixkostenEintrag.id)] = editedFixkostenEintrag;
     this.dataService.update();
+  }
+
+  editGeplanteAusgabenEintraegeForMonth(date: Date, elemente: IGeplanteAusgabe[]) {
+    this.dataService.createNewMonthIfNecessary(date);
+    const month = this.dataService.userData.months.find(month => month.startDate.toLocaleDateString() === date.toLocaleDateString());
+    if(month === undefined) {
+      throw new Error("error in dataChangeService editGeplanteAusgabenEintraegeForMonth: Month is undefined!");
+    }
+
+    month.geplanteAusgaben = [];
+
+    elemente.forEach(element => {
+      month.geplanteAusgaben?.push({
+        id: this.getNextFreeGeplanteAusgabeId(),
+        data: {
+          betrag: element.data.betrag,
+          title: element.data.title,
+          beschreibung: element.data.beschreibung
+        }
+      })
+    })
   }
 
   editFixkostenEintraegeForMonth(date: Date, elemente: IMonthFixkostenEintrag[]) {
@@ -229,6 +275,19 @@ export class DataChangeService {
     return freeId;
   }
 
+
+  private getNextFreeGeplanteAusgabenBuchungId() {
+    let freeId = 1;
+    for (let i = 0; i < this.dataService.userData.geplanteAusgabenBuchungen.length; i++) {
+      if (this.dataService.userData.geplanteAusgabenBuchungen.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private getNextFreeAuswertungLayoutId() {
     let freeId = 1;
     for (let i = 0; i < this.dataService.userData.auswertungsLayouts.length; i++) {
@@ -244,6 +303,19 @@ export class DataChangeService {
   private getNextFreeFixkostenEintragId() {
     let freeId = 1;
     const alleEintraege = this.getAlleFixkostenEintraege();
+    for (let i = 0; i < alleEintraege.length; i++) {
+      if (alleEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
+  private getNextFreeGeplanteAusgabeId() {
+    let freeId = 1;
+    const alleEintraege = this.getAlleGeplantenAusgaben();
     for (let i = 0; i < alleEintraege.length; i++) {
       if (alleEintraege.find(x => x.id === freeId) === undefined) {
         return freeId;
@@ -280,6 +352,10 @@ export class DataChangeService {
 
   private getIndexOfBuchungById(id: number) {
     return this.dataService.userData.buchungen.findIndex(eintrag => eintrag.id === id);
+  }
+
+  private getIndexOfGeplanteAusgabenBuchungById(id: number) {
+    return this.dataService.userData.geplanteAusgabenBuchungen.findIndex(eintrag => eintrag.id === id);
   }
 
   private getIndexOfAuswertungsLayoutById(id: number) {
@@ -321,6 +397,14 @@ export class DataChangeService {
     let eintraege = this.dataService.userData.standardFixkostenEintraege ?? [];
     this.dataService.userData.months.forEach(month => {
       eintraege = eintraege.concat(month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []);
+    })
+    return eintraege;
+  }
+
+  private getAlleGeplantenAusgaben(): IGeplanteAusgabe[] {
+    let eintraege: IGeplanteAusgabe[] = [];
+    this.dataService.userData.months.forEach(month => {
+      eintraege = eintraege.concat(month.geplanteAusgaben ? month.geplanteAusgaben : []);
     })
     return eintraege;
   }

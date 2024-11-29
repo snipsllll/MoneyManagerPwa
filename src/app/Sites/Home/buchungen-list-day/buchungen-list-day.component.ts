@@ -1,16 +1,17 @@
-import {Component, computed, Input} from '@angular/core';
+import {Component, computed, Input, OnInit} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
 import {UT} from "../../../Models/Classes/UT";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {TagesAnzeigeOptions} from "../../../Models/Enums";
+import {IBuchung} from "../../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-buchungen-list-day',
   templateUrl: './buchungen-list-day.component.html',
   styleUrl: './buchungen-list-day.component.css'
 })
-export class BuchungenListDayComponent {
+export class BuchungenListDayComponent implements OnInit{
   @Input() day!: Day;
 
   ausgabenForDay = computed(() => {
@@ -23,9 +24,18 @@ export class BuchungenListDayComponent {
     return ausgaben;
   })
 
+  alleDayBuchungen = computed(() => {
+    this.dataService.updated()
+    return (this.day.geplanteAusgabenBuchungen ?? []).concat(this.day.buchungen ?? [])
+  });
+
   ut: UT = new UT();
 
   constructor(public dataProvider: DataProviderService, private dataService: DataService) {
+  }
+
+  ngOnInit() {
+    //TODO bei leerer this.day.buchungen verschwindet this.day.geplanteAusgabenBuchungen
   }
 
   getTagesAnzeigeText() {

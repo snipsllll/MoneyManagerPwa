@@ -25,6 +25,7 @@ export class BuchungenListComponent  implements OnInit{
   }
 
   orderByDateDesc(array: Day[]) {
+    //TODO
     const rArray: Day[] = [];
     array.forEach(day => {
       day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())

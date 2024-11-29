@@ -24,7 +24,9 @@ export class BuchungDetailsComponent implements OnInit{
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set(this.dataProvider.getBuchungById(buchungsId));
+      const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
+
+      this.buchung?.set(geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!});
       if(this.buchung!()?.data.title !== null && this.buchung!()?.data.title !== undefined && this.buchung!()?.data.title !== '') {
         this.titelVorhanden = true;
       }

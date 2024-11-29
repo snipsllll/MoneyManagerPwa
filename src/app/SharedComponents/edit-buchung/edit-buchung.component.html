@@ -1,7 +1,7 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData">
+    <div class="create-eintrag__budget" *ngIf="!isGeplanteBuchungChecked; else plannedBuchung">
       <div class="ce__budget-eintrag">
         monat: <b class="red" [class.green]="availableMoneyCapped().availableForMonth! > 0">{{ getAvailableMoneyMonth() }}€</b>
       </div>
@@ -9,7 +9,7 @@
         woche: <b class="red" [class.green]="availableMoneyCapped().availableForWeek! > 0">{{ getAvailableMoneyWeek() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDay! > 0">{{ getAvailableMoneyDay() }}€</b>
+        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDayIst! > 0">{{ getAvailableMoneyDay() }}€</b>
       </div>
     </div>
     <div class="create-eintrag__top-spacer">
@@ -52,14 +52,28 @@
       </div>
       <div class="create-eintrag__datum-wrapper">
         <div class="create-eintrag__label-multi-select">
+          geplante Ausgabe:
+        </div>
+        <input type="checkbox" [(ngModel)]="isGeplanteBuchungChecked"  (ngModelChange)="onGeplanteBuchungChange($event)">
+      </div>
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
           Kategorie:
         </div>
-        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()">
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()" *ngIf="!isGeplanteBuchungChecked">
           <option
             *ngFor="let kategorie of kategorien"
-            class="multiselect-option"
+            class=""
             [value]="kategorie.id">
             {{ kategorie.name }}
+          </option>
+        </select>
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onplannedBuchungsKategorieChanged()" *ngIf="isGeplanteBuchungChecked">
+          <option
+            *ngFor="let kategorie of geplanteAusgabenKategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.title }}
           </option>
         </select>
       </div>
@@ -92,6 +106,37 @@
     Error: No Eintrag provided!
   </div>
 </div>
+
+<ng-template #plannedBuchung>
+  <div *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="buchung()!.data.buchungsKategorie; else keineKategorieAusgewaehlt">
+      <div class="ce__budget-eintrag-planned">
+        <div>
+          Restgeld für
+          <b>
+            {{ availableMonayForGeplanteAusgabenKategorien().title }}
+          </b>
+          :
+        </div>
+        <div>
+          <b class="red" [class.green]="availableMonayForGeplanteAusgabenKategorien().restgeldBetrag > 0 " >
+            {{ ut.toFixedDown(availableMonayForGeplanteAusgabenKategorien().restgeldBetrag, 2) }}€
+          </b>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #keineKategorieAusgewaehlt>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      keine Kategorie ausgewählt!
+    </div>
+  </div>
+</ng-template>
 
 
 <ng-template #noDayBudgetTop>

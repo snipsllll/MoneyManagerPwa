@@ -146,8 +146,11 @@ export class EinstellungenComponent implements OnInit{
       case 'Restgeld für Woche':
         option = TopBarBudgetOptions.woche;
         break;
-      case 'Restgeld für Tag':
-        option = TopBarBudgetOptions.tag;
+      case 'Restgeld für Tag (ist)':
+        option = TopBarBudgetOptions.tagIst;
+        break;
+      case 'Restgeld für Tag (soll)':
+        option = TopBarBudgetOptions.tagSoll;
         break;
       case 'Ausblenden':
         option = TopBarBudgetOptions.leer;
@@ -166,8 +169,11 @@ export class EinstellungenComponent implements OnInit{
       case TopBarBudgetOptions.woche:
         text = 'Restgeld für Woche';
         break;
-      case TopBarBudgetOptions.tag:
-        text = 'Restgeld für Tag';
+      case TopBarBudgetOptions.tagSoll:
+        text = 'Restgeld für Tag (soll)';
+        break;
+      case TopBarBudgetOptions.tagIst:
+        text = 'Restgeld für Tag (ist)';
         break;
       case TopBarBudgetOptions.leer:
         text = 'Ausblenden';
