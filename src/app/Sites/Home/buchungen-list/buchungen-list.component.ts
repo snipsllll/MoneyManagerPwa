@@ -1,5 +1,5 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
-import {Day, Month} from "../../../Models/Interfaces";
+import {Day} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 

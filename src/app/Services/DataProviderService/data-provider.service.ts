@@ -10,8 +10,8 @@ import {DataService} from "../DataService/data.service";
 import {
   AvailableMoney,
   BudgetInfosForMonth,
-  Day, IGeplanteAusgabe,
-  IGeplanteAusgabenBuchung, IGeplanteAusgabeRestgeld,
+  Day,
+  IGeplanteAusgabeRestgeld,
   Month,
   Settings
 } from "../../Models/Interfaces";
