@@ -76,7 +76,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDay
+        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst
 
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
@@ -211,6 +211,6 @@ export class CreateBuchungComponent {
   }
 
   protected isAvailableMoneyValid() {
-    return this.availableMoneyCapped().availableForDay && this.availableMoneyCapped().availableForWeek && this.availableMoneyCapped().availableForWeek
+    return this.availableMoneyCapped().availableForDayIst && this.availableMoneyCapped().availableForWeek && this.availableMoneyCapped().availableForWeek
   }
 }

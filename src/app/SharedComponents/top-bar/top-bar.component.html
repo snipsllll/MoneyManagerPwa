@@ -49,8 +49,8 @@
         <div class="top-bar__budget-eintrag-label">
           heute:
         </div>
-        <b class="red top-bar__budget-eintrag-data" *ngIf="availableMoneyCapped()!.availableForDay !== undefined; else blackContent"
-                  [class.green]="+(availableMoneyCapped()!.availableForDay!) > 0">{{ ut.toFixedDown(availableMoneyCapped()!.availableForDay!, 2) }}€</b>
+        <b class="red top-bar__budget-eintrag-data" *ngIf="availableMoneyCapped()!.availableForDayIst !== undefined; else blackContent"
+                  [class.green]="+(availableMoneyCapped()!.availableForDayIst!) > 0">{{ ut.toFixedDown(availableMoneyCapped()!.availableForDayIst!, 2) }}€</b>
       </div>
     </div>
   </div>

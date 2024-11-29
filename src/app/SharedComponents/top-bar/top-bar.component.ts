@@ -73,8 +73,11 @@ export class TopBarComponent implements OnInit {
       case TopBarBudgetOptions.woche:
         return 'für diese Woche';
         break;
-      case TopBarBudgetOptions.tag:
-        return 'für Heute';
+      case TopBarBudgetOptions.tagSoll:
+        return 'für Heute (soll)';
+        break;
+      case TopBarBudgetOptions.tagIst:
+        return 'für Heute (ist)';
         break;
       default:
         return undefined;
@@ -95,8 +98,11 @@ export class TopBarComponent implements OnInit {
       case TopBarBudgetOptions.woche:
         return this.ut.toFixedDown(this.availableMoney()!.availableForWeek, 2);
         break;
-      case TopBarBudgetOptions.tag:
-        return this.ut.toFixedDown(this.availableMoney()!.availableForDay, 2);
+      case TopBarBudgetOptions.tagIst:
+        return this.ut.toFixedDown(this.availableMoney()!.availableForDayIst, 2);
+        break;
+      case TopBarBudgetOptions.tagSoll:
+        return this.ut.toFixedDown(this.availableMoney()!.availableForDaySoll, 2);
         break;
       default:
         return undefined;
@@ -112,8 +118,11 @@ export class TopBarComponent implements OnInit {
       case TopBarBudgetOptions.woche:
         return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForWeek, 2);
         break;
-      case TopBarBudgetOptions.tag:
-        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForDay, 2);
+      case TopBarBudgetOptions.tagIst:
+        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForDayIst, 2);
+        break;
+      case TopBarBudgetOptions.tagSoll:
+        return this.ut.toFixedDown(this.availableMoneyCapped()!.availableForDaySoll, 2);
         break;
       default:
         return undefined;

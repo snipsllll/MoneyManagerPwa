@@ -93,6 +93,7 @@ export interface MenuItem {
 export interface AvailableMoney {
   availableForMonth: number;
   availableForWeek: number;
-  availableForDay: number;
+  availableForDayIst: number;
+  availableForDaySoll: number;
   noData: boolean;
 }
