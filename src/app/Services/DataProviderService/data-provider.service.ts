@@ -1,7 +1,20 @@
 import {Injectable} from '@angular/core';
-import {IBuchung, IMonthFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../../Models/NewInterfaces";
+import {
+  IBuchung,
+  IGeplanteAusgabenKategorie,
+  IMonthFixkostenEintrag,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
-import {AvailableMoney, BudgetInfosForMonth, Day, Month, Settings} from "../../Models/Interfaces";
+import {
+  AvailableMoney,
+  BudgetInfosForMonth,
+  Day,
+  IGeplanteAusgabenBuchung,
+  Month,
+  Settings
+} from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
 import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
 
@@ -543,9 +556,24 @@ export class DataProviderService {
 
   getBuchungsKategorienMitEmpty() {
     const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
-    x.push({id: -1, name: 'geplante Ausgabe'})
     x.push({id: 0, name: ''})
     return x;
+  }
+
+  getGeplanteAusgabenKategorienForMonth(date: Date): IGeplanteAusgabenKategorie[] {
+    const month = this.getMonthByDate(date);
+
+    let geplanteAusgabenKategorien: IGeplanteAusgabenKategorie[] = [];
+
+    month.geplanteAusgaben?.forEach(geplanteAusgabe => {
+      geplanteAusgabenKategorien.push({
+        id: geplanteAusgabe.id,
+        title: geplanteAusgabe.data.title,
+        betrag: geplanteAusgabe.data.betrag
+      })
+    })
+
+    return geplanteAusgabenKategorien;
   }
 
   getBuchungsKategorien() {

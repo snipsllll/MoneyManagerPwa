@@ -22,13 +22,17 @@ export class DataChangeService {
   constructor(private dataService: DataService) { }
 
   addBuchung(buchungData: IBuchungData): void {
-    const newBuchung: IBuchung = {
-      id: this.getNextFreeBuchungId(),
-      data: buchungData
-    };
+    if(buchungData.geplanteBuchung) {
+      this.addGeplanteAusgabeBuchung(buchungData);
+    } else {
+      const newBuchung: IBuchung = {
+        id: this.getNextFreeBuchungId(),
+        data: buchungData
+      };
 
-    this.dataService.userData.buchungen.push(newBuchung);
-    this.dataService.update();
+      this.dataService.userData.buchungen.push(newBuchung);
+      this.dataService.update();
+    }
   }
 
   editBuchung(editedBuchung: IBuchung): void {
@@ -42,7 +46,6 @@ export class DataChangeService {
   }
 
   addGeplanteAusgabeBuchung(buchungData: IGeplanteAusgabenBuchungData): void {
-    console.log(565655)
     const newGeplanteAusgabenBuchung: IGeplanteAusgabenBuchung = {
       id: this.getNextFreeGeplanteAusgabenBuchungId(),
       data: buchungData

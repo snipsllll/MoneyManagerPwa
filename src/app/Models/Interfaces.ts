@@ -80,6 +80,7 @@ export interface IGeplanteAusgabenBuchungData {
   title: string;
   betrag: number | null;
   beschreibung?: string;
+  kategorie?: number;
 }
 
 export interface Settings {

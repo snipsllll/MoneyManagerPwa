@@ -6,7 +6,7 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 import {UT} from "../../Models/Classes/UT";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
-import {IBuchung, IBuchungData} from "../../Models/NewInterfaces";
+import {IBuchung, IBuchungData, IGeplanteAusgabenKategorie} from "../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-create-buchung',
@@ -22,6 +22,7 @@ export class CreateBuchungComponent {
   showBetragWarning = false;
   betragWarnung = '';
   kategorien!: { id: number, name: string }[];
+  geplanteAusgabenKategorien!: IGeplanteAusgabenKategorie[];
 
   isSearchboxVisible = signal<boolean>(false);
   isSaveButtonDisabled = signal<boolean>(true);
@@ -49,6 +50,7 @@ export class CreateBuchungComponent {
 
     this.selectedDate = this.buchung.date.toISOString().slice(0, 10);
     this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
+    this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.buchung.date);
   }
 
   onKategorieChanged(): void {
@@ -79,14 +81,7 @@ export class CreateBuchungComponent {
         let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDay
 
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
-          console.log(77)
-          console.log(this.buchung.buchungsKategorie)
-          if(this.buchung.buchungsKategorie == -1) { // geplante ausgabe
-            console.log(88)
-            this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung);
-          } else {
-            this.dataChangeService.addBuchung(this.buchung);
-          }
+          this.dataChangeService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         } else {
           if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
@@ -97,11 +92,7 @@ export class CreateBuchungComponent {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                if(this.buchung.buchungsKategorie == -1) { // geplante ausgabe
-                  this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung);
-                } else {
-                  this.dataChangeService.addBuchung(this.buchung);
-                }
+                this.dataChangeService.addBuchung(this.buchung);
 
                 this.dialogService.isConfirmDialogVisible = false;
                 this.router.navigate(['/']);

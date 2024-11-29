@@ -74,14 +74,28 @@
       </div>
       <div class="create-eintrag__datum-wrapper">
         <div class="create-eintrag__label-multi-select">
+          geplante Ausgabe:
+        </div>
+        <input type="checkbox" [(ngModel)]="buchung.geplanteBuchung">
+      </div>
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
           Kategorie:
         </div>
-        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()">
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()" *ngIf="!buchung.geplanteBuchung">
           <option
             *ngFor="let kategorie of kategorien"
             class=""
             [value]="kategorie.id">
             {{ kategorie.name }}
+          </option>
+        </select>
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()" *ngIf="buchung.geplanteBuchung">
+          <option
+            *ngFor="let kategorie of geplanteAusgabenKategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.title }}
           </option>
         </select>
       </div>
