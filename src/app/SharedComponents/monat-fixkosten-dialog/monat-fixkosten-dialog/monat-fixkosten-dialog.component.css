@@ -69,6 +69,7 @@
   font-size: 23px;
   display: flex;
   align-items: center;
+  /*justify-content: space-between;*/
 }
 
 .monat-fixkosten-dialog__summe-label {

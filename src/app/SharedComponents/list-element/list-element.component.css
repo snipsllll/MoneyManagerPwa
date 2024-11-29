@@ -12,7 +12,9 @@
 
 .list-element__main-left {
   font-size: 18px;
-  width: 80px;
+  width: 85px;
+  padding-right: 5px;
+  display: flex;
 }
 
 .list-element__main-center {
