@@ -143,10 +143,22 @@ export class DataChangeService {
             }
           })
         } else {
-          month.uebernommeneStandardFixkostenEintraege!.push(element)
+          let x: IFixkostenEintrag = {
+            id: this.getNextFreeFixkostenEintragId(),
+            data: {
+              ...element.data
+            }
+          }
+          month.uebernommeneStandardFixkostenEintraege!.push(x)
         }
       } else {
-        month.specialFixkostenEintraege!.push(element);
+        let x: IFixkostenEintrag = {
+          id: this.getNextFreeFixkostenEintragId(),
+          data: {
+            ...element.data
+          }
+        }
+        month.specialFixkostenEintraege!.push(x);
       }
 
     })
