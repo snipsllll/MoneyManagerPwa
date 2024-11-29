@@ -80,7 +80,6 @@ export class EditBuchungComponent implements OnInit {
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
     this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
-    console.log(this.kategorien)
     this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.oldBuchung!.data.date);
     this.isGeplanteBuchungChecked = this.oldBuchung!.data.geplanteBuchung!;
     this.updateDate();

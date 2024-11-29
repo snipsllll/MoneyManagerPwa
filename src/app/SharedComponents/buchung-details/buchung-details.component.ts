@@ -56,8 +56,12 @@ export class BuchungDetailsComponent implements OnInit{
   }
 
   onEditClicked() {
-    this.router.navigate(['/editBuchung', this.buchung!()!.id]);
+    const buchungsId = this.buchung!()!.data.geplanteBuchung ? 0 : this.buchung!()!.id;
+    console.log(buchungsId)
+    const geplanteAusgabenBuchungsId = this.buchung!()!.data.geplanteBuchung ? this.buchung!()!.id : 0;
+    this.router.navigate(['/editBuchung', buchungsId, geplanteAusgabenBuchungsId]);
     this.navigationService.previousRoute = Sites.buchungDetails;
-    this.navigationService.param = this.buchung!()!.id!.toString();
+    this.navigationService.param1 = buchungsId.toString();
+    this.navigationService.param2 = geplanteAusgabenBuchungsId.toString();
   }
 }
