@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {UT} from "../../Models/Classes/UT";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {TopBarBudgetOptions} from "../../Models/Enums";
+import {versionName} from "../../Models/Classes/versionName";
 
 @Component({
   selector: 'app-top-bar',
@@ -139,4 +140,5 @@ export class TopBarComponent implements OnInit {
   }
 
   protected readonly TopBarBudgetOptions = TopBarBudgetOptions;
+  protected readonly versionName = versionName;
 }
