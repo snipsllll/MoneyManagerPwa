@@ -34,6 +34,13 @@ export class CreateBuchungComponent {
     return this.dataProvider.getAvailableMoneyCapped(this.buchung.date)
   })
 
+  availableMonayForGeplanteAusgabenKategorien = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForDay(this.buchung.date);
+    return geplanteAusgabenRestgelder[geplanteAusgabenRestgelder.findIndex(eintrag => eintrag.id == this.buchung.buchungsKategorie)]
+  })
+
   utils: UT = new UT();
 
   constructor(private dataProvider: DataProviderService,
@@ -55,6 +62,10 @@ export class CreateBuchungComponent {
 
   onKategorieChanged(): void {
 
+  }
+
+  onplannedKategorieChanged() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
   }
 
   onSearchClicked() {

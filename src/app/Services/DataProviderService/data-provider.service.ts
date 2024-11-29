@@ -10,8 +10,8 @@ import {DataService} from "../DataService/data.service";
 import {
   AvailableMoney,
   BudgetInfosForMonth,
-  Day,
-  IGeplanteAusgabenBuchung,
+  Day, IGeplanteAusgabe,
+  IGeplanteAusgabenBuchung, IGeplanteAusgabeRestgeld,
   Month,
   Settings
 } from "../../Models/Interfaces";
@@ -461,6 +461,38 @@ export class DataProviderService {
     availableMoney.availableForMonth = availableMoney.availableForMonth > 0 ? availableMoney.availableForMonth : 0;
 
     return availableMoney;
+  }
+
+  getAvailableMoneyForGeplanteAusgabenKategorienForDay(date: Date): IGeplanteAusgabeRestgeld[] {
+    const geplanteAusgaben: IGeplanteAusgabeRestgeld[] = [];
+
+    const month = this.getMonthByDate(date);
+    const geplanteAusgabenKategorien = this.getGeplanteAusgabenKategorienForMonth(date);
+
+    console.log(geplanteAusgabenKategorien)
+
+    geplanteAusgabenKategorien.forEach(geplanteAusgabenKategorie => {
+      geplanteAusgaben.push({
+        id: geplanteAusgabenKategorie.id,
+        restgeldBetrag: geplanteAusgabenKategorie.betrag,
+        title: geplanteAusgabenKategorie.title
+      })
+    })
+
+
+    month.weeks!.forEach(week => {
+      week.days.forEach(day => {
+        day.geplanteAusgabenBuchungen?.forEach(geplanteBuchung => {
+          let index = geplanteAusgaben.findIndex(eintrag => eintrag.id! ==  +(geplanteBuchung.data.buchungsKategorie!));
+          console.log(geplanteAusgaben[index])
+          console.log(geplanteBuchung)
+          geplanteAusgaben[index].restgeldBetrag -= geplanteBuchung.data.betrag ?? 0;
+        })
+      })
+    })
+
+
+    return geplanteAusgaben;
   }
 
   getFixkostenSummeForMonth(month: Month) {

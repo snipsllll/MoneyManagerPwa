@@ -292,3 +292,9 @@ hr {
 .betrag-input {
   width: 115px;
 }
+
+.ce__budget-eintrag-planned {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

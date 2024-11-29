@@ -80,7 +80,7 @@ export interface IGeplanteAusgabenBuchungData {
   title: string;
   betrag: number | null;
   beschreibung?: string;
-  kategorie?: number;
+  buchungsKategorie?: number;
 }
 
 export interface Settings {
@@ -113,6 +113,12 @@ export interface IGeplanteAusgabeData {
   title: string;
   betrag: number;
   beschreibung?: string;
+}
+
+export interface IGeplanteAusgabeRestgeld {
+  id: number;
+  title: string;
+  restgeldBetrag: number;
 }
 
 export interface MenuItem {

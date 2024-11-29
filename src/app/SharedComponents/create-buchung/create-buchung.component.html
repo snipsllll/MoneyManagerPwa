@@ -1,7 +1,7 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="!buchung.geplanteBuchung; else plannedBuchung">
       <div class="ce__budget-eintrag">
         monat: <b class="red"
                   [class.green]="availableMoneyCapped().availableForMonth > 0">{{ utils.toFixedDown(availableMoneyCapped().availableForMonth, 2) }}
@@ -90,7 +90,7 @@
             {{ kategorie.name }}
           </option>
         </select>
-        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onKategorieChanged()" *ngIf="buchung.geplanteBuchung">
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung.buchungsKategorie" (change)="onplannedKategorieChanged()" *ngIf="buchung.geplanteBuchung">
           <option
             *ngFor="let kategorie of geplanteAusgabenKategorien"
             class=""
@@ -124,6 +124,37 @@
     </div>
   </div>
 </div>
+
+<ng-template #plannedBuchung>
+  <div *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="buchung.buchungsKategorie; else keineKategorieAusgewaehlt">
+      <div class="ce__budget-eintrag-planned">
+        <div>
+          Restgeld für
+          <b>
+            {{ availableMonayForGeplanteAusgabenKategorien().title }}
+          </b>
+          :
+        </div>
+        <div>
+          <b class="red" [class.green]="availableMonayForGeplanteAusgabenKategorien().restgeldBetrag > 0 " >
+            {{ utils.toFixedDown(availableMonayForGeplanteAusgabenKategorien().restgeldBetrag, 2) }}€
+          </b>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #keineKategorieAusgewaehlt>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      keine Kategorie ausgewählt!
+    </div>
+  </div>
+</ng-template>
 
 
 <ng-template #noDayBudgetTop>
