@@ -89,7 +89,6 @@
 .budget__fixkosten-details {
   height: fit-content;
   width: calc(100% - 5px);
-  margin-top: -10px;
   margin-left: 5px;
 }
 
