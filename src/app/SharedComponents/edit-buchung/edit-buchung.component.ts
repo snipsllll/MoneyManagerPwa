@@ -64,7 +64,6 @@ export class EditBuchungComponent implements OnInit {
       const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
 
       this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
-      console.log(this.oldBuchung)
 
       this.buchung.set({
         id: this.oldBuchung!.id,
