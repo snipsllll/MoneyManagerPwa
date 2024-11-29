@@ -19,7 +19,10 @@ export class EditBuchungComponent implements OnInit {
   date?: string;
   showBetragWarning = false;
   betragWarnung?: string;
-  kategorien!: { id: number, name: string }[];
+  kategorien = computed<{ id: number, name: string }[]>(() => {
+    this.dataService.updated();
+    return this.dataProvider.getBuchungsKategorienMitEmpty();
+  }) ;
   isGeplanteBuchungChecked!: boolean;
 
   buchung = signal<IBuchung | undefined>(undefined);
@@ -64,7 +67,6 @@ export class EditBuchungComponent implements OnInit {
       const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
 
       this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
-      console.log(this.oldBuchung)
 
       this.buchung.set({
         id: this.oldBuchung!.id,
@@ -79,11 +81,17 @@ export class EditBuchungComponent implements OnInit {
       });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
-    this.kategorien = this.dataProvider.getBuchungsKategorienMitEmpty();
-    console.log(this.kategorien)
     this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.oldBuchung!.data.date);
     this.isGeplanteBuchungChecked = this.oldBuchung!.data.geplanteBuchung!;
     this.updateDate();
+  }
+
+  onBuchungsKategorieChanged(): void {
+    if(this.buchung()!.data.buchungsKategorie == -1) {
+      this.dialogService.showBuchungsKategorienDialog();
+      this.buchung()!.data.buchungsKategorie = 0;
+    }
+    this.updateSaveButton();
   }
 
   onGeplanteBuchungChange(newValue: boolean) {
@@ -210,10 +218,6 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onBeschreibungChanged() {
-    this.updateSaveButton();
-  }
-
-  onBuchungsKategorieChanged() {
     this.updateSaveButton();
   }
 

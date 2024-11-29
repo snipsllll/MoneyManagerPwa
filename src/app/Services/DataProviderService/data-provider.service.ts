@@ -10,8 +10,8 @@ import {DataService} from "../DataService/data.service";
 import {
   AvailableMoney,
   BudgetInfosForMonth,
-  Day, IGeplanteAusgabe,
-  IGeplanteAusgabenBuchung, IGeplanteAusgabeRestgeld,
+  Day,
+  IGeplanteAusgabeRestgeld,
   Month,
   Settings
 } from "../../Models/Interfaces";
@@ -88,7 +88,10 @@ export class DataProviderService {
 
   getGeplanteAusgabenEintraegeForMonth(date: Date) {
     const month = this.getMonthByDate(date);
-    return month.geplanteAusgaben;
+    if(!month) {
+      return [];
+    }
+    return month.geplanteAusgaben ?? [];
   }
 
   getAnzahlDaysLeftForMonth(date: Date) {
@@ -225,7 +228,7 @@ export class DataProviderService {
   }
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
-    if (this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0) {
+    if (!this.getMonthByDate(dayDate) || this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0) {
       return {
         availableForMonth: -0,
         availableForWeek: -0,
@@ -599,6 +602,7 @@ export class DataProviderService {
   }
 
   getBuchungsKategorienMitEmpty() {
+    console.log(this.dataService.userData.buchungsKategorien)
     const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
     x.push({id: 0, name: ''})
     return x;

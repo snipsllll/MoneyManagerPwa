@@ -1,1 +1,1 @@
-export const versionName: string = 'develop';
+export const versionName: string = 'beta(v24.12)';

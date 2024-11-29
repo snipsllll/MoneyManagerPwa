@@ -129,7 +129,7 @@ export class BudgetComponent  implements OnInit{
       elemente: this.getFixkostenDialogElements(),
       onAbortClicked: this.onFixkostenAbortClicked,
       onSaveClicked: this.onFixkostenSaveClicked,
-      summeLabel: 'Fixkosten Summe:'
+      summeLabel: 'Summe:'
     }
     this.dialogService.showMonatFixkostenDialog(viewModel);
   }
@@ -139,7 +139,7 @@ export class BudgetComponent  implements OnInit{
       elemente: this.getGeplanteAusgabenDialogElements(),
       onAbortClicked: this.onGeplanteAusgabenAbortClicked,
       onSaveClicked: this.onGeplanteAusgabenSaveClicked,
-      summeLabel: 'geplante Ausgaben Summe:'
+      summeLabel: 'Summe:'
     }
     this.dialogService.showMonatFixkostenDialog(viewModel);
   }

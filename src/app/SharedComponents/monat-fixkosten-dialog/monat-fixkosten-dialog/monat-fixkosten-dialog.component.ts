@@ -30,6 +30,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     return summe;
   })
   newFixKostenEintrag!: IFixkostenEintragData;
+  simulatedId = -1;
 
   constructor(private dialogService: DialogService, public dataService: DataService) {
   }
@@ -130,7 +131,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
     const newFixkostenEintrag: IMonthFixkostenEintrag = {
-      id: 0,
+      id: this.getNextFreeSimulatedId(),
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
@@ -146,6 +147,23 @@ export class MonatFixkostenDialogComponent implements OnInit {
       zusatz: ''
     }
     this.dataService.update()
+  }
+
+  getNextFreeSimulatedId() {
+    this.simulatedId--;
+    return this.simulatedId;
+  }
+
+  getNextFreeSpecialFixkostenEintragId() {
+    let freeId = 1;
+    for (let i = 0; i < this.dataService.userData.geplanteAusgabenBuchungen.length; i++) {
+      if (this.dataService.userData.geplanteAusgabenBuchungen.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
   }
 
   onCreateCancelClicked = () => {
@@ -200,6 +218,9 @@ export class MonatFixkostenDialogComponent implements OnInit {
         zusatz: eintrag.zusatz
       }
     }
+
+    console.log(eintrag)
+    console.log(this.viewModel.elemente)
 
     this.viewModel.elemente[this.viewModel.elemente.findIndex(eintrag => eintrag.id === newFixKostenEintrag.id)] = newFixKostenEintrag;
     this.dataService.update();

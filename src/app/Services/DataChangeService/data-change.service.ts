@@ -30,6 +30,7 @@ export class DataChangeService {
         data: buchungData
       };
 
+      this.dataService.createNewMonthIfNecessary(newBuchung.data.date);
       this.dataService.userData.buchungen.push(newBuchung);
       this.dataService.update();
     }
@@ -51,6 +52,7 @@ export class DataChangeService {
       data: buchungData
     };
 
+    this.dataService.createNewMonthIfNecessary(newGeplanteAusgabenBuchung.data.date);
     this.dataService.userData.geplanteAusgabenBuchungen.push(newGeplanteAusgabenBuchung);
     this.dataService.update();
   }
@@ -143,10 +145,22 @@ export class DataChangeService {
             }
           })
         } else {
-          month.uebernommeneStandardFixkostenEintraege!.push(element)
+          let x: IFixkostenEintrag = {
+            id: this.getNextFreeFixkostenEintragId(),
+            data: {
+              ...element.data
+            }
+          }
+          month.uebernommeneStandardFixkostenEintraege!.push(x)
         }
       } else {
-        month.specialFixkostenEintraege!.push(element);
+        let x: IFixkostenEintrag = {
+          id: this.getNextFreeFixkostenEintragId(),
+          data: {
+            ...element.data
+          }
+        }
+        month.specialFixkostenEintraege!.push(x);
       }
 
     })

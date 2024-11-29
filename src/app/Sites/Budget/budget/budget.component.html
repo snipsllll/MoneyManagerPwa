@@ -34,10 +34,10 @@
           <div class="budget__element-label-fixkosten-text">
             mntl. Fix-Kosten:
           </div>
-          <img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onFixkostenEditClicked()">
+          <!--<img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onFixkostenEditClicked()">-->
         </div>
         <div class="budget__element-data">
-          {{ data().fixKostenSumme }}€ <img src="assets/lock-closed.png" class="lock-image" alt="locked"
+          {{ ut.toFixedDown(data().fixKostenSumme, 2) }}€ <img src="assets/lock-closed.png" class="lock-image" alt="locked"
                                             *ngIf="data().fixKostenGesperrt">
         </div>
       </div>
@@ -55,7 +55,7 @@
       <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
         <div class="budget__element-label-fixkosten" (click)="onGeplanteAusgabenClicked()">
           <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
-               *ngIf="!isgeplanteAusgabenDetailsVisible() && data().geplanteAusgaben; else chevronDown">
+               *ngIf="!isgeplanteAusgabenDetailsVisible() && data().geplanteAusgaben && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else chevronDownGeplanteAusgaben">
           <div class="budget__element-label-fixkosten-text">
             geplante Ausgaben:
           </div>
@@ -77,6 +77,25 @@
         </div>
       </div>
     </div>
+    <hr class="budget__hr" *ngIf="data().geplanteAusgabenRestgeld !== undefined && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0">
+    <div class="budget__element-wrapper" *ngIf="data().geplanteAusgabenRestgeld !== undefined && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0">
+      <div class="budget__element-label">
+        geplante Ausgaben Restgeld:
+      </div>
+      <div class="budget__element-data">
+        {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
+      </div>
+    </div>
+    <div class="budget__fixkosten-details" *ngIf="data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0">
+      <div *ngFor="let eintrag of data().geplanteAusgabenKategorienRestgeld" class="budget__fixkosten-detail-wrapper">
+        <div class="budget__fixkosten-details-title">
+          - {{ eintrag.title }}
+        </div>
+        <div class="budget__fixkosten-details-betrag">
+          {{ eintrag.restgeldBetrag }}€
+        </div>
+      </div>
+    </div>
     <hr class="budget__hr">
     <div class="budget-bottom">
       <div class="budget__element-wrapper">
@@ -95,24 +114,6 @@
           {{ ut.toFixedDown(data().dayBudget!, 2) }}€
         </div>
       </div>
-      <div class="budget__element-wrapper" *ngIf="data().geplanteAusgabenRestgeld !== undefined">
-        <div class="budget__element-label">
-          geplante Ausgaben Restgeld:
-        </div>
-        <div class="budget__element-data">
-          {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
-        </div>
-      </div>
-      <div class="budget__fixkosten-details">
-        <div *ngFor="let eintrag of data().geplanteAusgabenKategorienRestgeld" class="budget__fixkosten-detail-wrapper">
-          <div class="budget__fixkosten-details-title">
-            - {{ eintrag.title }}
-          </div>
-          <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.restgeldBetrag }}€
-          </div>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -127,6 +128,11 @@
 
 <ng-template #chevronDown>
   <img class="budget__fixkosten-chevron" src="assets/chevron-down.png" alt="v" *ngIf="data().fixKostenEintraege; else spacer">
+</ng-template>
+
+
+<ng-template #chevronDownGeplanteAusgaben>
+  <img class="budget__fixkosten-chevron" src="assets/chevron-down.png" alt="v" *ngIf="data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else spacer">
 </ng-template>
 
 <ng-template #spacer>
