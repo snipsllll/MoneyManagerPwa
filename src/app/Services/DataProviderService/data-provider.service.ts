@@ -228,7 +228,7 @@ export class DataProviderService {
   }
 
   getAvailableMoney(dayDate: Date): AvailableMoney {
-    if (this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0) {
+    if (!this.getMonthByDate(dayDate) || this.getMonthByDate(dayDate).totalBudget === undefined || this.getMonthByDate(dayDate).totalBudget === 0) {
       return {
         availableForMonth: -0,
         availableForWeek: -0,

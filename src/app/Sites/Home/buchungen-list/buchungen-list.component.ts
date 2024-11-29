@@ -21,7 +21,7 @@ export class BuchungenListComponent  implements OnInit{
   }
 
   ngOnInit() {
-
+    console.log(this.days())
   }
 
   orderByDateDesc(array: Day[]) {

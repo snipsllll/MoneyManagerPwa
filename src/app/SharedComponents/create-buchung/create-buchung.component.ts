@@ -96,7 +96,7 @@ export class CreateBuchungComponent {
       if (!this.isSaveButtonDisabled()) {
         let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst
 
-        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
+        if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
           this.router.navigate(['/']);
         } else {
