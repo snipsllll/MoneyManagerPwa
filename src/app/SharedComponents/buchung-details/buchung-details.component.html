@@ -38,12 +38,21 @@
           {{buchung()!.data.time}}
         </div>
       </div>
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          geplante Ausgabe:
+        </div>
+        <input type="checkbox" [checked]="buchung()!.data.geplanteBuchung" disabled>
+      </div>
       <div class="create-eintrag__uhrzeit-wrapper">
         <div class="create-eintrag__label">
           Kategorie
         </div>
-        <div class="create-eintrag__data-kategorie">
+        <div class="create-eintrag__data-kategorie" *ngIf="buchung()!.data.geplanteBuchung">
           {{ dataProvider.getBuchungsKategorieNameById(+(buchung()!.data.buchungsKategorie!)) }}
+        </div>
+        <div class="create-eintrag__data-kategorie" *ngIf="!buchung()!.data.geplanteBuchung">
+          {{ dataProvider.getplannedBuchungsKategorieNameById(+(buchung()!.data.buchungsKategorie!)) }}
         </div>
       </div>
       <hr class="hr-details">

@@ -614,11 +614,18 @@ export class DataProviderService {
   }
 
   getBuchungsKategorieNameById(id: number) {
-    if(id == -1) {
-      return 'geplante Ausgabe'
-    }
     const kategorie = this.dataService.userData.buchungsKategorien.find(k => k.id === id);
     return kategorie ? kategorie.name : '---';
+  }
+
+  getplannedBuchungsKategorieNameById(id: number) {
+    const allePlannedAusgabenKategorien: IGeplanteAusgabenKategorie[] = [];
+    this.dataService.userData.months.forEach(month => {
+      allePlannedAusgabenKategorien.concat(this.getGeplanteAusgabenKategorienForMonth(month.startDate));
+    })
+
+    const kategorie = allePlannedAusgabenKategorien.find(k => k.id === id);
+    return kategorie ? kategorie.title : '---';
   }
 
   getAllMonthsForYear(year: number) {
