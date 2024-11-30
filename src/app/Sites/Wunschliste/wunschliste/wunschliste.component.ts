@@ -2,7 +2,6 @@ import {Component, computed, OnInit, signal} from '@angular/core';
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../../Services/DialogService/dialog.service";
-import {WunschlistenEintrag} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {
   ListElementData,
@@ -12,7 +11,9 @@ import {
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {Color} from "../../../Models/Enums";
-import {SparschweinService} from "../../../Services/SparschweinService/sparschwein.service";
+import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {IWunschlistenEintrag, IWunschlistenEintragData} from "../../../Models/NewInterfaces";
 
 @Component({
   selector: 'app-wunschliste',
@@ -32,9 +33,9 @@ export class WunschlisteComponent implements OnInit{
   wirdGekauftesAusgeblendet = signal<boolean>(false);
   selectedFilter = signal<string>('neuste zuerst');
 
-  newWunschlistenEintrag!: WunschlistenEintrag;
+  newWunschlistenEintrag!: IWunschlistenEintragData;
 
-  constructor(private sparschweinService: SparschweinService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
+  constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private dataService: DataService, private dialogService: DialogService, private topbarService: TopbarService) {
   }
 
   ngOnInit() {
@@ -49,14 +50,14 @@ export class WunschlisteComponent implements OnInit{
       gekauft: false,
       erstelltAm: new Date()
     }
-    this.selectedFilter.set(this.dataService.settings?.wunschllistenFilter.selectedFilter ?? '');
-    this.wirdGekauftesAusgeblendet.set(this.dataService.settings?.wunschllistenFilter.gekaufteEintraegeAusblenden ?? false);
+    //this.selectedFilter.set(this.saveService.getSettings().wunschllistenFilter.selectedFilter ?? '');
+    //this.wirdGekauftesAusgeblendet.set(this.saveService.getSettings().wunschllistenFilter.gekaufteEintraegeAusblenden ?? false);
   }
 
   getElements(selectedFilter?: string) {
-    let allElements = this.dataService.userData.wunschlistenEintraege;
+    let allElements = this.dataProvider.getAlleWunschlistenEintraege();
     if(this.wirdGekauftesAusgeblendet()){
-      allElements = allElements.filter(element => element.gekauft === false);
+      allElements = allElements.filter(element => !element.data.gekauft);
     }
 
     switch (selectedFilter) {
@@ -78,15 +79,21 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onFilterChanged() {
-    if(this.dataService.settings) {
-      this.dataService.settings!.wunschllistenFilter.selectedFilter = this.selectedFilter();
-    }
+    /*
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.selectedFilter = this.selectedFilter();
+      this.saveService.setSettings(x);
+    }*/
   }
 
   onGekaufteEintraegeAusblendenChanged() {
-    if(this.dataService.settings) {
-      this.dataService.settings!.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
-    }
+    /*
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
+    }*/
   }
 
   onPlusClicked() {
@@ -98,7 +105,7 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
-    const newWunschlistenEintrag: WunschlistenEintrag = {
+    const newWunschlistenEintrag: IWunschlistenEintragData = {
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       zusatz: eintrag.zusatz,
@@ -106,7 +113,7 @@ export class WunschlisteComponent implements OnInit{
       date: new Date(),
       erstelltAm: new Date()
     }
-    this.dataService.addWunschlistenEintrag(newWunschlistenEintrag);
+    this.dataChangeService.addWunschlistenEintrag(newWunschlistenEintrag);
     this.newWunschlistenEintrag = {
       title: '',
       betrag: 0,
@@ -121,34 +128,35 @@ export class WunschlisteComponent implements OnInit{
 
   }
 
-  getViewModel(eintrag: WunschlistenEintrag): ListElementViewModel {
+  getViewModel(eintrag: IWunschlistenEintrag): ListElementViewModel {
     const settings: ListElementSettings = {
       doMenuExist: true,
       doDetailsExist: true,
       betragColor: this.kannKaufen(eintrag) ? Color.green : Color.red,
-      isGrayedOut: eintrag.gekauft
+      isGrayedOut: eintrag.data.gekauft
     }
 
     const data: ListElementData = {
-      betrag: eintrag.betrag,
-      title: eintrag.title,
-      zusatz: eintrag.zusatz,
+      betrag: eintrag.data.betrag,
+      title: eintrag.data.title,
+      zusatz: eintrag.data.zusatz,
       id: eintrag.id,
-      date: eintrag.date,
-      erstelltAm: eintrag.erstelltAm,
+      date: eintrag.data.date,
+      erstelltAm: eintrag.data.erstelltAm,
       menuItems: [
         {
           label: 'bearbeiten',
-          onClick: this.onEditClicked
+          onClick: this.onEditClicked,
+          grayedOut: eintrag.data.gekauft
         },
         {
           label: 'löschen',
           onClick: this.onDeleteClicked
         },
         {
-          label: eintrag.gekauft ? 'zurücknehmen' : 'holen',
-          onClick: eintrag.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked,
-          grayedOut: eintrag.gekauft ? false : !this.kannKaufen(eintrag)
+          label: eintrag.data.gekauft ? 'zurücknehmen' : 'holen',
+          onClick: eintrag.data.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked,
+          grayedOut: eintrag.data.gekauft ? false : !this.kannKaufen(eintrag)
         }
       ]
     }
@@ -159,13 +167,13 @@ export class WunschlisteComponent implements OnInit{
     }
   }
 
-  onEditClicked = (eintrag: WunschlistenEintrag) => {
+  onEditClicked = (eintrag: ListElementData) => {
     const editDialogViewModel: EditDialogViewModel = {
       data: {
         betrag: eintrag.betrag,
         title: eintrag.title,
         zusatz: eintrag.zusatz,
-        id: eintrag.id,
+        id: eintrag.id!,
         erstelltAm: eintrag.erstelltAm,
         date: eintrag.date
       },
@@ -180,7 +188,7 @@ export class WunschlisteComponent implements OnInit{
       title: 'Eintrag Löschen?',
       message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.dataService.deleteWunschlistenEintrag(eintrag.id!);
+        this.dataChangeService.deleteWunschlistenEintrag(eintrag.id!);
       },
       onCancelClicked: () => {}
     }
@@ -189,79 +197,100 @@ export class WunschlisteComponent implements OnInit{
   }
 
   onEditSaveClicked = (eintrag: EditDialogData) => {
-    const newWunschlistenEintrag: WunschlistenEintrag = {
-      betrag: eintrag.betrag,
-      title: eintrag.title ?? 'ohne Titel',
-      zusatz: eintrag.zusatz,
-      id: eintrag.id,
-      gekauft: false,
-      date: eintrag.date!,
-      erstelltAm: eintrag.erstelltAm!
+    const newWunschlistenEintrag: IWunschlistenEintrag = {
+      id: eintrag.id!,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'ohne Titel',
+        zusatz: eintrag.zusatz,
+        gekauft: false,
+        date: eintrag.date!,
+        erstelltAm: eintrag.erstelltAm!
+      }
     }
 
-    this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+    this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
   }
 
   onEditCancelClicked = () => {}
 
   onHolenClicked = (eintrag: ListElementData) => {
-    const newWunschlistenEintrag: WunschlistenEintrag = {
-      betrag: eintrag.betrag,
-      title: eintrag.title,
-      gekauft: true,
-      id: eintrag.id,
-      date: new Date(),
-      zusatz: eintrag.zusatz,
-      erstelltAm: eintrag.erstelltAm!
+    const newWunschlistenEintrag: IWunschlistenEintrag = {
+      id: eintrag.id!,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'ohne Titel',
+        zusatz: eintrag.zusatz,
+        gekauft: true,
+        date: eintrag.date!,
+        erstelltAm: eintrag.erstelltAm!,
+        gekauftAm: new Date()
+      }
     }
-    console.log(newWunschlistenEintrag)
     if(this.kannKaufen(newWunschlistenEintrag)){
-      this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+      this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
+      this.dataChangeService.addSparschweinEintrag({
+        date: new Date(),
+        betrag: (eintrag.betrag ?? 0) * -1,
+        title: eintrag.title,
+        zusatz: eintrag.zusatz,
+        vonWunschliste: true,
+        wunschlistenId: eintrag.id
+      })
     }
   }
 
   onZuruecknehmenClicked = (eintrag: ListElementData) => {
-    const newWunschlistenEintrag: WunschlistenEintrag = {
-      betrag: eintrag.betrag,
-      title: eintrag.title,
-      gekauft: false,
-      gekauftAm: undefined,
-      id: eintrag.id,
-      date: eintrag.date!,
-      zusatz: eintrag.zusatz,
-      erstelltAm: eintrag.erstelltAm!
+    const newWunschlistenEintrag: IWunschlistenEintrag = {
+      id: eintrag.id!,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'ohne Titel',
+        zusatz: eintrag.zusatz,
+        gekauft: false,
+        date: eintrag.date!,
+        erstelltAm: eintrag.erstelltAm!
+      }
     }
-    this.dataService.editWunschlistenEintrag(newWunschlistenEintrag);
+    this.dataChangeService.editWunschlistenEintrag(newWunschlistenEintrag);
+    this.dataChangeService.deleteSparschweinEintragByWunschId(eintrag.id!);
   }
 
   onGekaufteEintraegeAusblendenCheckboxClicked() {
-    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
-    this.dataService.save();
+    /*
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
+    }*/
   }
 
   onGekaufteEintraegeAusblendenLabelClicked() {
-    this.wirdGekauftesAusgeblendet.set(!this.wirdGekauftesAusgeblendet());
-    this.dataService.settings.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
-    this.dataService.save();
+    /*
+    if(this.saveService.getSettings()) {
+      let x = this.saveService.getSettings();
+      x.wunschllistenFilter.gekaufteEintraegeAusblenden = this.wirdGekauftesAusgeblendet();
+      this.saveService.setSettings(x);
+    }*/
   }
 
-  private kannKaufen(eintrag: WunschlistenEintrag) {
-    return (eintrag.betrag <= this.dataService.getErspartes())
+  private kannKaufen(eintrag: IWunschlistenEintrag) {
+    return (eintrag.data.betrag <= this.dataProvider.getErspartes())
   }
 
-  private sortByDateDesc(allElements: WunschlistenEintrag[]) {
-    return allElements.sort((a, b) => b.erstelltAm.getTime() - a.erstelltAm.getTime());
+  private sortByDateDesc(allElements: IWunschlistenEintrag[]) {
+    return allElements.sort((a, b) => b.data.erstelltAm.getTime() - a.data.erstelltAm.getTime());
   }
 
-  private sortByDateAsc(allElements: WunschlistenEintrag[]) {
-    return allElements.sort((a, b) => a.erstelltAm.getTime() - b.erstelltAm.getTime());
+  private sortByDateAsc(allElements: IWunschlistenEintrag[]) {
+    return allElements.sort((a, b) => a.data.erstelltAm.getTime() - b.data.erstelltAm.getTime());
   }
 
-  private sortByBetragDesc(allElements: WunschlistenEintrag[]) {
-    return allElements.sort((a, b) => b.betrag - a.betrag);
+  private sortByBetragDesc(allElements: IWunschlistenEintrag[]) {
+    return allElements.sort((a, b) => b.data.betrag - a.data.betrag);
   }
 
-  private sortByBetragAsc(allElements: WunschlistenEintrag[]) {
-    return allElements.sort((a, b) => a.betrag - b.betrag);
+  private sortByBetragAsc(allElements: IWunschlistenEintrag[]) {
+    return allElements.sort((a, b) => a.data.betrag - b.data.betrag);
   }
 }

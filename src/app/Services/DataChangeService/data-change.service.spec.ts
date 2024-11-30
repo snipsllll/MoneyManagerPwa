@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SparschweinService } from './sparschwein.service';
+import { DataChangeService } from './data-change.service';
 
-describe('SparschweinService', () => {
-  let service: SparschweinService;
+describe('DataChangeService', () => {
+  let service: DataChangeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SparschweinService);
+    service = TestBed.inject(DataChangeService);
   });
 
   it('should be created', () => {

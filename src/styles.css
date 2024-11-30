@@ -41,11 +41,11 @@ all-centered {
 }
 
 .green {
-  color: #009500 !important;
+  color: #009500;
 }
 
 .red {
-  color: red;
+  color: red !important;
 }
 
 html, body { height: 100%; }

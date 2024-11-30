@@ -9,7 +9,6 @@
 }
 
 .eintrag-listelem__betrag {
-  width: 100px;
   min-width: 80px;
   font-size: 16px;
 }
@@ -24,12 +23,15 @@
 }
 
 .a {
+  width: 100%;
+  max-width: 90%;
   font-size: 15px;
   flex-grow: 1;
   overflow: hidden;
 }
 
 .eintrag-listelem__title {
+  line-height: 25px;
 }
 
 .eintrag-listelem__menu-button {
@@ -81,6 +83,8 @@ hr {
   white-space: nowrap;
   overflow: hidden;
   max-width: 100%;
+  line-height: 16px;
+  font-size: 14px;
 }
 
 .apz {
@@ -95,4 +99,8 @@ hr {
 .last {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.gray-text {
+  color: #454545;
 }

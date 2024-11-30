@@ -10,17 +10,19 @@ import {SparschweinComponent} from "./Sites/Sparschwein/sparschwein/sparschwein.
 import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.component";
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einstellungen.component";
+import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'buchungDetails/:buchungsId', component: BuchungDetailsComponent},
-  {path: 'editBuchung/:buchungsId', component: EditBuchungComponent},
+  {path: 'buchungDetails/:buchungsId/:geplanteAusgabenBuchungsId', component: BuchungDetailsComponent},
+  {path: 'editBuchung/:buchungsId/:geplanteAusgabenBuchungsId', component: EditBuchungComponent},
   {path: 'createBuchung', component: CreateBuchungComponent},
   {path: 'budget', component: BudgetComponent},
   {path: 'fixKosten', component: FixKostenComponent},
   {path: 'sparschwein', component: SparschweinComponent},
   {path: 'wunschliste', component: WunschlisteComponent},
   {path: 'spinning-fish', component: SpinningFishComponent},
+  {path: 'auswertungen', component: AuswertungenComponent},
   {path: 'einstellungen', component: EinstellungenComponent}
 ];
 

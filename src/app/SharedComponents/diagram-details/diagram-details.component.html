@@ -1,0 +1,98 @@
+<div class="diagram-details floating-box">
+  <div class="diagram-details__top">
+    <input class="diagram-details__titel" [(ngModel)]="viewModel.data.diagramTitle" placeholder="Diagram Titel">
+    <img src="assets/delete.png" class="diagram-details__delete-button" (click)="onDeleteClicked()">
+  </div>
+  <hr class="diagram-details__hr">
+  <div class="diagram-details__bottom">
+    <div class="diagram-details__bottom-eintrag">
+      <div class="diagram-details__bottom-eintrag-label">
+        Diagram
+      </div>
+      <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.selectedDiagramType" (ngModelChange)="onDiagramTypeChanged()">
+        <option *ngFor="let option of diagrammAuswahlList" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+    <div *ngIf="viewModel.data.selectedDiagramType === 'benutzerdefiniert'">
+      <div class="diagram-details__bottom-eintrag">
+        <div class="diagram-details__bottom-eintrag-label">
+          X-Achse:
+        </div>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.xAchse">
+          <option *ngFor="let option of xAchseAuswahlList" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="diagram-details__bottom-eintrag">
+        <div class="diagram-details__bottom-eintrag-label">
+          {{viewModel.data.yAchse !== 'Kategorien' ? 'Y-Achse:' : 'Zewitraum:'}}
+        </div>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse" *ngIf="viewModel.data.xAchse === 'Alle tage im Monat'">
+          <option *ngFor="let option of yAchseAuswahlListTag" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse" *ngIf="viewModel.data.xAchse === 'alle Monate im Jahr'">
+          <option *ngFor="let option of yAchseAuswahlListMonat" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.yAchse" *ngIf="viewModel.data.xAchse === 'Kategorien'">
+          <option *ngFor="let option of yAchseAuswahlListeKategorien" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="diagram-details__bottom-eintrag">
+        <div class="diagram-details__bottom-eintrag-label">
+          Filter:
+        </div>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.filterOption!.filter">
+          <option *ngFor="let option of filterTypeAuswahlList" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.data.filterOption!.filter !== '--kein Filter--'">
+        <div class="diagram-details__bottom-eintrag-label">
+          Wert:
+        </div>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.filterOption!.value" *ngIf="viewModel.data.filterOption!.filter === filterTypeAuswahlList[0]">
+          <option *ngFor="let option of filterOptionKategorien" [value]="option" >
+            {{ option }}
+          </option>
+        </select>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.filterOption!.value" *ngIf="viewModel.data.filterOption!.filter === filterTypeAuswahlList[1]">
+          <option *ngFor="let option of filterOptionWochentage" [value]="option" >
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="diagram-details__bottom-eintrag" *ngIf="true">
+        <div class="diagram-details__bottom-eintrag-label">
+          Rote Linie:
+        </div>
+        <select class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.lineOption!.lineType">
+          <option *ngFor="let option of lineTypeAuswahlList" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="diagram-details__bottom-eintrag-eingerueckt" *ngIf="viewModel.data.lineOption!.lineType === 'benutzerdefiniert'">
+        <div class="diagram-details__bottom-eintrag-label">
+          Wert:
+        </div>
+        <input type="number" class="diagram-details__bottom-eintrag-data-small" [(ngModel)]="viewModel.data.lineOption!.lineValue" onfocus="this.select()">
+      </div>
+      <div class="diagram-details__bottom-eintrag">
+        <div class="diagram-details__bottom-eintrag-label">
+          Farbe:
+        </div>
+        <input type="color" class="diagram-details__bottom-eintrag-data" [(ngModel)]="viewModel.data.balkenColor">
+      </div>
+    </div>
+  </div>
+</div>

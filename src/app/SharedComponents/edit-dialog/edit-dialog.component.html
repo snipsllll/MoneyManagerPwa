@@ -1,14 +1,9 @@
 <div class="edit-dialog__wrapper">
   <div class="edit-dialog floating-box">
     <div class="edit-dialog__content">
-      <input type="text" class="edit-dialog__title" maxlength="12" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()">
-      @if (viewModel.data.id !== undefined) {
-        <div class="edit-dialog__id">
-          (ID: {{viewModel.data.id}})
-        </div>
-      }
+      <input type="text" class="edit-dialog__title" maxlength="25" autofocus placeholder="Titel" [(ngModel)]="viewModel.data.title" (ngModelChange)="onValueChanged()" onfocus="this.select()">
       <hr class="edit-dialog__hr-title">
-      <div class="edit-dialog__betrag-wrapper">
+      <div class="edit-dialog__betrag-wrapper" *ngIf="!viewModel.isBetragAusgeblendet">
         <div class="edit-dialog__betrag-warnung" *ngIf="showBetragWarnung()">
           der Betrag darf nicht 0 betragen!
         </div>
@@ -17,7 +12,7 @@
             Betrag:
           </div>
           <div class="edit-dialog__betrag-input-wrapper">
-            <input type="number" [(ngModel)]="viewModel.data.betrag" class="edit-dialog__data edit-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()">
+            <input type="number" [(ngModel)]="viewModel.data.betrag" class="edit-dialog__data edit-dialog__betrag-input" placeholder="0.00" (ngModelChange)="onValueChanged()" onfocus="this.select()">
             <div class="edit-dialog__betrag-euro-zeichen">
               €
             </div>
@@ -32,7 +27,7 @@
           vom heutigen Budget abziehen
         </div>
       </div>
-      <div class="edit-dialog__beschreibung-wrapper">
+      <div class="edit-dialog__beschreibung-wrapper" *ngIf="!viewModel.isZusatzAusgeblendet">
         <div class="edit-dialog__label edit-dialog__beschreibung-label">
           Zusatz:
         </div>

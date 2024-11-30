@@ -9,8 +9,46 @@
       Daten exportieren
     </div>
   </div>
-  <div class="flex-spacer">
-
+  <div class="einstellungen__middle">
+    <div class="einstellungen__section">
+      <div class="einstellungen__checkbox-wrapper">
+        <input type="checkbox" [(ngModel)]="isEnableToHighBuchungenChecked" (click)="onZuVielErlaubtClicked()" class="create-eintrag__data-apz">
+        <div class="einstellungen__label" (click)="onZuVielErlaubtClicked()">
+          Zu hohe Buchungen erlauben
+        </div>
+      </div>
+    </div>
+    <div class="einstellungen__section">
+      <div class="einstellungen__multi-select-wrapper">
+        <div class="einstellungen__label-multi-select">
+          - Restgeld-Anzeige
+        </div>
+        <select class="einstellungen__multi-select" [(ngModel)]="topBarAnzeigeOption" (change)="onAnzeigeObenRechtsChanged()">
+          <option class="einstellungen__multi-select--option">Restgeld für Monat</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Woche</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Tag (soll)</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Tag (ist)</option>
+          <option class="einstellungen__multi-select--option">Ausblenden</option>
+        </select>
+      </div>
+      <div class="einstellungen__multi-select-wrapper">
+        <div class="einstellungen__label-multi-select">
+          - Tages-Anzeige
+        </div>
+        <select class="einstellungen__multi-select" [(ngModel)]="tagesAnzeigeOption" (change)="onTagesAnzeigeChanged()">
+          <option class="einstellungen__multi-select--option">Ausgaben</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Tag (soll)</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Tag (ist)</option>
+          <option class="einstellungen__multi-select--option">Restgeld für Monat</option>
+          <option class="einstellungen__multi-select--option">Ausblenden</option>
+        </select>
+      </div>
+    </div>
+    <div class="einstellungen__section">
+      <div (click)="onKatVerwaltenClicked()" class="button">
+        Buchungskategorien verwalten
+      </div>
+    </div>
   </div>
 
   <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">

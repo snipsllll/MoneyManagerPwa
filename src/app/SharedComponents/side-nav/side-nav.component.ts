@@ -37,6 +37,9 @@ export class SideNavComponent implements OnInit{
         case 'einstellungen':
           this.sideNavService.selectedElement = SideNavElements.einstellungen;
           break;
+        case 'auswertungen':
+          this.sideNavService.selectedElement = SideNavElements.auswertungen;
+          break;
       }
     }
   }
@@ -69,6 +72,12 @@ export class SideNavComponent implements OnInit{
     this.router.navigate(['wunschliste']);
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.wunschliste;
+  }
+
+  onAuswertungenClicked() {
+    this.router.navigate(['auswertungen']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.auswertungen;
   }
 
   onEinstellungenClicked() {

@@ -1,6 +1,10 @@
-<div class="list-element floating-box" [class.grayed-out-element]="viewModel.settings.isGrayedOut" [class.highlighted]="viewModel.settings.highlighted === true" [class.darker]="viewModel.settings.isDarker">
+<div class="list-element floating-box"
+     [class.grayed-out-element]="viewModel.settings.isGrayedOut || viewModel.data.isExcluded"
+     [class.highlighted]="viewModel.settings.highlighted === true"
+     [class.darker]="viewModel.settings.isDarker"
+     [style.maxHeight]="isExpanded ? '800px' : '70px'">
   <div class="list-element__main">
-    <div class="list-element__main-left">
+    <div class="list-element__main-left" (click)="onEintragClicked()" *ngIf="viewModel.data.betrag">
       @if(viewModel.settings.isDarker) {
         <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.isGrayedOut) {
@@ -16,11 +20,8 @@
       }
     </div>
     <div class="list-element__main-center">
-      <div class="list-element__main-center-top">
-        <b>{{ viewModel.data.title }}</b>
-      </div>
-      <div *ngIf="viewModel.data.zusatz" class="list-element__main-center-bottom">
-        {{ viewModel.data.zusatz }}
+      <div class="list-element__main-center-top" (click)="onEintragClicked()">
+        <b> {{ viewModel.data.title + (viewModel.data.isStandardFixkostenEintrag ? '  (Standard)' : '')}} </b>
       </div>
     </div>
     <div class="list-element__main-right">
@@ -30,10 +31,14 @@
     </div>
   </div>
 
+  <div *ngIf="isExpanded" class="list-element__detailss">
+    {{ viewModel.data.zusatz ?? '-- keine Beschreibung --' }}
+  </div>
+
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
     <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
-    <div *ngFor="let menuItem of viewModel.data.menuItems; let last = last">
-      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut" (click)="onMenuEintragClicked(menuItem)">
+    <div *ngFor="let menuItem of menuItems; let last = last">
+      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut ?? false" (click)="onMenuEintragClicked(menuItem)">
         {{ menuItem.label }}
       </div>
       <hr *ngIf="!last" class="list-element__menu-dividing-line">

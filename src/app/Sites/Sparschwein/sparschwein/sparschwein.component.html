@@ -6,7 +6,7 @@
       <b class="green" [class.red]="sparschweinData().erspartes < 0">{{ ut.toFixedDown(sparschweinData().erspartes!, 2) }}€</b>
     </div>
   </div>
-  <hr class="hr">
+  <hr class="hr-sparschwein">
   <div class="sparschwein__bottom">
     <div class="sparschwein__list" *ngIf="sparschweinData().eintraege.length > 0; else keineEintraege">
       <app-list-element *ngFor="let eintrag of sparschweinData().eintraege" [viewModel]="getEintragViewModel(eintrag)">

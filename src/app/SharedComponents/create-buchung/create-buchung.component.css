@@ -6,11 +6,11 @@
 }
 
 .red {
-  color: red !important;
+  color: red ;
 }
 
 .green {
-  color: green;
+  color: green !important;
 }
 
 .create-eintrag__back-button-wrapper {
@@ -172,6 +172,16 @@
   padding: 0 5px 0 0;
 }
 
+.create-eintrag__data-kategorie {
+  height: 23px;
+  background-color: #e5efff;
+  border: none;
+  border-bottom: black solid 1px;
+  width: 135px;
+  text-align: end;
+  padding: 0 5px 0 0;
+}
+
 .create-eintrag__beschreibung-wrapper {
   flex-grow: 1;
   display: flex;
@@ -264,7 +274,7 @@ hr {
 }
 
 .create-eintrag__label-apz {
-    font-size: 18px;
+  font-size: 18px;
   color: #323232;
   margin-left: 7px;
 }
@@ -281,4 +291,10 @@ hr {
 
 .betrag-input {
   width: 115px;
+}
+
+.ce__budget-eintrag-planned {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }

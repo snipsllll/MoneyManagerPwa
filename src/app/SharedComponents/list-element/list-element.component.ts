@@ -13,15 +13,19 @@ import {UT} from "../../Models/Classes/UT";
 export class ListElementComponent implements OnInit{
 
   @Input() viewModel!: ListElementViewModel;
+  isExpanded: boolean = false;
   @Output() onElementClicked = new EventEmitter();
+  @Output() onEditClicked = new EventEmitter();
   isMenuVisible = signal<boolean>(false);
+  menuItems?: MenuItem[];
   ut: UT = new UT();
 
   constructor() {
+
   }
 
   ngOnInit() {
-
+    this.menuItems = this.viewModel.data.menuItems;
   }
 
   onMenuClicked() {
@@ -31,14 +35,16 @@ export class ListElementComponent implements OnInit{
   onMenuEintragClicked(menuItem: MenuItem) {
     if(!menuItem.grayedOut){
       this.isMenuVisible.set(false);
+      if(menuItem.isEditButton) {
+        this.onEditClicked.emit(this.viewModel);
+      }
+      menuItem.onClick(this.viewModel.data);
     }
-    console.log(this.viewModel.data)
-    menuItem.onClick(this.viewModel.data);
   }
 
   onEintragClicked() {
     if(this.viewModel.settings.doDetailsExist) {
-      this.onElementClicked.emit();
+      this.isExpanded = !this.isExpanded;
     }
   }
 

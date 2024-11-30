@@ -4,6 +4,8 @@ import {DialogService} from "./Services/DialogService/dialog.service";
 import {environment} from "../environments/environment";
 import {SwUpdate} from "@angular/service-worker";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DataService} from "./Services/DataService/data.service";
+import {BarChartViewModel} from "./Models/NewInterfaces";
 
 @Component({
   selector: 'app-root',
@@ -13,17 +15,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class AppComponent implements OnInit{
   title = 'Moma';
   inProduction = environment.production
-  testArray = [
-    { titel: 'Tasche', betrag: 12 },
-    { titel: 'Bagger', betrag: 50 },
-    { titel: 'Ball', betrag: 10 }
-  ];
+  constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService, private dataService: DataService) {
 
-  test(event: Event) {
-    console.log(event)
-  }
-
-  constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService) {
   }
 
   ngOnInit() {

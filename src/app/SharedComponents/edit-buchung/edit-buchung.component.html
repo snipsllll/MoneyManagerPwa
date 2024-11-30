@@ -1,49 +1,36 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="dayBudget().weekIstBudget && dayBudget().monthIstBudget && dayBudget().dayIstBudget; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="!isGeplanteBuchungChecked; else plannedBuchung">
       <div class="ce__budget-eintrag">
-        monat: <b class="green" [class.red]="dayBudget().monthIstBudget! + buchung()?.betrag! < 0">{{ ut.toFixedDown(dayBudget().monthIstBudget! + buchung()?.betrag!, 2) ?? '???' }}€</b>
+        monat: <b class="red" [class.green]="availableMoneyCapped().availableForMonth! > 0">{{ getAvailableMoneyMonth() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        woche: <b class="green" [class.red]="dayBudget().weekIstBudget! + dayBudget().leftOvers! + buchung()?.betrag! < 0">{{ ut.toFixedDown(dayBudget().weekIstBudget! + dayBudget().leftOvers! + buchung()?.betrag!, 2) ?? '???' }}€</b>
+        woche: <b class="red" [class.green]="availableMoneyCapped().availableForWeek! > 0">{{ getAvailableMoneyWeek() }}€</b>
       </div>
       <div class="ce__budget-eintrag">
-        tag: <b class="green" [class.red]="dayBudget().dayIstBudget! + dayBudget().leftOvers! + buchung()?.betrag! < 0">{{ ut.toFixedDown(dayBudget().dayIstBudget! + dayBudget().leftOvers! + buchung()?.betrag!, 2) ?? '???' }}€</b>
+        tag: <b class="red" [class.green]="availableMoneyCapped().availableForDayIst! > 0">{{ getAvailableMoneyDay() }}€</b>
       </div>
     </div>
-    <ng-template #noDayBudgetTop>
-      <div class="create-eintrag__budget">
-        <div class="ce__budget-eintrag">
-          monat: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          woche: <b>???</b>
-        </div>
-        <div class="ce__budget-eintrag">
-          tag: <b>???</b>
-        </div>
-      </div>
-    </ng-template>
-    <div class="create-eintrag__top-spacer" (click)="onBackClicked()">
+    <div class="create-eintrag__top-spacer">
 
     </div>
   </div>
   <div class="create-eintrag__content" *ngIf="buchung() !== undefined">
     <div class="create-eintrag__top-content">
-      <input type="text" [(ngModel)]="buchung()!.title" maxlength="12" class="create-eintrag__title" autofocus placeholder="Titel"
-             (ngModelChange)="onTitleChanged()">
+      <input type="text" [(ngModel)]="buchung()!.data.title" maxlength="25" class="create-eintrag__title" autofocus placeholder="Titel"
+             (ngModelChange)="onTitleChanged()" onfocus="this.select()">
       <hr class="hr-title">
       <div class="create-eintrag__betrag">
         <div class="create-eintrag__betrag-warnung" *ngIf="showBetragWarning">
-          der Betrag darf nicht 0 betragen!
+          {{ betragWarnung }}
         </div>
         <div class="create-eintrag__betrag-wrapper">
           <div class="create-eintrag__label">
             Betrag:
           </div>
           <div class="betrag-input-wrapper">
-            <input type="number" [(ngModel)]="buchung()!.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()">
+            <input type="number" [(ngModel)]="buchung()!.data.betrag" class="create-eintrag__data betrag-input" placeholder="0.00" (ngModelChange)="onBetragChanged()" onfocus="this.select()">
             <div class="betrag-euro-zeichen">
               €
             </div>
@@ -61,20 +48,42 @@
         <div class="create-eintrag__label">
           Uhrzeit:
         </div>
-        <input type="time" [(ngModel)]="buchung()!.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
+        <input type="time" [(ngModel)]="buchung()!.data.time" (ngModelChange)="onTimeChange($event)" class="create-eintrag__data">
       </div>
-      <div class="create-eintrag__apz-wrapper">
-        <input type="checkbox" [(ngModel)]="buchung()!.apz" class="create-eintrag__data-apz" (ngModelChange)="onValueChange()">
-        <div class="create-eintrag__label-apz" (click)="onApzClicked()">
-          Außer planmäßige Zahlung
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          geplante Ausgabe:
         </div>
+        <input type="checkbox" [(ngModel)]="isGeplanteBuchungChecked"  (ngModelChange)="onGeplanteBuchungChange($event)">
+      </div>
+      <div class="create-eintrag__datum-wrapper">
+        <div class="create-eintrag__label-multi-select">
+          Kategorie:
+        </div>
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onBuchungsKategorieChanged()" *ngIf="!isGeplanteBuchungChecked">
+          <option
+            *ngFor="let kategorie of kategorien()"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.name }}
+          </option>
+          <option [value]="-1">--bearbeiten--</option>
+        </select>
+        <select class="betrag-input-wrapper create-eintrag__data-kategorie" [(ngModel)]="buchung()!.data.buchungsKategorie" (change)="onplannedBuchungsKategorieChanged()" *ngIf="isGeplanteBuchungChecked">
+          <option
+            *ngFor="let kategorie of geplanteAusgabenKategorien"
+            class=""
+            [value]="kategorie.id">
+            {{ kategorie.title }}
+          </option>
+        </select>
       </div>
       <hr class="hr-details">
       <div class="create-eintrag__beschreibung-wrapper">
         <div class="create-eintrag__label create-eintrag__beschreibung-label">
           Beschreibung:
         </div>
-        <textarea [(ngModel)]="buchung()!.beschreibung"
+        <textarea [(ngModel)]="buchung()!.data.beschreibung"
                   class="create-eintrag__data create-eintrag__beschreibung-data" (ngModelChange)="onBeschreibungChanged()">
 
         </textarea>
@@ -88,7 +97,7 @@
       <div class="create-eintrag__button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="create-eintrag__button" [class.disabled]="saveButtonDisabled()" (click)="onSaveClicked()">
+      <div class="create-eintrag__button" [class.disabled]="isSaveButtonDisabled()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>
@@ -98,3 +107,49 @@
     Error: No Eintrag provided!
   </div>
 </div>
+
+<ng-template #plannedBuchung>
+  <div *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
+    <div class="create-eintrag__budget" *ngIf="buchung()!.data.buchungsKategorie; else keineKategorieAusgewaehlt">
+      <div class="ce__budget-eintrag-planned">
+        <div>
+          Restgeld für
+          <b>
+            {{ availableMonayForGeplanteAusgabenKategorien().title }}
+          </b>
+          :
+        </div>
+        <div>
+          <b class="red" [class.green]="availableMonayForGeplanteAusgabenKategorien().restgeldBetrag > 0 " >
+            {{ ut.toFixedDown(availableMonayForGeplanteAusgabenKategorien().restgeldBetrag, 2) }}€
+          </b>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #keineKategorieAusgewaehlt>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      keine Kategorie ausgewählt!
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #noDayBudgetTop>
+  <div class="create-eintrag__budget">
+    <div class="ce__budget-eintrag">
+      monat: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      woche: <b>???</b>
+    </div>
+    <div class="ce__budget-eintrag">
+      tag: <b>???</b>
+    </div>
+  </div>
+</ng-template>

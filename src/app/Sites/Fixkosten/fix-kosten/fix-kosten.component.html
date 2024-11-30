@@ -1,5 +1,5 @@
 <app-top-bar></app-top-bar>
-<div  class="fixkosten__list" *ngIf="elements().length > 0; else keineEintraege">
+<div  class="fixkosten__list" *ngIf="elements() && elements().length > 0; else keineEintraege">
   <div *ngFor="let fixKostenEintrag of elements()">
     <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
   </div>

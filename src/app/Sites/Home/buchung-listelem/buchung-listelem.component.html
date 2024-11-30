@@ -1,26 +1,26 @@
-<div class="eintrag-listelem" [class.apz]="buchung.apz || buchung.spe" [class.first]="first" [class.last]="last">
-  <div class="eintrag-listelem__menu-button__left" (click)="onBuchungClicked(buchung.id!)">
-    <div class="eintrag-listelem__betrag all-centered">
-      <b>-{{ ut.toFixedDown(buchung.betrag!, 2) }}€</b>
+<div class="eintrag-listelem" [class.first]="first" [class.last]="last">
+  <div class="eintrag-listelem__menu-button__left" (click)="onBuchungClicked(buchung)">
+    <div class="eintrag-listelem__betrag all-centered" [class.gray-text]="buchung.data.buchungsKategorie == -1">
+      <b>-{{ ut.toFixedDown(buchung.data.betrag!, 2) }}€</b>
     </div>
     <div class="a">
       <div class="eintrag-listelem__title all-centered">
-        <b>@if(buchung.apz){{{'[APZ]  '}}} {{ buchung.title !== '' ? buchung.title : 'Unbenannt' }}</b>
+        <b> {{ buchung.data.title !== '' ? buchung.data.title : 'Unbenannt' }} {{buchung.data.geplanteBuchung ? ' (geplant)' : ''}} </b>
       </div>
       <div class="eintrag-listelem__beschreibung">
-        {{ buchung.beschreibung }}
+        {{ buchung.data.beschreibung }}
       </div>
     </div>
   </div>
 
-  <div class="eintrag-listelem__menu-button all-centered" (click)="onMenuButtonClicked()" *ngIf="!buchung.spe">
+  <div class="eintrag-listelem__menu-button all-centered" (click)="onMenuButtonClicked()">
     ...
   </div>
 
   @if (showMenu()) {
     <div class="eintrag-listelem__menu">
       <div class="eintrag-listelem__edit-button all-centered eintrag-listelem__menu-item"
-           (click)="onEditButtonClicked(buchung.id!)">
+           (click)="onEditButtonClicked(buchung)">
         bearbeiten
       </div>
       <hr>

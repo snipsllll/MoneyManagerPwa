@@ -1,0 +1,47 @@
+<div class="auswertungen">
+  <app-top-bar></app-top-bar>
+  <div class="budget__month-select">
+    <div class="budget__month-left" (click)="onMonthPrevClicked()">
+      <
+    </div>
+    <div class="budget__month-center">
+      {{ selectedMonth() }} {{ ' ' + selectedYear() }}
+    </div>
+    <div class="budget__month-right" (click)="onMonthNextClicked()">
+      >
+    </div>
+  </div>
+  <div class="auswertungen__layout-selection--wrapper">
+    <div class="einstellungen__multi-select-wrapper">
+      <div class="einstellungen__label-multi-select">
+
+      </div>
+      <select class="einstellungen__multi-select" [(ngModel)]="selectedLayoutString" (change)="updateLayout()">
+        <option class="einstellungen__multi-select--option" *ngFor="let option of layoutOptions()"> {{ option.data.layoutTitle}} </option>
+      </select>
+    </div>
+    <div class="button auswertungen__edit-button">
+      <img src="assets/edit.png" class="auswertungen__edit-button-icon" (click)="onEditLayoutsButtonClicked()">
+    </div>
+  </div>
+
+  <div class="charts" *ngIf="doesMonthExist(); else keineDaten">
+    <div *ngFor="let chart of selectedLayoutCharts">
+      <app-mm-bar-chart *ngIf="chart" [chart]="chart"></app-mm-bar-chart>
+    </div>
+  </div>
+</div>
+
+<!--
+<div *ngFor="let CVM of ausgabenForMonatProTagKategorisiertCVM">
+  @if(CVM.labels.length > 0) {
+    <app-bar-chart [chartId]="CVM.datasets[0].label" [viewModel]="CVM"></app-bar-chart>
+  }
+</div>
+-->
+
+<ng-template #keineDaten>
+  <div class="keine-eintraege">
+    keine Daten vorhanden
+  </div>
+</ng-template>

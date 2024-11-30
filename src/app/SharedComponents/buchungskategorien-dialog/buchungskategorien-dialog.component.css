@@ -1,0 +1,110 @@
+.monat-fixkosten-dialog-wrapper {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0.57);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.monat-fixkosten-dialog {
+  position: relative;
+  top: 120px;
+  left: 20px;
+  padding: 15px 10px 10px 10px;
+  height: calc(100vh - 250px);
+  width: calc(100vw - 60px);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #67a4cd !important;
+}
+
+.monat-fixkosten-dialog__add-button {
+  margin-left: 10px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  width: 70px;
+  background-color: #29508a;
+  box-shadow: #474747 1px 1px 2px;
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.monat-fixkosten-dialog__add-button:hover {
+  font-size: 40px;
+}
+
+.monat-fixkosten-dialog__list-wrapper {
+  width: 100%;
+  height: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.monat-fixkosten-dialog__list {
+  width: 100%;
+}
+
+.monat-fixkosten-dialog__bottom-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.monat-fixkosten-dialog__summe-wrapper {
+  flex-grow: 1;
+  height: 70px;
+  width: 10px;
+  border-radius: 10px;
+  font-size: 23px;
+  display: flex;
+  align-items: center;
+}
+
+.monat-fixkosten-dialog__summe-label {
+  margin: 0 10px;
+}
+
+.monat-fixkosten-dialog__summe-data {
+
+}
+
+.monat-fixkosten-dialog__spacer {
+  width: 100%;
+  height: 10px;
+  flex-grow: 1
+}
+
+.monat-fixkosten-dialog__keine-eintraege {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
+}
+
+.monat-fixkosten-dialog__buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.monat-fixkosten-dialog__button {
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 40%;
+  border-radius: 10px;
+  background-color: #cccccc;
+}

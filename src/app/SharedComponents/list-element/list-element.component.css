@@ -1,6 +1,7 @@
 .list-element {
   position: relative; /* Wichtig, damit das Menü relativ zum Container positioniert wird */
   box-shadow: none !important;
+  transition: max-height 0.3s ease-in-out;
 }
 
 .list-element__main {
@@ -11,7 +12,9 @@
 
 .list-element__main-left {
   font-size: 18px;
-  width: 80px;
+  width: 85px;
+  padding-right: 5px;
+  display: flex;
 }
 
 .list-element__main-center {
@@ -19,7 +22,7 @@
 }
 
 .list-element__main-center-top {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .list-element__main-center-bottom {
@@ -30,29 +33,21 @@
   max-width: 100%;
 }
 
-.list-element__main-right {
-
-}
-
 .list-element__menu-button {
   padding: 10px;
   margin-bottom: 7px;
   font-weight: bold;
 }
 
-.list-element__details {
-
-}
-
 .list-element__menu-wrapper {
   position: absolute;
-  z-index: 20;
+  z-index: 50;
   background-color: white;
   border: 1px solid black;
   border-radius: 10px;
   box-shadow: black 1px 1px 2px;
   right: 0;
-  top: 100%;
+  top: 40px;
   margin-top: 5px;
 }
 
@@ -120,17 +115,23 @@
 }
 
 .darker {
-  background-color: #777d95;
+  background-color: #b1b4bc;
 }
 
 .grayed-out {
   background-color: #e1e1e1;
   color: #888888;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 10px;
 }
 
 .grayed-out-element {
   background-color: #b5b5b5;
   color: #4c4c4c;
+}
+
+.list-element__detailss {
+  padding: 10px 0 0 0;
+  color: #333;
+  font-size: 16px;
+  word-break: break-word;
 }

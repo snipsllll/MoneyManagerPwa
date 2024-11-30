@@ -1,11 +1,13 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {NavigationService} from "../../Services/NavigationService/navigation.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "../../Services/DataService/data.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
-import {Buchung, DayIstBudgets} from "../../Models/Interfaces";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {UT} from "../../Models/Classes/UT";
+import {IBuchung, IGeplanteAusgabenKategorie} from "../../Models/NewInterfaces";
+import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-edit-buchung',
@@ -13,71 +15,234 @@ import {UT} from "../../Models/Classes/UT";
   styleUrl: './edit-buchung.component.css'
 })
 export class EditBuchungComponent implements OnInit {
-  buchung = signal<Buchung | undefined>(undefined);
-  oldBuchung?: Buchung;
+  oldBuchung?: IBuchung;
   date?: string;
-  dayBudget = signal<DayIstBudgets>({dayIstBudget: 0, weekIstBudget: 0, monthIstBudget: 0});
   showBetragWarning = false;
-  saveButtonDisabled = signal<boolean>(true);
+  betragWarnung?: string;
+  kategorien = computed<{ id: number, name: string }[]>(() => {
+    this.dataService.updated();
+    return this.dataProvider.getBuchungsKategorienMitEmpty();
+  }) ;
+  isGeplanteBuchungChecked!: boolean;
+
+  buchung = signal<IBuchung | undefined>(undefined);
+  dateUpdated = signal<number>(0);
+  isSaveButtonDisabled = signal<boolean>(true);
+  geplanteAusgabenKategorien!: IGeplanteAusgabenKategorie[];
+
+  availableMoneyCapped = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataProvider.getAvailableMoneyCapped(this.buchung()!.data.date)
+  })
+
+  availableMoney = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    return this.dataProvider.getAvailableMoney(this.buchung()!.data.date)
+  })
+
+  availableMonayForGeplanteAusgabenKategorien = computed(() => {
+    this.dataService.updated();
+    this.dateUpdated();
+    let geplanteAusgabenRestgelder = this.dataProvider.getAvailableMoneyForGeplanteAusgabenKategorienForMonth(this.buchung()!.data.date);
+    return geplanteAusgabenRestgelder[geplanteAusgabenRestgelder.findIndex(eintrag => eintrag.id == this.buchung()!.data.buchungsKategorie)]
+  })
+
   ut: UT = new UT();
 
-  constructor(private navigationService: NavigationService, private router: Router, private dataService: DataService, private route: ActivatedRoute, public dialogService: DialogService) {
-
+  constructor(
+    private dataProvider: DataProviderService,
+    private dataChangeService: DataChangeService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    public dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const buchungsId = +params.get('buchungsId')!;
-      this.buchung?.set(this.dataService.getBuchungById(buchungsId));
-      this.oldBuchung = {
-        date: new Date(this.buchung()!.date),
-        beschreibung: this.buchung()!.beschreibung,
-        betrag: this.buchung()!.betrag,
-        title: this.buchung()!.title,
-        time: this.buchung()!.time,
-        id: this.buchung()!.id,
-        apz: this.buchung()!.apz
-      };
-      this.date = this.buchung()?.date.toISOString().slice(0, 10);
+      const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
+
+      this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
+
+      this.buchung.set({
+        id: this.oldBuchung!.id,
+        data: {
+          date: new Date(this.oldBuchung!.data.date),
+          beschreibung: this.oldBuchung!.data.beschreibung,
+          betrag: this.oldBuchung!.data.betrag,
+          title: this.oldBuchung!.data.title,
+          time: this.oldBuchung!.data.time,
+          buchungsKategorie: +(this.oldBuchung!.data.buchungsKategorie)!
+        }
+      });
+      this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung()!.date)!);
+    this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.oldBuchung!.data.date);
+    this.isGeplanteBuchungChecked = this.oldBuchung!.data.geplanteBuchung!;
+    this.updateDate();
+  }
+
+  onBuchungsKategorieChanged(): void {
+    if(this.buchung()!.data.buchungsKategorie == -1) {
+      this.dialogService.showBuchungsKategorienDialog();
+      this.buchung()!.data.buchungsKategorie = 0;
+    }
+    this.updateSaveButton();
+  }
+
+  onGeplanteBuchungChange(newValue: boolean) {
+    this.buchung()!.data.geplanteBuchung = newValue;
+    this.isGeplanteBuchungChecked = newValue;
   }
 
   onSaveClicked() {
-    if (this.buchung()!.betrag !== 0 && this.buchung()!.betrag !== null) {
-      if(!this.saveButtonDisabled()){
-        let showConfDialog: boolean;
-        if(this.buchung()!.apz){
-          showConfDialog = (this.buchung()!.betrag! > this.dataService.getBudgetInfosForMonth(this.buchung()!.date!)?.budget!);
-        } else {
-          showConfDialog = ( this.buchung()?.betrag !== this.oldBuchung?.betrag && this.dayBudget() !== null && this.dayBudget().dayIstBudget !== undefined && this.dayBudget().dayIstBudget! < this.buchung()!.betrag!);
-        }
-
-        if (showConfDialog) {
-          const confirmDialogViewModel: ConfirmDialogViewModel = {
-            title: 'Betrag ist zu hoch',
-            message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
-            onCancelClicked: () => {
-              this.dialogService.isConfirmDialogVisible = false;
-            },
-            onConfirmClicked: () => {
-              this.dataService.editBuchung(this.buchung()!);
-              this.dialogService.isConfirmDialogVisible = false;
-              this.router.navigate(['/']);
+    if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
+      if (!this.isSaveButtonDisabled()) {
+        let isBetragZuHoch = this.isBetragZuHoch();
+        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
+          if(this.buchung()?.data.geplanteBuchung) {
+            if(this.oldBuchung?.data.geplanteBuchung) {
+              this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
+            } else {
+              this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
+              this.dataChangeService.deleteBuchung(this.buchung()!.id)
+            }
+          } else {
+            if(!this.oldBuchung?.data.geplanteBuchung) {
+              this.dataChangeService.editBuchung(this.buchung()!)
+            } else {
+              this.dataChangeService.addBuchung(this.buchung()!.data!)
+              this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
             }
           }
-          this.dialogService.showConfirmDialog(confirmDialogViewModel);
-        } else {
-          this.dataService.editBuchung(this.buchung()!);
           this.router.navigate(['/']);
+        } else {
+          if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
+            const confirmDialogViewModel: ConfirmDialogViewModel = {
+              title: 'Betrag ist zu hoch',
+              message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.data.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.data.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+              onCancelClicked: () => {
+                this.dialogService.isConfirmDialogVisible = false;
+              },
+              onConfirmClicked: () => {
+                if(this.buchung()?.data.geplanteBuchung) {
+                  if(this.oldBuchung?.data.geplanteBuchung) {
+                    this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
+                  } else {
+                    this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
+                    this.dataChangeService.deleteBuchung(this.buchung()!.id)
+                  }
+                } else {
+                  if(!this.oldBuchung?.data.geplanteBuchung) {
+                    this.dataChangeService.editBuchung(this.buchung()!)
+                  } else {
+                    this.dataChangeService.addBuchung(this.buchung()!.data!)
+                    this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
+                  }
+                }
+                this.dialogService.isConfirmDialogVisible = false;
+                this.router.navigate(['/']);
+              }
+            }
+            this.dialogService.showConfirmDialog(confirmDialogViewModel);
+          } else {
+            this.betragWarnung = "der Betrag ist zu hoch!";
+            this.showBetragWarning = true;
+          }
+
         }
       }
     } else {
+      this.betragWarnung = 'der Betrag darf nicht 0 betragen!'
       this.showBetragWarning = true;
     }
   }
 
+  isBetragZuHoch() {
+    if(this.buchung()?.data.buchungsKategorie == -1) {
+      return !this.availableMoneyCapped().noData && this.getRestGeplantAusgabenSumme();
+    } else {
+      return !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0
+    }
+
+  }
+
+  getRestGeplantAusgabenSumme() {
+    let bereitsVerplant = 0;
+    const geplanteBuchungenForMonth = this.dataProvider.getGeplanteAusgabenBuchungForMonth(this.dataProvider.getMonthByDate(this.buchung()?.data.date!))
+
+    geplanteBuchungenForMonth.forEach(buchung => {
+      bereitsVerplant += buchung.data.betrag ?? 0;
+    })
+
+    return this.dataProvider.getGeplanteAusgabenSummeForMonth(this.dataProvider.getMonthByDate(this.buchung()?.data.date!)) - bereitsVerplant;
+  }
+
   onCancelClicked() {
+    this.executeExitAction();
+  }
+
+  onDateChange() {
+    if (this.date)
+      this.buchung()!.data.date = new Date(this.date);
+
+    this.updateDate();
+    this.updateSaveButton();
+  }
+
+  onTimeChange(event: any) {
+    const [hours, minutes] = event.target.value.split(':');
+    const date = new Date();
+    date.setHours(+hours, +minutes);
+    this.buchung()!.data.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+    this.updateSaveButton();
+  }
+
+  onBackClicked() {
+    this.executeExitAction();
+  }
+
+  onBetragChanged() {
+    if (this.buchung()!.data.betrag !== null)
+      this.buchung()!.data.betrag = +(this.buchung()!.data.betrag!);
+
+    this.updateSaveButton();
+  }
+
+  onTitleChanged() {
+    this.updateSaveButton();
+  }
+
+  onBeschreibungChanged() {
+    this.updateSaveButton();
+  }
+
+  onplannedBuchungsKategorieChanged() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
+  }
+
+  onApzClicked() {
+    //this.buchung()!.apz = !this.buchung()?.apz;
+    //this.updateSaveButton();
+  }
+
+  onValueChange() {
+    this.updateSaveButton();
+  }
+
+  private hasBuchungChanged() {
+    return !(this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
+  }
+
+  private isSaveAble() {
+    return (this.buchung()!.data.betrag === null || this.buchung()!.data.betrag === 0) && this.hasBuchungChanged();
+  }
+
+  private executeExitAction() {
     if (!this.hasBuchungChanged()) {
       this.router.navigate([this.navigationService.getBackRoute()]);
       return;
@@ -96,69 +261,26 @@ export class EditBuchungComponent implements OnInit {
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
-  onDateChange() {
-    if (this.date)
-      this.buchung()!.date = new Date(this.date);
-    this.dayBudget.set(this.dataService.getDayIstBudgets(this.buchung()!.date)!);
-    this.saveButtonDisabled.set(this.isSaveAble());
+  private updateDate() {
+    this.dateUpdated.set(this.dateUpdated() + 1);
   }
 
-  onTimeChange(event: any) {
-    const [hours, minutes] = event.target.value.split(':');
-    const date = new Date();
-    date.setHours(+hours, +minutes);
-    this.buchung()!.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
-    this.saveButtonDisabled.set(this.isSaveAble());
+  private updateSaveButton() {
+    this.isSaveButtonDisabled.set(this.isSaveAble());
   }
 
-  onBackClicked() {
-    if (!this.hasBuchungChanged()) {
-      this.router.navigate([this.navigationService.getBackRoute()]);
-      return;
-    }
-    const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Abbrechen?',
-      message: 'Willst du abbrechen? Alle Änderungen werden verworfen.',
-      onCancelClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-      },
-      onConfirmClicked: () => {
-        this.dialogService.isConfirmDialogVisible = false;
-        this.router.navigate([this.navigationService.getBackRoute()])
-      }
-    }
-    this.dialogService.showConfirmDialog(confirmDialogViewModel);
+  protected getAvailableMoneyMonth() {
+    const x = this.ut.toFixedDown(this.availableMoney().availableForMonth! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    return x && x > 0 ? x : 0;
   }
 
-  onBetragChanged() {
-    if(this.buchung()!.betrag !== null) {
-      this.buchung()!.betrag = +(this.buchung()!.betrag!);
-    }
-    this.saveButtonDisabled.set(this.isSaveAble());
+  protected getAvailableMoneyWeek() {
+    const x = this.ut.toFixedDown(this.availableMoney().availableForWeek! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2)
+    return x && x > 0 ? x : 0;
   }
 
-  onTitleChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
-  }
-
-  onBeschreibungChanged() {
-    this.saveButtonDisabled.set(this.isSaveAble());
-  }
-
-  onApzClicked() {
-    this.buchung()!.apz = !this.buchung()?.apz;
-    this.saveButtonDisabled.set(this.isSaveAble());
-  }
-
-  onValueChange() {
-    this.saveButtonDisabled.set(this.isSaveAble());
-  }
-
-  private hasBuchungChanged() {
-    return !(this.buchung()!.apz === this.oldBuchung?.apz && this.buchung()!.betrag === this.oldBuchung?.betrag && this.buchung()!.title === this.oldBuchung?.title && this.buchung()!.beschreibung === this.oldBuchung?.beschreibung && this.buchung()!.date.getDate() === this.oldBuchung.date.getDate() && this.buchung()!.time === this.oldBuchung.time)
-  }
-
-  private isSaveAble() {
-    return (this.buchung()!.betrag === null || this.buchung()!.betrag === 0) && this.hasBuchungChanged();
+  protected getAvailableMoneyDay() {
+    const x = this.ut.toFixedDown(this.availableMoney().availableForDayIst! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
+    return x && x > 0 ? x : 0;
   }
 }
