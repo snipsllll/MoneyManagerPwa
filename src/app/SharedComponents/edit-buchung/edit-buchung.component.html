@@ -97,7 +97,7 @@
       <div class="create-eintrag__button" (click)="onCancelClicked()">
         abbrechen
       </div>
-      <div class="create-eintrag__button" [class.disabled]="isSaveButtonDisabled()" (click)="onSaveClicked()">
+      <div class="create-eintrag__button" [class.disabled]="!isSaveButtonEnabled()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>

@@ -483,8 +483,6 @@ export class DataProviderService {
     const month = this.getMonthByDate(date);
     const geplanteAusgabenKategorien = this.getGeplanteAusgabenKategorienForMonth(date);
 
-    console.log(geplanteAusgabenKategorien)
-
     geplanteAusgabenKategorien.forEach(geplanteAusgabenKategorie => {
       geplanteAusgaben.push({
         id: geplanteAusgabenKategorie.id,
@@ -498,8 +496,6 @@ export class DataProviderService {
       week.days.forEach(day => {
         day.geplanteAusgabenBuchungen?.forEach(geplanteBuchung => {
           let index = geplanteAusgaben.findIndex(eintrag => eintrag.id! ==  +(geplanteBuchung.data.buchungsKategorie!));
-          console.log(geplanteAusgaben[index])
-          console.log(geplanteBuchung)
           geplanteAusgaben[index].restgeldBetrag -= geplanteBuchung.data.betrag ?? 0;
         })
       })
@@ -602,7 +598,6 @@ export class DataProviderService {
   }
 
   getBuchungsKategorienMitEmpty() {
-    console.log(this.dataService.userData.buchungsKategorien)
     const x = this.utils.clone(this.dataService.userData.buchungsKategorien) as { id: number, name: string }[];
     x.push({id: 0, name: ''})
     return x;

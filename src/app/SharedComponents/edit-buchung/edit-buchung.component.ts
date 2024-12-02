@@ -27,7 +27,7 @@ export class EditBuchungComponent implements OnInit {
 
   buchung = signal<IBuchung | undefined>(undefined);
   dateUpdated = signal<number>(0);
-  isSaveButtonDisabled = signal<boolean>(true);
+  isSaveButtonEnabled = signal<boolean>(false);
   geplanteAusgabenKategorien!: IGeplanteAusgabenKategorie[];
 
   availableMoneyCapped = computed(() => {
@@ -67,6 +67,7 @@ export class EditBuchungComponent implements OnInit {
       const geplanteAusgabenBuchungsId = +params.get('geplanteAusgabenBuchungsId')!;
 
       this.oldBuchung = geplanteAusgabenBuchungsId === 0 ? {...this.dataProvider.getBuchungById(buchungsId)!} : {...this.dataProvider.getGeplanteAusgabenBuchungById(geplanteAusgabenBuchungsId)!};
+      this.oldBuchung.data.buchungsKategorie = +(this.oldBuchung.data.buchungsKategorie ?? 0)
 
       this.buchung.set({
         id: this.oldBuchung!.id,
@@ -76,7 +77,8 @@ export class EditBuchungComponent implements OnInit {
           betrag: this.oldBuchung!.data.betrag,
           title: this.oldBuchung!.data.title,
           time: this.oldBuchung!.data.time,
-          buchungsKategorie: +(this.oldBuchung!.data.buchungsKategorie)!
+          buchungsKategorie: +(this.oldBuchung!.data.buchungsKategorie)!,
+          geplanteBuchung: this.oldBuchung.data.geplanteBuchung
         }
       });
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
@@ -97,11 +99,12 @@ export class EditBuchungComponent implements OnInit {
   onGeplanteBuchungChange(newValue: boolean) {
     this.buchung()!.data.geplanteBuchung = newValue;
     this.isGeplanteBuchungChecked = newValue;
+    this.updateSaveButton();
   }
 
   onSaveClicked() {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
-      if (!this.isSaveButtonDisabled()) {
+      if (this.isSaveButtonEnabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
         if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           if(this.buchung()?.data.geplanteBuchung) {
@@ -223,11 +226,7 @@ export class EditBuchungComponent implements OnInit {
 
   onplannedBuchungsKategorieChanged() {
     this.dateUpdated.set(this.dateUpdated() + 1);
-  }
-
-  onApzClicked() {
-    //this.buchung()!.apz = !this.buchung()?.apz;
-    //this.updateSaveButton();
+    this.updateSaveButton();
   }
 
   onValueChange() {
@@ -235,11 +234,21 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private hasBuchungChanged() {
-    return !(this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
+    console.log(2)
+    const x = !(this.buchung()!.data.geplanteBuchung === this.oldBuchung?.data.geplanteBuchung && this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
+    console.log(x)
+    return x;
   }
 
   private isSaveAble() {
-    return (this.buchung()!.data.betrag === null || this.buchung()!.data.betrag === 0) && this.hasBuchungChanged();
+    console.log(1)
+    console.log(this.oldBuchung)
+    console.log(this.buchung())
+    console.log(this.buchung()?.data.betrag)
+
+    const x = (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged();
+    console.log(x)
+    return x;
   }
 
   private executeExitAction() {
@@ -266,7 +275,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private updateSaveButton() {
-    this.isSaveButtonDisabled.set(this.isSaveAble());
+    this.isSaveButtonEnabled.set(this.isSaveAble());
   }
 
   protected getAvailableMoneyMonth() {
