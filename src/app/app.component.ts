@@ -6,6 +6,7 @@ import {SwUpdate} from "@angular/service-worker";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DataService} from "./Services/DataService/data.service";
 import {BarChartViewModel} from "./Models/NewInterfaces";
+import {versionName} from "./Models/Classes/versionName";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import {BarChartViewModel} from "./Models/NewInterfaces";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  title = 'Moma';
+  title = versionName === 'develop' ? 'Moma - develop' : 'Moma';
   inProduction = environment.production
   constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar, private router: Router, public dialogService: DialogService, private dataService: DataService) {
 
