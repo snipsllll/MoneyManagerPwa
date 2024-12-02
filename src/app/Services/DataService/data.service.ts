@@ -188,7 +188,7 @@ export class DataService {
             data: {
               betrag: standardEintrag.data.betrag,
               title: standardEintrag.data.title,
-              zusatz: standardEintrag.data.zusatz,
+              beschreibung: standardEintrag.data.beschreibung,
               isStandardFixkostenEintrag: true,
               isExcluded: false
             }
@@ -196,7 +196,7 @@ export class DataService {
         } else {
           //geänderte standardfixkosten anpassen
           const eintrag = month.uebernommeneStandardFixkostenEintraege?.find(eintragx => standardEintrag.id === eintragx.id)!
-          if(eintrag.data.title !== standardEintrag.data.title || eintrag.data.betrag !== standardEintrag.data.betrag || eintrag.data.zusatz !== standardEintrag.data.zusatz) {
+          if(eintrag.data.title !== standardEintrag.data.title || eintrag.data.betrag !== standardEintrag.data.betrag || eintrag.data.beschreibung !== standardEintrag.data.beschreibung) {
             console.log(eintrag)
             month.uebernommeneStandardFixkostenEintraege![month.uebernommeneStandardFixkostenEintraege!.findIndex(eintragx => standardEintrag.id === eintragx.id)] = standardEintrag;
           }

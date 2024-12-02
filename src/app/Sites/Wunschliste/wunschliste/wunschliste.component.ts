@@ -108,7 +108,7 @@ export class WunschlisteComponent implements OnInit{
     const newWunschlistenEintrag: IWunschlistenEintragData = {
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
-      zusatz: eintrag.zusatz,
+      zusatz: eintrag.beschreibung,
       gekauft: false,
       date: new Date(),
       erstelltAm: new Date()

@@ -11,6 +11,7 @@ import {
 import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {MonatFixkostenDialogViewModel} from "../../../Models/ViewModels/MonatFixkostenDialogViewModel";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-monat-fixkosten-dialog',
@@ -31,6 +32,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
   })
   newFixKostenEintrag!: IFixkostenEintragData;
   simulatedId = -1;
+  oldElements: IMonthFixkostenEintrag[] = [];
+  utils = new UT();
 
   constructor(private dialogService: DialogService, public dataService: DataService) {
   }
@@ -39,8 +42,10 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
+
+    this.oldElements = this.utils.clone(this.viewModel.elemente);
   }
 
   onCancelClicked() {
@@ -70,7 +75,24 @@ export class MonatFixkostenDialogComponent implements OnInit {
   }
 
   checkHasChanged() {
-    return true;
+    if(this.oldElements.length !== this.viewModel.elemente.length) {
+      return true;
+    }
+
+    for (let i = 0; i < this.viewModel.elemente.length; i++) {
+      if(this.oldElements[i].data.title !== this.viewModel.elemente[i].data.title)
+        return true;
+      if(this.oldElements[i].data.beschreibung !== this.viewModel.elemente[i].data.beschreibung)
+        return true;
+      if(this.oldElements[i].data.betrag !== this.viewModel.elemente[i].data.betrag)
+        return true;
+      if(this.oldElements[i].data.isExcluded !== this.viewModel.elemente[i].data.isExcluded)
+        return true;
+      if(this.oldElements[i].data.isStandardFixkostenEintrag !== this.viewModel.elemente[i].data.isStandardFixkostenEintrag)
+        return true;
+    }
+
+    return false;
   }
 
   checkDarfSpeichern() {
@@ -95,7 +117,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       id: eintrag.id,
       betrag: eintrag.data.betrag,
       title: eintrag.data.title,
-      zusatz: eintrag.data.zusatz,
+      zusatz: eintrag.data.beschreibung,
       isStandardFixkostenEintrag: eintrag.data.isStandardFixkostenEintrag,
       isExcluded: eintrag.data.isExcluded,
       menuItems: eintrag.data.isStandardFixkostenEintrag
@@ -135,7 +157,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
-        zusatz: eintrag.zusatz,
+        beschreibung: eintrag.beschreibung,
         isExcluded: false,
         isStandardFixkostenEintrag: false
       }
@@ -144,7 +166,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
     this.dataService.update()
   }
@@ -215,7 +237,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
-        zusatz: eintrag.zusatz
+        beschreibung: eintrag.zusatz
       }
     }
 
