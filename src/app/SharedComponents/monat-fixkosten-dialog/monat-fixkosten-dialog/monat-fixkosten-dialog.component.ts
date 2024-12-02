@@ -39,7 +39,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
   }
 
@@ -95,7 +95,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       id: eintrag.id,
       betrag: eintrag.data.betrag,
       title: eintrag.data.title,
-      zusatz: eintrag.data.zusatz,
+      zusatz: eintrag.data.beschreibung,
       isStandardFixkostenEintrag: eintrag.data.isStandardFixkostenEintrag,
       isExcluded: eintrag.data.isExcluded,
       menuItems: eintrag.data.isStandardFixkostenEintrag
@@ -135,7 +135,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
-        zusatz: eintrag.zusatz,
+        beschreibung: eintrag.beschreibung,
         isExcluded: false,
         isStandardFixkostenEintrag: false
       }
@@ -144,7 +144,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
     this.dataService.update()
   }
@@ -215,7 +215,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
-        zusatz: eintrag.zusatz
+        beschreibung: eintrag.zusatz
       }
     }
 

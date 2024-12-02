@@ -112,6 +112,7 @@ export class DataChangeService {
     month.geplanteAusgaben = [];
 
     elemente.forEach(element => {
+      console.log(element)
       month.geplanteAusgaben?.push({
         id: this.getNextFreeGeplanteAusgabeId(),
         data: {
@@ -140,7 +141,7 @@ export class DataChangeService {
             id: this.getNextFreeFixkostenEintragId(),
             data: {
               title: element.data.title,
-              zusatz: element.data.zusatz,
+              beschreibung: element.data.beschreibung,
               betrag: element.data.betrag
             }
           })

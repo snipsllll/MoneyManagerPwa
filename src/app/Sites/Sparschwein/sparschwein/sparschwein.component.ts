@@ -153,7 +153,7 @@ export class SparschweinComponent implements OnInit{
         const newSparschweinEintrag: ISparschweinEintragData = {
           betrag: eintrag.betrag ?? 0,
           title: eintrag.title,
-          zusatz: eintrag.zusatz,
+          zusatz: eintrag.beschreibung,
           date: new Date()
         }
         this.dataChangeService.addSparschweinEintrag(newSparschweinEintrag);
