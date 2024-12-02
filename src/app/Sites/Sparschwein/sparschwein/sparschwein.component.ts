@@ -104,49 +104,6 @@ export class SparschweinComponent implements OnInit{
     }
   }
 
-  private getTitle(eintrag: ISparschweinEintrag) {
-    const art = eintrag.data.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
-    const title = eintrag.data.title !== undefined && eintrag.data.title !== '' ? eintrag.data.title : art;
-    return `${title} (${eintrag.data.date.toLocaleDateString()})`;
-    /*
-    if(!eintrag.isMonatEintrag) {
-      const art = eintrag.betrag > 0 ? 'Einzahlung' : 'Auszahlung';
-      const title = eintrag.title !== undefined && eintrag.title !== '' ? eintrag.title : art;
-      return `${title} (${eintrag.date.toLocaleDateString()})`;
-    }
-    return `Restgeld: ${this.getMonthNameByIndex(eintrag.date.getMonth())} ${eintrag.date.getFullYear()}`*/
-  }
-
-  private getMonthNameByIndex(index: number) {
-    switch(index){
-      case 0:
-        return 'Januar';
-      case 1:
-        return 'Februar';
-      case 2:
-        return 'März';
-      case 3:
-        return 'April';
-      case 4:
-        return 'Mai';
-      case 5:
-        return 'Juni';
-      case 6:
-        return 'Juli';
-      case 7:
-        return 'August';
-      case 8:
-        return 'September';
-      case 9:
-        return 'Oktober';
-      case 10:
-        return 'November';
-      case 11:
-        return 'Dezember';
-    }
-    return '';
-  }
-
   private getCreateDialogViewModel(): CreateDialogViewModel {
     return {
       onSaveClick: (eintrag: CreateDialogEintrag) => {
