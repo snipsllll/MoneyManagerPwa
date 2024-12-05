@@ -63,6 +63,9 @@ export class EditDialogComponent implements OnInit{
   }
 
   onValueChanged() {
+    if(this.viewModel.data.betrag !== null && this.viewModel.data.betrag !== undefined)
+      this.viewModel.data.betrag = +(this.viewModel.data.betrag?.toFixed(2));
+
     this.darfSpeichern.set(this.checkDarfSpeichern());
   }
 
