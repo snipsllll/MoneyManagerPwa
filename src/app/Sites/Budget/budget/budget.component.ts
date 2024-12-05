@@ -25,6 +25,7 @@ export class BudgetComponent  implements OnInit{
 
   isFixkostenDetailsVisible = signal<boolean>(false);
   isgeplanteAusgabenDetailsVisible = signal<boolean>(false);
+  isgeplanteAusgabenRestgeldDetailsVisible = signal<boolean>(false);
 
   data = signal<BudgetInfosForMonth>({
     budget: 0,
@@ -114,6 +115,10 @@ export class BudgetComponent  implements OnInit{
 
   onGeplanteAusgabenClicked() {
     this.isgeplanteAusgabenDetailsVisible.set(!this.isgeplanteAusgabenDetailsVisible());
+  }
+
+  onGeplanteAusgabenRestgeldClicked() {
+    this.isgeplanteAusgabenRestgeldDetailsVisible.set(!this.isgeplanteAusgabenRestgeldDetailsVisible());
   }
 
   getStartdateForSelectedMonth() {

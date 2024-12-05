@@ -47,7 +47,7 @@ export class FixKostenComponent  implements OnInit{
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
   }
 
@@ -69,7 +69,7 @@ export class FixKostenComponent  implements OnInit{
       id: eintrag.id,
       betrag: eintrag.data.betrag,
       title: eintrag.data.title,
-      zusatz: eintrag.data.zusatz,
+      zusatz: eintrag.data.beschreibung,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -92,13 +92,13 @@ export class FixKostenComponent  implements OnInit{
     const newFixkostenEintrag: IFixkostenEintragData = {
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
-      zusatz: eintrag.zusatz
+      beschreibung: eintrag.beschreibung
     }
     this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      zusatz: ''
+      beschreibung: ''
     }
   }
 
@@ -139,7 +139,7 @@ export class FixKostenComponent  implements OnInit{
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
-        zusatz: eintrag.zusatz
+        beschreibung: eintrag.zusatz
       }
     }
 

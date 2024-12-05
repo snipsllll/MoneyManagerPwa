@@ -22,7 +22,7 @@ export class CreateDialogComponent implements OnInit {
     this.eintrag = {
       betrag: undefined,
       title: undefined,
-      zusatz: undefined,
+      beschreibung: undefined,
       vonHeuteAbziehen: false
     }
   }
@@ -73,7 +73,7 @@ export class CreateDialogComponent implements OnInit {
   }
 
   private checkHasChanged() {
-    return !((this.eintrag.title === undefined || this.eintrag.title === '') && (this.eintrag.zusatz === undefined || this.eintrag.zusatz === '') && (this.eintrag.betrag === undefined || this.eintrag.betrag === 0));
+    return !((this.eintrag.title === undefined || this.eintrag.title === '') && (this.eintrag.beschreibung === undefined || this.eintrag.beschreibung === '') && (this.eintrag.betrag === undefined || this.eintrag.betrag === 0));
   }
 
   private checkBetragValid() {

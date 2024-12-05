@@ -37,7 +37,7 @@ export interface IFixkostenEintrag {
 export interface IMonthFixkostenEintragData {
   title: string;
   betrag: number;
-  zusatz?: string;
+  beschreibung?: string;
   isExcluded?: boolean;
   isStandardFixkostenEintrag?: boolean;
 }
@@ -45,7 +45,7 @@ export interface IMonthFixkostenEintragData {
 export interface IFixkostenEintragData {
   title: string;
   betrag: number;
-  zusatz?: string;
+  beschreibung?: string;
 }
 
 export interface IWunschlistenEintrag {

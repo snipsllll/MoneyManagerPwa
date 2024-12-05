@@ -112,6 +112,7 @@ export class DataChangeService {
     month.geplanteAusgaben = [];
 
     elemente.forEach(element => {
+      console.log(element)
       month.geplanteAusgaben?.push({
         id: this.getNextFreeGeplanteAusgabeId(),
         data: {
@@ -140,7 +141,7 @@ export class DataChangeService {
             id: this.getNextFreeFixkostenEintragId(),
             data: {
               title: element.data.title,
-              zusatz: element.data.zusatz,
+              beschreibung: element.data.beschreibung,
               betrag: element.data.betrag
             }
           })
@@ -399,14 +400,6 @@ export class DataChangeService {
     return this.dataService.userData.months.findIndex(monat => monat.startDate.toLocaleDateString() === monthStartDate.toLocaleDateString())
   }
 
-  private getAlleFixkostenEintraegeIds(): number[] {
-    let eintraege = this.dataService.userData.standardFixkostenEintraege.map(obj => obj.id) ?? [];
-    this.dataService.userData.months.forEach(month => {
-      eintraege = eintraege.concat(month.specialFixkostenEintraege ? month.specialFixkostenEintraege.map(obj => obj.id) : []);
-    })
-    return eintraege;
-  }
-
   private getAlleFixkostenEintraege(): IFixkostenEintrag[] {
     let eintraege = this.dataService.userData.standardFixkostenEintraege ?? [];
     this.dataService.userData.months.forEach(month => {
@@ -421,11 +414,5 @@ export class DataChangeService {
       eintraege = eintraege.concat(month.geplanteAusgaben ? month.geplanteAusgaben : []);
     })
     return eintraege;
-  }
-
-
-  //erstmal irrelevant
-  private getIndexOfMonthSpareintrag(date: Date) {
-    return this.dataService.userData.sparschweinEintraege.findIndex(eintrag => eintrag.data.date.toLocaleDateString() === date.toLocaleDateString());
   }
 }

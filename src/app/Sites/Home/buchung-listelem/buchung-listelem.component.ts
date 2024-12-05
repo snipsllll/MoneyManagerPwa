@@ -51,7 +51,7 @@ export class BuchungListelemComponent implements OnInit{
       message: 'Willst du die Buchung wirklich löschen? Sie kann nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        if(this.buchung.data.buchungsKategorie == -1) {
+        if(this.buchung.data.geplanteBuchung) {
           this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung.id);
         } else {
           this.dataChangeService.deleteBuchung(this.buchung.id!);
