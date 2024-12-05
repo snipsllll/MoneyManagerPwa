@@ -115,7 +115,7 @@
             - {{ eintrag.title }}
           </div>
           <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.restgeldBetrag.toFixed(2) }}€
+            {{ eintrag.restgeldBetrag.toFixed(2).toString() !== "0.00" ? eintrag.restgeldBetrag.toFixed(2) : 0 }}€
           </div>
         </div>
       </div>
