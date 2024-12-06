@@ -1,3 +1,14 @@
+.budget-scroll-area {
+  overflow-x: scroll;
+  flex-grow: 1;
+  max-height: calc(100vh - 120px);
+}
+
+.budget-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .budget__element-wrapper {
   display: flex;
   width: calc(100% - 20px);
