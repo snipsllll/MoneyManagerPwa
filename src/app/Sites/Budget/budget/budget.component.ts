@@ -154,7 +154,7 @@ export class BudgetComponent  implements OnInit{
   }
 
   getGeplanteAusgabenDialogElements() {
-    return this.dataProvider.getGeplanteAusgabenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? [];
+    return this.ut.clone(this.dataProvider.getGeplanteAusgabenEintraegeForMonth(this.getStartdateForSelectedMonth()) ?? []);
   }
 
   onFixkostenAbortClicked = () => {
@@ -174,6 +174,7 @@ export class BudgetComponent  implements OnInit{
   onGeplanteAusgabenSaveClicked = (data: MonatFixkostenDialogData) => {
     this.dataChangeService.editGeplanteAusgabenEintraegeForMonth(this.getStartdateForSelectedMonth(), data.elemente);
     this.dialogService.isMonatFixkostenDialogVisible = false;
+    this.dataService.update();
     this.update();
   }
 

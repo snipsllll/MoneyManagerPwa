@@ -13,7 +13,7 @@ export class FileEngine {
   }
 
   save(savedData: SavedData) {
-    console.log(savedData)
+    console.log('data was saved. Saved Data:', savedData);
     if (!this.isInProduction.production) {
       // JSON.stringify mit Einrückung für lesbares JSON
       const readableJson = JSON.stringify(savedData, null, 2);

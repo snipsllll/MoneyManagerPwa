@@ -340,6 +340,7 @@ export class DataService {
   }
 
   private save() { //TODO testen
+    console.log(2)
     this.userData.save();
   }
 
