@@ -12,7 +12,12 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
-import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData} from "../../Models/Interfaces";
+import {
+  IGeplanteAusgabe,
+  IGeplanteAusgabenBuchung,
+  IGeplanteAusgabenBuchungData,
+  ISchuldenEintrag, ISchuldenEintragData
+} from "../../Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -262,6 +267,26 @@ export class DataChangeService {
     this.dataService.userData.editKategorie(id, name);
   }
 
+  addSchuldenEintrag(schuldenEintragData: ISchuldenEintragData): void {
+    const newSchuldenEintrag: ISchuldenEintrag = {
+      id: this.getNextFreeSchuldenEintragId(),
+      data: schuldenEintragData
+    };
+
+    this.dataService.userData.schuldenEintraege.push(newSchuldenEintrag);
+    this.dataService.update();
+  }
+
+  deleteSchuldenEintrag(schuldenEintragId: number) {
+    this.dataService.userData.schuldenEintraege.splice(this.getIndexOfSchuldenEintragById(schuldenEintragId), 1);
+    this.dataService.update();
+  }
+
+  editSchuldenEintrag(editedSchuldenEintrag: ISchuldenEintrag): void {
+    this.dataService.userData.schuldenEintraege[this.getIndexOfSchuldenEintragById(editedSchuldenEintrag.id)] = editedSchuldenEintrag;
+    this.dataService.update();
+  }
+
   deleteAllBuchungsKategorien() {
     this.dataService.userData.buchungsKategorien = [];
   }
@@ -364,6 +389,18 @@ export class DataChangeService {
     return freeId;
   }
 
+  private getNextFreeSchuldenEintragId() {
+    let freeId = 1;
+    for (let i = 0; i < this.dataService.userData.schuldenEintraege.length; i++) {
+      if (this.dataService.userData.schuldenEintraege.find(x => x.id === freeId) === undefined) {
+        return freeId;
+      } else {
+        freeId++;
+      }
+    }
+    return freeId;
+  }
+
   private getIndexOfBuchungById(id: number) {
     return this.dataService.userData.buchungen.findIndex(eintrag => eintrag.id === id);
   }
@@ -390,6 +427,10 @@ export class DataChangeService {
 
   private getIndexOfSparschweinEintragByWunschId(id: number) {
     return this.dataService.userData.sparschweinEintraege.findIndex(eintrag => eintrag.data.wunschlistenId === id);
+  }
+
+  private getIndexOfSchuldenEintragById(id: number) {
+    return this.dataService.userData.schuldenEintraege.findIndex(eintrag => eintrag.id === id);
   }
 
   private getIndexOfMonthByDate(date: Date) {
