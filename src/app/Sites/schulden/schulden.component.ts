@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
-import {ISchuldenEintrag} from "../../Models/Interfaces";
+import {ISchuldenEintrag, ISchuldenEintragData} from "../../Models/Interfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {ListElementData, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
+import {IFixkostenEintrag, IFixkostenEintragData} from "../../Models/NewInterfaces";
+import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 
 @Component({
   selector: 'app-schulden',
@@ -28,10 +31,11 @@ export class SchuldenComponent implements OnInit{
   }
 
   onPlusClicked() {
-    this.dataChangeService.addSchuldenEintrag({
-      betrag: 12,
-      title: ''
-    })
+    const createDialogViewModel: CreateDialogViewModel = {
+      onSaveClick: this.onCreateSaveClicked,
+      onCancelClick: this.onCreateCancelClicked
+    }
+    this.dialogService.showCreateDialog(createDialogViewModel);
   }
 
   protected getListElemViewModelForSchuldenEintrag(schuldenEintrag: ISchuldenEintrag): ListElementViewModel {
@@ -76,8 +80,18 @@ export class SchuldenComponent implements OnInit{
     console.log('eintrag clicked', data)
   }
 
-  onSchuldenEintragEditClicked = (data: ListElementData) => {
-    console.log('edit clicked', data)
+  onSchuldenEintragEditClicked = (eintrag: ListElementData) => {
+    const editDialogViewModel: EditDialogViewModel = {
+      data: {
+        betrag: eintrag.betrag,
+        title: eintrag.title,
+        zusatz: eintrag.zusatz,
+        id: eintrag.id!
+      },
+      onSaveClick: this.onEditSaveClicked,
+      onCancelClick: this.onEditCancelClicked
+    }
+    this.dialogService.showEditDialog(editDialogViewModel);
   }
 
   onSchuldenEintragPlanClicked = (data: ListElementData) => {
@@ -102,6 +116,36 @@ export class SchuldenComponent implements OnInit{
     }
 
     this.dialogService.showConfirmDialog(confirmDialogViewModel)
+  }
+
+
+
+  onEditSaveClicked = (eintrag: EditDialogData) => {
+    const newSchuldenEintrag: ISchuldenEintrag = {
+      id: eintrag.id,
+      data: {
+        betrag: eintrag.betrag ?? 0,
+        title: eintrag.title ?? 'ohne Titel',
+        beschreibung: eintrag.zusatz
+      }
+    }
+
+    this.dataChangeService.editSchuldenEintrag(newSchuldenEintrag);
+  }
+
+  onEditCancelClicked = () => {}
+
+  onCreateSaveClicked = (eintrag: CreateDialogEintrag) => {
+    const newSchuldenEintragData: ISchuldenEintragData = {
+      betrag: eintrag.betrag ?? 0,
+      title: eintrag.title ?? 'kein Titel',
+      beschreibung: eintrag.beschreibung
+    }
+    this.dataChangeService.addSchuldenEintrag(newSchuldenEintragData);
+  }
+
+  onCreateCancelClicked = () => {
+
   }
 
 }
