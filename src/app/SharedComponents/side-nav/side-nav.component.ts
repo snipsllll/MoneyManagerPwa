@@ -40,6 +40,9 @@ export class SideNavComponent implements OnInit{
         case 'auswertungen':
           this.sideNavService.selectedElement = SideNavElements.auswertungen;
           break;
+        case 'schulden':
+          this.sideNavService.selectedElement = SideNavElements.schulden;
+          break;
       }
     }
   }
@@ -60,6 +63,12 @@ export class SideNavComponent implements OnInit{
     this.router.navigate(['fixKosten']);
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.fixkosten;
+  }
+
+  onSchuldenClicked(): void {
+    this.router.navigate(['schulden']);
+    this.topbarService.isSlidIn.set(false);
+    this.sideNavService.selectedElement = SideNavElements.schulden;
   }
 
   onSparscheinClicked() {

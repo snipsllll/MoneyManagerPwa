@@ -11,6 +11,7 @@ import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einstellungen.component";
 import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component";
+import {SchuldenComponent} from "./Sites/schulden/schulden.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'createBuchung', component: CreateBuchungComponent},
   {path: 'budget', component: BudgetComponent},
   {path: 'fixKosten', component: FixKostenComponent},
+  {path: 'schulden', component: SchuldenComponent},
   {path: 'sparschwein', component: SparschweinComponent},
   {path: 'wunschliste', component: WunschlisteComponent},
   {path: 'spinning-fish', component: SpinningFishComponent},

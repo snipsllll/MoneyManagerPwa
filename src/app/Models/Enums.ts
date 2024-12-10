@@ -20,7 +20,8 @@ export enum SideNavElements {
   sparschwein,
   wunschliste,
   einstellungen,
-  auswertungen
+  auswertungen,
+  schulden
 }
 
 export enum Sites {
