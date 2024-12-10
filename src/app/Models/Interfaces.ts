@@ -68,6 +68,7 @@ export interface SavedData {
   settings: Settings;
   dbVersion: number;
   geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[];
+  schuldenEintraege: ISchuldenEintrag[];
 }
 
 export interface IGeplanteAusgabenBuchung {
@@ -135,4 +136,15 @@ export interface AvailableMoney {
   availableForDayIst: number;
   availableForDaySoll: number;
   noData: boolean;
+}
+
+export interface ISchuldenEintrag {
+  id: number;
+  data: ISchuldenEintragData;
+}
+
+export interface ISchuldenEintragData {
+  title: string;
+  betrag: number;
+  beschreibung?: string;
 }

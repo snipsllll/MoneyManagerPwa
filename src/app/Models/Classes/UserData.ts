@@ -1,4 +1,13 @@
-import {Day, IGeplanteAusgabenBuchung, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
+import {
+  Day,
+  IGeplanteAusgabenBuchung,
+  ISchuldenEintrag,
+  Month,
+  SavedData,
+  SavedMonth,
+  Settings,
+  Week
+} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
@@ -17,6 +26,7 @@ export class UserData {
   public wunschlistenEintraege: IWunschlistenEintrag[] = [];
   public auswertungsLayouts: IAuswertungsLayout[] = [];
   public geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[] = [];
+  public schuldenEintraege: ISchuldenEintrag[] = [];
   public settings: Settings = {
     toHighBuchungenEnabled: false,
     topBarAnzeigeEinstellung: TopBarBudgetOptions.monat,
@@ -74,6 +84,7 @@ export class UserData {
     this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
     this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
+    this.schuldenEintraege = savedData.schuldenEintraege ?? [];
   }
 
   save(savedData?: SavedData) {
@@ -134,7 +145,8 @@ export class UserData {
         standardFixkostenEintraege: [],
         savedMonths: [],
         geplanteAusgabenBuchungen: [],
-        dbVersion: currentDbVersion
+        dbVersion: currentDbVersion,
+        schuldenEintraege: []
       }
     }
   }
@@ -158,7 +170,8 @@ export class UserData {
       },
       sparEintraege: [],
       standardFixkostenEintraege: [],
-      wunschlistenEintraege: []
+      wunschlistenEintraege: [],
+      schuldenEintraege: []
     }
   }
 
@@ -225,7 +238,8 @@ export class UserData {
             title: 'titel test'
           }
         }
-      ]
+      ],
+      schuldenEintraege: []
     };
 
     for(let year = 2024; year < 2025; year++) {
@@ -443,6 +457,7 @@ export class UserData {
     this.auswertungsLayouts = savedData.auswertungsLayouts;
     this.settings = savedData.settings;
     this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
+    this.schuldenEintraege = savedData.schuldenEintraege ?? [];
   }
 
   deleteAllData() {
@@ -464,7 +479,8 @@ export class UserData {
       standardFixkostenEintraege: [],
       savedMonths: [],
       geplanteAusgabenBuchungen: [],
-      dbVersion: currentDbVersion
+      dbVersion: currentDbVersion,
+      schuldenEintraege: []
     });
     this.reload();
   }
@@ -484,6 +500,7 @@ export class UserData {
       sparEintraege: [],
       standardFixkostenEintraege: [],
       wunschlistenEintraege: [],
+      schuldenEintraege: []
     }
 
     savedData.buchungen = this.buchungen;
@@ -494,6 +511,7 @@ export class UserData {
     savedData.auswertungsLayouts = this.auswertungsLayouts;
     savedData.settings = this.settings;
     savedData.geplanteAusgabenBuchungen = this.geplanteAusgabenBuchungen;
+    savedData.schuldenEintraege = this.schuldenEintraege;
 
     this.months.forEach(month => {
       savedData.savedMonths.push({
