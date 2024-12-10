@@ -11,7 +11,7 @@ import {
   AvailableMoney,
   BudgetInfosForMonth,
   Day,
-  IGeplanteAusgabeRestgeld,
+  IGeplanteAusgabeRestgeld, ISchuldenEintrag,
   Month,
   Settings
 } from "../../Models/Interfaces";
@@ -26,6 +26,10 @@ export class DataProviderService {
   private utils = new UT();
 
   constructor(private dataService: DataService) {
+  }
+
+  getAlleSchuldenEintraege(): ISchuldenEintrag[] {
+    return this.dataService.userData.schuldenEintraege;
   }
 
   getAlleWunschlistenEintraege(): IWunschlistenEintrag[] {

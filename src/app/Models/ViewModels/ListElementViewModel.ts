@@ -20,6 +20,7 @@ export interface ListElementData {
   wunschId?: number;
   isStandardFixkostenEintrag?: boolean;
   isExcluded?: boolean;
+  onEintragClicked?: (data: any) => void;
 }
 
 export interface ListElementSettings {

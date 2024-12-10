@@ -1,1 +1,5 @@
 <app-top-bar></app-top-bar>
+<div class="schulden">
+  <app-list-element [viewModel]="getListElemViewModelForSchuldenEintrag(schuldenEintrag)"  *ngFor="let schuldenEintrag of schuldenEintraege"></app-list-element>
+</div>
+<app-plus-button (click)="onPlusClicked()"></app-plus-button>

@@ -45,6 +45,8 @@ export class ListElementComponent implements OnInit{
   onEintragClicked() {
     if(this.viewModel.settings.doDetailsExist) {
       this.isExpanded = !this.isExpanded;
+    } else if(this.viewModel.data.onEintragClicked) {
+      this.viewModel.data.onEintragClicked(this.viewModel.data);
     }
   }
 
