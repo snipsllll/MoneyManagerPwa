@@ -7,6 +7,8 @@ import {IAuswertungsLayout} from "../Auswertungen-Interfaces";
 
 export class UserData {
 
+  private useEmptyData = false;
+
   public buchungen: IBuchung[] = [];
   public buchungsKategorien: { id: number; name: string }[] = [];
   public months: Month[] = [];
@@ -75,6 +77,7 @@ export class UserData {
   }
 
   save(savedData?: SavedData) {
+    console.log(1)
     if (savedData) {
       this._fileEngine.save(this.checkForDbUpdates(savedData));
       this.reload();
@@ -85,6 +88,10 @@ export class UserData {
 
   private checkForDbUpdates(data: any): SavedData {
     //return this.getLongTestData();
+
+    if(this.useEmptyData) {
+      return this.getEmptyTestData();
+    }
 
     let currentData: any;
 
@@ -129,6 +136,29 @@ export class UserData {
         geplanteAusgabenBuchungen: [],
         dbVersion: currentDbVersion
       }
+    }
+  }
+
+  getEmptyTestData(): SavedData {
+    return {
+      auswertungsLayouts: [],
+      buchungen: [],
+      buchungsKategorien: [],
+      dbVersion: currentDbVersion,
+      geplanteAusgabenBuchungen: [],
+      savedMonths: [],
+      settings: {
+        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        toHighBuchungenEnabled: true,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer,
+        wunschlistenFilter: {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        }
+      },
+      sparEintraege: [],
+      standardFixkostenEintraege: [],
+      wunschlistenEintraege: []
     }
   }
 

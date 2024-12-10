@@ -46,6 +46,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     }
 
     this.oldElements = this.utils.clone(this.viewModel.elemente);
+    console.log(this.viewModel)
   }
 
   onCancelClicked() {
@@ -207,18 +208,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
   }
 
   onDeleteClicked = (x: EditDialogData) => {
-    const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Eintrag Löschen?',
-      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
-      onConfirmClicked: () => {
-        this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
-        this.dataService.update()
-      },
-      onCancelClicked: () => {
-      }
-    }
-
-    this.dialogService.showConfirmDialog(confirmDialogViewModel)
+    this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
   }
 
   onAusschliessenClicked = (eintragx: EditDialogData) => {

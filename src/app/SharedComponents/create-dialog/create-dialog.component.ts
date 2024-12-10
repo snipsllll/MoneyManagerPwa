@@ -61,6 +61,9 @@ export class CreateDialogComponent implements OnInit {
   }
 
   onValueChanged() {
+    if(this.eintrag.betrag !== null && this.eintrag.betrag !== undefined)
+      this.eintrag.betrag = +(this.eintrag.betrag?.toFixed(2));
+
     this.darfSpeichern.set(this.checkDarfSpeichern());
   }
 

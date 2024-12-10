@@ -211,7 +211,7 @@ export class EditBuchungComponent implements OnInit {
 
   onBetragChanged() {
     if (this.buchung()!.data.betrag !== null)
-      this.buchung()!.data.betrag = +(this.buchung()!.data.betrag!);
+      this.buchung()!.data.betrag = +(this.buchung()!.data.betrag!).toFixed(2);
 
     this.updateSaveButton();
   }

@@ -112,7 +112,6 @@ export class DataChangeService {
     month.geplanteAusgaben = [];
 
     elemente.forEach(element => {
-      console.log(element)
       month.geplanteAusgaben?.push({
         id: this.getNextFreeGeplanteAusgabeId(),
         data: {
