@@ -1,0 +1,35 @@
+<div class="zahlung-dialog__background">
+
+</div>
+<div class="zahlungen-dialog__wrapper">
+  <div class="floating-box zahlung-dialog">
+    <div class="zahlung-dialog__title">
+      Zahlung
+    </div>
+    <div class="zahlung-dialog__message">
+      Der offene Betrag beträgt: <b>{{viewModel!.eintrag.betrag}}€</b>
+    </div>
+
+    <div class="zahlung-dialog__voller-betrag-wrapper">
+      <input type="checkbox" [(ngModel)]="vollerBetrag">
+      vollen Betrag zahlen
+    </div>
+
+    <div class="zahlung-dialog__betrag-wrapper">
+      <input type="number" class="zahlung-dialog__betrag" placeholder="0,00" [(ngModel)]="viewModel!.eingegebenerBetrag">€
+    </div>
+
+    <div class="zahlung-dialog__buttons-wrapper">
+      <div class="zahlung-dialog__cancel-button zahlung-dialog__button" (click)="onAbortClicked()">
+        abbrechen
+      </div>
+      <div class="zahlung-dialog__confirm-button zahlung-dialog__button" (click)="onSaveClicked()">
+        speichern
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

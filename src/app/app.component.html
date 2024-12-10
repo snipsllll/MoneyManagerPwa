@@ -36,4 +36,10 @@
 
     </app-auswertungen-dialog>
   }
+
+  @if (dialogService.isZahlungDialogVisible) {
+    <app-zahlung-dialog [viewModel]="dialogService.zahlungDialogViewModel!">
+
+    </app-zahlung-dialog>
+  }
 </div>

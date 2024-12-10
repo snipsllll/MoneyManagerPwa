@@ -6,7 +6,11 @@ import {MonatFixkostenDialogViewModel} from "../../Models/ViewModels/MonatFixkos
 import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
 import {DataProviderService} from "../DataProviderService/data-provider.service";
 import {DataChangeService} from "../DataChangeService/data-change.service";
-import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
+import {
+  AuswertungenDialogViewModel,
+  IAuswertungsLayout,
+  ZahlungDialogViewModel
+} from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../DataService/data.service";
 
 @Injectable({
@@ -33,6 +37,9 @@ export class DialogService {
   isAuswertungenDialogVisible = false;
   auswertungenDialogViewModel?: AuswertungenDialogViewModel;
 
+  isZahlungDialogVisible = false;
+  zahlungDialogViewModel?: ZahlungDialogViewModel;
+
   constructor(private dataService: DataService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
 
@@ -54,6 +61,11 @@ export class DialogService {
   showMonatFixkostenDialog(monatFixkostenDialogViewModel: MonatFixkostenDialogViewModel) {
     this.isMonatFixkostenDialogVisible = true;
     this.monatFixkostenDialogViewModel = monatFixkostenDialogViewModel;
+  }
+
+  showZahlungDialog(zahlungDialogViewModel: ZahlungDialogViewModel) {
+    this.isZahlungDialogVisible = true;
+    this.zahlungDialogViewModel = zahlungDialogViewModel;
   }
 
   showBuchungsKategorienDialog() {

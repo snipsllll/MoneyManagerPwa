@@ -36,6 +36,7 @@ import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diag
 import { MmBarChartComponent } from './SharedComponents/mm-bar-chart/mm-bar-chart.component';
 import { SchuldenComponent } from './Sites/schulden/schulden.component';
 import { PlusButtonComponent } from './SharedComponents/plus-button/plus-button.component';
+import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlung-dialog.component';
 
 @NgModule({
     declarations: [
@@ -70,7 +71,8 @@ import { PlusButtonComponent } from './SharedComponents/plus-button/plus-button.
         DiagramDetailsComponent,
         MmBarChartComponent,
         SchuldenComponent,
-        PlusButtonComponent
+        PlusButtonComponent,
+        ZahlungDialogComponent
     ],
     imports: [
         BrowserModule,

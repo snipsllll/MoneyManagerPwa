@@ -1,7 +1,17 @@
+import {ListElementData} from "./ViewModels/ListElementViewModel";
+
 export interface AuswertungenDialogViewModel {
   elemente: IAuswertungsLayout[];
   onSaveClicked: (data: IAuswertungsLayout[]) => void;
   onAbortClicked: () => void;
+}
+
+export interface ZahlungDialogViewModel {
+  zuZahlenderBetrag: number;
+  eingegebenerBetrag?: number;
+  onSaveClicked: (data: ListElementData) => void;
+  onAbortClicked: (data: ListElementData) => void;
+  eintrag: ListElementData;
 }
 
 export interface IAuswertungsLayout {

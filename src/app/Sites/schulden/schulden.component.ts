@@ -9,6 +9,7 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../Models/NewInterfaces";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
+import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
 
 @Component({
   selector: 'app-schulden',
@@ -99,7 +100,23 @@ export class SchuldenComponent implements OnInit{
   }
 
   onSchuldenEintragBezahlenClicked = (data: ListElementData) => {
-    console.log('bezahlen clicked', data)
+    console.log('bezahlen clicked', data);
+    const zahlungsDialogViewModel: ZahlungDialogViewModel = {
+      zuZahlenderBetrag: data.betrag!,
+      onAbortClicked: this.onZahlungDialogAbortClicked,
+      onSaveClicked: this.onZahlungDialogSaveClicked,
+      eintrag: data
+    }
+
+    this.dialogService.showZahlungDialog(zahlungsDialogViewModel);
+  }
+
+  onZahlungDialogSaveClicked = (data: ListElementData) => {
+    this.dialogService.isZahlungDialogVisible = false;
+  }
+
+  onZahlungDialogAbortClicked = (data: ListElementData) => {
+    this.dialogService.isZahlungDialogVisible = false;
   }
 
   onSchuldenEintragDeleteClicked = (data: ListElementData) => {
