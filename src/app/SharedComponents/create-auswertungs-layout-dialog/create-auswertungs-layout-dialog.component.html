@@ -9,9 +9,7 @@
                              *ngFor="let diagram of viewModel.data.diagramme">
         </app-diagram-details>
         <div class="diagram-plus-button-wrapper">
-          <div class="diagram-plus-button" (click)="onPlusClicked()">
-            +
-          </div>
+          <app-plus-button (click)="onPlusClicked()"></app-plus-button>
         </div>
       </div>
       <div class="create-dialog__bottom-buttons-wrapper">
