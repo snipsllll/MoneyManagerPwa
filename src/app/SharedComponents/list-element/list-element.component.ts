@@ -3,6 +3,7 @@ import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel
 import {MenuItem} from "../../Models/Interfaces";
 import {Color} from "../../Models/Enums";
 import {UT} from "../../Models/Classes/UT";
+import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
   selector: 'app-list-element',

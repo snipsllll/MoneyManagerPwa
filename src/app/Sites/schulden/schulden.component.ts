@@ -4,6 +4,8 @@ import {DataChangeService} from "../../Services/DataChangeService/data-change.se
 import {ISchuldenEintrag} from "../../Models/Interfaces";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {ListElementData, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
+import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-schulden',
@@ -14,7 +16,7 @@ export class SchuldenComponent implements OnInit{
 
   schuldenEintraege: ISchuldenEintrag[] = [];
 
-  constructor(private topbarService: TopbarService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
+  constructor(private topbarService: TopbarService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService, public dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -52,10 +54,15 @@ export class SchuldenComponent implements OnInit{
             onClick: this.onSchuldenEintragPlanClicked
           },
           {
+            label: 'bezahlen',
+            isEditButton: true,
+            onClick: this.onSchuldenEintragBezahlenClicked
+          },
+          {
             label: 'löschen',
             isEditButton: true,
             onClick: this.onSchuldenEintragDeleteClicked
-          },
+          }
         ]
       },
       settings: {
@@ -65,20 +72,36 @@ export class SchuldenComponent implements OnInit{
     }
   }
 
-  private onSchuldenEintragClicked(data: ListElementData) {
+  onSchuldenEintragClicked = (data: ListElementData) => {
     console.log('eintrag clicked', data)
   }
 
-  private onSchuldenEintragEditClicked(data: ListElementData) {
+  onSchuldenEintragEditClicked = (data: ListElementData) => {
     console.log('edit clicked', data)
   }
 
-  private onSchuldenEintragPlanClicked(data: ListElementData) {
+  onSchuldenEintragPlanClicked = (data: ListElementData) => {
     console.log('plan clicked', data)
   }
 
-  private onSchuldenEintragDeleteClicked(data: ListElementData) {
-    console.log('delete clicked', data)
+  onSchuldenEintragBezahlenClicked = (data: ListElementData) => {
+    console.log('bezahlen clicked', data)
+  }
+
+  onSchuldenEintragDeleteClicked = (data: ListElementData) => {
+    if(!data.id)
+      throw new Error('id was not found')
+
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Eintrag Löschen?',
+      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.dataChangeService.deleteSchuldenEintrag(data.id!);
+      },
+      onCancelClicked: () => {}
+    }
+
+    this.dialogService.showConfirmDialog(confirmDialogViewModel)
   }
 
 }
