@@ -15,7 +15,7 @@
       vollen Betrag zahlen
     </div>
 
-    <div class="zahlung-dialog__betrag-wrapper">
+    <div class="zahlung-dialog__betrag-wrapper" *ngIf="!vollerBetrag">
       <input type="number" class="zahlung-dialog__betrag" placeholder="0,00" [(ngModel)]="viewModel!.eingegebenerBetrag">€
     </div>
 
