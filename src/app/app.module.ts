@@ -35,6 +35,8 @@ import { CreateAuswertungsLayoutDialogComponent } from './SharedComponents/creat
 import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diagram-details.component";
 import { MmBarChartComponent } from './SharedComponents/mm-bar-chart/mm-bar-chart.component';
 import { PlusButtonComponent } from './SharedComponents/plus-button/plus-button.component';
+import { LoginComponent } from './Sites/login/login.component';
+import { RegisterComponent } from './Sites/register/register.component';
 
 @NgModule({
     declarations: [
@@ -68,7 +70,9 @@ import { PlusButtonComponent } from './SharedComponents/plus-button/plus-button.
         DiagramDetailsComponent,
         DiagramDetailsComponent,
         MmBarChartComponent,
-        PlusButtonComponent
+        PlusButtonComponent,
+        LoginComponent,
+        RegisterComponent
     ],
     imports: [
         BrowserModule,
