@@ -59,7 +59,6 @@ export class AdminService {
   async register(email: string, password: string): Promise<void> {
     return this.authService.register(email, password)
       .then(() => {
-        this.router.navigate(['login'])
         // Erfolgreiche Registrierung, hier kannst du zusätzliche Logik hinzufügen, falls erforderlich
       })
       .catch(error => {

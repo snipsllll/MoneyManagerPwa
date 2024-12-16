@@ -11,7 +11,7 @@
     <input type="password" placeholder="passwort wiederholen" class="register__data-input-element" [(ngModel)]="pw2">
   </div>
   <div class="register__buttons-wrapper">
-    <div class="register__button" (click)="onRegisterClicked()">
+    <div class="register__button" (click)="onRegisterClicked()" [class.register__button-grayed-out]="isLoading">
       registrieren
     </div>
     <div class="register__back-text" (click)="onToLoginClicked()">

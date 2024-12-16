@@ -12,6 +12,7 @@ export class RegisterComponent {
   email?: string;
   pw1?: string;
   pw2?: string;
+  isLoading = false;
 
   errorMessage?: string = '';
 
@@ -59,7 +60,11 @@ export class RegisterComponent {
     if(!this.email || !this.pw1) {
       throw new Error('email oder pw war leer');
     }
-    this.adminService.register(this.email, this.pw1);
+    this.isLoading = true;
+    this.adminService.register(this.email, this.pw1).then(() => {
+      this.isLoading = false;
+      this.router.navigate(['login'])
+    });
   }
 
 }

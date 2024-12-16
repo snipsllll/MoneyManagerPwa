@@ -59,3 +59,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.register__button-grayed-out {
+  background-color: #d3d9da;
+}
