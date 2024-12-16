@@ -2,10 +2,13 @@
   <div class="register__logo-wrapper">
     <img src="assets/favicon.jpg" class="register__logo">
   </div>
+  <div class="register__error-message">
+    {{errorMessage}}
+  </div>
   <div class="register__data-input-wrapper">
-    <input type="email" placeholder="email" class="register__data-input-element">
-    <input type="password" placeholder="passwort" class="register__data-input-element">
-    <input type="password" placeholder="passwort wiederholen" class="register__data-input-element">
+    <input type="email" placeholder="email" class="register__data-input-element" [(ngModel)]="email">
+    <input type="password" placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw1">
+    <input type="password" placeholder="passwort wiederholen" class="register__data-input-element" [(ngModel)]="pw2">
   </div>
   <div class="register__buttons-wrapper">
     <div class="register__button" (click)="onRegisterClicked()">
