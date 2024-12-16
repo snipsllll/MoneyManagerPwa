@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {AdminService} from "../../admin.service";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginComponent {
 
   errorMessage?: string = '';
 
-  constructor(private router: Router) {
+  constructor(private adminService: AdminService, private router: Router) {
+
   }
 
   onLoginClicked() {
@@ -36,6 +38,12 @@ export class LoginComponent {
   }
 
   private login() {
-    this.router.navigate(['home']);
+    if(!this.email || !this.pw) {
+      throw new Error('email oder pw war leer');
+    }
+
+    this.adminService.login(this.email, this.pw).then(() => {
+      this.router.navigate(['home']);
+    })
   }
 }
