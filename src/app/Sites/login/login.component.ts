@@ -8,14 +8,34 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent {
 
+  email?: string;
+  pw?: string;
+
+  errorMessage?: string = '';
+
   constructor(private router: Router) {
   }
 
   onLoginClicked() {
-    this.router.navigate(['home']);
+    if(!this.email) {
+      this.errorMessage = 'Bitte geben Sie eine Email-adresse an!'
+      return;
+    }
+
+    if(!this.pw) {
+      this.errorMessage = 'Bitte geben Sie ein Passwort an!'
+      return;
+    }
+
+    this.errorMessage = undefined;
+    this.login();
   }
 
   onRegisterClicked() {
     this.router.navigate(['register']);
+  }
+
+  private login() {
+    this.router.navigate(['home']);
   }
 }

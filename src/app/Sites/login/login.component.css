@@ -15,6 +15,15 @@
   width: 200px;
 }
 
+.login__error-message {
+  display: flex;
+  width: 80%;
+  justify-content: left;
+  color: #ff0000;
+  font-size: 15px;
+  min-height: 25px;
+}
+
 .login__data-input-wrapper {
   display: flex;
   flex-direction: column;

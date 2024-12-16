@@ -2,9 +2,12 @@
   <div class="login__logo-wrapper">
     <img src="assets/favicon.jpg" class="login__logo">
   </div>
+  <div class="login__error-message">
+    {{errorMessage}}
+  </div>
   <div class="login__data-input-wrapper">
-    <input type="email" placeholder="email" class="login__data-input-element">
-    <input type="password" placeholder="passwort" class="login__data-input-element">
+    <input type="email" placeholder="email" class="login__data-input-element" [(ngModel)]="email">
+    <input type="password" placeholder="passwort" class="login__data-input-element" [(ngModel)]="pw">
   </div>
   <div class="login__buttons-wrapper">
     <div class="login__button" (click)="onLoginClicked()">
