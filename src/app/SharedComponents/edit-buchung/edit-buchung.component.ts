@@ -122,7 +122,7 @@ export class EditBuchungComponent implements OnInit {
               this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
             }
           }
-          this.router.navigate(['/']);
+          this.router.navigate(['home']);
         } else {
           if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -148,7 +148,7 @@ export class EditBuchungComponent implements OnInit {
                   }
                 }
                 this.dialogService.isConfirmDialogVisible = false;
-                this.router.navigate(['/']);
+                this.router.navigate(['home']);
               }
             }
             this.dialogService.showConfirmDialog(confirmDialogViewModel);

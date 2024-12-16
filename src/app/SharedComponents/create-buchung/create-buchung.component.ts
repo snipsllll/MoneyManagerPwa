@@ -98,7 +98,7 @@ export class CreateBuchungComponent {
 
         if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
-          this.router.navigate(['/']);
+          this.router.navigate(['home']);
         } else {
           if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -111,7 +111,7 @@ export class CreateBuchungComponent {
                 this.dataChangeService.addBuchung(this.buchung);
 
                 this.dialogService.isConfirmDialogVisible = false;
-                this.router.navigate(['/']);
+                this.router.navigate(['home']);
               }
             }
             this.dialogService.showConfirmDialog(confirmDialogViewModel);
@@ -129,7 +129,7 @@ export class CreateBuchungComponent {
 
   onCancelClicked() {
     if (this.isBuchungEmpty()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['home']);
       return;
     }
 
@@ -141,7 +141,7 @@ export class CreateBuchungComponent {
       },
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['home']);
       }
     }
 
@@ -150,7 +150,7 @@ export class CreateBuchungComponent {
 
   onBackClicked() {
     if (this.isBuchungEmpty()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['home']);
       return;
     }
     const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -161,7 +161,7 @@ export class CreateBuchungComponent {
       },
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['home']);
       }
     }
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
