@@ -252,14 +252,17 @@ export class DataChangeService {
 
   addBuchungsKategorie(name: string) {
     this.dataService.userData.addKategorie(name);
+    this.dataService.update();
   }
 
   deleteBuchungsKategorie(id: number) {
     this.dataService.userData.removeKategorie(id);
+    this.dataService.update();
   }
 
   editBuchungsKategorie(id: number, name: string) {
     this.dataService.userData.editKategorie(id, name);
+    this.dataService.update();
   }
 
   deleteAllBuchungsKategorien() {

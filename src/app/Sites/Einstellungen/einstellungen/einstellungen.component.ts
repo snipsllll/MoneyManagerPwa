@@ -44,10 +44,12 @@ export class EinstellungenComponent implements OnInit {
       title: 'Alle Daten löschen?',
       message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.dataService.userData.deleteAllData();
-        this.dataService.update();
-        this.update();
-        this.dialogService.isConfirmDialogVisible = false;
+        this.adminService.deleteSavedData().then(() => {
+          this.dataService.userData.deleteAllData();
+          this.dataService.update();
+          this.update();
+          this.dialogService.isConfirmDialogVisible = false;
+        })
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
@@ -78,10 +80,12 @@ export class EinstellungenComponent implements OnInit {
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.userData.save(JSON.parse(fileContent));
-          this.dataService.update();
-          this.update();
-          this.dialogService.isConfirmDialogVisible = false;
+          this.adminService.updateSavedData(JSON.parse(fileContent)).then(() => {
+            this.dataService.userData.save(JSON.parse(fileContent));
+            this.dataService.update();
+            this.update();
+            this.dialogService.isConfirmDialogVisible = false;
+          })
         },
         onCancelClicked: () => {
           this.dialogService.isConfirmDialogVisible = false;
