@@ -17,7 +17,7 @@ export class AdminService {
   data = new BehaviorSubject<IDoc | null>(null);
 
   constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
-    this.tryStartupLogin();
+    //this.tryStartupLogin();
   }
 
   // Login-Methode gibt ein Promise zurück
@@ -47,6 +47,7 @@ export class AdminService {
         this.loggedIn.next(false);
         this.data.next(null);
         this.deleteSavedLoginData();
+        this.router.navigate(['login'])
       })
       .catch(error => {
         console.error('Fehler beim Logout:', error);
@@ -58,6 +59,7 @@ export class AdminService {
   async register(email: string, password: string): Promise<void> {
     return this.authService.register(email, password)
       .then(() => {
+        this.router.navigate(['login'])
         // Erfolgreiche Registrierung, hier kannst du zusätzliche Logik hinzufügen, falls erforderlich
       })
       .catch(error => {
@@ -99,6 +101,7 @@ export class AdminService {
       .then(() => {
         this.logout();
         this.reloadData();
+        this.router.navigate(['login'])
       })
       .catch(error => {
         console.error('Fehler beim Löschen des Benutzerkontos:', error);

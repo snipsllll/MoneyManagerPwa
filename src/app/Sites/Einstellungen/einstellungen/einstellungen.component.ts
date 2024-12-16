@@ -8,20 +8,21 @@ import {DataProviderService} from "../../../Services/DataProviderService/data-pr
 import {SavedData} from "../../../Models/Interfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 import {Router} from "@angular/router";
+import {AdminService} from "../../../admin.service";
 
 @Component({
   selector: 'app-einstellungen',
   templateUrl: './einstellungen.component.html',
   styleUrl: './einstellungen.component.css'
 })
-export class EinstellungenComponent implements OnInit{
+export class EinstellungenComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput: any;
   isEnableToHighBuchungenChecked!: boolean;
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
 
-  constructor(private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
   }
 
@@ -40,18 +41,18 @@ export class EinstellungenComponent implements OnInit{
 
   onAlleDatenLoeschenClicked() {
     const confirmDialogViewModel: ConfirmDialogViewModel = {
-    title: 'Alle Daten löschen?',
-    message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
-    onConfirmClicked: () => {
-      this.dataService.userData.deleteAllData();
-      this.dataService.update();
-      this.update();
-      this.dialogService.isConfirmDialogVisible = false;
-    },
-    onCancelClicked: () => {
-      this.dialogService.isConfirmDialogVisible = false;
+      title: 'Alle Daten löschen?',
+      message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.dataService.userData.deleteAllData();
+        this.dataService.update();
+        this.update();
+        this.dialogService.isConfirmDialogVisible = false;
+      },
+      onCancelClicked: () => {
+        this.dialogService.isConfirmDialogVisible = false;
+      }
     }
-  }
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
@@ -98,7 +99,7 @@ export class EinstellungenComponent implements OnInit{
     const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
     // Erstelle ein Blob-Objekt mit dem Textinhalt und dem MIME-Typ
-    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const blob = new Blob([fileContent], {type: 'text/plain'});
 
     // Erstelle einen temporären Link zum Herunterladen der Datei
     const link = document.createElement('a');
@@ -119,7 +120,7 @@ export class EinstellungenComponent implements OnInit{
       const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
       // Erstelle die Datei im ausgewählten Ordner
-      const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });
+      const fileHandle = await handle.getFileHandle('meineDaten.txt', {create: true});
       const writableStream = await fileHandle.createWritable();
 
       // Schreibe den Inhalt in die Datei und schließe den Stream
@@ -237,5 +238,20 @@ export class EinstellungenComponent implements OnInit{
 
   onAusloggenClicked() {
     this.router.navigate(['login'])
+  }
+
+  onAccountLoeschenClicked() {
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Account löschen?',
+      message: 'Bist du sicher, dass du deinen Account löschen möchtest? Es wird ALLES unwiederrufbar gelöscht!',
+      onConfirmClicked: () => {
+        this.adminService.deleteAccount();
+        this.dialogService.isConfirmDialogVisible = false;
+      },
+      onCancelClicked: () => {
+        this.dialogService.isConfirmDialogVisible = false;
+      }
+    }
+    this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 }

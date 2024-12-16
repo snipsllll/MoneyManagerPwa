@@ -19,6 +19,9 @@ export class RegisterComponent {
   }
 
   onToLoginClicked() {
+    this.email = undefined;
+    this.pw1 = undefined;
+    this.pw2 = undefined;
     this.router.navigate(['login']);
   }
 
@@ -56,9 +59,7 @@ export class RegisterComponent {
     if(!this.email || !this.pw1) {
       throw new Error('email oder pw war leer');
     }
-    this.adminService.register(this.email, this.pw1).then(() => {
-      this.router.navigate(['login']);
-    })
+    this.adminService.register(this.email, this.pw1);
   }
 
 }
