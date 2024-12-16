@@ -17,6 +17,7 @@ export class AdminService {
   data = new BehaviorSubject<SavedData | null>(null);
 
   constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+    this.router.navigate(['login']);
     this.tryStartupLogin();
   }
 
@@ -30,8 +31,8 @@ export class AdminService {
         return this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
       })
       .then(() => {
-        this.reloadData();
         this.router.navigate(['home']);
+        this.reloadData();
       })
       .catch(error => {
         console.error('Fehler beim Login:', error);
