@@ -19,6 +19,14 @@
   font-size: 20px;
 }
 
+.einstellungen__ausloggen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
 .button {
   padding: 10px;
   width: fit-content;

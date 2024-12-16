@@ -7,6 +7,7 @@ import {DataChangeService} from "../../../Services/DataChangeService/data-change
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {SavedData} from "../../../Models/Interfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-einstellungen',
@@ -20,7 +21,7 @@ export class EinstellungenComponent implements OnInit{
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
 
-  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
   }
 
@@ -232,5 +233,9 @@ export class EinstellungenComponent implements OnInit{
 
   onKatVerwaltenClicked() {
     this.dialogService.showBuchungsKategorienDialog();
+  }
+
+  onAusloggenClicked() {
+    this.router.navigate(['login'])
   }
 }
