@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { IDoc } from './Models/IDoc';
 import { lastValueFrom } from 'rxjs';
+import {SavedData} from "./Models/Interfaces";
+import {UT} from "./Models/Classes/UT";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
 
+  utils = new UT();
+
   constructor(private firestore: AngularFirestore) {}
 
   // Hinzufügen von Daten
-  async addSavedData(dataToAdd: IDoc, uid?: string): Promise<void> {
+  async addSavedData(dataToAdd: SavedData, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -49,7 +52,7 @@ export class FirestoreService {
   }
 
   // Bearbeiten von gespeicherten Daten
-  async editSavedDataForUser(updatedData: Partial<IDoc>, uid?: string): Promise<void> {
+  async editSavedDataForUser(updatedData: Partial<SavedData>, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -58,10 +61,7 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const newDoc: IDoc = {
-          value: updatedData.value || 0,
-          text: updatedData.text || 'Default Title',
-        };
+        const newDoc: SavedData = this.utils.getEmptySavedData();
         await this.addSavedData(newDoc, uid);
         console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden. Neues savedData wurde erstellt.`);
         return;
@@ -77,7 +77,7 @@ export class FirestoreService {
   }
 
   // Abrufen von gespeicherten Daten
-  async getSavedDataForUser(uid?: string): Promise<IDoc | null> {
+  async getSavedDataForUser(uid?: string): Promise<SavedData | null> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -90,7 +90,7 @@ export class FirestoreService {
         return null;
       }
       const docSnap = querySnapshot.docs[0];
-      return docSnap.data() as IDoc;
+      return docSnap.data() as SavedData;
     } catch (error) {
       console.error(`Fehler beim Abrufen des Dokuments in der Collection 'savedData' für Benutzer mit uid=${uid}:`, error);
       throw error;
@@ -152,10 +152,7 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const newSavedData: IDoc = {
-          value: 0,
-          text: "Default Entry",
-        };
+        const newSavedData = this.utils.getEmptySavedData();
         await collectionRef.add(newSavedData);
         console.log(`Kein gespeichertes Data für Benutzer mit uid=${uid} gefunden. Ein neuer Eintrag wurde hinzugefügt.`);
       } else {

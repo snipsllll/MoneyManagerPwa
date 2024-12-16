@@ -3,9 +3,9 @@ import {BehaviorSubject} from "rxjs";
 import {FirestoreService} from "./firestore.service";
 import {AuthService} from "./auth.service";
 import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
-import {IDoc} from "./Models/IDoc";
 import { User } from 'firebase/auth';
 import {Router} from "@angular/router";
+import {SavedData} from "./Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class AdminService {
 
   loggedInUser = new BehaviorSubject<User | null>(null);
   loggedIn = new BehaviorSubject<boolean>(false);
-  data = new BehaviorSubject<IDoc | null>(null);
+  data = new BehaviorSubject<SavedData | null>(null);
 
   constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     //this.tryStartupLogin();
@@ -68,7 +68,7 @@ export class AdminService {
   }
 
   // Aktualisierung der gespeicherten Daten gibt ein Promise zurück
-  async updateSavedData(savedData: IDoc): Promise<void> {
+  async updateSavedData(savedData: SavedData): Promise<void> {
     return this.firestoreService.editSavedDataForUser(savedData, this.getUid())
       .then(() => {
         this.reloadData();
