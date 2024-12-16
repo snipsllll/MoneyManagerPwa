@@ -1,1 +1,18 @@
-<div (click)="onToLoginClicked()">to login</div>
+<div class="register">
+  <div class="register__logo-wrapper">
+    <img src="assets/favicon.jpg" class="register__logo">
+  </div>
+  <div class="register__data-input-wrapper">
+    <input type="email" placeholder="email" class="register__data-input-element">
+    <input type="password" placeholder="passwort" class="register__data-input-element">
+    <input type="password" placeholder="passwort wiederholen" class="register__data-input-element">
+  </div>
+  <div class="register__buttons-wrapper">
+    <div class="register__button" (click)="onRegisterClicked()">
+      registrieren
+    </div>
+    <div class="register__back-text" (click)="onToLoginClicked()">
+      zurück
+    </div>
+  </div>
+</div>

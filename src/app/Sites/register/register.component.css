@@ -1,0 +1,52 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+}
+
+.register__logo-wrapper {
+  margin: 50px 0;
+}
+
+.register__logo {
+  height: 200px;
+  width: 200px;
+}
+
+.register__data-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.register__data-input-element {
+  width: 80%;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.register__buttons-wrapper {
+  margin-top: 20px;
+}
+
+.register__button {
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: 20px;
+  background-color: #b9e0ff;
+}
+
+.register__back-text {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
