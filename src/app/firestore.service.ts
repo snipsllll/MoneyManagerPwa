@@ -66,6 +66,7 @@ export class FirestoreService {
         console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden. Neues savedData wurde erstellt.`);
         return;
       }
+      console.log(1231231)
       const docSnap = querySnapshot.docs[0];
       const documentRef = docSnap.ref;
       await documentRef.update(updatedData);

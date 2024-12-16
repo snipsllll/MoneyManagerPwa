@@ -2,6 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
 import {Day, IGeplanteAusgabenBuchung, Month, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
+import {AdminService} from "../../admin.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class DataService {
   userData = new UserData();
   updated = signal<number>(0);
 
-  constructor() {
+  constructor(private adminService: AdminService) {
     this.update(false);
   }
 
@@ -341,6 +342,7 @@ export class DataService {
 
   private save() { //TODO testen
     console.log(2)
+    this.adminService.updateSavedData(this.userData.getSavedData());
     this.userData.save();
   }
 

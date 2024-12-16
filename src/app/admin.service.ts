@@ -17,7 +17,7 @@ export class AdminService {
   data = new BehaviorSubject<SavedData | null>(null);
 
   constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
-    //this.tryStartupLogin();
+    this.tryStartupLogin();
   }
 
   // Login-Methode gibt ein Promise zurück

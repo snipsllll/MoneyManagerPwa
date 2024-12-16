@@ -29,13 +29,13 @@ export class FileEngine {
 
       try {
         // Lesbares JSON in localStorage speichern
-        localStorage.setItem('savedText', readableJson);
+        //localStorage.setItem('savedText', readableJson);
       } catch (e) {
         console.error('Fehler beim Speichern in localStorage:', e);
       }
     } else {
       // Production: Kompaktes JSON speichern
-      localStorage.setItem('savedValue', JSON.stringify(savedData) ?? 'lol');
+      //localStorage.setItem('savedValue', JSON.stringify(savedData) ?? 'lol');
     }
   }
 
