@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { IDoc } from './Models/IDoc';
 import { lastValueFrom } from 'rxjs';
+import {SavedData} from "./Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +78,7 @@ export class FirestoreService {
   }
 
   // Abrufen von gespeicherten Daten
-  async getSavedDataForUser(uid?: string): Promise<IDoc | null> {
+  async getSavedDataForUser(uid?: string): Promise<SavedData | null> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -90,7 +91,7 @@ export class FirestoreService {
         return null;
       }
       const docSnap = querySnapshot.docs[0];
-      return docSnap.data() as IDoc;
+      return docSnap.data() as SavedData;
     } catch (error) {
       console.error(`Fehler beim Abrufen des Dokuments in der Collection 'savedData' für Benutzer mit uid=${uid}:`, error);
       throw error;

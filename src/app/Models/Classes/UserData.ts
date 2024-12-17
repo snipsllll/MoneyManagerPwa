@@ -29,6 +29,24 @@ export class UserData {
   private _fileEngine: FileEngine = new FileEngine(true);
 
   constructor() {
+    //this.loadDataFromStorage();
+  }
+
+  setUserData(loadedData: any) {
+    let savedData: SavedData = this.checkForDbUpdates(loadedData);
+
+    this.buchungen = savedData.buchungen ?? [];
+    this.buchungsKategorien = savedData.buchungsKategorien ?? [];
+    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
+    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
+    this.sparschweinEintraege = savedData.sparEintraege ?? [];
+    this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
+    this.settings = savedData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
+  }
+
+  loadData() {
     this.loadDataFromStorage();
   }
 
@@ -77,7 +95,7 @@ export class UserData {
   }
 
   save(savedData?: SavedData) {
-    console.log(1)
+    console.log(111222)
     if (savedData) {
       this._fileEngine.save(this.checkForDbUpdates(savedData));
       this.reload();
@@ -525,7 +543,8 @@ export class UserData {
     const months: Month[] = [];
 
     savedMonths.forEach(savedMonth => {
-      const date = savedMonth.date;
+      const date = new Date(savedMonth.date);
+      console.log(date)
       const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;

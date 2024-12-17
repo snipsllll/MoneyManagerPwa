@@ -7,6 +7,7 @@ import {UT} from "../../Models/Classes/UT";
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {TopBarBudgetOptions} from "../../Models/Enums";
 import {versionName} from "../../Models/Classes/versionName";
+import {AdminService} from "../../admin.service";
 
 @Component({
   selector: 'app-top-bar',
@@ -28,7 +29,7 @@ export class TopBarComponent implements OnInit {
 
   ut: UT = new UT();
 
-  constructor(public dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(private adminService: AdminService, public dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
 
@@ -46,6 +47,9 @@ export class TopBarComponent implements OnInit {
   }
 
   test() {
+    this.adminService.loadData();
+    //this.dataService.userData.loadData();
+    //this.dataService.update();
     console.log(this.dataService.userData)
   }
 

@@ -6,6 +6,7 @@ import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
 import {IDoc} from "./Models/IDoc";
 import { User } from 'firebase/auth';
 import {Router} from "@angular/router";
+import {DataService} from "./Services/DataService/data.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,17 @@ export class AdminService {
 
   loggedInUser = new BehaviorSubject<User | null>(null);
   loggedIn = new BehaviorSubject<boolean>(false);
-  data = new BehaviorSubject<IDoc | null>(null);
 
-  constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
+  }
+
+  async loadData() {
+    this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
+      console.log(data);
+      this.dataService.userData.setUserData(data);
+      this.dataService.update();
+    });
   }
 
   // Login-Methode gibt ein Promise zurück
@@ -51,7 +59,7 @@ export class AdminService {
         console.log(89898787)
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
-        this.data.next(null);
+        //TODO userData in dataService auf null setzten oder halt emoptyUserData
         this.deleteSavedLoginData();
         this.router.navigate(['login'])
       })
@@ -90,7 +98,7 @@ export class AdminService {
   async deleteSavedData(): Promise<void> {
     return this.firestoreService.deleteSavedData(this.getUid())
       .then(() => {
-        this.data.next(null);
+        //TODO userData in dataService auf null setzten oder halt emoptyUserData
       })
       .catch(error => {
         console.error('Fehler beim Löschen der gespeicherten Daten:', error);
@@ -120,7 +128,7 @@ export class AdminService {
     this.firestoreService.getSavedDataForUser(this.getUid())
       .then(data => {
         console.log(data);
-        this.data.next(data);
+        //TODO userData in dataService auf data setzen
       })
       .catch(error => {
         console.error('Fehler beim Neuladen der Daten:', error);
@@ -129,6 +137,7 @@ export class AdminService {
 
   // private Methode, um die UID des angemeldeten Benutzers zu erhalten
   private getUid(): string | undefined {
+    console.log(this.loggedInUser.getValue()?.uid)
     return this.loggedInUser.getValue()?.uid;
   }
 
