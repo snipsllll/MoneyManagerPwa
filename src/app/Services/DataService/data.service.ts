@@ -12,14 +12,10 @@ export class DataService {
 
   userData = new UserData();
   updated = signal<number>(0);
-  doSave = new BehaviorSubject<SaveDataUpdateInfos | null>(null);
+  doFireSave = new BehaviorSubject<SaveDataUpdateInfos | null>(null);
 
   constructor() {
     this.update(false, true);
-  }
-
-  initialLoad() {
-
   }
 
   triggerUpdated() {
@@ -346,7 +342,7 @@ export class DataService {
   }
 
   private save(isInitial?: boolean) { //TODO testen
-    this.doSave.next({isInitialLoad: isInitial, fireData: this.userData.getFireData()});
+    this.doFireSave.next({isInitialLoad: isInitial, fireData: this.userData.getFireData()});
     //this.userData.save();
   }
 

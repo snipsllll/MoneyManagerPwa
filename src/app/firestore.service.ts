@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { IDoc } from './Models/IDoc';
 import { lastValueFrom } from 'rxjs';
-import {SavedData} from "./Models/Interfaces";
+import {FireData, SavedData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 
 @Injectable({
@@ -53,7 +53,7 @@ export class FirestoreService {
   }
 
   // Bearbeiten von gespeicherten Daten
-  async editSavedDataForUser(updatedData: Partial<SavedData>, uid?: string): Promise<void> {
+  async editSavedDataForUser(updatedData: Partial<FireData>, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }

@@ -6,7 +6,7 @@ import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
 import { User } from 'firebase/auth';
 import {Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
-import {SavedData} from "./Models/Interfaces";
+import {FireData, SavedData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 
 @Injectable({
@@ -24,11 +24,11 @@ export class AdminService {
   constructor(private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
-    this.dataService.doSave.subscribe(data => {
+    this.dataService.doFireSave.subscribe(data => {
       if(data && data.fireData && !data.isInitialLoad) {
         console.log(777777)
         console.log(data.fireData)
-        this.updateSavedData(data.fireData)
+        this.updateFireData(data.fireData)
       }
 
     })
@@ -114,8 +114,8 @@ export class AdminService {
   }
 
   // Aktualisierung der gespeicherten Daten gibt ein Promise zurück
-  async updateSavedData(savedData: SavedData): Promise<void> {
-    return this.firestoreService.editSavedDataForUser(savedData, this.getUid())
+  async updateFireData(fireData: FireData): Promise<void> {
+    return this.firestoreService.editSavedDataForUser(fireData, this.getUid())
       .then(() => {
         this.reloadData();
       })

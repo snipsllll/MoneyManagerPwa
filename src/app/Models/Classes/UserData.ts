@@ -127,6 +127,7 @@ export class UserData {
   private convertSpareintraegeToFireSpareintraege(spareintraege: ISparschweinEintrag[]) {
     const fireSparEintraege: IFireSparschweinEintrag[] = [];
     spareintraege.forEach(spareintrag => {
+      console.log(spareintrag.data.date.getTime() / 1000)
       const fireSpareintrag: IFireSparschweinEintrag = {
         id: spareintrag.id,
         data: {
@@ -135,16 +136,18 @@ export class UserData {
             seconds: spareintrag.data.date.getTime() / 1000
           },
           betrag: spareintrag.data.betrag,
-          title: spareintrag.data.title,
-          zusatz: spareintrag.data.zusatz,
-          vonMonat: spareintrag.data.vonMonat,
-          vonWunschliste: spareintrag.data.vonWunschliste,
-          wunschlistenId: spareintrag.data.wunschlistenId
+          title: spareintrag.data.title ?? '',
+          zusatz: spareintrag.data.zusatz ?? '',
+          vonMonat: spareintrag.data.vonMonat ?? false,
+          vonWunschliste: spareintrag.data.vonWunschliste ?? false,
+          wunschlistenId: spareintrag.data.wunschlistenId ?? -1
         }
       };
 
       fireSparEintraege.push(fireSpareintrag);
     })
+
+    console.log(fireSparEintraege)
 
     return fireSparEintraege;
   }

@@ -74,11 +74,13 @@ export class EinstellungenComponent implements OnInit {
     // Dateiinhalt wird geladen und in der Konsole angezeigt
     reader.onload = (e: any) => {
       const fileContent = e.target.result;
+      console.log(JSON.parse(fileContent))
       const confirmDialogViewModel: ConfirmDialogViewModel = {
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.userData.save(JSON.parse(fileContent));
+          this.dataService.userData.setUserData(JSON.parse(fileContent));
+          this.adminService.updateFireData(this.dataService.userData.getFireData());
           this.dataService.update();
           this.update();
           this.dialogService.isConfirmDialogVisible = false;
