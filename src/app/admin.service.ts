@@ -48,7 +48,7 @@ export class AdminService {
   }
 
   // Login-Methode gibt ein Promise zurück
-  async login(email: string, password: string){
+  async login(email: string, password: string, loginDatenRunterladen?: boolean){
     console.log('Login-Versuch gestartet');
 
     return this.authService.login(email, password)
@@ -59,9 +59,10 @@ export class AdminService {
         this.router.navigate(['home']);
 
         // Zusätzliche Logik nach erfolgreichem Login
-        this.saveLoginData(email, password);
-        this.reloadData();
+        if(loginDatenRunterladen !== false)
+          this.saveLoginData(email, password);
 
+        this.reloadData();
         console.log('Login erfolgreich:', userCredential.user);
         this.loadData();
         return userCredential.user; // Rückgabe des Users
@@ -166,7 +167,7 @@ export class AdminService {
     const savedLoginData = this.fileManager.load();
     console.log(savedLoginData)
     if(savedLoginData.email && savedLoginData.password)
-      this.login(savedLoginData.email, savedLoginData.password);
+      this.login(savedLoginData.email, savedLoginData.password, false);
   }
 
   private saveLoginData(email: string, password: string) {

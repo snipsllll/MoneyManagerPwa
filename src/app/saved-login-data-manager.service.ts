@@ -29,6 +29,7 @@ export class SavedLoginDataManagerService {
     }
 
     const url = window.URL.createObjectURL(blob);
+    console.log(url)
     this.previousBlobUrl = url; // Speichere die aktuelle URL, um sie später freizugeben
 
     const a = document.createElement('a');
