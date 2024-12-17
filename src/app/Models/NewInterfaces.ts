@@ -93,6 +93,21 @@ export interface ISparschweinEintragData {
   vonMonat?: boolean;
 }
 
+export interface IFireSparschweinEintrag {
+  id: number;
+  data: IFireSparschweinEintragData;
+}
+
+export interface IFireSparschweinEintragData {
+  date: any;
+  title?: string;
+  betrag: number;
+  zusatz?: string;
+  vonWunschliste?: boolean;
+  wunschlistenId?: number;
+  vonMonat?: boolean;
+}
+
 export interface BarChartViewModel {
   diagramLabel: string;
   labels: string[]; // Labels für die x-Achse (z. B. Monate)

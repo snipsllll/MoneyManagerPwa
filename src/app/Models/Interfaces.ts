@@ -1,5 +1,5 @@
 import {
-  IBuchung, IFireBuchung,
+  IBuchung, IFireBuchung, IFireSparschweinEintrag,
   IFixkostenEintrag, IGeplanteAusgabenKategorie,
   IMonthFixkostenEintrag,
   ISparschweinEintrag,
@@ -78,7 +78,7 @@ export interface FireData {
   buchungsKategorien: { id: number; name: string }[];
   savedMonths: FireMonth[];
   standardFixkostenEintraege: IFixkostenEintrag[];
-  sparEintraege: ISparschweinEintrag[];
+  sparEintraege: IFireSparschweinEintrag[];
   wunschlistenEintraege: IWunschlistenEintrag[];
   auswertungsLayouts: IAuswertungsLayout[];
   settings: Settings;

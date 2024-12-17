@@ -141,6 +141,7 @@ export class SparschweinComponent implements OnInit{
   }
 
   private sortByDate(eintraege: ISparschweinEintrag[]) {
+    console.log(eintraege)
     return eintraege.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   }
 

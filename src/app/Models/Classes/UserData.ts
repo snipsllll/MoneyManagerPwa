@@ -10,7 +10,14 @@ import {
   Week
 } from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {IBuchung, IFireBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
+import {
+  IBuchung,
+  IFireBuchung,
+  IFireSparschweinEintrag,
+  IFixkostenEintrag,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 import {IAuswertungsLayout} from "../Auswertungen-Interfaces";
@@ -51,7 +58,7 @@ export class UserData {
       buchungsKategorien: this.buchungsKategorien ?? [],
       savedMonths: this.convertSavedMonthsToFireMonths(this.months) ?? [],
       settings: this.settings ?? [],
-      sparEintraege: this.sparschweinEintraege ?? [],
+      sparEintraege: this.convertSpareintraegeToFireSpareintraege(this.sparschweinEintraege) ?? [],
       standardFixkostenEintraege: this.standardFixkostenEintraege ?? [],
       wunschlistenEintraege: this.wunschlistenEintraege ?? []
     }
@@ -65,7 +72,7 @@ export class UserData {
     this.buchungsKategorien = fireData.buchungsKategorien ?? [];
     this.months = this.convertFireMonthsToMonths(fireData.savedMonths ?? []);
     this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = fireData.sparEintraege ?? [];
+    this.sparschweinEintraege = this.convertFirespareintraegeToSpareintraege(fireData.sparEintraege) ?? [];
     this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
     this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
     this.settings = fireData.settings ?? this.getDefaultSettings();
@@ -93,6 +100,53 @@ export class UserData {
       newBuchungen.push(newBuchung);
     })
     return newBuchungen;
+  }
+
+  private convertSpareintraegeToFireSpareintraege(spareintraege: ISparschweinEintrag[]) {
+    const fireSparEintraege: IFireSparschweinEintrag[] = [];
+    spareintraege.forEach(spareintrag => {
+      const fireSpareintrag: IFireSparschweinEintrag = {
+        id: spareintrag.id,
+        data: {
+          date: {
+            nanoseconds: 0,
+            seconds: spareintrag.data.date.getTime() / 1000
+          },
+          betrag: spareintrag.data.betrag,
+          title: spareintrag.data.title,
+          zusatz: spareintrag.data.zusatz,
+          vonMonat: spareintrag.data.vonMonat,
+          vonWunschliste: spareintrag.data.vonWunschliste,
+          wunschlistenId: spareintrag.data.wunschlistenId
+        }
+      };
+
+      fireSparEintraege.push(fireSpareintrag);
+    })
+
+    return fireSparEintraege;
+  }
+
+  private convertFirespareintraegeToSpareintraege(fireSpareintraege: IFireSparschweinEintrag[]) {
+    const sparEintraege: ISparschweinEintrag[] = [];
+    fireSpareintraege.forEach(fireSpareintrag => {
+      const spareintrag: ISparschweinEintrag = {
+        id: fireSpareintrag.id,
+        data: {
+          date: new Date(fireSpareintrag.data.date.seconds * 1000),
+          betrag: fireSpareintrag.data.betrag,
+          title: fireSpareintrag.data.title,
+          zusatz: fireSpareintrag.data.zusatz,
+          vonMonat: fireSpareintrag.data.vonMonat,
+          vonWunschliste: fireSpareintrag.data.vonWunschliste,
+          wunschlistenId: fireSpareintrag.data.wunschlistenId
+        }
+      };
+
+      sparEintraege.push(spareintrag);
+    })
+
+    return sparEintraege;
   }
 
   private convertSavedMonthsToFireMonths(months: Month[]) {
