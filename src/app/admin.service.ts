@@ -17,6 +17,7 @@ export class AdminService {
   loggedInUser = new BehaviorSubject<User | null>(null);
   loggedIn = new BehaviorSubject<boolean>(false);
   isInitialLoad: boolean = true;
+  isDataLoading = new BehaviorSubject<boolean>(true);
 
   utils = new UT();
 
@@ -42,6 +43,7 @@ export class AdminService {
         this.dataService.userData.setUserData(data);
         this.dataService.update(false, this.isInitialLoad);
         this.isInitialLoad = false;
+        this.isDataLoading.next(false);
       }
 
     });
@@ -62,7 +64,7 @@ export class AdminService {
         if(loginDatenRunterladen !== false)
           this.saveLoginData(email, password);
 
-        this.reloadData();
+        //this.reloadData();
         console.log('Login erfolgreich:', userCredential.user);
         this.loadData();
         return userCredential.user; // Rückgabe des Users

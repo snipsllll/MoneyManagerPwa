@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {TopbarService} from "../../../Services/TopBarService/topbar.service";
 import {Sites} from "../../../Models/Enums";
 import {NavigationService} from "../../../Services/NavigationService/navigation.service";
+import {AdminService} from "../../../admin.service";
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,13 @@ import {NavigationService} from "../../../Services/NavigationService/navigation.
   styleUrl: './home.component.css'
 })
 export class HomeComponent  implements OnInit{
-  constructor(private navigationService: NavigationService, private router: Router, private topbarService: TopbarService) {
+  isDataLoading = true;
+
+  constructor(private adminService: AdminService, private navigationService: NavigationService, private router: Router, private topbarService: TopbarService) {
+    this.adminService.isDataLoading.subscribe(isLoading => {
+      console.log(isLoading);
+      this.isDataLoading = isLoading;
+    })
   }
 
   ngOnInit() {

@@ -1,59 +1,92 @@
 import { Injectable } from '@angular/core';
-import {ISavedLoginData} from "./Models/ISavedLoginData";
-import {environment} from "../environments/environment";
+import { ISavedLoginData } from './Models/ISavedLoginData';
+import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SavedLoginDataManagerService {
+  private readonly fileName: string = 'savedText.txt';
+  private readonly defaultData: string = '{}';
+  private isInProduction: boolean = environment.production;
 
-  fileName: string = 'savedLoginData/savedText.txt';
-  isInProduction = environment;
+  constructor() {}
 
-  constructor() { }
-
-  save(savedLoginData?: ISavedLoginData) {
-    if (!this.isInProduction.production) {
-      // JSON.stringify mit Einrückung für lesbares JSON
-      const readableJson = JSON.stringify(savedLoginData, null, 2);
-
-      // JSON als Blob speichern
-      const blob = new Blob([readableJson], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = this.fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      try {
-        // Lesbares JSON in localStorage speichern
-        localStorage.setItem('savedText', readableJson);
-      } catch (e) {
-        console.error('Fehler beim Speichern in localStorage:', e);
-      }
-    } else {
-      // Production: Kompaktes JSON speichern
-      localStorage.setItem('savedValue', JSON.stringify(savedLoginData) ?? 'lol');
-    }
-  }
-
-  load(): ISavedLoginData {
-    return JSON.parse(this.loadTextFromLocalStorage());
-  }
-
-  private loadTextFromLocalStorage(): string {
+  /**
+   * Löscht oder überschreibt gespeicherte Login-Daten.
+   * Erstellt neue Daten, falls keine existieren.
+   */
+  deleteLoginData(): string {
     try {
-      let savedText = localStorage.getItem(this.fileName);
-      console.log(savedText)
-      if (savedText !== undefined && savedText !== null) {
-        console.log(663636)
-        return savedText;
+      const existingData = localStorage.getItem(this.fileName);
+
+      if (existingData) {
+        console.log('Datei gefunden. Alte Daten:', existingData);
+
+        // Überschreibe vorhandene Daten
+        localStorage.setItem(this.fileName, this.defaultData);
+        console.log('Alte Datei überschrieben.');
+      } else {
+        console.log('Keine Datei gefunden. Neue Datei wird erstellt.');
+
+        // Speichere die Standarddaten
+        localStorage.setItem(this.fileName, this.defaultData);
+        console.log('Neue Datei gespeichert.');
       }
-      return '{}';
+      return this.defaultData;
     } catch (e) {
-      console.error('Fehler beim laden aus localStorage:', e);
+      console.error('Fehler beim Zugriff auf localStorage:', e);
+      return this.defaultData;
     }
-    return '{}';
+  }
+
+  /**
+   * Speichert die übergebenen Login-Daten.
+   * @param savedLoginData - Die zu speichernden Daten.
+   */
+  save(savedLoginData?: ISavedLoginData): void {
+    try {
+      const jsonString = this.isInProduction
+        ? JSON.stringify(savedLoginData ?? this.defaultData) // Kompakte Speicherung in Produktion
+        : JSON.stringify(savedLoginData ?? this.defaultData, null, 2); // Lesbares JSON in Entwicklung
+
+      localStorage.setItem(this.fileName, jsonString);
+      console.log('Daten erfolgreich in localStorage gespeichert.');
+
+      // Nur in der Entwicklungsumgebung: JSON-Datei herunterladen
+      if (!this.isInProduction) {
+        this.downloadAsFile(jsonString);
+      }
+    } catch (e) {
+      console.error('Fehler beim Speichern in localStorage:', e);
+    }
+  }
+
+  /**
+   * Lädt die gespeicherten Login-Daten aus dem localStorage.
+   */
+  load(): ISavedLoginData {
+    try {
+      const savedText = localStorage.getItem(this.fileName) || this.defaultData;
+      return JSON.parse(savedText) as ISavedLoginData;
+    } catch (e) {
+      console.error('Fehler beim Laden aus localStorage:', e);
+      return JSON.parse(this.defaultData);
+    }
+  }
+
+  /**
+   * Private Hilfsmethode, um JSON-Daten als Datei herunterzuladen.
+   * @param jsonString - Der zu speichernde JSON-String.
+   */
+  private downloadAsFile(jsonString: string): void {
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    console.log('JSON-Datei wurde heruntergeladen.');
   }
 }
