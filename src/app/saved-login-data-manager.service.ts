@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ISavedLoginData} from "./Models/ISavedLoginData";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -7,42 +8,33 @@ import {ISavedLoginData} from "./Models/ISavedLoginData";
 export class SavedLoginDataManagerService {
 
   fileName: string = 'savedLoginData/savedText.txt';
-  previousBlobUrl?: string | null;
+  isInProduction = environment;
 
   constructor() { }
 
   save(savedLoginData?: ISavedLoginData) {
-    // Static reference for the previous URL (to revoke old object URLs)
-    if (!this.previousBlobUrl) {
-      this.previousBlobUrl = null;
-    }
+    if (!this.isInProduction.production) {
+      // JSON.stringify mit Einrückung für lesbares JSON
+      const readableJson = JSON.stringify(savedLoginData, null, 2);
 
-    // JSON.stringify mit Einrückung für lesbares JSON
-    const readableJson = JSON.stringify(savedLoginData ?? '{}', null, 2);
+      // JSON als Blob speichern
+      const blob = new Blob([readableJson], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
 
-    // JSON als Blob speichern
-    const blob = new Blob([readableJson], { type: 'text/plain' });
-
-    // Vorherigen Blob freigeben, um unnötige Speicherbelegung zu verhindern
-    if (this.previousBlobUrl) {
-      window.URL.revokeObjectURL(this.previousBlobUrl);
-    }
-
-    const url = window.URL.createObjectURL(blob);
-    console.log(url)
-    this.previousBlobUrl = url; // Speichere die aktuelle URL, um sie später freizugeben
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = this.fileName;
-    a.click();
-
-    try {
-      // Lesbares JSON in localStorage speichern
-      localStorage.setItem(this.fileName, readableJson);
-      console.log('Data was saved. Saved Login Data:', savedLoginData);
-    } catch (e) {
-      console.error('Fehler beim Speichern in localStorage:', e);
+      try {
+        // Lesbares JSON in localStorage speichern
+        localStorage.setItem('savedText', readableJson);
+      } catch (e) {
+        console.error('Fehler beim Speichern in localStorage:', e);
+      }
+    } else {
+      // Production: Kompaktes JSON speichern
+      localStorage.setItem('savedValue', JSON.stringify(savedLoginData) ?? 'lol');
     }
   }
 
