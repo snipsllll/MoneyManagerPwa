@@ -73,7 +73,7 @@ export class DialogService {
           this.dataChangeService.addBuchungsKategorie(element.name);
         });
         this.isBuchungsKategorienDialogVisible = false;
-        this.dataService.triggerUpdated();
+        this.dataService.update();
       }
     }
   }

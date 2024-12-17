@@ -129,7 +129,7 @@ export class AdminService {
   async deleteSavedData(): Promise<void> {
     return this.firestoreService.deleteSavedData(this.getUid())
       .then(() => {
-        //TODO userData in dataService auf null setzten oder halt emoptyUserData
+        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
       })
       .catch(error => {
         console.error('Fehler beim Löschen der gespeicherten Daten:', error);

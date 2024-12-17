@@ -9,6 +9,7 @@ import {SavedData} from "../../../Models/Interfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 import {Router} from "@angular/router";
 import {AdminService} from "../../../admin.service";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-einstellungen',
@@ -21,6 +22,7 @@ export class EinstellungenComponent implements OnInit {
   isEnableToHighBuchungenChecked!: boolean;
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
+  utils = new UT();
 
   constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
@@ -44,7 +46,8 @@ export class EinstellungenComponent implements OnInit {
       title: 'Alle Daten löschen?',
       message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.dataService.userData.deleteAllData();
+        this.adminService.deleteSavedData();
+        this.dataService.userData.setUserData(this.utils.getEmptyUserData());
         this.dataService.update();
         this.update();
         this.dialogService.isConfirmDialogVisible = false;

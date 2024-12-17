@@ -224,34 +224,10 @@ export class UserData {
       ? Math.max(...this.buchungsKategorien.map(k => k.id)) + 1
       : 1; // Neue ID generieren
     this.buchungsKategorien.push({id: newId, name});
-    this.save();
-  }
-
-  removeKategorie(id: number): void {
-    this.buchungsKategorien = this.buchungsKategorien.filter(k => k.id !== id);
-    this.save();
-  }
-
-  editKategorie(id: number, newName: string): void {
-    const kategorie = this.buchungsKategorien.find(k => k.id === id);
-    if (kategorie) {
-      kategorie.name = newName;
-    }
-    this.save();
   }
 
   getKategorienNamen(): string[] {
     return this.buchungsKategorien.map(k => k.name);
-  }
-
-  save(savedData?: SavedData) {
-    console.log(111222)
-    if (savedData) {
-      this._fileEngine.save(this.checkForDbUpdates(savedData));
-      this.reload();
-    } else {
-      this._fileEngine.save(this.getSavedData());
-    }
   }
 
   private checkForDbUpdates(data: any): SavedData {
