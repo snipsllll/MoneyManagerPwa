@@ -7,6 +7,7 @@ import {IDoc} from "./Models/IDoc";
 import { User } from 'firebase/auth';
 import {Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
+import {SavedData} from "./Models/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,22 @@ export class AdminService {
 
   constructor(private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
+
+    this.dataService.doSave.subscribe(data => {
+      if(data && data.fireData && !data.isInitialLoad) {
+        console.log(777777)
+        console.log(data.fireData)
+        this.updateSavedData(data.fireData)
+      }
+
+    })
   }
 
   async loadData() {
     this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
       console.log(data);
       this.dataService.userData.setUserData(data);
-      this.dataService.update();
+      this.dataService.update(false, true);
     });
   }
 
@@ -83,7 +93,7 @@ export class AdminService {
   }
 
   // Aktualisierung der gespeicherten Daten gibt ein Promise zurück
-  async updateSavedData(savedData: IDoc): Promise<void> {
+  async updateSavedData(savedData: SavedData): Promise<void> {
     return this.firestoreService.editSavedDataForUser(savedData, this.getUid())
       .then(() => {
         this.reloadData();

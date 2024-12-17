@@ -3,16 +3,19 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { IDoc } from './Models/IDoc';
 import { lastValueFrom } from 'rxjs';
 import {SavedData} from "./Models/Interfaces";
+import {UT} from "./Models/Classes/UT";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
 
+  utils = new UT();
+
   constructor(private firestore: AngularFirestore) {}
 
   // Hinzufügen von Daten
-  async addSavedData(dataToAdd: IDoc, uid?: string): Promise<void> {
+  async addSavedData(dataToAdd: SavedData, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -50,24 +53,25 @@ export class FirestoreService {
   }
 
   // Bearbeiten von gespeicherten Daten
-  async editSavedDataForUser(updatedData: Partial<IDoc>, uid?: string): Promise<void> {
+  async editSavedDataForUser(updatedData: Partial<SavedData>, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
+
+    console.log(99999999999)
 
     const collectionRef = this.firestore.collection(`users/${uid}/savedData`);
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const newDoc: IDoc = {
-          value: updatedData.value || 0,
-          text: updatedData.text || 'Default Title',
-        };
-        await this.addSavedData(newDoc, uid);
+        const emptySavedData: SavedData = this.utils.getEmptyUserData();
+        await this.addSavedData(emptySavedData, uid);
         console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden. Neues savedData wurde erstellt.`);
         return;
       }
+      console.log(querySnapshot)
       const docSnap = querySnapshot.docs[0];
+      console.log(updatedData)
       const documentRef = docSnap.ref;
       await documentRef.update(updatedData);
       console.log(`Das Dokument in der Collection 'savedData' wurde erfolgreich aktualisiert:`, updatedData);

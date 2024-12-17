@@ -1,7 +1,8 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
-import {Day, IGeplanteAusgabenBuchung, Month, Week} from "../../Models/Interfaces";
+import {Day, IGeplanteAusgabenBuchung, Month, SaveDataUpdateInfos, SavedData, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,21 @@ export class DataService {
 
   userData = new UserData();
   updated = signal<number>(0);
+  doSave = new BehaviorSubject<SaveDataUpdateInfos | null>(null);
 
   constructor() {
-    this.update(false);
+    this.update(false, true);
+  }
+
+  initialLoad() {
+
   }
 
   triggerUpdated() {
     this.updated.set(this.updated() + 1);
   }
 
-  update(safeAfterUpdate?: boolean) {
+  update(safeAfterUpdate?: boolean, isInitial?: boolean) {
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
     if (!this.checkIfMonthExistsForDay(new Date())) {
       this.createNewMonth(new Date());
@@ -50,7 +56,7 @@ export class DataService {
     });
 
     if (safeAfterUpdate === undefined || safeAfterUpdate)
-      this.save();
+      this.save(isInitial);
 
     this.sendUpdateToComponents();
   }
@@ -339,9 +345,9 @@ export class DataService {
     this.setMonth(month);
   }
 
-  private save() { //TODO testen
-    console.log(2)
-    this.userData.save();
+  private save(isInitial?: boolean) { //TODO testen
+    this.doSave.next({isInitialLoad: isInitial, fireData: this.userData.getFireData()});
+    //this.userData.save();
   }
 
   private sendUpdateToComponents() { //TODO testen

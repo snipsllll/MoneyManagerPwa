@@ -1,6 +1,10 @@
+import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
+import {currentDbVersion} from "./CurrentDbVersion";
+import {SavedData} from "../Interfaces";
+
 export class UT {
   public toFixedDown(number?: number, decimals?: number): number | undefined {
-    if(number === undefined || decimals === undefined) {
+    if (number === undefined || decimals === undefined) {
       return undefined;
     }
     const numberString = number.toString();
@@ -24,11 +28,34 @@ export class UT {
 
   clone<T>(object: T) {
     return JSON.parse(JSON.stringify(object), (key, value) => {
-    // Prüfen, ob der Wert ein ISO-8601 Datum ist
-    if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
-      return new Date(value); // Wenn ja, in ein Date-Objekt konvertieren
+      // Prüfen, ob der Wert ein ISO-8601 Datum ist
+      if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
+        return new Date(value); // Wenn ja, in ein Date-Objekt konvertieren
+      }
+      return value; // Ansonsten den Wert unverändert zurückgeben
+    });
+  }
+
+  getEmptyUserData(): SavedData {
+    return {
+      buchungen: [],
+      buchungsKategorien: [],
+      auswertungsLayouts: [],
+      settings: {
+        toHighBuchungenEnabled: true,
+        wunschlistenFilter: {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        },
+        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+      },
+      wunschlistenEintraege: [],
+      sparEintraege: [],
+      standardFixkostenEintraege: [],
+      savedMonths: [],
+      geplanteAusgabenBuchungen: [],
+      dbVersion: currentDbVersion
     }
-    return value; // Ansonsten den Wert unverändert zurückgeben
-  });
   }
 }

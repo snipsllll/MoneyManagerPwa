@@ -1,6 +1,16 @@
-import {Day, IGeplanteAusgabenBuchung, Month, SavedData, SavedMonth, Settings, Week} from "../Interfaces";
+import {
+  Day,
+  FireData,
+  FireMonth,
+  IGeplanteAusgabenBuchung,
+  Month,
+  SavedData,
+  SavedMonth,
+  Settings,
+  Week
+} from "../Interfaces";
 import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
+import {IBuchung, IFireBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 import {IAuswertungsLayout} from "../Auswertungen-Interfaces";
@@ -29,25 +39,105 @@ export class UserData {
   private _fileEngine: FileEngine = new FileEngine(true);
 
   constructor() {
-    //this.loadDataFromStorage();
+
+  }
+
+  getFireData(): FireData {
+    return {
+      auswertungsLayouts: this.auswertungsLayouts ?? [],
+      buchungen: this.convertBuchungenToFireBuchungen(this.buchungen) ?? [],
+      dbVersion: currentDbVersion,
+      geplanteAusgabenBuchungen: this.geplanteAusgabenBuchungen ?? [],
+      buchungsKategorien: this.buchungsKategorien ?? [],
+      savedMonths: this.convertSavedMonthsToFireMonths(this.months) ?? [],
+      settings: this.settings ?? [],
+      sparEintraege: this.sparschweinEintraege ?? [],
+      standardFixkostenEintraege: this.standardFixkostenEintraege ?? [],
+      wunschlistenEintraege: this.wunschlistenEintraege ?? []
+    }
   }
 
   setUserData(loadedData: any) {
-    let savedData: SavedData = this.checkForDbUpdates(loadedData);
+    let fireData: FireData = this.checkForFireDbUpdates(loadedData);
+    console.log(fireData)
 
-    this.buchungen = savedData.buchungen ?? [];
-    this.buchungsKategorien = savedData.buchungsKategorien ?? [];
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
-    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = savedData.sparEintraege ?? [];
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
-    this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
-    this.settings = savedData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
+    this.buchungen = this.convertFireBuchungenToBuchungen(fireData.buchungen ?? []);
+    this.buchungsKategorien = fireData.buchungsKategorien ?? [];
+    this.months = this.convertFireMonthsToMonths(fireData.savedMonths ?? []);
+    this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
+    this.sparschweinEintraege = fireData.sparEintraege ?? [];
+    this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
+    this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
+    this.settings = fireData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = fireData.geplanteAusgabenBuchungen ?? [];
+    console.log(444444)
+    console.log(this)
   }
 
-  loadData() {
-    this.loadDataFromStorage();
+  private convertFireBuchungenToBuchungen(buchungen: IFireBuchung[]): IBuchung[] {
+    const newBuchungen: IBuchung[] = [];
+    buchungen.forEach(buchung => {
+      const newBuchung: IBuchung = {
+        id: buchung.id,
+        data: {
+          date: new Date(buchung.data.date.seconds * 1000),
+          betrag: buchung.data.betrag,
+          title: buchung.data.title,
+          time: buchung.data.time,
+          geplanteBuchung: buchung.data.geplanteBuchung,
+          buchungsKategorie: buchung.data.buchungsKategorie,
+          beschreibung: buchung.data.beschreibung
+        }
+      }
+
+      newBuchungen.push(newBuchung);
+    })
+    return newBuchungen;
+  }
+
+  private convertSavedMonthsToFireMonths(months: Month[]) {
+    const fireMonths: FireMonth[] = [];
+    months.forEach(month => {
+      const fireMonth: FireMonth = {
+        date: {
+          nanoseconds: 0,
+          seconds: month.startDate.getTime() / 1000
+        },
+        sparen: month.sparen ?? 0,
+        geplanteAusgaben: month.geplanteAusgaben ?? [],
+        specialFixkostenEintraege: month.specialFixkostenEintraege ?? [],
+        totalBudget: month.totalBudget ?? 0,
+        uebernommeneStandardFixkostenEintraege: month.uebernommeneStandardFixkostenEintraege ?? []
+      }
+
+      fireMonths.push(fireMonth);
+    })
+
+    return fireMonths;
+  }
+
+  private convertBuchungenToFireBuchungen(buchungen: IBuchung[]): IFireBuchung[] {
+    const newBuchungen: IFireBuchung[] = [];
+    buchungen.forEach(buchung => {
+      const newBuchung: IFireBuchung = {
+        id: buchung.id,
+        data: {
+          date: {
+            nanoseconds: 0,
+            seconds: buchung.data.date.getTime() / 1000
+          },
+          betrag: buchung.data.betrag ?? 0,
+          title: buchung.data.title ?? '',
+          time: buchung.data.time ?? '',
+          geplanteBuchung: buchung.data.geplanteBuchung ?? false,
+          buchungsKategorie: buchung.data.buchungsKategorie ?? 0,
+          beschreibung: buchung.data.beschreibung ?? ''
+        }
+      }
+
+      newBuchungen.push(newBuchung);
+    })
+    return newBuchungen;
   }
 
   addKategorie(name: string): void {
@@ -58,13 +148,11 @@ export class UserData {
     this.save();
   }
 
-  // Entfernt eine Kategorie anhand ihrer ID
   removeKategorie(id: number): void {
     this.buchungsKategorien = this.buchungsKategorien.filter(k => k.id !== id);
     this.save();
   }
 
-  // Bearbeitet eine bestehende Kategorie
   editKategorie(id: number, newName: string): void {
     const kategorie = this.buchungsKategorien.find(k => k.id === id);
     if (kategorie) {
@@ -73,25 +161,8 @@ export class UserData {
     this.save();
   }
 
-  // Gibt alle Kategorienamen als Array von Strings zurück
   getKategorienNamen(): string[] {
     return this.buchungsKategorien.map(k => k.name);
-  }
-
-  loadDataFromStorage() {
-    let loadedData: any = this._fileEngine.load();
-    console.log(loadedData)
-    let savedData: SavedData = this.checkForDbUpdates(loadedData);
-
-    this.buchungen = savedData.buchungen ?? [];
-    this.buchungsKategorien = savedData.buchungsKategorien ?? [];
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
-    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = savedData.sparEintraege ?? [];
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
-    this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
-    this.settings = savedData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
   }
 
   save(savedData?: SavedData) {
@@ -157,7 +228,83 @@ export class UserData {
     }
   }
 
+  private checkForFireDbUpdates(data: any): FireData {
+    //return this.getLongTestData();
+
+    if(this.useEmptyData) {
+      return this.getEmptyFireData();
+    }
+
+    let currentData: any;
+
+    data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
+      ? currentData = data
+      : currentData = {dbVersion: 0, ...data};
+
+    try {
+      if (currentData.dbVersion < 1) {
+        currentData = this.convertToVersion1(currentData);
+      }
+
+      if (currentData.dbVersion < 2) {
+        currentData = this.convertFixkostenToStandardFixkosten(currentData);
+      }
+
+      if (currentData.dbVersion < 3) {
+        currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
+      }
+
+      currentData.dbVersion = currentDbVersion;
+      return currentData as FireData;
+    } catch (e) {
+      console.log(e)
+      return {
+        buchungen: [],
+        buchungsKategorien: [],
+        auswertungsLayouts: [],
+        settings: {
+          toHighBuchungenEnabled: true,
+          wunschlistenFilter: {
+            selectedFilter: '',
+            gekaufteEintraegeAusblenden: false
+          },
+          tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+          topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+        },
+        wunschlistenEintraege: [],
+        sparEintraege: [],
+        standardFixkostenEintraege: [],
+        savedMonths: [],
+        geplanteAusgabenBuchungen: [],
+        dbVersion: currentDbVersion
+      }
+    }
+  }
+
   getEmptyTestData(): SavedData {
+    return {
+      auswertungsLayouts: [],
+      buchungen: [],
+      buchungsKategorien: [],
+      dbVersion: currentDbVersion,
+      geplanteAusgabenBuchungen: [],
+      savedMonths: [],
+      settings: {
+        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        toHighBuchungenEnabled: true,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer,
+        wunschlistenFilter: {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        }
+      },
+      sparEintraege: [],
+      standardFixkostenEintraege: [],
+      wunschlistenEintraege: []
+    }
+  }
+
+  getEmptyFireData(): FireData {
     return {
       auswertungsLayouts: [],
       buchungen: [],
@@ -543,8 +690,71 @@ export class UserData {
     const months: Month[] = [];
 
     savedMonths.forEach(savedMonth => {
-      const date = new Date(savedMonth.date);
-      console.log(date)
+      const date = savedMonth.date;
+      const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
+      const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
+
+      const weeks: Week[] = [];
+
+      let weekStartDate = startDate;
+
+      while (weekStartDate <= endDate) {
+        // Calculate the end of the week, or the end of the month if it falls within this week
+        let weekEndDate: Date = this.getSunday(weekStartDate);
+        if (weekEndDate > endDate) {
+          weekEndDate = endDate; // Adjust to end of the month if the week goes past it
+        }
+
+        const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1;
+        const days: Day[] = [];
+
+        // Populate days in the week
+        for (let d = weekStartDate.getDate(); d <= weekEndDate.getDate(); d++) {
+          const dateForDay = new Date(weekStartDate.getFullYear(), weekStartDate.getMonth(), d);
+          days.push({date: dateForDay});
+        }
+
+        // Push the week to weeks array
+        weeks.push({
+          startDate: new Date(weekStartDate),
+          endDate: new Date(weekEndDate),
+          daysInWeek: daysInWeek,
+          days: days
+        });
+
+        // Move to the next Monday
+        weekStartDate = this.getNextMonday(weekStartDate);
+      }
+
+      const abgeschlossen = !(this.isDayBeforeMonth(new Date(), startDate) ||
+        (startDate.getFullYear() === new Date().getFullYear() && startDate.getMonth() === new Date().getMonth()));
+
+      months.push(
+        {
+          totalBudget: savedMonth.totalBudget,
+          sparen: savedMonth.sparen,
+          startDate: startDate,
+          endDate: endDate,
+          daysInMonth: daysInMonth,
+          weeks: weeks,
+          monatAbgeschlossen: abgeschlossen,
+          uebernommeneStandardFixkostenEintraege: savedMonth.uebernommeneStandardFixkostenEintraege ?? [],
+          specialFixkostenEintraege: savedMonth.specialFixkostenEintraege ?? [],
+          geplanteAusgaben: savedMonth.geplanteAusgaben ?? []
+        }
+      )
+    })
+
+    return months;
+  }
+
+  private convertFireMonthsToMonths(savedMonths: FireMonth[]): Month[] {
+    const months: Month[] = [];
+
+    savedMonths.forEach(savedMonth => {
+      const date = new Date(savedMonth.date.seconds * 1000);
+      console.log(savedMonth.date)
       const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;

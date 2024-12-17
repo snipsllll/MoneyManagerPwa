@@ -225,7 +225,8 @@ export class CreateBuchungComponent {
       date: date,
       time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
       buchungsKategorie: 0,
-      beschreibung: ''
+      beschreibung: '',
+      geplanteBuchung: false
     };
   }
 

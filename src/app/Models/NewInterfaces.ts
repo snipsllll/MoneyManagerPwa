@@ -24,6 +24,21 @@ export interface IBuchungData {
   geplanteBuchung?: boolean;
 }
 
+export interface IFireBuchung {
+  id: number;
+  data: IFireBuchungData;
+}
+
+export interface IFireBuchungData {
+  date: any;
+  time: string;
+  title: string
+  betrag: number | null
+  beschreibung?: string
+  buchungsKategorie?: number;
+  geplanteBuchung?: boolean;
+}
+
 export interface IMonthFixkostenEintrag {
   id: number;
   data: IMonthFixkostenEintragData;
