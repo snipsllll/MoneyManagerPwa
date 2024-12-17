@@ -60,14 +60,15 @@ export class AdminService {
   }
 
   // Registrierung gibt ein Promise zurück
-  async register(email: string, password: string): Promise<void> {
+  async register(email: string, password: string) {
     return this.authService.register(email, password)
-      .then(() => {
-        // Erfolgreiche Registrierung, hier kannst du zusätzliche Logik hinzufügen, falls erforderlich
+      .then((userCredential) => {
+        console.log('Registrierung erfolgreich:', userCredential.user);
+        return userCredential.user; // Rückgabe des Users
       })
-      .catch(error => {
-        console.error('Fehler bei der Registrierung:', error);
-        throw error; // Fehler weiterwerfen
+      .catch((error) => {
+        //console.error('Login fehlgeschlagen:', error);
+        return Promise.reject(error); // Fehler weitergeben
       });
   }
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-register',
@@ -12,11 +13,16 @@ export class RegisterComponent {
   email?: string;
   pw1?: string;
   pw2?: string;
-  isLoading = false;
+
+  isEmailRed = false;
+  isPw1Red = false;
+  isPw2Red = false;
 
   errorMessage?: string = '';
 
-  constructor(private adminService: AdminService, private router: Router) {
+  isLoading = false;
+
+  constructor(private dialogService: DialogService, private adminService: AdminService, private router: Router) {
   }
 
   onToLoginClicked() {
@@ -27,33 +33,96 @@ export class RegisterComponent {
   }
 
   onRegisterClicked() {
-    if(!this.email) {
-      this.errorMessage = 'Bitte geben Sie eine Email-adresse an!'
+    this.updateEmailErrors();
+    this.updatePw1Errors();
+    this.updatePw2Errors();
+    this.updateErrorText();
+
+    if(this.isEmailValid() && this.isPw1Valid() && this.isPw2Valid() && this.doPwsMatch()) {
+      this.errorMessage = undefined;
+      this.register();
+    }
+  }
+
+  onEmailChange() {
+    this.isEmailRed = false;
+  }
+
+  onPw1Change() {
+    this.isPw1Red = false;
+  }
+
+  onPw2Change() {
+    this.isPw2Red = false;
+  }
+
+  private updateEmailErrors() {
+    this.isEmailRed = !this.isEmailValid();
+  }
+
+  private updatePw1Errors() {
+    this.isPw1Red = !this.isPw1Valid();
+  }
+
+  private updatePw2Errors() {
+    this.isPw2Red = !this.isPw2Valid();
+  }
+
+  private updateErrorText() {
+    if(!this.isEmailValid()) {
+      this.errorMessage = 'Bitte geben Sie eine gültige Email-adresse an!'
       return;
     }
 
-    if(!this.pw1) {
+    if(!this.isPw1Valid()) {
       this.errorMessage = 'Bitte geben Sie ein Passwort an!'
       return;
     }
 
-    if(this.pw1.length < 6) {
+    if(this.pw1!.length < 6) {
       this.errorMessage = 'Das Passwort muss mindestens 6 Zeichen enthalten!'
       return;
     }
 
-    if(!this.pw2) {
-      this.errorMessage = 'Bitte geben Sie das Passwort zwei mal an!'
+    if(!this.isPw2Valid()) {
+      this.errorMessage = 'Bitte geben Sie das Passwort erneut an!'
       return;
     }
 
-    if(this.pw1 != this.pw2) {
+    if(!this.doPwsMatch()) {
       this.errorMessage = 'Die angegebene Passwörter stimmen nicht überein!'
       return;
     }
 
     this.errorMessage = undefined;
-    this.register();
+  }
+
+  private doPwsMatch() {
+    return this.pw1 == this.pw2;
+  }
+
+  private isEmailValid() {
+    if(!this.email) {
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(this.email);
+  }
+
+  private isPw1Valid() {
+    if(!this.pw1) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private isPw2Valid() {
+    if(!this.pw2) {
+      return false;
+    }
+
+    return true;
   }
 
   private register() {
@@ -63,7 +132,8 @@ export class RegisterComponent {
     this.isLoading = true;
     this.adminService.register(this.email, this.pw1).then(() => {
       this.isLoading = false;
-      this.router.navigate(['login'])
+      this.router.navigate(['login']);
+      this.dialogService.showNotificationPopup({text: 'Erfolgreich registriert!'});
     });
   }
 

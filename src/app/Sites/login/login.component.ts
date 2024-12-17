@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {versionName} from "../../Models/Classes/versionName";
@@ -10,8 +10,8 @@ import {versionName} from "../../Models/Classes/versionName";
 })
 export class LoginComponent {
 
-  email?: string = 'dat@gmail.com';
-  pw?: string = '123456';
+  email?: string;
+  pw?: string;
 
   isEmailRed = false;
   isPwRed = false;
@@ -21,7 +21,6 @@ export class LoginComponent {
   isLoading = false;
 
   constructor(private adminService: AdminService, private router: Router) {
-
   }
 
   onLoginClicked() {
@@ -29,7 +28,7 @@ export class LoginComponent {
     this.updatePasswordErrors();
     this.updateErrorText();
 
-    if(this.isEmailValid() && this.isPasswordValid()) {
+    if (this.isEmailValid() && this.isPasswordValid()) {
       this.errorMessage = undefined;
       this.login();
     }
@@ -56,18 +55,18 @@ export class LoginComponent {
   }
 
   private updateErrorText() {
-    if(!this.isEmailValid()) {
+    if (!this.isEmailValid()) {
       this.errorMessage = 'Bitte geben Sie eine gültige Email-adresse an!'
       return;
     }
 
-    if(!this.isPasswordValid()) {
+    if (!this.isPasswordValid()) {
       this.errorMessage = 'Bitte geben Sie eine Passwort an!'
     }
   }
 
   private isEmailValid() {
-    if(!this.email) {
+    if (!this.email) {
       return false;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,7 +74,7 @@ export class LoginComponent {
   }
 
   private isPasswordValid() {
-    if(!this.pw) {
+    if (!this.pw) {
       return false;
     }
 

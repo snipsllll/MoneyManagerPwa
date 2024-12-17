@@ -40,6 +40,7 @@ import { RegisterComponent } from './Sites/register/register.component';
 import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
+import { NotificationPopupComponent } from './SharedComponents/notification-popup/notification-popup.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsIabaMBr-3DJD6dNPaWpuI_IWD-B5J7U",
@@ -84,7 +85,8 @@ const firebaseConfig = {
         MmBarChartComponent,
         PlusButtonComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        NotificationPopupComponent
     ],
     imports: [
         BrowserModule,

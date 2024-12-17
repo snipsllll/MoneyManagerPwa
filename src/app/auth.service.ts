@@ -13,17 +13,19 @@ export class AuthService {
 
   constructor(private fireauth: AngularFireAuth) {}
 
-  async register(email: string, password: string): Promise<User> {
-    try {
-      const userCredential = await this.fireauth.createUserWithEmailAndPassword(email, password);
-      console.log('User registered successfully', userCredential);
-
-      // Sicherstellen, dass wir den richtigen Rückgabewert liefern
-      return userCredential.user as User;
-    } catch (error) {
-      console.error('Error registering user', error);
-      throw error;
-    }
+  async register(email: string, password: string) {
+    return this.fireauth.createUserWithEmailAndPassword(email, password)
+      .then((result) => {
+        // Rückgabe des erfolgreichen Ergebnisses
+        return result;
+      })
+      .catch((error) => {
+        // Rückgabe eines Fehlers als abgelehntes Promise
+        return Promise.reject({
+          code: error.code,
+          message: error.message,
+        });
+      });
   }
 
   // Login mit E-Mail und Passwort

@@ -7,7 +7,7 @@
 }
 
 .register__logo-wrapper {
-  margin: 150px 0 20px 0;
+  margin: 120px 0 0 0;
 }
 
 .register__logo {
@@ -27,19 +27,49 @@
 .register__data-input-wrapper {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 80%;
   align-items: center;
 }
 
+.register__data-input-element-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+
+.register__data-input-label {
+  color: #404040;
+  font-size: 15px;
+}
+
 .register__data-input-element {
-  width: 80%;
-  height: 40px;
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  height: 50px;
   margin-bottom: 10px;
   font-size: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+  border-bottom: 2px solid black;
+  box-shadow: #4c586a 3px 1px 2px;
+  background-color: #f9faff;
+}
+
+.register__data-input-element:focus {
+  background-color: white;
+  outline: none;
+}
+
+.register__input-red {
+  background-color: #ffd1d1;
 }
 
 .register__buttons-wrapper {
-  margin-top: 15px;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .register__button {
@@ -48,19 +78,33 @@
   align-items: center;
   justify-content: center;
   border: 1px solid black;
-  border-radius: 5px;
-  font-size: 20px;
+  border-radius: 10px;
+  font-size: 24px;
   background-color: #b9e0ff;
-  height: 24px;
+  height: 30px;
+  width: 150px;
 }
 
-.register__back-text {
+.register__button:active {
+  background-color: #9cd5ff;
+}
+
+.register__register-text {
   margin-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.register__button-grayed-out {
-  background-color: #d3d9da;
+.register__loading-gif {
+  width: 41px;
+  height: 41px;
+}
+
+.register__version {
+  display: flex;
+  flex-grow: 1;
+  align-items: end;
+  margin-bottom: 10px;
+  color: #919193;
 }
