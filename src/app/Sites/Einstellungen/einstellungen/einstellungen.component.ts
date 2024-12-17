@@ -237,7 +237,7 @@ export class EinstellungenComponent implements OnInit {
   }
 
   onAusloggenClicked() {
-    this.router.navigate(['login'])
+    this.adminService.logout();
   }
 
   onAccountLoeschenClicked() {

@@ -17,7 +17,7 @@ export class AdminService {
   data = new BehaviorSubject<IDoc | null>(null);
 
   constructor(private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
-    //this.tryStartupLogin();
+    this.tryStartupLogin();
   }
 
   // Login-Methode gibt ein Promise zurück
@@ -29,6 +29,7 @@ export class AdminService {
         // User-Daten speichern
         this.loggedInUser.next(userCredential.user as User);
         this.loggedIn.next(true);
+        this.router.navigate(['home']);
 
         // Zusätzliche Logik nach erfolgreichem Login
         this.saveLoginData(email, password);
@@ -47,6 +48,7 @@ export class AdminService {
   async logout(): Promise<void> {
     return this.authService.logout()
       .then(() => {
+        console.log(89898787)
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
         this.data.next(null);
@@ -132,6 +134,7 @@ export class AdminService {
 
   private tryStartupLogin() {
     const savedLoginData = this.fileManager.load();
+    console.log(savedLoginData)
     if(savedLoginData.email && savedLoginData.password)
       this.login(savedLoginData.email, savedLoginData.password);
   }
@@ -141,6 +144,7 @@ export class AdminService {
   }
 
   private deleteSavedLoginData() {
+    console.log(635241)
     this.fileManager.save();
   }
 }

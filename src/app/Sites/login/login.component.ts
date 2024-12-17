@@ -91,7 +91,6 @@ export class LoginComponent {
       const user = await this.adminService.login(this.email, this.pw);
       this.isLoading = false;
       console.log('Willkommen,', user?.email);
-      this.router.navigate(['home']);
     } catch (error) {
       console.log('Login fehlgeschlagen:', error);
       this.errorMessage = 'E-Mail-Adresse oder Passwort ist falsch.'
