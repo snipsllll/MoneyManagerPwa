@@ -3,11 +3,11 @@ import {BehaviorSubject} from "rxjs";
 import {FirestoreService} from "./firestore.service";
 import {AuthService} from "./auth.service";
 import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
-import {IDoc} from "./Models/IDoc";
 import { User } from 'firebase/auth';
 import {Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
 import {SavedData} from "./Models/Interfaces";
+import {UT} from "./Models/Classes/UT";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,9 @@ export class AdminService {
 
   loggedInUser = new BehaviorSubject<User | null>(null);
   loggedIn = new BehaviorSubject<boolean>(false);
+  isInitialLoad: boolean = true;
+
+  utils = new UT();
 
   constructor(private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
@@ -33,8 +36,14 @@ export class AdminService {
   async loadData() {
     this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
       console.log(data);
-      this.dataService.userData.setUserData(data);
-      this.dataService.update(false, true);
+      if(data == null) {
+        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
+      } else {
+        this.dataService.userData.setUserData(data);
+        this.dataService.update(false, this.isInitialLoad);
+        this.isInitialLoad = false;
+      }
+
     });
   }
 
@@ -54,6 +63,7 @@ export class AdminService {
         this.reloadData();
 
         console.log('Login erfolgreich:', userCredential.user);
+        this.loadData();
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
@@ -69,6 +79,7 @@ export class AdminService {
         console.log(89898787)
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
+        this.dataService.userData.setUserData(this.utils.getEmptyUserData());
         //TODO userData in dataService auf null setzten oder halt emoptyUserData
         this.deleteSavedLoginData();
         this.router.navigate(['login'])

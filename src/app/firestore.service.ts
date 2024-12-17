@@ -157,11 +157,8 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const newSavedData: IDoc = {
-          value: 0,
-          text: "Default Entry",
-        };
-        await collectionRef.add(newSavedData);
+        const newDoc = this.utils.getEmptyUserData();
+        await collectionRef.add(newDoc);
         console.log(`Kein gespeichertes Data für Benutzer mit uid=${uid} gefunden. Ein neuer Eintrag wurde hinzugefügt.`);
       } else {
         console.log(`Benutzer mit uid=${uid} hat bereits Einträge.`);
