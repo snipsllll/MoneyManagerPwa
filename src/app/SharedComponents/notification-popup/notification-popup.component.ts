@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {NotificationPopupViewModel} from "../../Models/ViewModels/NotificationPopupViewModel";
+import {DialogService} from "../../Services/DialogService/dialog.service";
 
 @Component({
   selector: 'app-notification-popup',
@@ -10,7 +11,7 @@ export class NotificationPopupComponent {
   @Input() viewModel!: NotificationPopupViewModel;
   isPopupHidden = true;
 
-  constructor() {
+  constructor(private dialogService: DialogService) {
     setTimeout(() => {
       this.showPopup();
     }, 100);
@@ -20,6 +21,7 @@ export class NotificationPopupComponent {
     this.isPopupHidden = false;
     setTimeout(() => {
       this.isPopupHidden = true;
+      this.dialogService.isNotificationPopupVisible = false;
     }, 4000);
   }
 }
