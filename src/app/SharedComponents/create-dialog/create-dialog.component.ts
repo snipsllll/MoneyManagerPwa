@@ -21,8 +21,8 @@ export class CreateDialogComponent implements OnInit {
   ngOnInit() {
     this.eintrag = {
       betrag: undefined,
-      title: undefined,
-      beschreibung: undefined,
+      title: '',
+      beschreibung: '',
       vonHeuteAbziehen: false
     }
   }

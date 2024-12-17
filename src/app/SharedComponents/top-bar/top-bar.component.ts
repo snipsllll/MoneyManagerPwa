@@ -47,9 +47,6 @@ export class TopBarComponent implements OnInit {
   }
 
   test() {
-    this.adminService.loadData();
-    //this.dataService.userData.loadData();
-    //this.dataService.update();
     console.log(this.dataService.userData)
   }
 

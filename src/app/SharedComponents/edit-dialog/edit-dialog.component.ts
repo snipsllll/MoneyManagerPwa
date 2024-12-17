@@ -20,12 +20,12 @@ export class EditDialogComponent implements OnInit{
 
   ngOnInit() {
     this.oldEintrag = {
-      betrag: this.viewModel.data.betrag,
-      title: this.viewModel.data.title,
-      zusatz: this.viewModel.data.zusatz,
-      date: this.viewModel.data.date,
+      betrag: this.viewModel.data.betrag!,
+      title: this.viewModel.data.title ?? '',
+      zusatz: this.viewModel.data.zusatz ?? '',
+      date: this.viewModel.data.date!,
       id: this.viewModel.data.id,
-      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen
+      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen ?? false
     }
   }
 

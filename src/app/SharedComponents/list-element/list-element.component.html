@@ -32,7 +32,7 @@
   </div>
 
   <div *ngIf="isExpanded" class="list-element__detailss">
-    {{ viewModel.data.zusatz ?? '-- keine Beschreibung --' }}
+    {{ viewModel.data.zusatz && viewModel.data.zusatz !== ''? viewModel.data.zusatz : '-- keine Beschreibung --' }}
   </div>
 
   <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
