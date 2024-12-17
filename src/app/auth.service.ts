@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth'; // Importiere AngularFireAuth
+import { UserCredential } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -26,18 +27,32 @@ export class AuthService {
   }
 
   // Login mit E-Mail und Passwort
-  async login(email: string, password: string): Promise<User> {
-    try {
-      const userCredential = await this.fireauth.signInWithEmailAndPassword(email, password);
-      console.log('User logged in successfully', userCredential);
-      this.loggedInUser.next(userCredential.user as User);
-      this.isLoggedIn = true;
-      return userCredential.user as User;
-    } catch (error) {
-      console.error('Error logging in', error);
-      throw error;
-    }
+  async login(email: string, password: string) {
+    return this.fireauth.signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        // Rückgabe des erfolgreichen Ergebnisses
+        return result;
+      })
+      .catch((error) => {
+        // Rückgabe eines Fehlers als abgelehntes Promise
+        return Promise.reject({
+          code: error.code,
+          message: error.message,
+        });
+      });
   }
+
+  /*
+  try {
+    const userCredential = await this.fireauth.signInWithEmailAndPassword(email, password);
+    console.log('User logged in successfully', userCredential);
+    this.loggedInUser.next(userCredential.user as User);
+    this.isLoggedIn = true;
+    return userCredential as UserCredential;
+  } catch (error) {
+    console.error('Error logging in', error);
+    throw error;
+  }*/
 
   // Logout des Benutzers
   async logout(): Promise<void> {

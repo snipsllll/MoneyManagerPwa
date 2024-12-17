@@ -6,15 +6,32 @@
     {{errorMessage}}
   </div>
   <div class="login__data-input-wrapper">
-    <input type="email" placeholder="email" class="login__data-input-element" [(ngModel)]="email">
-    <input type="password" placeholder="passwort" class="login__data-input-element" [(ngModel)]="pw">
+    <div class="input__data-input-element-wrapper">
+      <div class="login__data-input-label">
+        Email-Adresse
+      </div>
+      <input type="email" [class.login__input-red]="isEmailRed"  [class.login__grayed-out]="isLoading" placeholder="email" class="login__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
+    </div>
+    <div class="input__data-input-element-wrapper">
+      <div class="login__data-input-label">
+        Passwort
+      </div>
+      <input type="password" [class.login__input-red]="isPwRed"  [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
+    </div>
   </div>
   <div class="login__buttons-wrapper">
-    <div class="login__button" (click)="onLoginClicked()">
-      anmelden
+    <div class="login__button" (click)="onLoginClicked()" *ngIf="!isLoading; else loading">
+      Anmelden
     </div>
-    <div class="login__register-text" (click)="onRegisterClicked()">
+    <div class="login__register-text" (click)="onRegisterClicked()" [class.login__grayed-out]="isLoading">
       registrieren
     </div>
   </div>
+  <div class="login__version">
+    {{versionName}}
+  </div>
 </div>
+
+<ng-template #loading>
+  <img src="assets/loading-gif.gif" class="login__loading-gif">
+</ng-template>

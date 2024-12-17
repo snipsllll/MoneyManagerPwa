@@ -21,21 +21,25 @@ export class AdminService {
   }
 
   // Login-Methode gibt ein Promise zurück
-  async login(email: string, password: string): Promise<void> {
+  async login(email: string, password: string){
+    console.log('Login-Versuch gestartet');
+
     return this.authService.login(email, password)
-      .then(user => {
-        this.loggedInUser.next(user);
+      .then((userCredential) => {
+        // User-Daten speichern
+        this.loggedInUser.next(userCredential.user as User);
         this.loggedIn.next(true);
+
+        // Zusätzliche Logik nach erfolgreichem Login
         this.saveLoginData(email, password);
-        return this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
-      })
-      .then(() => {
         this.reloadData();
-        this.router.navigate(['home']);
+
+        console.log('Login erfolgreich:', userCredential.user);
+        return userCredential.user; // Rückgabe des Users
       })
-      .catch(error => {
-        console.error('Fehler beim Login:', error);
-        throw error; // Fehler weiterwerfen
+      .catch((error) => {
+        //console.error('Login fehlgeschlagen:', error);
+        return Promise.reject(error); // Fehler weitergeben
       });
   }
 

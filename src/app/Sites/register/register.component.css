@@ -7,7 +7,7 @@
 }
 
 .register__logo-wrapper {
-  margin: 50px 0;
+  margin: 150px 0 20px 0;
 }
 
 .register__logo {
@@ -39,7 +39,7 @@
 }
 
 .register__buttons-wrapper {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .register__button {
@@ -51,6 +51,7 @@
   border-radius: 5px;
   font-size: 20px;
   background-color: #b9e0ff;
+  height: 24px;
 }
 
 .register__back-text {
