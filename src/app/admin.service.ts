@@ -38,14 +38,21 @@ export class AdminService {
     this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
       console.log(data);
       if(data == null) {
-        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
+        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
+          this.firestoreService.getSavedDataForUser(this.getUid()).then(dataAfterCreating => {
+            console.log(dataAfterCreating)
+            this.dataService.userData.setUserDataFire(dataAfterCreating);
+            this.dataService.update(false, this.isInitialLoad);
+            this.isInitialLoad = false;
+            this.isDataLoading.next(false);
+          });
+        });
       } else {
-        this.dataService.userData.setUserData(data);
+        this.dataService.userData.setUserDataFire(data);
         this.dataService.update(false, this.isInitialLoad);
         this.isInitialLoad = false;
         this.isDataLoading.next(false);
       }
-
     });
   }
 
@@ -82,7 +89,7 @@ export class AdminService {
         console.log(89898787)
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
-        this.dataService.userData.setUserData(this.utils.getEmptyUserData());
+        this.dataService.userData.setUserDataFire(this.utils.getEmptyUserData());
         //TODO userData in dataService auf null setzten oder halt emoptyUserData
         this.deleteSavedLoginData();
         this.router.navigate(['login'])

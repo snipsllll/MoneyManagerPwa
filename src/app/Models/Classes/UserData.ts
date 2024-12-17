@@ -64,7 +64,11 @@ export class UserData {
     }
   }
 
-  setUserData(loadedData: any) {
+  setUserDataFire(loadedData: any) {
+    if(loadedData == null) {
+      return;
+    }
+
     let fireData: FireData = this.checkForFireDbUpdates(loadedData);
     console.log(fireData)
 
@@ -77,8 +81,26 @@ export class UserData {
     this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
     this.settings = fireData.settings ?? this.getDefaultSettings();
     this.geplanteAusgabenBuchungen = fireData.geplanteAusgabenBuchungen ?? [];
-    console.log(444444)
-    console.log(this)
+  }
+
+  setUserData(loadedData: any) {
+    if(loadedData == null) {
+      return;
+    }
+    console.log(loadedData)
+
+    let fireData: SavedData = this.checkForDbUpdates(loadedData);
+    console.log(fireData)
+
+    this.buchungen = fireData.buchungen ?? [];
+    this.buchungsKategorien = fireData.buchungsKategorien ?? [];
+    this.months = this.convertSavedMonthsToMonths(fireData.savedMonths ?? []);
+    this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
+    this.sparschweinEintraege = fireData.sparEintraege ?? [];
+    this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
+    this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
+    this.settings = fireData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = fireData.geplanteAusgabenBuchungen ?? [];
   }
 
   private convertFireBuchungenToBuchungen(buchungen: IFireBuchung[]): IBuchung[] {
@@ -290,6 +312,8 @@ export class UserData {
     }
 
     let currentData: any;
+
+    console.log(data)
 
     data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
       ? currentData = data
@@ -743,10 +767,14 @@ export class UserData {
   private convertSavedMonthsToMonths(savedMonths: SavedMonth[]): Month[] {
     const months: Month[] = [];
 
+    console.log(savedMonths)
+
     savedMonths.forEach(savedMonth => {
+      console.log(savedMonth)
       const date = savedMonth.date;
-      const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
+      console.log(date)
+      const startDate = new Date(savedMonth.date.getFullYear(), savedMonth.date.getMonth(), 1);
+      const endDate: Date = new Date(savedMonth.date.getFullYear(), savedMonth.date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
 
       const weeks: Week[] = [];
