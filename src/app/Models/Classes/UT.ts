@@ -58,4 +58,12 @@ export class UT {
       dbVersion: currentDbVersion
     }
   }
+
+  isEmailValid(email?: string) {
+    if(!email)
+      return false
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 }

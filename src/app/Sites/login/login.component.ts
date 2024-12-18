@@ -4,6 +4,7 @@ import {AdminService} from "../../admin.service";
 import {versionName} from "../../Models/Classes/versionName";
 import {TempService} from "../../temp.service";
 import { Location } from '@angular/common';
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   private sub: any;
+  private utils = new UT();
 
   constructor(private location: Location, private tempService: TempService, private adminService: AdminService, private router: Router) {
   }
@@ -54,7 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.updatePasswordErrors();
     this.updateErrorText();
 
-    if (this.isEmailValid() && this.isPasswordValid()) {
+    if (this.utils.isEmailValid(this.email) && this.isPasswordValid()) {
       this.errorMessage = undefined;
       this.login();
     }
@@ -85,7 +87,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private updateEmailErrors() {
-    this.isEmailRed = !this.isEmailValid();
+    this.isEmailRed = !this.utils.isEmailValid(this.email);
   }
 
   private updatePasswordErrors() {
@@ -93,7 +95,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private updateErrorText() {
-    if (!this.isEmailValid()) {
+    if (!this.utils.isEmailValid(this.email)) {
       this.errorMessage = 'Bitte geben Sie eine gültige Email-adresse an!'
       return;
     }
@@ -101,14 +103,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (!this.isPasswordValid()) {
       this.errorMessage = 'Bitte geben Sie eine Passwort an!'
     }
-  }
-
-  private isEmailValid() {
-    if (!this.email) {
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(this.email);
   }
 
   private isPasswordValid() {

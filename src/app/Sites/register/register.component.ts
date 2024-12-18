@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-register',
@@ -23,6 +24,7 @@ export class RegisterComponent {
   errorMessage?: string = '';
 
   isLoading = false;
+  private utils = new UT();
 
   constructor(private dialogService: DialogService, private adminService: AdminService, private router: Router) {
   }
@@ -40,7 +42,7 @@ export class RegisterComponent {
     this.updatePw2Errors();
     this.updateErrorText();
 
-    if(this.isEmailValid() && this.isPw1Valid() && this.isPw2Valid() && this.doPwsMatch()) {
+    if(this.utils.isEmailValid(this.email) && this.isPw1Valid() && this.isPw2Valid() && this.doPwsMatch()) {
       this.errorMessage = undefined;
       this.register();
     }
@@ -75,7 +77,7 @@ export class RegisterComponent {
   }
 
   private updateEmailErrors() {
-    this.isEmailRed = !this.isEmailValid();
+    this.isEmailRed = !this.utils.isEmailValid(this.email);
   }
 
   private updatePw1Errors() {
@@ -87,7 +89,7 @@ export class RegisterComponent {
   }
 
   private updateErrorText() {
-    if(!this.isEmailValid()) {
+    if(!this.utils.isEmailValid(this.email)) {
       this.errorMessage = 'Bitte geben Sie eine gültige Email-adresse an!'
       return;
     }
@@ -117,14 +119,6 @@ export class RegisterComponent {
 
   private doPwsMatch() {
     return this.pw1 == this.pw2;
-  }
-
-  private isEmailValid() {
-    if(!this.email) {
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(this.email);
   }
 
   private isPw1Valid() {
