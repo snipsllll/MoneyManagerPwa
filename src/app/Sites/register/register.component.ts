@@ -13,6 +13,8 @@ export class RegisterComponent {
   email?: string;
   pw1?: string;
   pw2?: string;
+  isPw1Hidden: boolean = true;
+  isPw2Hidden: boolean = true;
 
   isEmailRed = false;
   isPw1Red = false;
@@ -54,6 +56,22 @@ export class RegisterComponent {
 
   onPw2Change() {
     this.isPw2Red = false;
+  }
+
+  onHidePassword1Clicked() {
+    this.isPw1Hidden = true;
+  }
+
+  onShowPassword1Clicked() {
+    this.isPw1Hidden = false;
+  }
+
+  onHidePassword2Clicked() {
+    this.isPw2Hidden = true;
+  }
+
+  onShowPassword2Clicked() {
+    this.isPw2Hidden = false;
   }
 
   private updateEmailErrors() {
@@ -110,19 +128,11 @@ export class RegisterComponent {
   }
 
   private isPw1Valid() {
-    if(!this.pw1) {
-      return false;
-    }
-
-    return true;
+    return this.pw1 !== undefined && this.pw1 !== null && this.pw1 !== '';
   }
 
   private isPw2Valid() {
-    if(!this.pw2) {
-      return false;
-    }
-
-    return true;
+    return this.pw2 !== undefined && this.pw2 !== null && this.pw2 !== '';
   }
 
   private register() {

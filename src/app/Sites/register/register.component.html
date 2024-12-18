@@ -3,34 +3,84 @@
     <img src="assets/favicon.jpg" class="register__logo">
   </div>
   <div class="register__error-message">
-    {{errorMessage}}
+    {{ errorMessage }}
   </div>
   <div class="register__data-input-wrapper">
     <div class="register__data-input-element-wrapper">
       <div class="register__data-input-label">
         Email-Adresse
       </div>
-      <input type="email" [class.register__input-red]="isEmailRed"  [class.register__grayed-out]="isLoading" placeholder="email" class="register__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
+      <input type="email" [class.register__input-red]="isEmailRed" [class.register__grayed-out]="isLoading"
+             placeholder="email" class="register__data-input-element" [(ngModel)]="email"
+             (ngModelChange)="onEmailChange()">
     </div>
+    <!-- start -->
     <div class="register__data-input-element-wrapper">
       <div class="register__data-input-label">
         Passwort
       </div>
-      <input type="password" [class.register__input-red]="isPw1Red"  [class.register__grayed-out]="isLoading" placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw1" (ngModelChange)="onPw1Change()">
+      <div class="register__password-input-wrapper" [class.register__input-red]="isPw1Red" *ngIf="isPw1Hidden; else visiblePassword1">
+        <input type="password" [class.register__grayed-out]="isLoading"
+               placeholder="passwort" class="register__data-input-element-password" [(ngModel)]="pw1"
+               (ngModelChange)="onPw1Change()">
+        <img src="assets/eye-closed-light-gray.png" class="register__eye" (click)="onShowPassword1Clicked()">
+      </div>
+      <ng-template #visiblePassword1>
+        <div class="register__password-input-wrapper" [class.register_input-red]="isPw1Red">
+          <input type="text" [class.register__grayed-out]="isLoading"
+                 placeholder="passwort" class="register__data-input-element-password" [(ngModel)]="pw1"
+                 (ngModelChange)="onPw1Change()">
+          <img src="assets/eye-open-light-gray.png" class="register__eye" (click)="onHidePassword1Clicked()">
+        </div>
+      </ng-template>
     </div>
+    <!-- pause -->
     <div class="register__data-input-element-wrapper">
       <div class="register__data-input-label">
         Passwort wiederholen
       </div>
-      <input type="password" [class.register__input-red]="isPw2Red"  [class.register__grayed-out]="isLoading" placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw2" (ngModelChange)="onPw2Change()">
+      <div class="register__password-input-wrapper" [class.register__input-red]="isPw2Red" *ngIf="isPw2Hidden; else visiblePassword2">
+        <input type="password" [class.register__grayed-out]="isLoading"
+               placeholder="passwort" class="register__data-input-element-password" [(ngModel)]="pw2"
+               (ngModelChange)="onPw2Change()">
+        <img src="assets/eye-closed-light-gray.png" class="register__eye" (click)="onShowPassword2Clicked()">
+      </div>
+      <ng-template #visiblePassword2>
+        <div class="register__password-input-wrapper" [class.register__input-red]="isPw2Red">
+          <input type="text" [class.register__grayed-out]="isLoading"
+                 placeholder="passwort" class="register__data-input-element-password" [(ngModel)]="pw2"
+                 (ngModelChange)="onPw2Change()">
+          <img src="assets/eye-open-light-gray.png" class="register__eye" (click)="onHidePassword2Clicked()">
+        </div>
+      </ng-template>
     </div>
-  </div>
-  <div class="register__buttons-wrapper">
-    <div class="register__button" (click)="onRegisterClicked()" [class.register__button-grayed-out]="isLoading">
-      registrieren
-    </div>
-    <div class="register__back-text" (click)="onToLoginClicked()">
-      zurück
+    <!-- end -->
+    <div class="register__buttons-wrapper">
+      <div class="register__button" (click)="onRegisterClicked()" [class.register__button-grayed-out]="isLoading">
+        registrieren
+      </div>
+      <div class="register__back-text" (click)="onToLoginClicked()">
+        zurück
+      </div>
     </div>
   </div>
 </div>
+
+<!--
+<div class="register__data-input-element-wrapper">
+  <div class="register__data-input-label">
+    Passwort
+  </div>
+  <input type="password" [class.register__input-red]="isPw1Red" [class.register__grayed-out]="isLoading"
+         placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw1"
+         (ngModelChange)="onPw1Change()">
+</div>
+<div class="register__data-input-element-wrapper">
+  <div class="register__data-input-label">
+    Passwort wiederholen
+  </div>
+  <input type="password" [class.register__input-red]="isPw2Red" [class.register__grayed-out]="isLoading"
+         placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw2"
+         (ngModelChange)="onPw2Change()">
+</div>
+-->
