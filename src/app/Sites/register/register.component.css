@@ -7,7 +7,7 @@
 }
 
 .register__logo-wrapper {
-  margin: 120px 0 0 0;
+  margin-top: 90px;
 }
 
 .register__logo {
@@ -121,9 +121,10 @@
   border: 1px solid black;
   border-radius: 10px;
   font-size: 24px;
-  background-color: #b9e0ff;
-  height: 30px;
+  background-color: #7bc2fd;
+  height: 35px;
   width: 150px;
+  margin-top: 5px;
 }
 
 .register__button:active {
@@ -131,10 +132,11 @@
 }
 
 .register__back-text {
-  margin-top: 5px;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: underline;
 }
 
 .register__loading-gif {

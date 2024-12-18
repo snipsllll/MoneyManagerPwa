@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {UT} from "../../Models/Classes/UT";
+import {versionName} from "../../Models/Classes/versionName";
 
 @Component({
   selector: 'app-register',
@@ -142,4 +143,6 @@ export class RegisterComponent {
       this.isLoading = false;
     }
   }
+
+  protected readonly versionName = versionName;
 }
