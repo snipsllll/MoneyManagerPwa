@@ -12,6 +12,7 @@ export class LoginComponent {
 
   email?: string;
   pw?: string;
+  isPasswordHidden: boolean = true;
 
   isEmailRed = false;
   isPwRed = false;
@@ -44,6 +45,14 @@ export class LoginComponent {
 
   onRegisterClicked() {
     this.router.navigate(['register']);
+  }
+
+  onHidePasswordClicked() {
+    this.isPasswordHidden = true;
+  }
+
+  onShowPasswordClicked() {
+    this.isPasswordHidden = false;
   }
 
   private updateEmailErrors() {
