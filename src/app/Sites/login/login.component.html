@@ -16,13 +16,13 @@
       <div class="login__data-input-label">
         Passwort
       </div>
-      <div class="login__password-input-wrapper" *ngIf="isPasswordHidden; else visiblePassword">
-        <input type="password" [class.login__input-red]="isPwRed"  [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
+      <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed" *ngIf="isPasswordHidden; else visiblePassword">
+        <input type="password" [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
         <img src="assets/eye-closed-light-gray.png" class="login__eye" (click)="onShowPasswordClicked()">
       </div>
       <ng-template #visiblePassword>
-        <div class="login__password-input-wrapper">
-          <input type="text" [class.login__input-red]="isPwRed"  [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
+        <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed">
+          <input type="text" [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
           <img src="assets/eye-open-light-gray.png" class="login__eye" (click)="onHidePasswordClicked()">
         </div>
       </ng-template>
