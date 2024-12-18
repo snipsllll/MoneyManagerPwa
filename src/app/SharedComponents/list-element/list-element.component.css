@@ -33,6 +33,10 @@
   max-width: 100%;
 }
 
+.list-element__main-right {
+  margin-left: auto;
+}
+
 .list-element__menu-button {
   padding: 10px;
   margin-bottom: 7px;
