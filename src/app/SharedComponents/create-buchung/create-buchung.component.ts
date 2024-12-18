@@ -71,6 +71,7 @@ export class CreateBuchungComponent {
 
   onplannedKategorieChanged() {
     this.dateUpdated.set(this.dateUpdated() + 1);
+    this.updateSaveButton();
   }
 
   onSearchClicked() {
@@ -198,12 +199,26 @@ export class CreateBuchungComponent {
     this.updateSaveButton();
   }
 
+  onGeplanteBuchungCheckboxChange() {
+    this.updateSaveButton();
+  }
+
   private isBuchungEmpty() {
     return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === undefined)
   }
 
   private isSaveAble() {
-    return this.buchung.betrag === null || this.buchung.betrag === 0;
+    if(this.buchung.betrag === null || this.buchung.betrag === 0){
+      return false;
+    }
+
+    if(this.buchung.geplanteBuchung && this.buchung.buchungsKategorie === 0) {
+      return false;
+    }
+
+    console.log(78967896)
+
+    return true;
   }
 
   private updateDate() {
@@ -211,7 +226,7 @@ export class CreateBuchungComponent {
   }
 
   private updateSaveButton() {
-    this.isSaveButtonDisabled.set(this.isSaveAble());
+    this.isSaveButtonDisabled.set(!this.isSaveAble());
   }
 
   private getNewEmptyBuchung(date: Date): IBuchungData {
