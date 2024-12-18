@@ -1,9 +1,9 @@
 <div class="eintraege-list">
   <div class="eintraege-list__topbar">
   </div>
-  @if (getAnzahlFutureBuchungen() > 0) {
+  @if (days().length > 0) {
     <div class="eintraege-list__lists">
-      <div class="eintraege-list__geplant-text" *ngIf="getFutureDays().length > 0">
+      <div class="eintraege-list__geplant-text" *ngIf="getAnzahlFutureBuchungen() > 0">
         <img src="assets/chevron-right.png" class="eintraege-list__geplant-img" *ngIf="!isGeplantVisible()" (click)="setIsGeplantVisibleTrue()">
         <img src="assets/chevron-down.png" class="eintraege-list__geplant-img" *ngIf="isGeplantVisible()" (click)="setIsGeplantVisibleFalse()">
         <div  class="eintraege-list__geplant-label" (click)="toggleIsGeplantVisible()">
