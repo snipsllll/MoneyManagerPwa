@@ -140,6 +140,7 @@
 .register__loading-gif {
   width: 41px;
   height: 41px;
+  margin-top: 40px;
 }
 
 .register__version {

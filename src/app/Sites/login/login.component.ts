@@ -104,7 +104,6 @@ export class LoginComponent {
       console.log('Login fehlgeschlagen:', error);
       this.errorMessage = 'E-Mail-Adresse oder Passwort ist falsch.'
       this.isLoading = false;
-      // Fehleranzeige im UI (optional)
     }
   }
 

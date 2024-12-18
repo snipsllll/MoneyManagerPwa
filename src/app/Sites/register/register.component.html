@@ -55,7 +55,7 @@
       </ng-template>
     </div>
     <!-- end -->
-    <div class="register__buttons-wrapper">
+    <div class="register__buttons-wrapper" *ngIf="!isLoading; else loading">
       <div class="register__button" (click)="onRegisterClicked()" [class.register__button-grayed-out]="isLoading">
         registrieren
       </div>
@@ -66,21 +66,6 @@
   </div>
 </div>
 
-<!--
-<div class="register__data-input-element-wrapper">
-  <div class="register__data-input-label">
-    Passwort
-  </div>
-  <input type="password" [class.register__input-red]="isPw1Red" [class.register__grayed-out]="isLoading"
-         placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw1"
-         (ngModelChange)="onPw1Change()">
-</div>
-<div class="register__data-input-element-wrapper">
-  <div class="register__data-input-label">
-    Passwort wiederholen
-  </div>
-  <input type="password" [class.register__input-red]="isPw2Red" [class.register__grayed-out]="isLoading"
-         placeholder="passwort" class="register__data-input-element" [(ngModel)]="pw2"
-         (ngModelChange)="onPw2Change()">
-</div>
--->
+<ng-template #loading>
+  <img src="assets/loading-gif.gif" class="register__loading-gif">
+</ng-template>

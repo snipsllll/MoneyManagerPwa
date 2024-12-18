@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
 import {FireData, SavedData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
+import {DialogService} from "./Services/DialogService/dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class AdminService {
 
   utils = new UT();
 
-  constructor(private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
@@ -86,17 +87,15 @@ export class AdminService {
   async logout(): Promise<void> {
     return this.authService.logout()
       .then(() => {
-        console.log(89898787)
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
         this.dataService.userData.setUserDataFire(this.utils.getEmptyUserData());
-        //TODO userData in dataService auf null setzten oder halt emoptyUserData
         this.deleteSavedLoginData();
         this.router.navigate(['login'])
       })
       .catch(error => {
         console.error('Fehler beim Logout:', error);
-        throw error; // Fehler weiterwerfen
+        throw error;
       });
   }
 
@@ -104,11 +103,12 @@ export class AdminService {
   async register(email: string, password: string) {
     return this.authService.register(email, password)
       .then((userCredential) => {
-        console.log('Registrierung erfolgreich:', userCredential.user);
+        this.router.navigate(['login']);
+        this.dialogService.showNotificationPopup({text: 'Erfolgreich registriert!'});
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
-        //console.error('Login fehlgeschlagen:', error);
+        console.log(62626262626)
         return Promise.reject(error); // Fehler weitergeben
       });
   }

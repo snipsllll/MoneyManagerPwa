@@ -10,9 +10,9 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 })
 export class RegisterComponent {
 
-  email?: string;
-  pw1?: string;
-  pw2?: string;
+  email?: string = 'dat@gmail.com';
+  pw1?: string = 'nmdz7an3fd5';
+  pw2?: string = 'nmdz7an3fd5';
   isPw1Hidden: boolean = true;
   isPw2Hidden: boolean = true;
 
@@ -135,15 +135,17 @@ export class RegisterComponent {
     return this.pw2 !== undefined && this.pw2 !== null && this.pw2 !== '';
   }
 
-  private register() {
+  private async register() {
     if(!this.email || !this.pw1) {
       throw new Error('email oder pw war leer');
     }
-    this.isLoading = true;
-    this.adminService.register(this.email, this.pw1).then(() => {
+    try {
+      this.isLoading = true;
+      await this.adminService.register(this.email, this.pw1);
       this.isLoading = false;
-      this.router.navigate(['login']);
-      this.dialogService.showNotificationPopup({text: 'Erfolgreich registriert!'});
-    });
+    } catch (error) {
+      this.errorMessage = 'Diese Emailadresse ist bereits registriert';
+      this.isLoading = false;
+    }
   }
 }
