@@ -146,5 +146,4 @@ export class RegisterComponent {
       this.dialogService.showNotificationPopup({text: 'Erfolgreich registriert!'});
     });
   }
-
 }

@@ -1,4 +1,4 @@
-<div class="login">
+<div class="login" (keydown.enter)="onLoginClicked()">
   <div class="login__logo-wrapper">
     <img src="assets/favicon.jpg" class="login__logo">
   </div>
@@ -28,8 +28,8 @@
       </ng-template>
     </div>
   </div>
-  <div class="login__buttons-wrapper">
-    <div class="login__button" (click)="onLoginClicked()" *ngIf="!isLoading; else loading">
+  <div class="login__buttons-wrapper" *ngIf="!isLoading; else loading">
+    <div class="login__button" (click)="onLoginClicked()">
       Anmelden
     </div>
     <div class="login__register-text" (click)="onRegisterClicked()" [class.login__grayed-out]="isLoading">
@@ -43,4 +43,7 @@
 
 <ng-template #loading>
   <img src="assets/loading-gif.gif" class="login__loading-gif">
+  <div class="login__du-wirst-eingeloggt">
+    du wirst eingeloggt
+  </div>
 </ng-template>
