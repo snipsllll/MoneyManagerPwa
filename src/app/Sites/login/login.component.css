@@ -148,6 +148,7 @@
 .login__loading-gif {
   width: 41px;
   height: 41px;
+  margin-top: 120px;
 }
 
 .login__version {
