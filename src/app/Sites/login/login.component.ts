@@ -1,15 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {versionName} from "../../Models/Classes/versionName";
 import {TempService} from "../../temp.service";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit, OnDestroy {
 
   email?: string;
   pw?: string;
@@ -21,15 +22,30 @@ export class LoginComponent implements OnInit{
   errorMessage?: string = '';
 
   isLoading = false;
+  private sub: any;
 
-  constructor(private tempService: TempService, private adminService: AdminService, private router: Router) {
+  constructor(private location: Location, private tempService: TempService, private adminService: AdminService, private router: Router) {
   }
 
   ngOnInit() {
+    this.sub = this.location.subscribe((event) => {
+      // Zurück-Taste gedrückt
+      if (this.router.url === '/') {
+        this.location.forward(); // Verhindert Zurück-Navigation
+      }
+    });
+
     if(this.tempService.dataUsedForRegister) {
       this.email = this.tempService.dataUsedForRegister.email;
       this.pw = this.tempService.dataUsedForRegister.password;
       this.tempService.dataUsedForRegister = undefined;
+    }
+  }
+
+  ngOnDestroy() {
+    // Abonnement beenden
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
   }
 
