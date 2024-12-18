@@ -36,6 +36,10 @@ export class AdminService {
     })
   }
 
+  resetPassword() {
+    this.authService.resetPassword(this.loggedInUser.getValue()?.email!);
+  }
+
   async loadData() {
     this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
       console.log(data);

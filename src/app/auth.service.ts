@@ -13,6 +13,10 @@ export class AuthService {
 
   constructor(private fireauth: AngularFireAuth) {}
 
+  resetPassword(email: string) {
+    this.fireauth.sendPasswordResetEmail(email);
+  }
+
   async register(email: string, password: string) {
     return this.fireauth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
@@ -32,6 +36,8 @@ export class AuthService {
   async login(email: string, password: string) {
     return this.fireauth.signInWithEmailAndPassword(email, password)
       .then((result) => {
+        if(result.user)
+          this.loggedInUser.next(result.user as User);
         // Rückgabe des erfolgreichen Ergebnisses
         return result;
       })
@@ -43,18 +49,6 @@ export class AuthService {
         });
       });
   }
-
-  /*
-  try {
-    const userCredential = await this.fireauth.signInWithEmailAndPassword(email, password);
-    console.log('User logged in successfully', userCredential);
-    this.loggedInUser.next(userCredential.user as User);
-    this.isLoggedIn = true;
-    return userCredential as UserCredential;
-  } catch (error) {
-    console.error('Error logging in', error);
-    throw error;
-  }*/
 
   // Logout des Benutzers
   async logout(): Promise<void> {
@@ -73,12 +67,14 @@ export class AuthService {
   async deleteAccount(): Promise<void> {
     try {
       const user = this.loggedInUser.getValue();
+      console.log(user)
 
       if (!user) {
         throw new Error('Kein Benutzer ist angemeldet.');
       }
 
       const uid = user.uid;
+      console.log(12122323)
       await this.fireauth.currentUser.then((currentUser) => {
         if (currentUser) {
           currentUser.delete(); // Lösche das Benutzerkonto
