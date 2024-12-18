@@ -1,6 +1,14 @@
 <app-top-bar></app-top-bar>
 
 <div class="einstellungen">
+  <div class="einstellungen__userdata-wrapper">
+    <div class="einstellungen__userdata-email-label">
+      angemeldet als:
+    </div>
+    <div class="einstellungen__userdata-email">
+      {{email}}
+    </div>
+  </div>
   <div class="einstellungen__import-export-wrapper">
     <div class="einstellungen__import-wrapper button" (click)="onFileButtonClick()">
       Daten importieren

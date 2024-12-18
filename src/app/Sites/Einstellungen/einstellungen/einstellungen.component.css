@@ -4,6 +4,13 @@
   height: calc(100% - 70px);
 }
 
+.einstellungen__userdata-wrapper {
+  padding: 10px 10px 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .einstellungen__import-export-wrapper {
   display: flex;
   justify-content: space-between;

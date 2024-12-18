@@ -23,6 +23,7 @@ export class EinstellungenComponent implements OnInit {
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
   utils = new UT();
+  email: string = '';
 
   constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
@@ -32,6 +33,7 @@ export class EinstellungenComponent implements OnInit {
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+    this.email = this.adminService.loggedInUser.getValue()?.email ?? '';
   }
 
   update() {
