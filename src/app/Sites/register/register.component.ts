@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
-import {TempService} from "../../temp.service";
 
 @Component({
   selector: 'app-register',

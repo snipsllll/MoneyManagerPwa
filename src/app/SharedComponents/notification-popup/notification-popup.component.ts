@@ -21,7 +21,9 @@ export class NotificationPopupComponent {
     this.isPopupHidden = false;
     setTimeout(() => {
       this.isPopupHidden = true;
-      this.dialogService.isNotificationPopupVisible = false;
+      setTimeout(() => {
+        this.dialogService.isNotificationPopupVisible = false;
+      }, 500)
     }, 4000);
   }
 }
