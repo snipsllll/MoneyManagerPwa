@@ -6,13 +6,13 @@
     {{errorMessage}}
   </div>
   <div class="login__data-input-wrapper">
-    <div class="input__data-input-element-wrapper">
+    <div class="login__data-input-element-wrapper">
       <div class="login__data-input-label">
         Email-Adresse
       </div>
       <input type="email" [class.login__input-red]="isEmailRed"  [class.login__grayed-out]="isLoading" placeholder="email" class="login__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
     </div>
-    <div class="input__data-input-element-wrapper">
+    <div class="login__data-input-element-wrapper">
       <div class="login__data-input-label">
         Passwort
       </div>
