@@ -198,10 +198,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onTimeChange(event: any) {
-    const [hours, minutes] = event.target.value.split(':');
-    const date = new Date();
-    date.setHours(+hours, +minutes);
-    this.buchung()!.data.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+    this.buchung()!.data.time = event;
     this.updateSaveButton();
   }
 
@@ -234,21 +231,12 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private hasBuchungChanged() {
-    console.log(2)
     const x = !(this.buchung()!.data.geplanteBuchung === this.oldBuchung?.data.geplanteBuchung && this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
-    console.log(x)
     return x;
   }
 
   private isSaveAble() {
-    console.log(1)
-    console.log(this.oldBuchung)
-    console.log(this.buchung())
-    console.log(this.buchung()?.data.betrag)
-
-    const x = (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged();
-    console.log(x)
-    return x;
+    return (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged();
   }
 
   private executeExitAction() {
