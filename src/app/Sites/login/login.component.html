@@ -35,7 +35,7 @@
     <div class="login__button login__anmelden-button" (click)="onLoginClicked()">
       Anmelden
     </div>
-    <div class="login__register-text" [class.login__grayed-out]="isLoading">
+    <div class="login__register-text" [class.login__grayed-out]="isLoading" (click)="onRegisterClicked()">
       Account erstellen
     </div>
   </div>

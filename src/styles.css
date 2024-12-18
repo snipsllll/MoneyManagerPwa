@@ -48,5 +48,10 @@ all-centered {
   color: red !important;
 }
 
+.disabled {
+  background-color: #e3e3e3 !important;
+  color: #939393 !important;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

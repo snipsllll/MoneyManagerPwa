@@ -5,23 +5,25 @@
   <div class="password-reset__error-message">
     {{errorMessage}}
   </div>
-  <div class="password-reset__data-input-wrapper">
-    <div class="password-reset__data-input-element-wrapper">
-      <div class="password-reset__data-input-label">
-        Email-Adresse
+  <div class="password-reset__before-email-send" *ngIf="!wasEmailSend; else emailWasSend">
+    <div class="password-reset__data-input-wrapper">
+      <div class="password-reset__data-input-element-wrapper">
+        <div class="password-reset__data-input-label">
+          Email-Adresse
+        </div>
+        <input type="email" [class.password-reset__grayed-out]="wasEmailSend" placeholder="email" class="password-reset__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
       </div>
-      <input type="email" [class.login__grayed-out]="wasEmailSend" placeholder="email" class="password-reset__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
     </div>
-  </div>
-  <app-info-box class="password-reset__info-box-wrapper">
-    Bitte gib die Emailadresse von dem Account, dessen Passwort du zurücksetzen möchtest, an.
-  </app-info-box>
-  <div class="password-reset__buttons-wrapper" *ngIf="!wasEmailSend; else emailWasSend">
-    <div class="password-reset__button login__anmelden-button" (click)="onSendEmailClicked()">
-      Email senden
-    </div>
-    <div class="password-reset__register-text" [class.login__grayed-out]="wasEmailSend">
-
+    <app-info-box class="password-reset__info-box-wrapper">
+      Bitte gib die Emailadresse von dem Account, dessen Passwort du zurücksetzen möchtest, an.
+    </app-info-box>
+    <div class="password-reset__buttons-wrapper">
+      <div class="password-reset__button password-reset__send-email-button" (click)="onSendEmailClicked()" [class.disabled]="isSaveButtonDisabled" *ngIf="!isLoading; else loading">
+        Email senden
+      </div>
+      <div class="password-reset__back-text" (click)="onBackClicked()">
+        zurück
+      </div>
     </div>
   </div>
   <div class="password-reset__version">
@@ -30,5 +32,19 @@
 </div>
 
 <ng-template #emailWasSend>
+  <div class="password-reset__after-email-send">
+    <app-info-box class="password-reset__info-box-wrapper">
+      Wir haben dir eine Email gesendet. In dieser Email ist ein Link mit dessen Hilfe du dein Passwort zurücksetzen kannst.
+    </app-info-box>
+    <div class="password-reset__button login__anmelden-button" (click)="onSendEmailClicked()" [class.disabled]="isSaveButtonDisabled">
+      zum Login
+    </div>
+    <div class="password-reset__back-text" (click)="onBackClicked()">
+      Email erneut senden
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>
   <img src="assets/loading-gif.gif" class="password-reset__loading-gif">
 </ng-template>

@@ -36,8 +36,8 @@ export class AdminService {
     })
   }
 
-  resetPassword() {
-    this.authService.resetPassword(this.loggedInUser.getValue()?.email!);
+  async sendResetPasswordEmail(email?: string) {
+    return this.authService.resetPassword(email!);
   }
 
   async loadData() {

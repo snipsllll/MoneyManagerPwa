@@ -15,9 +15,16 @@
   width: 200px;
 }
 
-.password-reset__error-message {
+.password-reset__before-email-send, .password-reset__after-email-send {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80%;
+}
+
+.password-reset__error-message {
+  width: 100%;
+  display: flex;
   justify-content: left;
   color: #ff0000;
   font-size: 15px;
@@ -27,7 +34,7 @@
 .password-reset__data-input-wrapper {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
   align-items: center;
 }
 
@@ -66,7 +73,7 @@
 }
 
 .password-reset__info-box-wrapper {
-  width: 80%;
+  width: 100%;
   margin: 20px 0 110px 0;
 }
 
@@ -95,12 +102,18 @@
   background-color: #9cd5ff;
 }
 
-.password-reset__register-text {
+.password-reset__back-text {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   text-decoration: underline;
+}
+
+.password-reset__loading-gif {
+  width: 41px;
+  height: 41px;
+  margin-bottom: 15px;
 }
 
 .password-reset__version {

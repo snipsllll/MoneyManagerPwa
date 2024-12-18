@@ -134,6 +134,7 @@
 .login__passwort-vergessen-text {
   margin-left: auto;
   margin-top: -3px;
+  text-decoration: underline;
 }
 
 .login__register-text {

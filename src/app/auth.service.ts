@@ -13,8 +13,8 @@ export class AuthService {
 
   constructor(private fireauth: AngularFireAuth) {}
 
-  resetPassword(email: string) {
-    this.fireauth.sendPasswordResetEmail(email);
+  async resetPassword(email: string) {
+    return this.fireauth.sendPasswordResetEmail(email);
   }
 
   async register(email: string, password: string) {

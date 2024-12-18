@@ -248,7 +248,7 @@ export class EinstellungenComponent implements OnInit {
   }
 
   onResetPwClicked() {
-    this.adminService.resetPassword();
+    this.adminService.sendResetPasswordEmail();
   }
 
   onAccountLoeschenClicked() {
