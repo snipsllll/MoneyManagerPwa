@@ -1,7 +1,7 @@
 import {
   Day,
   FireData,
-  FireMonth,
+  FireMonth, IFireGeplanteAusgabenBuchung, IGeplanteAusgabe,
   IGeplanteAusgabenBuchung,
   Month,
   SavedData,
@@ -14,7 +14,7 @@ import {
   IBuchung,
   IFireBuchung,
   IFireSparschweinEintrag,
-  IFixkostenEintrag,
+  IFixkostenEintrag, IGeplanteAusgabenKategorie,
   ISparschweinEintrag,
   IWunschlistenEintrag
 } from "../NewInterfaces";
@@ -76,31 +76,33 @@ export class UserData {
     this.buchungsKategorien = fireData.buchungsKategorien ?? [];
     this.months = this.convertFireMonthsToMonths(fireData.savedMonths ?? []);
     this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = this.convertFirespareintraegeToSpareintraege(fireData.sparEintraege) ?? [];
+    this.sparschweinEintraege = this.convertFirespareintraegeToSpareintraege(fireData.sparEintraege ?? []);
     this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
     this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
     this.settings = fireData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = fireData.geplanteAusgabenBuchungen ?? [];
+    this.geplanteAusgabenBuchungen = this.convertFireAusgBuchToGeplAusgBuch(fireData.geplanteAusgabenBuchungen ?? []);
   }
 
   setUserData(loadedData: any) {
+    console.log(loadedData)
     if(loadedData == null) {
       return;
     }
     console.log(loadedData)
 
-    let fireData: SavedData = this.checkForDbUpdates(loadedData);
-    console.log(fireData)
+    let savedData: SavedData = this.checkForDbUpdates(loadedData);
+    console.log(savedData)
 
-    this.buchungen = fireData.buchungen ?? [];
-    this.buchungsKategorien = fireData.buchungsKategorien ?? [];
-    this.months = this.convertSavedMonthsToMonths(fireData.savedMonths ?? []);
-    this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = fireData.sparEintraege ?? [];
-    this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
-    this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
-    this.settings = fireData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = fireData.geplanteAusgabenBuchungen ?? [];
+    this.buchungen = this.convertSavedBuchungenToBuchungen(savedData.buchungen ?? []);
+    this.buchungsKategorien = savedData.buchungsKategorien ?? [];
+    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
+    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
+    this.sparschweinEintraege = savedData.sparEintraege ?? [];
+    this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
+    this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
+    this.settings = savedData.settings ?? this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = this.convertGeplAusgBuchToGeplAusgBuch(savedData.geplanteAusgabenBuchungen ?? []);
+    console.log(this)
   }
 
   private convertFireBuchungenToBuchungen(buchungen: IFireBuchung[]): IBuchung[] {
@@ -122,6 +124,81 @@ export class UserData {
       newBuchungen.push(newBuchung);
     })
     return newBuchungen;
+  }
+
+  private convertSavedBuchungenToBuchungen(buchungen: IBuchung[]): IBuchung[] {
+    const newBuchungen: IBuchung[] = [];
+    buchungen.forEach(buchung => {
+      const newBuchung: IBuchung = {
+        id: buchung.id,
+        data: {
+          date: new Date(buchung.data.date),
+          betrag: buchung.data.betrag,
+          title: buchung.data.title,
+          time: buchung.data.time,
+          geplanteBuchung: buchung.data.geplanteBuchung,
+          buchungsKategorie: buchung.data.buchungsKategorie,
+          beschreibung: buchung.data.beschreibung
+        }
+      }
+
+      newBuchungen.push(newBuchung);
+    })
+    return newBuchungen;
+  }
+
+  private convertGeplAusgKatToGeplAusgKat(ausgabenKats: IGeplanteAusgabenKategorie[]): IGeplanteAusgabenKategorie[] {
+    const newGeplAusgKats: IGeplanteAusgabenKategorie[] = [];
+    ausgabenKats.forEach(kat => {
+      const newKat: IGeplanteAusgabenKategorie = {
+        id: kat.id,
+        title: kat.title,
+        betrag: kat.betrag
+      }
+      newGeplAusgKats.push(newKat);
+    })
+
+    return newGeplAusgKats;
+  }
+
+  private convertGeplAusgBuchToGeplAusgBuch(ausgabenbuchungen: IGeplanteAusgabenBuchung[]): IGeplanteAusgabenBuchung[] {
+    const newGeplAusgBuchungen: IGeplanteAusgabenBuchung[] = [];
+    ausgabenbuchungen.forEach(buchung => {
+      const newBuchung: IGeplanteAusgabenBuchung = {
+        id: buchung.id,
+        data: {
+          date: new Date(buchung.data.date),
+          betrag: buchung.data.betrag,
+          title: buchung.data.title,
+          time: buchung.data.time,
+          buchungsKategorie: buchung.data.buchungsKategorie,
+          beschreibung: buchung.data.beschreibung
+        }
+      }
+      newGeplAusgBuchungen.push(newBuchung);
+    })
+
+    return newGeplAusgBuchungen;
+  }
+
+  private convertFireAusgBuchToGeplAusgBuch(ausgabenbuchungen: IFireGeplanteAusgabenBuchung[]): IGeplanteAusgabenBuchung[] {
+    const newGeplAusgBuchungen: IGeplanteAusgabenBuchung[] = [];
+    ausgabenbuchungen.forEach(buchung => {
+      const newBuchung: IGeplanteAusgabenBuchung = {
+        id: buchung.id,
+        data: {
+          date: new Date(buchung.data.date.seconds / 1000),
+          betrag: buchung.data.betrag,
+          title: buchung.data.title,
+          time: buchung.data.time,
+          buchungsKategorie: buchung.data.buchungsKategorie,
+          beschreibung: buchung.data.beschreibung
+        }
+      }
+      newGeplAusgBuchungen.push(newBuchung);
+    })
+
+    return newGeplAusgBuchungen;
   }
 
   private convertSpareintraegeToFireSpareintraege(spareintraege: ISparschweinEintrag[]) {
@@ -750,10 +827,10 @@ export class UserData {
 
     savedMonths.forEach(savedMonth => {
       console.log(savedMonth)
-      const date = savedMonth.date;
+      const date = new Date(savedMonth.date);
       console.log(date)
-      const startDate = new Date(savedMonth.date.getFullYear(), savedMonth.date.getMonth(), 1);
-      const endDate: Date = new Date(savedMonth.date.getFullYear(), savedMonth.date.getMonth() + 1, 0); // Last day of the month
+      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
 
       const weeks: Week[] = [];

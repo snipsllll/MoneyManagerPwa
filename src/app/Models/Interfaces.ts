@@ -100,6 +100,20 @@ export interface IGeplanteAusgabenBuchungData {
   buchungsKategorie?: number;
 }
 
+export interface IFireGeplanteAusgabenBuchung {
+  id: number;
+  data: IFireGeplanteAusgabenBuchungData;
+}
+
+export interface IFireGeplanteAusgabenBuchungData {
+  date: any;
+  time: string;
+  title: string;
+  betrag: number | null;
+  beschreibung?: string;
+  buchungsKategorie?: number;
+}
+
 export interface Settings {
   wunschlistenFilter: WunschlistenFilter;
   toHighBuchungenEnabled: boolean;
