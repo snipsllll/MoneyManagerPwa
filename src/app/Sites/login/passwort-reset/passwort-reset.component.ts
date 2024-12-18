@@ -23,14 +23,11 @@ export class PasswortResetComponent {
   }
 
   onSendEmailClicked() {
-    this.updateSaveButton();
-    if(!this.isSaveButtonDisabled){
-      this.isLoading = true;
-      this.adminService.sendResetPasswordEmail(this.email).then(result => {
-        this.isLoading = false;
-        this.wasEmailSend = true;
-      });
-    }
+    this.sendEmail();
+  }
+
+  onSendAgainClicked() {
+    this.sendEmail();
   }
 
   onEmailChange() {
@@ -39,6 +36,22 @@ export class PasswortResetComponent {
 
   onBackClicked() {
     this.router.navigate([('')]);
+  }
+
+  private sendEmail() {
+    this.updateSaveButton();
+    this.errorMessage = '';
+
+    if(!this.isSaveButtonDisabled){
+      this.isLoading = true;
+      this.adminService.sendResetPasswordEmail(this.email).then(result => {
+        this.isLoading = false;
+        this.wasEmailSend = true;
+      }).catch((error) => {
+        this.errorMessage = error.message;
+        this.isLoading = false;
+      });
+    }
   }
 
   private updateSaveButton() {

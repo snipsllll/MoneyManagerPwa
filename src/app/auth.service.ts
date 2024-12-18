@@ -14,7 +14,13 @@ export class AuthService {
   constructor(private fireauth: AngularFireAuth) {}
 
   async resetPassword(email: string) {
-    return this.fireauth.sendPasswordResetEmail(email);
+    return this.fireauth.sendPasswordResetEmail(email).catch((error) => {
+      // Rückgabe eines Fehlers als abgelehntes Promise
+      return Promise.reject({
+        code: error.code,
+        message: error.message,
+      })
+    });
   }
 
   async register(email: string, password: string) {

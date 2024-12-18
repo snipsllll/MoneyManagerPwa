@@ -33,13 +33,13 @@
 
 <ng-template #emailWasSend>
   <div class="password-reset__after-email-send">
-    <app-info-box class="password-reset__info-box-wrapper">
+    <app-info-box class="password-reset__info-box-wrapper-after-email-send">
       Wir haben dir eine Email gesendet. In dieser Email ist ein Link mit dessen Hilfe du dein Passwort zurücksetzen kannst.
     </app-info-box>
-    <div class="password-reset__button login__anmelden-button" (click)="onSendEmailClicked()" [class.disabled]="isSaveButtonDisabled">
+    <div class="password-reset__button login__anmelden-button" (click)="onBackClicked()" [class.disabled]="isSaveButtonDisabled" *ngIf="!isLoading; else loading">
       zum Login
     </div>
-    <div class="password-reset__back-text" (click)="onBackClicked()">
+    <div class="password-reset__back-text" (click)="onSendAgainClicked()">
       Email erneut senden
     </div>
   </div>

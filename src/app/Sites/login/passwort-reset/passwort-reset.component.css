@@ -77,6 +77,11 @@
   margin: 20px 0 110px 0;
 }
 
+.password-reset__info-box-wrapper-after-email-send {
+  width: 100%;
+  margin: 20px 0 150px 0;
+}
+
 .password-reset__buttons-wrapper {
   margin-top: 10px;
   display: flex;

@@ -37,7 +37,9 @@ export class AdminService {
   }
 
   async sendResetPasswordEmail(email?: string) {
-    return this.authService.resetPassword(email!);
+     return this.authService.resetPassword(email!).catch((error) => {
+       return Promise.reject(error);
+     });
   }
 
   async loadData() {
