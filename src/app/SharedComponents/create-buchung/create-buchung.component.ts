@@ -94,7 +94,7 @@ export class CreateBuchungComponent {
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst
+        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst && this.dataProvider.checkIfMonthExistsForDay(this.buchung.date) && this.dataProvider.getMonthByDate(this.buchung.date).totalBudget !== 0;
 
         if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
@@ -196,10 +196,6 @@ export class CreateBuchungComponent {
 
   onBeschreibungChanged() {
     this.updateSaveButton();
-  }
-
-  onApzClicked() {
-    //this.buchung.apz = !this.buchung.apz;
   }
 
   private isBuchungEmpty() {
