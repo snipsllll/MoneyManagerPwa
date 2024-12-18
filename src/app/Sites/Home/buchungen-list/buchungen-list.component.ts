@@ -8,7 +8,7 @@ import {DataProviderService} from "../../../Services/DataProviderService/data-pr
   templateUrl: './buchungen-list.component.html',
   styleUrl: './buchungen-list.component.css'
 })
-export class BuchungenListComponent  implements OnInit{
+export class BuchungenListComponent {
   date = new Date();
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
@@ -20,12 +20,7 @@ export class BuchungenListComponent  implements OnInit{
 
   }
 
-  ngOnInit() {
-    console.log(this.days())
-  }
-
   orderByDateDesc(array: Day[]) {
-    //TODO
     const rArray: Day[] = [];
     array.forEach(day => {
       day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
@@ -50,6 +45,18 @@ export class BuchungenListComponent  implements OnInit{
       const dayDate = day.date;
       return dayDate > today;  // Vergleiche direkt das Datum
     });
+  }
+
+  getAnzahlFutureBuchungen() {
+    const futureDays = this.getFutureDays();
+    let anzahlBuchungen = 0;
+    futureDays.forEach(futureDay => {
+      futureDay.buchungen?.forEach(buchung => {
+        anzahlBuchungen++;
+      })
+    })
+
+    return anzahlBuchungen;
   }
 
   setIsGeplantVisibleTrue() {
