@@ -113,3 +113,8 @@
   border-radius: 10px;
   background-color: #cccccc;
 }
+
+.monat-fixkosten-dialog__grayed-out {
+  background-color: #e3e3e3 !important;
+  color: #939393 !important;
+}

@@ -27,7 +27,7 @@
       <div class="monat-fixkosten-dialog__button" (click)=onCancelClicked()>
         abbrechen
       </div>
-      <div class="monat-fixkosten-dialog__button" (click)="onSaveClicked()">
+      <div class="monat-fixkosten-dialog__button" [class.monat-fixkosten-dialog__grayed-out]="!this.checkDarfSpeichern()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>

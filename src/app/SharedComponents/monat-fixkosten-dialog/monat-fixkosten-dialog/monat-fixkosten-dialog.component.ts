@@ -80,24 +80,26 @@ export class MonatFixkostenDialogComponent implements OnInit {
       return true;
     }
 
+    let hasChanged = false;
+
     for (let i = 0; i < this.viewModel.elemente.length; i++) {
       if(this.oldElements[i].data.title !== this.viewModel.elemente[i].data.title)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.beschreibung !== this.viewModel.elemente[i].data.beschreibung)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.betrag !== this.viewModel.elemente[i].data.betrag)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.isExcluded !== this.viewModel.elemente[i].data.isExcluded)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.isStandardFixkostenEintrag !== this.viewModel.elemente[i].data.isStandardFixkostenEintrag)
-        return true;
+        hasChanged = true;
     }
 
-    return false;
+    return hasChanged;
   }
 
   checkDarfSpeichern() {
-    return true;
+    return this.checkHasChanged();
   }
 
   onPlusClicked() {
