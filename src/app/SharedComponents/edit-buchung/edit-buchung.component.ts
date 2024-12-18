@@ -236,7 +236,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private isSaveAble() {
-    return (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged();
+    return (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged() && !(this.buchung()?.data.geplanteBuchung && this.buchung()?.data.buchungsKategorie === 0);
   }
 
   private executeExitAction() {
