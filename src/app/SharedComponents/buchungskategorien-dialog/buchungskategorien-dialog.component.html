@@ -6,17 +6,12 @@
           <div *ngFor="let element of viewModel.elemente">
             <app-list-element [viewModel]="getViewModel(element)"></app-list-element>
           </div>
-          <div style="height: calc(100vh - 70px - 190px)"></div>
         </div>
+        <div class="bk__spacer" *ngIf="viewModel.elemente.length > 0"></div>
       </div>
     </div>
-    <div class="monat-fixkosten-dialog__bottom-wrapper">
-      <div class="monat-fixkosten-dialog__summe-wrapper">
-
-      </div>
-      <div class="monat-fixkosten-dialog__add-button-wrapper">
-        <app-plus-button (click)="onPlusClicked()"></app-plus-button>
-      </div>
+    <div class="buchungskategorien-dialog__add-button-wrapper">
+      <app-plus-button (click)="onPlusClicked()" [fixed]="false"></app-plus-button>
     </div>
     <div class="monat-fixkosten-dialog__buttons-wrapper">
       <div class="monat-fixkosten-dialog__button" (click)=onCancelClicked()>
@@ -31,9 +26,6 @@
         noch keine Einträge vorhanden
       </div>
     </ng-template>
-
-
   </div>
-
 </div>
 
