@@ -1,14 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {versionName} from "../../Models/Classes/versionName";
+import {TempService} from "../../temp.service";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
   email?: string;
   pw?: string;
@@ -21,7 +22,15 @@ export class LoginComponent {
 
   isLoading = false;
 
-  constructor(private adminService: AdminService, private router: Router) {
+  constructor(private tempService: TempService, private adminService: AdminService, private router: Router) {
+  }
+
+  ngOnInit() {
+    if(this.tempService.dataUsedForRegister) {
+      this.email = this.tempService.dataUsedForRegister.email;
+      this.pw = this.tempService.dataUsedForRegister.password;
+      this.tempService.dataUsedForRegister = undefined;
+    }
   }
 
   onLoginClicked() {

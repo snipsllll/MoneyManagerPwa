@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {TempService} from "../../temp.service";
 
 @Component({
   selector: 'app-register',
@@ -10,9 +11,9 @@ import {DialogService} from "../../Services/DialogService/dialog.service";
 })
 export class RegisterComponent {
 
-  email?: string = 'dat@gmail.com';
-  pw1?: string = 'nmdz7an3fd5';
-  pw2?: string = 'nmdz7an3fd5';
+  email?: string;
+  pw1?: string;
+  pw2?: string;
   isPw1Hidden: boolean = true;
   isPw2Hidden: boolean = true;
 

@@ -9,6 +9,7 @@ import {DataService} from "./Services/DataService/data.service";
 import {FireData, SavedData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 import {DialogService} from "./Services/DialogService/dialog.service";
+import {TempService} from "./temp.service";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AdminService {
 
   utils = new UT();
 
-  constructor(private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
@@ -105,6 +106,10 @@ export class AdminService {
       .then((userCredential) => {
         this.router.navigate(['login']);
         this.dialogService.showNotificationPopup({text: 'Erfolgreich registriert!'});
+        this.tempService.dataUsedForRegister = {
+          email: email,
+          password: password
+        }
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
