@@ -17,7 +17,7 @@
       <div class="bk-dialog__button" (click)=onCancelClicked()>
         abbrechen
       </div>
-      <div class="bk-dialog__button" (click)="onSaveClicked()">
+      <div class="bk-dialog__button" (click)="onSaveClicked()" [class.bk-dialog__grayed-out]="!checkDarfSpeichern()">
         speichern
       </div>
     </div>
