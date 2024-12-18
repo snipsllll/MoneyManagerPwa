@@ -7,7 +7,7 @@
 }
 
 .login__logo-wrapper {
-  margin: 120px 0 50px 0;
+  margin-top: 90px;
 }
 
 .login__logo {
@@ -107,7 +107,7 @@
 }
 
 .login__buttons-wrapper {
-  margin-top: 40px;
+  margin-top: 110px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -121,20 +121,27 @@
   border: 1px solid black;
   border-radius: 10px;
   font-size: 24px;
-  background-color: #b9e0ff;
-  height: 30px;
+  background-color: #7bc2fd;
+  height: 35px;
   width: 150px;
+  margin-bottom: 10px;
 }
 
 .login__button:active {
   background-color: #9cd5ff;
 }
 
+.login__passwort-vergessen-text {
+  margin-left: auto;
+  margin-top: -3px;
+}
+
 .login__register-text {
-  margin-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  text-decoration: underline;
 }
 
 .login__loading-gif {

@@ -26,14 +26,17 @@
           <img src="assets/eye-open-light-gray.png" class="login__eye" (click)="onHidePasswordClicked()">
         </div>
       </ng-template>
+      <div class="login__passwort-vergessen-text" (click)="onRegisterClicked()" [class.login__grayed-out]="isLoading">
+        passwort vergessen?
+      </div>
     </div>
   </div>
   <div class="login__buttons-wrapper" *ngIf="!isLoading; else loading">
-    <div class="login__button" (click)="onLoginClicked()">
+    <div class="login__button login__anmelden-button" (click)="onLoginClicked()">
       Anmelden
     </div>
-    <div class="login__register-text" (click)="onRegisterClicked()" [class.login__grayed-out]="isLoading">
-      registrieren
+    <div class="login__register-text" [class.login__grayed-out]="isLoading">
+      Account erstellen
     </div>
   </div>
   <div class="login__version">
