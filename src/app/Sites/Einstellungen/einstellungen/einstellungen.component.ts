@@ -247,6 +247,10 @@ export class EinstellungenComponent implements OnInit {
     this.adminService.logout();
   }
 
+  onResetPwClicked() {
+    this.adminService.resetPassword();
+  }
+
   onAccountLoeschenClicked() {
     const confirmDialogViewModel: ConfirmDialogViewModel = {
       title: 'Account löschen?',

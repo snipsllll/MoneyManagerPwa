@@ -80,6 +80,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isPasswordHidden = false;
   }
 
+  onPwVergessenClicked() {
+    this.router.navigate(['resetPassword']);
+  }
+
   private updateEmailErrors() {
     this.isEmailRed = !this.isEmailValid();
   }

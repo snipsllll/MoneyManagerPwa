@@ -13,6 +13,7 @@ import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einste
 import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component";
 import {LoginComponent} from "./Sites/login/login.component";
 import {RegisterComponent} from "./Sites/register/register.component";
+import {PasswortResetComponent} from "./Sites/login/passwort-reset/passwort-reset.component";
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -28,7 +29,8 @@ const routes: Routes = [
   {path: 'wunschliste', component: WunschlisteComponent},
   {path: 'spinning-fish', component: SpinningFishComponent},
   {path: 'auswertungen', component: AuswertungenComponent},
-  {path: 'einstellungen', component: EinstellungenComponent}
+  {path: 'einstellungen', component: EinstellungenComponent},
+  {path: 'resetPassword', component: PasswortResetComponent}
 ];
 
 @NgModule({

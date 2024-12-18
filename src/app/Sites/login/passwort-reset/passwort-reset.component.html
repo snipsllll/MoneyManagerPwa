@@ -1,0 +1,34 @@
+<div class="password-reset" (keydown.enter)="onSendEmailClicked()">
+  <div class="password-reset__logo-wrapper">
+    <img src="assets/favicon.jpg" class="password-reset__logo">
+  </div>
+  <div class="password-reset__error-message">
+    {{errorMessage}}
+  </div>
+  <div class="password-reset__data-input-wrapper">
+    <div class="password-reset__data-input-element-wrapper">
+      <div class="password-reset__data-input-label">
+        Email-Adresse
+      </div>
+      <input type="email" [class.login__grayed-out]="wasEmailSend" placeholder="email" class="password-reset__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
+    </div>
+  </div>
+  <app-info-box class="password-reset__info-box-wrapper">
+    Bitte gib die Emailadresse von dem Account, dessen Passwort du zurücksetzen möchtest, an.
+  </app-info-box>
+  <div class="password-reset__buttons-wrapper" *ngIf="!wasEmailSend; else emailWasSend">
+    <div class="password-reset__button login__anmelden-button" (click)="onSendEmailClicked()">
+      Email senden
+    </div>
+    <div class="password-reset__register-text" [class.login__grayed-out]="wasEmailSend">
+
+    </div>
+  </div>
+  <div class="password-reset__version">
+    {{versionName}}
+  </div>
+</div>
+
+<ng-template #emailWasSend>
+  <img src="assets/loading-gif.gif" class="password-reset__loading-gif">
+</ng-template>
