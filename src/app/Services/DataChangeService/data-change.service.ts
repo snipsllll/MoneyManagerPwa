@@ -37,6 +37,7 @@ export class DataChangeService {
   }
 
   editBuchung(editedBuchung: IBuchung): void {
+    this.dataService.createNewMonthIfNecessary(editedBuchung.data.date);
     this.dataService.userData.buchungen[this.getIndexOfBuchungById(editedBuchung.id)] = editedBuchung;
     this.dataService.update();
   }
