@@ -34,6 +34,8 @@ export class DataService {
 
       this.updateGeplanteAusgabenForMonth(month.startDate);
 
+      this.updateGeplanteBuchungenForMonth(month.startDate);
+
       this.updateFixkostenForMonth(month.startDate);
 
       this.calcDailyBudgetForMonth(month.startDate);
@@ -111,7 +113,8 @@ export class DataService {
       daysInMonth: daysInMonth,
       weeks: weeks,
       uebernommeneStandardFixkostenEintraege: this.userData.standardFixkostenEintraege ? this.userData.standardFixkostenEintraege : [],
-      specialFixkostenEintraege: []
+      specialFixkostenEintraege: [],
+      geplanteAusgaben: []
     };
 
     // Check if the month is completed or not
@@ -173,6 +176,35 @@ export class DataService {
         const dayDateStr = day.date.toLocaleDateString();
         // Buchungen direkt aus der Map holen
         day.buchungen = buchungenMap.get(dayDateStr) || [];
+      });
+    });
+
+    this.setMonth(month);
+  }
+
+  private updateGeplanteBuchungenForMonth(date: Date) { //TODO testen
+    const month = this.getMonthByDate(date);
+
+    // Zuerst die Buchungen in eine Map umwandeln, wobei das Datum der Schlüssel ist
+    const buchungenMap = new Map<string, IGeplanteAusgabenBuchung[]>();
+
+    // Daten einmal durchgehen und in der Map organisieren
+    this.userData.geplanteAusgabenBuchungen.forEach(buchung => {
+      const buchungDateStr = buchung.data.date?.toLocaleDateString();
+      if (buchungDateStr) {
+        if (!buchungenMap.has(buchungDateStr)) {
+          buchungenMap.set(buchungDateStr, []);
+        }
+        buchungenMap.get(buchungDateStr)!.push(buchung);
+      }
+    });
+
+    // Jetzt durch die Wochen und Tage des Monats gehen und Buchungen zuweisen
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        const dayDateStr = day.date.toLocaleDateString();
+        // Buchungen direkt aus der Map holen
+        day.geplanteAusgabenBuchungen = buchungenMap.get(dayDateStr) || [];
       });
     });
 

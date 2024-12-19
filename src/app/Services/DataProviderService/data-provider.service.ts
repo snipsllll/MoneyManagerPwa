@@ -152,7 +152,7 @@ export class DataProviderService {
     return selectedDay;
   }
 
-  getAllDays() {
+  getAllDaysWithBuchungen() {
     const months: Month[] = this.dataService.userData.months;
     const days: Day[] = []
     months.forEach(month => {
@@ -164,6 +164,7 @@ export class DataProviderService {
         })
       })
     });
+    console.log(days)
     return days;
   }
 

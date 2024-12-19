@@ -46,37 +46,75 @@ export class UserData {
 
   }
 
-  getFireData(): FireData {
-    return {
-      auswertungsLayouts: this.auswertungsLayouts ?? [],
-      buchungen: this.convertBuchungenToFireBuchungen(this.buchungen) ?? [],
-      dbVersion: currentDbVersion,
-      geplanteAusgabenBuchungen: this.geplanteAusgabenBuchungen ?? [],
-      buchungsKategorien: this.buchungsKategorien ?? [],
-      savedMonths: this.convertSavedMonthsToFireMonths(this.months) ?? [],
-      settings: this.settings ?? [],
-      sparEintraege: this.convertSpareintraegeToFireSpareintraege(this.sparschweinEintraege) ?? [],
-      standardFixkostenEintraege: this.standardFixkostenEintraege ?? [],
-      wunschlistenEintraege: this.wunschlistenEintraege ?? []
+  transformToFireData(input: any): any {
+    if (input === null || input === undefined) {
+      return input;
     }
+
+    if (input instanceof Date) {
+      return {milliseconds: 0, seconds: Math.floor(new Date(input).getTime() / 1000)};
+    }
+
+    if (Array.isArray(input)) {
+      return input.map(item => this.transformToFireData(item));
+    }
+
+    if (typeof input === 'object') {
+      const transformedObject: any = {};
+      for (const key of Object.keys(input)) {
+        transformedObject[key] = this.transformToFireData(input[key]);
+      }
+      return transformedObject;
+    }
+
+    // Return primitive values as they are
+    return input;
+  }
+
+  transformToSavedData(input: any): any {
+    if (input === null || input === undefined) {
+      return input;
+    }
+
+    // Konvertiere {milliseconds, seconds} zu einem Date-Objekt
+    if (typeof input === 'object' && 'seconds' in input) {
+      console.log(1)
+      return new Date(input.seconds * 1000);
+    }
+
+    if (Array.isArray(input)) {
+      return input.map(item => this.transformToSavedData(item));
+    }
+
+    if (typeof input === 'object') {
+      const transformedObject: any = {};
+      for (const key of Object.keys(input)) {
+        transformedObject[key] = this.transformToSavedData(input[key]);
+      }
+      return transformedObject;
+    }
+
+    // Gib primitive Werte unverändert zurück
+    return input;
+  }
+
+  getFireData(): FireData {
+    const x = this.transformToFireData(this.getSavedData());
+    console.log(x);
+    return x;
   }
 
   setUserDataFire(loadedData: any) {
+    console.log('Die vom Server geladenen daten werden versucht in UserData zu speichern.')
     if(loadedData == null) {
       return;
     }
 
-    let fireData: FireData = this.checkForFireDbUpdates(loadedData);
+    const x = this.transformToSavedData(loadedData);
 
-    this.buchungen = this.convertFireBuchungenToBuchungen(fireData.buchungen ?? []);
-    this.buchungsKategorien = fireData.buchungsKategorien ?? [];
-    this.months = this.convertFireMonthsToMonths(fireData.savedMonths ?? []);
-    this.standardFixkostenEintraege = fireData.standardFixkostenEintraege ?? [];
-    this.sparschweinEintraege = this.convertFirespareintraegeToSpareintraege(fireData.sparEintraege ?? []);
-    this.wunschlistenEintraege = fireData.wunschlistenEintraege ?? [];
-    this.auswertungsLayouts = fireData.auswertungsLayouts ?? [];
-    this.settings = fireData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = this.convertFireAusgBuchToGeplAusgBuch(fireData.geplanteAusgabenBuchungen ?? []);
+    console.log('Daten wuirden erfolgreich zu savedData transormiert:', x);
+
+    this.setUserData(x)
   }
 
   setUserData(loadedData: any) {
@@ -86,7 +124,7 @@ export class UserData {
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
-    this.buchungen = this.convertSavedBuchungenToBuchungen(savedData.buchungen ?? []);
+    this.buchungen = savedData.buchungen ?? [];
     this.buchungsKategorien = savedData.buchungsKategorien ?? [];
     this.months = this.convertSavedMonthsToMonths(savedData.savedMonths ?? []);
     this.standardFixkostenEintraege = savedData.standardFixkostenEintraege ?? [];
@@ -94,195 +132,7 @@ export class UserData {
     this.wunschlistenEintraege = savedData.wunschlistenEintraege ?? [];
     this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen = this.convertGeplAusgBuchToGeplAusgBuch(savedData.geplanteAusgabenBuchungen ?? []);
-  }
-
-  private convertFireBuchungenToBuchungen(buchungen: IFireBuchung[]): IBuchung[] {
-    const newBuchungen: IBuchung[] = [];
-    buchungen.forEach(buchung => {
-      const newBuchung: IBuchung = {
-        id: buchung.id,
-        data: {
-          date: new Date(buchung.data.date.seconds * 1000),
-          betrag: buchung.data.betrag,
-          title: buchung.data.title,
-          time: buchung.data.time,
-          geplanteBuchung: buchung.data.geplanteBuchung,
-          buchungsKategorie: buchung.data.buchungsKategorie,
-          beschreibung: buchung.data.beschreibung
-        }
-      }
-
-      newBuchungen.push(newBuchung);
-    })
-    return newBuchungen;
-  }
-
-  private convertSavedBuchungenToBuchungen(buchungen: IBuchung[]): IBuchung[] {
-    const newBuchungen: IBuchung[] = [];
-    buchungen.forEach(buchung => {
-      const newBuchung: IBuchung = {
-        id: buchung.id,
-        data: {
-          date: new Date(buchung.data.date),
-          betrag: buchung.data.betrag,
-          title: buchung.data.title,
-          time: buchung.data.time,
-          geplanteBuchung: buchung.data.geplanteBuchung,
-          buchungsKategorie: buchung.data.buchungsKategorie,
-          beschreibung: buchung.data.beschreibung
-        }
-      }
-
-      newBuchungen.push(newBuchung);
-    })
-    return newBuchungen;
-  }
-
-  private convertGeplAusgKatToGeplAusgKat(ausgabenKats: IGeplanteAusgabenKategorie[]): IGeplanteAusgabenKategorie[] {
-    const newGeplAusgKats: IGeplanteAusgabenKategorie[] = [];
-    ausgabenKats.forEach(kat => {
-      const newKat: IGeplanteAusgabenKategorie = {
-        id: kat.id,
-        title: kat.title,
-        betrag: kat.betrag
-      }
-      newGeplAusgKats.push(newKat);
-    })
-
-    return newGeplAusgKats;
-  }
-
-  private convertGeplAusgBuchToGeplAusgBuch(ausgabenbuchungen: IGeplanteAusgabenBuchung[]): IGeplanteAusgabenBuchung[] {
-    const newGeplAusgBuchungen: IGeplanteAusgabenBuchung[] = [];
-    ausgabenbuchungen.forEach(buchung => {
-      const newBuchung: IGeplanteAusgabenBuchung = {
-        id: buchung.id,
-        data: {
-          date: new Date(buchung.data.date),
-          betrag: buchung.data.betrag,
-          title: buchung.data.title,
-          time: buchung.data.time,
-          buchungsKategorie: buchung.data.buchungsKategorie,
-          beschreibung: buchung.data.beschreibung
-        }
-      }
-      newGeplAusgBuchungen.push(newBuchung);
-    })
-
-    return newGeplAusgBuchungen;
-  }
-
-  private convertFireAusgBuchToGeplAusgBuch(ausgabenbuchungen: IFireGeplanteAusgabenBuchung[]): IGeplanteAusgabenBuchung[] {
-    const newGeplAusgBuchungen: IGeplanteAusgabenBuchung[] = [];
-    ausgabenbuchungen.forEach(buchung => {
-      const newBuchung: IGeplanteAusgabenBuchung = {
-        id: buchung.id,
-        data: {
-          date: new Date(buchung.data.date.seconds / 1000),
-          betrag: buchung.data.betrag,
-          title: buchung.data.title,
-          time: buchung.data.time,
-          buchungsKategorie: buchung.data.buchungsKategorie,
-          beschreibung: buchung.data.beschreibung
-        }
-      }
-      newGeplAusgBuchungen.push(newBuchung);
-    })
-
-    return newGeplAusgBuchungen;
-  }
-
-  private convertSpareintraegeToFireSpareintraege(spareintraege: ISparschweinEintrag[]) {
-    const fireSparEintraege: IFireSparschweinEintrag[] = [];
-    spareintraege.forEach(spareintrag => {
-      const fireSpareintrag: IFireSparschweinEintrag = {
-        id: spareintrag.id,
-        data: {
-          date: {
-            nanoseconds: 0,
-            seconds: new Date(spareintrag.data.date).getTime() / 1000
-          },
-          betrag: spareintrag.data.betrag,
-          title: spareintrag.data.title ?? '',
-          zusatz: spareintrag.data.zusatz ?? '',
-          vonMonat: spareintrag.data.vonMonat ?? false,
-          vonWunschliste: spareintrag.data.vonWunschliste ?? false,
-          wunschlistenId: spareintrag.data.wunschlistenId ?? -1
-        }
-      };
-
-      fireSparEintraege.push(fireSpareintrag);
-    })
-
-    return fireSparEintraege;
-  }
-
-  private convertFirespareintraegeToSpareintraege(fireSpareintraege: IFireSparschweinEintrag[]) {
-    const sparEintraege: ISparschweinEintrag[] = [];
-    fireSpareintraege.forEach(fireSpareintrag => {
-      const spareintrag: ISparschweinEintrag = {
-        id: fireSpareintrag.id,
-        data: {
-          date: new Date(fireSpareintrag.data.date.seconds * 1000),
-          betrag: fireSpareintrag.data.betrag,
-          title: fireSpareintrag.data.title,
-          zusatz: fireSpareintrag.data.zusatz,
-          vonMonat: fireSpareintrag.data.vonMonat,
-          vonWunschliste: fireSpareintrag.data.vonWunschliste,
-          wunschlistenId: fireSpareintrag.data.wunschlistenId
-        }
-      };
-
-      sparEintraege.push(spareintrag);
-    })
-
-    return sparEintraege;
-  }
-
-  private convertSavedMonthsToFireMonths(months: Month[]) {
-    const fireMonths: FireMonth[] = [];
-    months.forEach(month => {
-      const fireMonth: FireMonth = {
-        date: {
-          nanoseconds: 0,
-          seconds: month.startDate.getTime() / 1000
-        },
-        sparen: month.sparen ?? 0,
-        geplanteAusgaben: month.geplanteAusgaben ?? [],
-        specialFixkostenEintraege: month.specialFixkostenEintraege ?? [],
-        totalBudget: month.totalBudget ?? 0,
-        uebernommeneStandardFixkostenEintraege: month.uebernommeneStandardFixkostenEintraege ?? []
-      }
-
-      fireMonths.push(fireMonth);
-    })
-
-    return fireMonths;
-  }
-
-  private convertBuchungenToFireBuchungen(buchungen: IBuchung[]): IFireBuchung[] {
-    const newBuchungen: IFireBuchung[] = [];
-    buchungen.forEach(buchung => {
-      const newBuchung: IFireBuchung = {
-        id: buchung.id,
-        data: {
-          date: {
-            nanoseconds: 0,
-            seconds: buchung.data.date.getTime() / 1000
-          },
-          betrag: buchung.data.betrag ?? 0,
-          title: buchung.data.title ?? '',
-          time: buchung.data.time ?? '',
-          geplanteBuchung: buchung.data.geplanteBuchung ?? false,
-          buchungsKategorie: buchung.data.buchungsKategorie ?? 0,
-          beschreibung: buchung.data.beschreibung ?? ''
-        }
-      }
-
-      newBuchungen.push(newBuchung);
-    })
-    return newBuchungen;
+    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
   }
 
   addKategorie(name: string): void {
@@ -349,82 +199,7 @@ export class UserData {
     }
   }
 
-  private checkForFireDbUpdates(data: any): FireData {
-    //return this.getLongTestData();
-
-    if(this.useEmptyData) {
-      return this.getEmptyFireData();
-    }
-
-    let currentData: any;
-
-    data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
-      ? currentData = data
-      : currentData = {dbVersion: 0, ...data};
-
-    try {
-      if (currentData.dbVersion < 1) {
-        currentData = this.convertToVersion1(currentData);
-      }
-
-      if (currentData.dbVersion < 2) {
-        currentData = this.convertFixkostenToStandardFixkosten(currentData);
-      }
-
-      if (currentData.dbVersion < 3) {
-        currentData = this.addEmptyKategorieZuAllenBuchungen(currentData);
-      }
-
-      currentData.dbVersion = currentDbVersion;
-      return currentData as FireData;
-    } catch (e) {
-      return {
-        buchungen: [],
-        buchungsKategorien: [],
-        auswertungsLayouts: [],
-        settings: {
-          toHighBuchungenEnabled: true,
-          wunschlistenFilter: {
-            selectedFilter: '',
-            gekaufteEintraegeAusblenden: false
-          },
-          tagesAnzeigeOption: TagesAnzeigeOptions.leer,
-          topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
-        },
-        wunschlistenEintraege: [],
-        sparEintraege: [],
-        standardFixkostenEintraege: [],
-        savedMonths: [],
-        geplanteAusgabenBuchungen: [],
-        dbVersion: currentDbVersion
-      }
-    }
-  }
-
   getEmptyTestData(): SavedData {
-    return {
-      auswertungsLayouts: [],
-      buchungen: [],
-      buchungsKategorien: [],
-      dbVersion: currentDbVersion,
-      geplanteAusgabenBuchungen: [],
-      savedMonths: [],
-      settings: {
-        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
-        toHighBuchungenEnabled: true,
-        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer,
-        wunschlistenFilter: {
-          selectedFilter: '',
-          gekaufteEintraegeAusblenden: false
-        }
-      },
-      sparEintraege: [],
-      standardFixkostenEintraege: [],
-      wunschlistenEintraege: []
-    }
-  }
-
-  getEmptyFireData(): FireData {
     return {
       auswertungsLayouts: [],
       buchungen: [],
