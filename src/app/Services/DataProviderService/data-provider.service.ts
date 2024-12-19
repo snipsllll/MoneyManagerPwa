@@ -193,7 +193,7 @@ export class DataProviderService {
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         if (!isDayReached) {
-          if (day.date.getDate() === dayDate.getDate()) {
+          if (new Date(day.date).getDate() === new Date(dayDate).getDate()) {
             isDayReached = true;
           }
 
@@ -202,7 +202,7 @@ export class DataProviderService {
             moneySpendOnDay += buchung.data.betrag!;
           })
 
-          notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
+          notSpendMoney += x[new Date(day.date).toLocaleDateString()] - moneySpendOnDay;
           daysLeftOver--;
         }
       })
