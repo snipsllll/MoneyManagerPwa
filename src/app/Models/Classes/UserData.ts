@@ -9,7 +9,6 @@ import {
   Settings,
   Week
 } from "../Interfaces";
-import {FileEngine} from "../../Services/FileEngine/FileEnigne";
 import {
   IBuchung,
   IFireBuchung,
@@ -42,8 +41,6 @@ export class UserData {
       gekaufteEintraegeAusblenden: false
     }
   };
-
-  private _fileEngine: FileEngine = new FileEngine(true);
 
   constructor() {
 
