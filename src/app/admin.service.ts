@@ -146,7 +146,6 @@ export class AdminService {
         })
       })
       .catch(error => {
-        console.error('Fehler beim Löschen des Benutzerkontos:', error);
         throw error; // Fehler weiterwerfen
       });
   }

@@ -77,14 +77,11 @@ export class AuthService {
   async deleteAccount(): Promise<void> {
     try {
       const user = this.loggedInUser.getValue();
-      console.log(user)
-
       if (!user) {
         throw new Error('Kein Benutzer ist angemeldet.');
       }
 
       const uid = user.uid;
-      console.log(12122323)
       await this.fireauth.currentUser.then((currentUser) => {
         if (currentUser) {
           currentUser.delete(); // Lösche das Benutzerkonto

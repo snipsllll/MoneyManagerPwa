@@ -716,44 +716,24 @@ export class UserData {
     };
   }
 
-  private reload() {
-    let loadedData: any = this._fileEngine.load();
-
-    let savedData: SavedData = this.checkForDbUpdates(loadedData);
-
-    this.buchungen = savedData.buchungen;
-    this.buchungsKategorien = savedData.buchungsKategorien;
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
-    this.sparschweinEintraege = savedData.sparEintraege;
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
-    this.auswertungsLayouts = savedData.auswertungsLayouts;
-    this.settings = savedData.settings;
-    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
-  }
-
   deleteAllData() {
-    this._fileEngine.save({
-      buchungen: [],
-      buchungsKategorien: [],
-      auswertungsLayouts: [],
-      settings: {
-        toHighBuchungenEnabled: true,
+    this.buchungen = [];
+    this.buchungsKategorien = [];
+    this.months = [];
+    this.standardFixkostenEintraege = [];
+    this.sparschweinEintraege = [];
+    this.wunschlistenEintraege = [];
+    this.auswertungsLayouts = [];
+    this.settings = {
+      toHighBuchungenEnabled: true,
         wunschlistenFilter: {
-          selectedFilter: '',
+        selectedFilter: '',
           gekaufteEintraegeAusblenden: false
-        },
-        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
-        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
       },
-      wunschlistenEintraege: [],
-      sparEintraege: [],
-      standardFixkostenEintraege: [],
-      savedMonths: [],
-      geplanteAusgabenBuchungen: [],
-      dbVersion: currentDbVersion
-    });
-    this.reload();
+      tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+    }
+    this.geplanteAusgabenBuchungen = []
   }
 
   getSavedData(): SavedData {
