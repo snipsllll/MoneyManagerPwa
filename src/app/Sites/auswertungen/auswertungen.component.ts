@@ -109,7 +109,7 @@ export class AuswertungenComponent implements OnInit {
                 const x = this.dataProvider.getAlleSparschweinEintraege();
                 let summeSparschweinEinAuszahlungen = 0;
                 x.forEach(eintrag => {
-                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear()) {
+                  if(new Date(eintrag.data.date).getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.date).getFullYear() === new Date(month.startDate).getFullYear()) {
                     summeSparschweinEinAuszahlungen += eintrag.data.betrag;
                   }
                 })
@@ -120,7 +120,7 @@ export class AuswertungenComponent implements OnInit {
                 const x1 = this.dataProvider.getAlleSparschweinEintraege();
                 let summeSparschweinEinAuszahlungen1 = 0;
                 x1.forEach(eintrag => {
-                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear()) {
+                  if(new Date(eintrag.data.date).getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.date).getFullYear() === new Date(month.startDate).getFullYear()) {
                     summeSparschweinEinAuszahlungen1 += eintrag.data.betrag;
                   }
                 })
@@ -148,7 +148,7 @@ export class AuswertungenComponent implements OnInit {
                 break;
               case 'von Wunschliste gekauft':
                 const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
-                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.getMonth() === month.startDate.getMonth() && eintrag.data.gekauftAm?.getFullYear() === month.startDate.getFullYear());
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => new Date(eintrag.data.gekauftAm!)?.getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.gekauftAm!)?.getFullYear() === new Date(month.startDate).getFullYear());
                 let summe = 0;
                 gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
                   summe += eintrag.data.betrag;
@@ -214,7 +214,7 @@ export class AuswertungenComponent implements OnInit {
               for( let day=0; day<month.daysInMonth!; day++) {
                 let summeAusEinzahlung = 0;
                 x.forEach(eintrag => {
-                  if(eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear() && eintrag.data.date.getDate() - 1 === day) {
+                  if(new Date(eintrag.data.date).getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.date).getFullYear() === new Date(month.startDate).getFullYear() && new Date(eintrag.data.date).getDate() - 1 === day) {
                     summeAusEinzahlung += eintrag.data.betrag;
                   }
                 })
@@ -224,7 +224,7 @@ export class AuswertungenComponent implements OnInit {
             case 'von Wunschliste gekauft':
               const gekaufteWunschlistenEIntraege = this.dataProvider.getAlleWunschlistenEintraege().filter(eintrag => eintrag.data.gekauft);
               allDaysInMonthx.forEach(day => {
-                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => eintrag.data.gekauftAm?.toLocaleDateString() === day.date.toLocaleDateString());
+                const gekaufteWunschlistenEintraegeForDay = gekaufteWunschlistenEIntraege.filter(eintrag => new Date(eintrag.data.gekauftAm!)?.toLocaleDateString() === new Date(day.date).toLocaleDateString());
                 let summe = 0;
                 gekaufteWunschlistenEintraegeForDay.forEach(eintrag => {
                   summe += eintrag.data.betrag;
@@ -242,7 +242,7 @@ export class AuswertungenComponent implements OnInit {
               }
 
               filteredBuchungenDif.forEach(buchung => {
-                alleAusgabenDaysDif[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+                alleAusgabenDaysDif[new Date(buchung.data.date).getDate() - 1] += buchung.data.betrag!;
               })
 
               for (let i = 0; i < month.daysInMonth!; i++) {
