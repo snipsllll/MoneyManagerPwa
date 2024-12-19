@@ -185,13 +185,18 @@ export class AdminService {
 
   private tryStartupLogin() {
     const savedLoginData = this.fileManager.load();
-    console.log(savedLoginData)
     if(savedLoginData.email && savedLoginData.password){
       this.tempService.dataUsedForRegister = {
         email: savedLoginData.email,
         password: savedLoginData.password
-      }
-      this.login(savedLoginData.email, savedLoginData.password, false);
+      };
+      this.tempService.isTryingAutoLogin.next(true);
+      this.login(savedLoginData.email, savedLoginData.password, false).then(() => {
+        this.tempService.isTryingAutoLogin.next(false);
+      }).catch((error) => {
+        this.tempService.autoLoginError.next(error);
+        this.tempService.isTryingAutoLogin.next(false);
+      });
     }
   }
 

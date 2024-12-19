@@ -42,6 +42,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.pw = this.tempService.dataUsedForRegister.password;
       this.tempService.dataUsedForRegister = undefined;
     }
+
+    this.tempService.isTryingAutoLogin.subscribe(isTryingAutoLogin => {
+      this.isLoading = isTryingAutoLogin;
+    })
+
+    this.tempService.autoLoginError.subscribe(autoLoginError => {
+      this.errorMessage = autoLoginError.message;
+    })
   }
 
   ngOnDestroy() {
