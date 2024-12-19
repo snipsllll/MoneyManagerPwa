@@ -12,12 +12,13 @@
       </div>
 
     </div>
-    <div class="top-bar__right" *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && title !== 'AUSWERTUNGEN' && !availableMoney().noData  && dataProvider.getSettings().topBarAnzeigeEinstellung !== TopBarBudgetOptions.leer">
+    <div class="top-bar__right">
       <div class="top-bar__budget"
            (click)="toggleDropdown()"
            (touchstart)="onTouchStart()"
            (touchend)="onTouchEnd()"
-           (touchcancel)="onTouchEnd()">
+           (touchcancel)="onTouchEnd()"
+           *ngIf="title !== 'EINSTELLUNGEN' && title !== 'WUNSCHLISTE' && title !== 'SPARSCHWEIN' && title !== 'AUSWERTUNGEN' && !availableMoney().noData  && dataProvider.getSettings().topBarAnzeigeEinstellung !== TopBarBudgetOptions.leer">
         <div>
           <b class="darkgreen" [class.darkred]="getSelectedtTopBarBudgetCapped() !== undefined && getSelectedtTopBarBudgetCapped()! === 0">
             {{ getSelectedtTopBarBudgetCapped() }}€
@@ -26,6 +27,9 @@
             {{ getDaysLeftText() }}
           </div>
         </div>
+      </div>
+      <div class="top-bar__account-circle-icon-wrapper" *ngIf="title === 'EINSTELLUNGEN'">
+        <img src="assets/logout.png" class="top-bar__account-circle-icon" (click)="onLogoutClicked()">
       </div>
     </div>
     <div class="top-bar__dropdown-box" [class.top-bar__dropdown-box-slidin]="topbarService.dropDownSlidIn()"

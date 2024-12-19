@@ -59,12 +59,8 @@
     </div>
   </div>
 
-  <div class="einstellungen__ausloggen" (click)="onResetPwClicked()">
+  <div class="einstellungen__ausloggen" (click)="onResetPwClicked()" *ngIf="isResetPwTextVisible; else resetPwLoading">
     passwort zurück setzen
-  </div>
-
-  <div class="einstellungen__ausloggen" (click)="onAusloggenClicked()">
-    ausloggen
   </div>
 
   <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">
@@ -74,7 +70,18 @@
   <div class="einstellungen__alles-loeschen" (click)="onAccountLoeschenClicked()">
     account Löschen
   </div>
-
 </div>
 
 <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+
+<ng-template #resetPwLoading>
+  <div class="einstellungen__reset-pw-loading-gif-wrapper" *ngIf="isResetPwLoading; else resetPwCheck">
+    <img src="assets/loading-gif.gif" class="einstellungen__reset-pw-loading-gif">
+  </div>
+</ng-template>
+
+<ng-template #resetPwCheck>
+  <div class="einstellungen__reset-pw-loading-gif-wrapper">
+    <img src="assets/check-green.png" class="einstellungen__reset-pw-loading-gif">
+  </div>
+</ng-template>

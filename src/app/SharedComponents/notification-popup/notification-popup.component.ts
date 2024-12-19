@@ -24,6 +24,6 @@ export class NotificationPopupComponent {
       setTimeout(() => {
         this.dialogService.isNotificationPopupVisible = false;
       }, 500)
-    }, 4000);
+    }, this.viewModel.duration ?? 4000);
   }
 }

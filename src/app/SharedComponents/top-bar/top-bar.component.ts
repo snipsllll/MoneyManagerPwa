@@ -50,6 +50,10 @@ export class TopBarComponent implements OnInit {
     console.log(this.dataService.userData)
   }
 
+  onLogoutClicked() {
+    this.adminService.logout();
+  }
+
   isDropdownEnabled() {
     if(this.title === 'EINSTELLUNGEN')
       return false;

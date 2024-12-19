@@ -1,3 +1,4 @@
 export interface NotificationPopupViewModel {
-  text: string;
+  text?: string;
+  duration?: number;
 }

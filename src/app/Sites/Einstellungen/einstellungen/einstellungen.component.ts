@@ -10,6 +10,7 @@ import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 import {Router} from "@angular/router";
 import {AdminService} from "../../../admin.service";
 import {UT} from "../../../Models/Classes/UT";
+import {NotificationPopupViewModel} from "../../../Models/ViewModels/NotificationPopupViewModel";
 
 @Component({
   selector: 'app-einstellungen',
@@ -24,6 +25,13 @@ export class EinstellungenComponent implements OnInit {
   tagesAnzeigeOption!: string;
   utils = new UT();
   email: string = '';
+  isResetPwLoading = false;
+  isResetInfoVisible = false;
+  isResetPwTextVisible = true;
+  resetPopupViewModel: NotificationPopupViewModel = {
+    text: 'Email wurde gesendet!',
+    duration: 7000
+  }
 
   constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
@@ -248,7 +256,16 @@ export class EinstellungenComponent implements OnInit {
   }
 
   onResetPwClicked() {
-    this.adminService.sendResetPasswordEmail();
+    this.isResetPwLoading = true;
+    this.isResetPwTextVisible = false;
+    this.adminService.sendResetPasswordEmail().then(() => {
+      this.isResetPwLoading = false;
+      this.dialogService.showNotificationPopup(this.resetPopupViewModel);
+    }).catch((error) => {
+      console.log(error)
+      this.isResetPwLoading = false;
+      this.isResetPwTextVisible = true;
+    });
   }
 
   onAccountLoeschenClicked() {

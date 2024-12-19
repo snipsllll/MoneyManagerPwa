@@ -19,6 +19,9 @@
 }
 
 .top-bar__right {
+}
+
+.top-bar__budget {
   display: flex;
   justify-content: right;
   position: relative;
@@ -37,7 +40,23 @@
   box-shadow: black 1px 1px 2px;
 }
 
-.top-bar__budget {
+.top-bar__account-circle-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  margin-right: -10px;
+}
+
+.top-bar__account-circle-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.top-bar__account-circle-icon:active {
+  height: 38px;
+  width: 38px;
 }
 
 .top-bar__tage-left {

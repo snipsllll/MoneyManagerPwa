@@ -112,3 +112,15 @@
   color: #323232;
   margin-left: 7px;
 }
+
+.einstellungen__reset-pw-loading-gif-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.einstellungen__reset-pw-loading-gif {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 10px;
+}
