@@ -123,6 +123,7 @@ export class UserData {
     }
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
+    console.log(savedData)
 
     this.buchungen = savedData.buchungen ?? [];
     this.buchungsKategorien = savedData.buchungsKategorien ?? [];

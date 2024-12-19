@@ -23,10 +23,10 @@ export class BuchungenListComponent {
   orderByDateDesc(array: Day[]) {
     const rArray: Day[] = [];
     array.forEach(day => {
-      day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+      day.buchungen?.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
       rArray.push(day);
     })
-    return rArray.sort((a, b) => b.date.getTime() - a.date.getTime())
+    return rArray.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
 
   getPresentAndPastDays() {

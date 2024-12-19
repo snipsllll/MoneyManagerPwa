@@ -132,7 +132,7 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.geplanteAusgabenBuchungen.forEach(geplanteAusgabe => {
-      const geplanteAusgabenDateStr = geplanteAusgabe.data.date?.toLocaleDateString();
+      const geplanteAusgabenDateStr = new Date(geplanteAusgabe.data.date).toLocaleDateString();
       if (geplanteAusgabenDateStr) {
         if (!geplanteAusgabenMap.has(geplanteAusgabenDateStr)) {
           geplanteAusgabenMap.set(geplanteAusgabenDateStr, []);
@@ -161,7 +161,8 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.buchungen.forEach(buchung => {
-      const buchungDateStr = buchung.data.date?.toLocaleDateString();
+      console.log(buchung)
+      const buchungDateStr = new Date(buchung.data.date).toLocaleDateString();
       if (buchungDateStr) {
         if (!buchungenMap.has(buchungDateStr)) {
           buchungenMap.set(buchungDateStr, []);
@@ -190,7 +191,7 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.geplanteAusgabenBuchungen.forEach(buchung => {
-      const buchungDateStr = buchung.data.date?.toLocaleDateString();
+      const buchungDateStr = new Date(buchung.data.date).toLocaleDateString();
       if (buchungDateStr) {
         if (!buchungenMap.has(buchungDateStr)) {
           buchungenMap.set(buchungDateStr, []);
