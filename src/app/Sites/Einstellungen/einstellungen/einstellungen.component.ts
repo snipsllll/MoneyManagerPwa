@@ -5,7 +5,6 @@ import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
-import {SavedData} from "../../../Models/Interfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
 import {Router} from "@angular/router";
 import {AdminService} from "../../../admin.service";
@@ -32,6 +31,7 @@ export class EinstellungenComponent implements OnInit {
     text: 'Email wurde gesendet!',
     duration: 7000
   }
+  isLoading = false;
 
   constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
@@ -56,11 +56,14 @@ export class EinstellungenComponent implements OnInit {
       title: 'Alle Daten löschen?',
       message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
       onConfirmClicked: () => {
-        this.adminService.deleteSavedData();
-        this.dataService.userData.setUserData(this.utils.getEmptyUserData());
-        this.dataService.update();
-        this.update();
-        this.dialogService.isConfirmDialogVisible = false;
+        this.isLoading = true;
+        this.adminService.deleteAllDataOnServer().then(() => {
+          this.dataService.userData.setUserData(this.utils.getEmptyUserData());
+          this.dataService.update();
+          this.update();
+          this.dialogService.isConfirmDialogVisible = false;
+          this.isLoading = false;
+        });
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
@@ -92,11 +95,15 @@ export class EinstellungenComponent implements OnInit {
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.userData.setUserData(JSON.parse(fileContent));
-          this.adminService.updateFireData(this.dataService.userData.getFireData());
-          this.dataService.update();
-          this.update();
+          this.isLoading = true;
           this.dialogService.isConfirmDialogVisible = false;
+          this.dataService.userData.setUserData(JSON.parse(fileContent));
+          this.adminService.saveDataOnServer(this.dataService.userData.getFireData()).then(() => {
+            this.dataService.update();
+            this.update();
+            this.isLoading = false;
+          });
+
         },
         onCancelClicked: () => {
           this.dialogService.isConfirmDialogVisible = false;
@@ -251,10 +258,6 @@ export class EinstellungenComponent implements OnInit {
     this.dialogService.showBuchungsKategorienDialog();
   }
 
-  onAusloggenClicked() {
-    this.adminService.logout();
-  }
-
   onResetPwClicked() {
     this.isResetPwLoading = true;
     this.isResetPwTextVisible = false;
@@ -273,8 +276,8 @@ export class EinstellungenComponent implements OnInit {
       title: 'Account löschen?',
       message: 'Bist du sicher, dass du deinen Account löschen möchtest? Es wird ALLES unwiederrufbar gelöscht!',
       onConfirmClicked: () => {
-        this.adminService.deleteAccount();
         this.dialogService.isConfirmDialogVisible = false;
+        this.adminService.deleteAccount();
       },
       onCancelClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;

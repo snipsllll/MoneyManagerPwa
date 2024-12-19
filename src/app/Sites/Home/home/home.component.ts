@@ -15,7 +15,6 @@ export class HomeComponent  implements OnInit{
 
   constructor(private adminService: AdminService, private navigationService: NavigationService, private router: Router, private topbarService: TopbarService) {
     this.adminService.isDataLoading.subscribe(isLoading => {
-      console.log(isLoading);
       this.isDataLoading = isLoading;
     })
   }

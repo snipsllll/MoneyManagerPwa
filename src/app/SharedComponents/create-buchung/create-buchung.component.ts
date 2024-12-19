@@ -216,8 +216,6 @@ export class CreateBuchungComponent {
       return false;
     }
 
-    console.log(78967896)
-
     return true;
   }
 

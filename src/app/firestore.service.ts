@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { IDoc } from './Models/IDoc';
-import { lastValueFrom } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {lastValueFrom} from 'rxjs';
 import {FireData, SavedData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 
@@ -12,10 +11,11 @@ export class FirestoreService {
 
   utils = new UT();
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore) {
+  }
 
   // Hinzufügen von Daten
-  async addSavedData(dataToAdd: SavedData, uid?: string): Promise<void> {
+  private async saveDataOnServer(dataToAdd: SavedData, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -23,15 +23,14 @@ export class FirestoreService {
     const collectionRef = this.firestore.collection(`users/${uid}/savedData`);
     try {
       await collectionRef.add(dataToAdd);
-      console.log('savedData erfolgreich hinzugefügt:', dataToAdd);
+      console.log('Daten wurden auf Server gespeichert!');
     } catch (error) {
-      console.error('Fehler beim Hinzufügen von savedData:', error);
-      throw error;
+      console.error('Fehler beim Speichern der Daten auf dem Server', error);
     }
   }
 
   // Löschen von Daten
-  async deleteSavedData(uid?: string): Promise<void> {
+  async deleteDataOnServer(uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -40,49 +39,45 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        console.warn(`Kein savedData für Benutzer mit uid=${uid} gefunden.`);
+        console.warn(`Kein Daten auf dem Server für Benutzer mit uid=${uid} gefunden.`);
         return;
       }
       const docSnap = querySnapshot.docs[0];
       await docSnap.ref.delete();
-      console.log(`savedData für Benutzer mit uid=${uid} erfolgreich gelöscht.`);
+      console.log(`Daten wurden auf dem Server gelöscht!`);
     } catch (error) {
-      console.error(`Fehler beim Löschen von savedData für Benutzer mit uid=${uid}:`, error);
+      console.error(`Fehler beim Löschen aller Daten auf dem Server`, error);
       throw error;
     }
   }
 
   // Bearbeiten von gespeicherten Daten
-  async editSavedDataForUser(updatedData: Partial<FireData>, uid?: string): Promise<void> {
+  async updateDataOnServer(updatedData: Partial<FireData>, uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
-
-    console.log(99999999999)
 
     const collectionRef = this.firestore.collection(`users/${uid}/savedData`);
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
         const emptySavedData: SavedData = this.utils.getEmptyUserData();
-        await this.addSavedData(emptySavedData, uid);
+        await this.saveDataOnServer(emptySavedData, uid);
         console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden. Neues savedData wurde erstellt.`);
         return;
       }
-      console.log(querySnapshot)
       const docSnap = querySnapshot.docs[0];
-      console.log(updatedData)
       const documentRef = docSnap.ref;
       await documentRef.update(updatedData);
-      console.log(`Das Dokument in der Collection 'savedData' wurde erfolgreich aktualisiert:`, updatedData);
+      console.log(`Daten wurde erfolgreich auf dem Server aktualisiert.`);
     } catch (error) {
-      console.error(`Fehler beim Bearbeiten des Dokuments in der Collection 'savedData' für Benutzer mit uid=${uid}:`, error);
+      console.error(`Fehler beim Aktualisieren der Daten auf dem Server:`, error);
       throw error;
     }
   }
 
   // Abrufen von gespeicherten Daten
-  async getSavedDataForUser(uid?: string): Promise<SavedData | null> {
+  async getDataFromServer(uid?: string): Promise<SavedData | null> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -91,42 +86,20 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden.`);
+        console.warn(`Daten konnten nicht vom Server geladen werden. Keine Daten für Benutzer mit uid=${uid} auf dem Server gefunden.`);
         return null;
       }
       const docSnap = querySnapshot.docs[0];
+      console.log('Daten wurden erfolgreich von Server heruntergeladen.')
       return docSnap.data() as SavedData;
     } catch (error) {
-      console.error(`Fehler beim Abrufen des Dokuments in der Collection 'savedData' für Benutzer mit uid=${uid}:`, error);
-      throw error;
-    }
-  }
-
-  // Hinzufügen eines Benutzers
-  async addUser(uid?: string): Promise<void> {
-    if (!uid) {
-      throw new Error('User ID (uid) is required.');
-    }
-
-    const userDocRef = this.firestore.doc(`users/${uid}`);
-    try {
-      await userDocRef.set({
-        createdAt: new Date(),
-        eintraegeInitialized: true,
-      });
-
-      const savedDataCollectionRef = this.firestore.collection(`users/${uid}/savedData`);
-      await savedDataCollectionRef.add({ initialized: true });
-
-      console.log(`Benutzer mit uid=${uid} erfolgreich hinzugefügt und die Sammlung 'savedData' erstellt.`);
-    } catch (error) {
-      console.error(`Fehler beim Hinzufügen eines Benutzers mit uid=${uid}:`, error);
+      console.error(`Fehler beim Abrufen der Daten für Benutzer mit uid=${uid} vom Server:`, error);
       throw error;
     }
   }
 
   // Löschen eines Benutzers
-  async deleteUser(uid?: string): Promise<void> {
+  async deleteAccountData(uid?: string): Promise<void> {
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -137,12 +110,11 @@ export class FirestoreService {
       const querySnapshot = await lastValueFrom(savedDataCollectionRef.get());
       for (const docSnap of querySnapshot.docs) {
         await docSnap.ref.delete();
-        console.log(`Dokument ${docSnap.id} aus der Sammlung 'savedData' von Benutzer ${uid} gelöscht.`);
       }
       await userDocRef.delete();
-      console.log(`Benutzer mit uid=${uid} und alle zugehörigen Daten erfolgreich gelöscht.`);
+      console.log(`Alle Daten von Benutzer ${uid} wurde vom Server gelöscht.`);
     } catch (error) {
-      console.error(`Fehler beim Löschen des Benutzers mit uid=${uid}:`, error);
+      console.error(`Fehler beim Löschen des Accounts von Benutzer mit uid=${uid}:`, error);
       throw error;
     }
   }
@@ -159,7 +131,7 @@ export class FirestoreService {
       if (querySnapshot.empty) {
         const newDoc = this.utils.getEmptyUserData();
         await collectionRef.add(newDoc);
-        console.log(`Kein gespeichertes Data für Benutzer mit uid=${uid} gefunden. Ein neuer Eintrag wurde hinzugefügt.`);
+        console.log(`Neuer Datensatz für Benutzer mit uid=${uid} wurde erstellt.`);
       } else {
         console.log(`Benutzer mit uid=${uid} hat bereits Einträge.`);
       }

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { ISavedLoginData } from './Models/ISavedLoginData';
-import { environment } from '../environments/environment';
+import {Injectable} from '@angular/core';
+import {ISavedLoginData} from './Models/ISavedLoginData';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,18 +21,13 @@ export class SavedLoginDataManagerService {
       const existingData = localStorage.getItem(this.fileName);
 
       if (existingData) {
-        console.log('Datei gefunden. Alte Daten:', existingData);
-
         // Überschreibe vorhandene Daten
         localStorage.setItem(this.fileName, this.defaultData);
-        console.log('Alte Datei überschrieben.');
       } else {
-        console.log('Keine Datei gefunden. Neue Datei wird erstellt.');
-
         // Speichere die Standarddaten
         localStorage.setItem(this.fileName, this.defaultData);
-        console.log('Neue Datei gespeichert.');
       }
+      console.log('Logindaten wurden erfolgreich aus localStorage gelöscht.');
       return this.defaultData;
     } catch (e) {
       console.error('Fehler beim Zugriff auf localStorage:', e);
@@ -51,7 +46,7 @@ export class SavedLoginDataManagerService {
         : JSON.stringify(savedLoginData ?? this.defaultData, null, 2); // Lesbares JSON in Entwicklung
 
       localStorage.setItem(this.fileName, jsonString);
-      console.log('Daten erfolgreich in localStorage gespeichert.');
+      console.log('Logindaten wurden erfolgreich in localStorage gespeichert.');
 
       // Nur in der Entwicklungsumgebung: JSON-Datei herunterladen
       if (!this.isInProduction) {
@@ -87,6 +82,5 @@ export class SavedLoginDataManagerService {
     a.download = this.fileName;
     a.click();
     window.URL.revokeObjectURL(url);
-    console.log('JSON-Datei wurde heruntergeladen.');
   }
 }

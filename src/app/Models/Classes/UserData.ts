@@ -70,7 +70,6 @@ export class UserData {
     }
 
     let fireData: FireData = this.checkForFireDbUpdates(loadedData);
-    console.log(fireData)
 
     this.buchungen = this.convertFireBuchungenToBuchungen(fireData.buchungen ?? []);
     this.buchungsKategorien = fireData.buchungsKategorien ?? [];
@@ -84,14 +83,11 @@ export class UserData {
   }
 
   setUserData(loadedData: any) {
-    console.log(loadedData)
     if(loadedData == null) {
       return;
     }
-    console.log(loadedData)
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
-    console.log(savedData)
 
     this.buchungen = this.convertSavedBuchungenToBuchungen(savedData.buchungen ?? []);
     this.buchungsKategorien = savedData.buchungsKategorien ?? [];
@@ -102,7 +98,6 @@ export class UserData {
     this.auswertungsLayouts = savedData.auswertungsLayouts ?? [];
     this.settings = savedData.settings ?? this.getDefaultSettings();
     this.geplanteAusgabenBuchungen = this.convertGeplAusgBuchToGeplAusgBuch(savedData.geplanteAusgabenBuchungen ?? []);
-    console.log(this)
   }
 
   private convertFireBuchungenToBuchungen(buchungen: IFireBuchung[]): IBuchung[] {
@@ -204,13 +199,12 @@ export class UserData {
   private convertSpareintraegeToFireSpareintraege(spareintraege: ISparschweinEintrag[]) {
     const fireSparEintraege: IFireSparschweinEintrag[] = [];
     spareintraege.forEach(spareintrag => {
-      console.log(spareintrag.data.date.getTime() / 1000)
       const fireSpareintrag: IFireSparschweinEintrag = {
         id: spareintrag.id,
         data: {
           date: {
             nanoseconds: 0,
-            seconds: spareintrag.data.date.getTime() / 1000
+            seconds: new Date(spareintrag.data.date).getTime() / 1000
           },
           betrag: spareintrag.data.betrag,
           title: spareintrag.data.title ?? '',
@@ -223,8 +217,6 @@ export class UserData {
 
       fireSparEintraege.push(fireSpareintrag);
     })
-
-    console.log(fireSparEintraege)
 
     return fireSparEintraege;
   }
@@ -336,7 +328,7 @@ export class UserData {
       currentData.dbVersion = currentDbVersion;
       return currentData as SavedData;
     } catch (e) {
-      console.log(e)
+
       return {
         buchungen: [],
         buchungsKategorien: [],
@@ -369,8 +361,6 @@ export class UserData {
 
     let currentData: any;
 
-    console.log(data)
-
     data.dbVersion  //wenn keine dbVersion gespeichert wurde, wird sie auf 0 gesetzt
       ? currentData = data
       : currentData = {dbVersion: 0, ...data};
@@ -391,7 +381,6 @@ export class UserData {
       currentData.dbVersion = currentDbVersion;
       return currentData as FireData;
     } catch (e) {
-      console.log(e)
       return {
         buchungen: [],
         buchungsKategorien: [],
@@ -729,7 +718,6 @@ export class UserData {
 
   private reload() {
     let loadedData: any = this._fileEngine.load();
-    console.log(loadedData)
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
@@ -823,12 +811,8 @@ export class UserData {
   private convertSavedMonthsToMonths(savedMonths: SavedMonth[]): Month[] {
     const months: Month[] = [];
 
-    console.log(savedMonths)
-
     savedMonths.forEach(savedMonth => {
-      console.log(savedMonth)
       const date = new Date(savedMonth.date);
-      console.log(date)
       const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
@@ -892,7 +876,6 @@ export class UserData {
 
     savedMonths.forEach(savedMonth => {
       const date = new Date(savedMonth.date.seconds * 1000);
-      console.log(savedMonth.date)
       const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;

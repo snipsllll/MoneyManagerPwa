@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {FirestoreService} from "./firestore.service";
 import {AuthService} from "./auth.service";
 import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
-import { User } from 'firebase/auth';
+import {User} from 'firebase/auth';
 import {Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
-import {FireData, SavedData} from "./Models/Interfaces";
+import {FireData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 import {DialogService} from "./Services/DialogService/dialog.service";
 import {TempService} from "./temp.service";
@@ -27,28 +27,24 @@ export class AdminService {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
-      if(data && data.fireData && !data.isInitialLoad) {
-        console.log(777777)
-        console.log(data.fireData)
-        this.updateFireData(data.fireData)
+      if (data && data.fireData && !data.isInitialLoad) {
+        this.saveDataOnServer(data.fireData);
       }
 
     })
   }
 
   async sendResetPasswordEmail(email?: string) {
-     return this.authService.resetPassword(email ?? this.loggedInUser.getValue()?.email!).catch((error) => {
-       return Promise.reject(error);
-     });
+    return this.authService.resetPassword(email ?? this.loggedInUser.getValue()?.email!).catch((error) => {
+      return Promise.reject(error);
+    });
   }
 
   async loadData() {
-    this.firestoreService.getSavedDataForUser(this.getUid()).then(data => {
-      console.log(data);
-      if(data == null) {
+    this.firestoreService.getDataFromServer(this.getUid()).then(data => {
+      if (data == null) {
         this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
-          this.firestoreService.getSavedDataForUser(this.getUid()).then(dataAfterCreating => {
-            console.log(dataAfterCreating)
+          this.firestoreService.getDataFromServer(this.getUid()).then(dataAfterCreating => {
             this.dataService.userData.setUserDataFire(dataAfterCreating);
             this.dataService.update(false, this.isInitialLoad);
             this.isInitialLoad = false;
@@ -65,9 +61,7 @@ export class AdminService {
   }
 
   // Login-Methode gibt ein Promise zurück
-  async login(email: string, password: string, loginDatenRunterladen?: boolean){
-    console.log('Login-Versuch gestartet');
-
+  async login(email: string, password: string, loginDatenRunterladen?: boolean) {
     return this.authService.login(email, password)
       .then((userCredential) => {
         // User-Daten speichern
@@ -76,11 +70,9 @@ export class AdminService {
         this.router.navigate(['home']);
 
         // Zusätzliche Logik nach erfolgreichem Login
-        if(loginDatenRunterladen !== false)
-          this.saveLoginData(email, password);
+        if (loginDatenRunterladen !== false)
+          this.saveLoginDataLocal(email, password);
 
-        //this.reloadData();
-        console.log('Login erfolgreich:', userCredential.user);
         this.loadData();
         return userCredential.user; // Rückgabe des Users
       })
@@ -97,7 +89,7 @@ export class AdminService {
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
         this.dataService.userData.setUserDataFire(this.utils.getEmptyUserData());
-        this.deleteSavedLoginData();
+        this.deleteLocalSavedLoginData();
         this.router.navigate(['login'])
       })
       .catch(error => {
@@ -119,17 +111,13 @@ export class AdminService {
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
-        console.log(62626262626)
         return Promise.reject(error); // Fehler weitergeben
       });
   }
 
   // Aktualisierung der gespeicherten Daten gibt ein Promise zurück
-  async updateFireData(fireData: FireData): Promise<void> {
-    return this.firestoreService.editSavedDataForUser(fireData, this.getUid())
-      .then(() => {
-        this.reloadData();
-      })
+  async saveDataOnServer(fireData: FireData): Promise<void> {
+    return this.firestoreService.updateDataOnServer(fireData, this.getUid())
       .catch(error => {
         console.error('Fehler bei der Aktualisierung der gespeicherten Daten:', error);
         throw error; // Fehler weiterwerfen
@@ -137,8 +125,8 @@ export class AdminService {
   }
 
   // Löschen der gespeicherten Daten gibt ein Promise zurück
-  async deleteSavedData(): Promise<void> {
-    return this.firestoreService.deleteSavedData(this.getUid())
+  async deleteAllDataOnServer(): Promise<void> {
+    return this.firestoreService.deleteDataOnServer(this.getUid())
       .then(() => {
         this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
       })
@@ -152,12 +140,10 @@ export class AdminService {
   async deleteAccount(): Promise<void> {
     return this.authService.deleteAccount()
       .then(() => {
-        return this.firestoreService.deleteUser(this.getUid());
-      })
-      .then(() => {
-        this.logout();
-        this.reloadData();
-        this.router.navigate(['login'])
+        return this.firestoreService.deleteAccountData(this.getUid()).then(() => {
+          this.dataService.userData.deleteAllData();
+          this.logout();
+        })
       })
       .catch(error => {
         console.error('Fehler beim Löschen des Benutzerkontos:', error);
@@ -165,27 +151,14 @@ export class AdminService {
       });
   }
 
-  // private Methode, um die Benutzerdaten neu zu laden
-  private reloadData(): void {
-    this.firestoreService.getSavedDataForUser(this.getUid())
-      .then(data => {
-        console.log(data);
-        //TODO userData in dataService auf data setzen
-      })
-      .catch(error => {
-        console.error('Fehler beim Neuladen der Daten:', error);
-      });
-  }
-
   // private Methode, um die UID des angemeldeten Benutzers zu erhalten
   private getUid(): string | undefined {
-    console.log(this.loggedInUser.getValue()?.uid)
     return this.loggedInUser.getValue()?.uid;
   }
 
   private tryStartupLogin() {
     const savedLoginData = this.fileManager.load();
-    if(savedLoginData.email && savedLoginData.password){
+    if (savedLoginData.email && savedLoginData.password) {
       this.tempService.dataUsedForRegister = {
         email: savedLoginData.email,
         password: savedLoginData.password
@@ -200,12 +173,11 @@ export class AdminService {
     }
   }
 
-  private saveLoginData(email: string, password: string) {
+  private saveLoginDataLocal(email: string, password: string) {
     this.fileManager.save({email: email, password: password})
   }
 
-  private deleteSavedLoginData() {
-    console.log(635241)
-    this.fileManager.save();
+  private deleteLocalSavedLoginData() {
+    this.fileManager.deleteLoginData();
   }
 }

@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     })
 
     this.tempService.autoLoginError.subscribe(autoLoginError => {
-      this.errorMessage = autoLoginError.message;
+      this.errorMessage = autoLoginError.message ?? '';
     })
   }
 
@@ -128,11 +128,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     try {
       this.isLoading = true;
-      const user = await this.adminService.login(this.email, this.pw);
-      this.isLoading = false;
-      console.log('Willkommen,', user?.email);
+      await this.adminService.login(this.email, this.pw).then(() => {
+        this.isLoading = false;
+        this.errorMessage = '';
+      });
     } catch (error) {
-      console.log('Login fehlgeschlagen:', error);
       this.errorMessage = 'E-Mail-Adresse oder Passwort ist falsch.'
       this.isLoading = false;
     }

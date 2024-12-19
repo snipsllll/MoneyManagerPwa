@@ -9,7 +9,7 @@ export class TempService {
 
   dataUsedForRegister?: ISavedLoginData;
   isTryingAutoLogin = new BehaviorSubject<boolean>(false);
-  autoLoginError = new BehaviorSubject<any | undefined>(undefined);
+  autoLoginError = new BehaviorSubject<any | undefined>({code: undefined, message: undefined});
 
   constructor() { }
 }
