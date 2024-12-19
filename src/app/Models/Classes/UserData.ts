@@ -461,7 +461,7 @@ export class UserData {
     }
   }
 
-  getLongTestData: SavedData() {
+  getLongTestData(): SavedData {
     const testSavedData: SavedData = {
       buchungen: [],
       buchungsKategorien: [
