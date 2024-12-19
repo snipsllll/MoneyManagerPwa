@@ -164,7 +164,6 @@ export class DataProviderService {
         })
       })
     });
-    console.log(days)
     return days;
   }
 
@@ -531,11 +530,11 @@ export class DataProviderService {
   }
 
   getGeplanteAusgabenBuchungForMonth(month: Month) {
-    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear())
+    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => new Date(eintrag.data.date).getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.date).getFullYear() === new Date(month.startDate).getFullYear())
   }
 
   checkIfMonthExistsForDay(date: Date) {
-    return this.dataService.userData.months.findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
+    return this.dataService.userData.months.findIndex(month => new Date(month.startDate).getMonth() === date.getMonth() && new Date(month.startDate).getFullYear() === date.getFullYear()) !== -1;
   }
 
   isDayBeforeMonth(dayDate: Date, month: Month) {

@@ -181,7 +181,7 @@ export class AuswertungenComponent implements OnInit {
               }
 
               filteredBuchungenAusgaben.forEach(buchung => {
-                data[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+                data[new Date(buchung.data.date).getDate() - 1] += buchung.data.betrag!;
               })
               break;
             case 'Restgeld für Monat':
@@ -194,7 +194,7 @@ export class AuswertungenComponent implements OnInit {
               }
 
               filteredBuchungen.forEach(buchung => {
-                alleAusgabenDays[buchung.data.date.getDate() - 1] += buchung.data.betrag!;
+                alleAusgabenDays[new Date(buchung.data.date).getDate() - 1] += buchung.data.betrag!;
               })
 
               let ausgabeGesammt = 0;

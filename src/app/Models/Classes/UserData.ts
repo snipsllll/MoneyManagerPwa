@@ -78,7 +78,6 @@ export class UserData {
 
     // Konvertiere {milliseconds, seconds} zu einem Date-Objekt
     if (typeof input === 'object' && 'seconds' in input) {
-      console.log(1)
       return new Date(input.seconds * 1000);
     }
 
@@ -99,9 +98,7 @@ export class UserData {
   }
 
   getFireData(): FireData {
-    const x = this.transformToFireData(this.getSavedData());
-    console.log(x);
-    return x;
+    return this.transformToFireData(this.getSavedData());
   }
 
   setUserDataFire(loadedData: any) {
@@ -112,7 +109,7 @@ export class UserData {
 
     const x = this.transformToSavedData(loadedData);
 
-    console.log('Daten wuirden erfolgreich zu savedData transormiert:', x);
+    console.log('Daten wurden erfolgreich zu savedData transformiert.');
 
     this.setUserData(x)
   }
@@ -123,7 +120,6 @@ export class UserData {
     }
 
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
-    console.log(savedData)
 
     this.buchungen = savedData.buchungen ?? [];
     this.buchungsKategorien = savedData.buchungsKategorien ?? [];

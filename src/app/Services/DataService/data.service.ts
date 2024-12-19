@@ -161,7 +161,6 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.buchungen.forEach(buchung => {
-      console.log(buchung)
       const buchungDateStr = new Date(buchung.data.date).toLocaleDateString();
       if (buchungDateStr) {
         if (!buchungenMap.has(buchungDateStr)) {
@@ -232,7 +231,6 @@ export class DataService {
           //geänderte standardfixkosten anpassen
           const eintrag = month.uebernommeneStandardFixkostenEintraege?.find(eintragx => standardEintrag.id === eintragx.id)!
           if(eintrag.data.title !== standardEintrag.data.title || eintrag.data.betrag !== standardEintrag.data.betrag || eintrag.data.beschreibung !== standardEintrag.data.beschreibung) {
-            console.log(eintrag)
             month.uebernommeneStandardFixkostenEintraege![month.uebernommeneStandardFixkostenEintraege!.findIndex(eintragx => standardEintrag.id === eintragx.id)] = standardEintrag;
           }
         }
