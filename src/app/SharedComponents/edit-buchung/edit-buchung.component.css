@@ -24,7 +24,7 @@
   justify-content: space-between;
 }
 
-.create-eintrag__budget {
+.create-eintrag__budget, .create-eintrag__budget-no-data {
   background-color: #a6a6a6;
   height: 10px;
   width: 270px;
@@ -35,6 +35,10 @@
   justify-content: space-between;
   padding: 10px;
   font-size: 12px;
+}
+
+.create-eintrag__budget-no-data {
+  justify-content: center !important;
 }
 
 .create-eintrag__back-button {

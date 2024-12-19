@@ -1,7 +1,7 @@
 <div class="create-eintrag">
   <div class="create-eintrag__back-button-wrapper">
     <img src="assets/arrow-back.png" class="create-eintrag__back-button" (click)="onBackClicked()" alt="<-">
-    <div class="create-eintrag__budget" *ngIf="!isGeplanteBuchungChecked; else plannedBuchung">
+    <div class="create-eintrag__budget" *ngIf="!isGeplanteBuchungChecked && !availableMoneyCapped().noData; else plannedBuchung">
       <div class="ce__budget-eintrag">
         monat: <b class="red" [class.green]="availableMoneyCapped().availableForMonth! > 0">{{ getAvailableMoneyMonth() }}€</b>
       </div>
@@ -141,15 +141,7 @@
 
 
 <ng-template #noDayBudgetTop>
-  <div class="create-eintrag__budget">
-    <div class="ce__budget-eintrag">
-      monat: <b>???</b>
-    </div>
-    <div class="ce__budget-eintrag">
-      woche: <b>???</b>
-    </div>
-    <div class="ce__budget-eintrag">
-      tag: <b>???</b>
-    </div>
+  <div class="create-eintrag__budget-no-data">
+    Kein Budget für diesen Monat eingetragen...
   </div>
 </ng-template>
