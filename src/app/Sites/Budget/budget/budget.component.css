@@ -122,3 +122,10 @@
   align-items: center;
   color: lightgrey;
 }
+
+.budget__fixkosten-details-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 85%;
+}

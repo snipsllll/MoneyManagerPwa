@@ -19,10 +19,16 @@
 
 .list-element__main-center {
   width: 270px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .list-element__main-center-top {
   font-size: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .list-element__main-center-bottom {
