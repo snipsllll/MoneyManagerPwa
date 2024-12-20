@@ -106,7 +106,7 @@ export class EditBuchungComponent implements OnInit {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (this.isSaveButtonEnabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
-        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
+        if (!(isBetragZuHoch && this.hasBetragChanged()) || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           if(this.buchung()?.data.geplanteBuchung) {
             if(this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
@@ -167,11 +167,16 @@ export class EditBuchungComponent implements OnInit {
 
   isBetragZuHoch() {
     if(this.buchung()?.data.buchungsKategorie == -1) {
-      return !this.availableMoneyCapped().noData && this.getRestGeplantAusgabenSumme();
+      if(this.availableMoneyCapped().noData) {
+        return false;
+      }
+      return this.getRestGeplantAusgabenSumme();
     } else {
-      return !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0
+      if(this.availableMoneyCapped().noData) {
+        return false;
+      }
+      return this.getAvailableMoneyDay()! === -1
     }
-
   }
 
   getRestGeplantAusgabenSumme() {
@@ -278,6 +283,13 @@ export class EditBuchungComponent implements OnInit {
 
   protected getAvailableMoneyDay() {
     const x = this.ut.toFixedDown(this.availableMoney().availableForDayIst! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
-    return x && x > 0 ? x : 0;
+    console.log('x:', x)
+    const y = x && x < 0 ? -1 : x;
+    console.log(y)
+    return y;
+  }
+
+  protected hasBetragChanged() {
+    return this.buchung()?.data.betrag !== this.oldBuchung?.data.betrag;
   }
 }
