@@ -4,7 +4,7 @@ import {FirestoreService} from "./firestore.service";
 import {AuthService} from "./auth.service";
 import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
 import {User} from 'firebase/auth';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
 import {FireData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
@@ -23,7 +23,7 @@ export class AdminService {
 
   utils = new UT();
 
-  constructor(private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private route: ActivatedRoute, private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
@@ -61,13 +61,13 @@ export class AdminService {
   }
 
   // Login-Methode gibt ein Promise zurück
-  async login(email: string, password: string, loginDatenRunterladen?: boolean) {
+  async login(email: string, password: string, loginDatenRunterladen?: boolean, redirectUrl?: string) {
     return this.authService.login(email, password)
       .then((userCredential) => {
         // User-Daten speichern
         this.loggedInUser.next(userCredential.user as User);
         this.loggedIn.next(true);
-        this.router.navigate(['home']);
+        this.router.navigate([redirectUrl ?? 'home']);
 
         // Zusätzliche Logik nach erfolgreichem Login
         if (loginDatenRunterladen !== false)
@@ -163,7 +163,7 @@ export class AdminService {
         password: savedLoginData.password
       };
       this.tempService.isTryingAutoLogin.next(true);
-      this.login(savedLoginData.email, savedLoginData.password, false).then(() => {
+      this.login(savedLoginData.email, savedLoginData.password, false, this.route.toString()).then(() => {
         this.tempService.isTryingAutoLogin.next(false);
       }).catch((error) => {
         this.tempService.autoLoginError.next(error);
