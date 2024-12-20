@@ -78,7 +78,7 @@ export class EditDialogComponent implements OnInit{
   }
 
   private checkBetragValid() {
-    return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null);
+    return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null && this.viewModel.data.betrag !== undefined);
   }
 
   private checkHasChanged() {

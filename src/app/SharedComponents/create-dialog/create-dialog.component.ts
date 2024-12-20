@@ -80,6 +80,6 @@ export class CreateDialogComponent implements OnInit {
   }
 
   private checkBetragValid() {
-    return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null);
+    return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null && this.eintrag.betrag !== undefined);
   }
 }
