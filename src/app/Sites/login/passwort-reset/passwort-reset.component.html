@@ -11,7 +11,7 @@
         <div class="password-reset__data-input-label">
           Email-Adresse
         </div>
-        <input type="email" [class.password-reset__grayed-out]="wasEmailSend" placeholder="email" class="password-reset__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
+        <input type="email" [disabled]="isLoading" [class.disabled]="isLoading" [class.password-reset__grayed-out]="wasEmailSend" placeholder="email" class="password-reset__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
       </div>
     </div>
     <app-info-box class="password-reset__info-box-wrapper">

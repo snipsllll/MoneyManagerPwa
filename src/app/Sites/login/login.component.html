@@ -10,18 +10,18 @@
       <div class="login__data-input-label">
         Email-Adresse
       </div>
-      <input type="email" onfocus="this.select()" [class.login__input-red]="isEmailRed"  [class.login__grayed-out]="isLoading" placeholder="email" class="login__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
+      <input type="email" [disabled]="isLoading" [class.disabled]="isLoading" onfocus="this.select()" [class.login__input-red]="isEmailRed"  [class.login__grayed-out]="isLoading" placeholder="email" class="login__data-input-element" [(ngModel)]="email" (ngModelChange)="onEmailChange()">
     </div>
     <div class="login__data-input-element-wrapper">
       <div class="login__data-input-label">
         Passwort
       </div>
-      <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed" *ngIf="isPasswordHidden; else visiblePassword">
-        <input type="password" onfocus="this.select()" [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
+      <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed" [class.disabled]="isLoading" *ngIf="isPasswordHidden; else visiblePassword">
+        <input type="password" [disabled]="isLoading" onfocus="this.select()" [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
         <img src="assets/eye-closed-light-gray.png" class="login__eye" (click)="onShowPasswordClicked()">
       </div>
       <ng-template #visiblePassword>
-        <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed">
+        <div class="login__password-input-wrapper" [class.login__input-red]="isPwRed" [class.disabled]="isLoading">
           <input type="text" onfocus="this.select()" [class.login__grayed-out]="isLoading" placeholder="passwort" class="login__data-input-element-password" [(ngModel)]="pw" (ngModelChange)="onPwChange()">
           <img src="assets/eye-open-light-gray.png" class="login__eye" (click)="onHidePasswordClicked()">
         </div>
