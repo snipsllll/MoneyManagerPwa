@@ -27,20 +27,24 @@
 .fixkosten__summe-wrapper {
   height: 105px;
   width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   font-size: 25px;
   display: flex;
   align-items: center;
-  background-color: #78b0d5;
+  background-color: #77afd1;
 }
 
 .fixkosten__summe-label {
-  margin: 0 10px;
+  flex-grow: 1;
+  font-weight: bold;
 }
 
 .fixkosten__summe-data {
+  width: fit-content;
+  font-weight: bold;
+}
 
+.fixkosten__add-button {
+  padding: 15px;
 }
 
 .spacer {
@@ -54,4 +58,17 @@
   justify-content: center;
   align-items: center;
   color: lightgrey;
+}
+
+.fixkosten__summe {
+  background-color: #c5dff8;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: calc(60% - 40px);
+  padding: 20px;
+  border-radius: 10px;
+  margin-left: 20px;
+  border: 2px solid #4f82b3;
 }
