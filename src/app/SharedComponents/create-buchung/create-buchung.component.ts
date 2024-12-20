@@ -129,7 +129,7 @@ export class CreateBuchungComponent {
   }
 
   onCancelClicked() {
-    if (this.isBuchungEmpty()) {
+    if (this.hasBuchungChanges()) {
       this.router.navigate(['home']);
       return;
     }
@@ -150,7 +150,7 @@ export class CreateBuchungComponent {
   }
 
   onBackClicked() {
-    if (this.isBuchungEmpty()) {
+    if (this.hasBuchungChanges()) {
       this.router.navigate(['home']);
       return;
     }
@@ -203,8 +203,8 @@ export class CreateBuchungComponent {
     this.updateSaveButton();
   }
 
-  private isBuchungEmpty() {
-    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === undefined)
+  private hasBuchungChanges() {
+    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && new Date(this.buchung.date).getDate() === new Date(this.oldBuchung.date).getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === 0)
   }
 
   private isSaveAble() {
