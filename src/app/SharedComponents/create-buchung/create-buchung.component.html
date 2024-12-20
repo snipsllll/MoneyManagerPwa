@@ -76,7 +76,7 @@
         <div class="create-eintrag__label-multi-select">
           geplante Ausgabe:
         </div>
-        <input type="checkbox" [(ngModel)]="buchung.geplanteBuchung" (change)="onGeplanteBuchungCheckboxChange()">
+        <input type="checkbox" [disabled]="geplanteAusgabenKategorien.length === 0" [(ngModel)]="buchung.geplanteBuchung" (change)="onGeplanteBuchungCheckboxChange()">
       </div>
       <div class="create-eintrag__datum-wrapper">
         <div class="create-eintrag__label-multi-select">
