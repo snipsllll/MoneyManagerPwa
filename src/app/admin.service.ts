@@ -23,7 +23,7 @@ export class AdminService {
 
   utils = new UT();
 
-  constructor(private route: ActivatedRoute, private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
@@ -163,7 +163,11 @@ export class AdminService {
         password: savedLoginData.password
       };
       this.tempService.isTryingAutoLogin.next(true);
-      this.login(savedLoginData.email, savedLoginData.password, false, this.route.toString()).then(() => {
+      let redirectUrl = this.router.url;
+      if(redirectUrl === '/') {
+        redirectUrl = 'home';
+      }
+      this.login(savedLoginData.email, savedLoginData.password, false, redirectUrl).then(() => {
         this.tempService.isTryingAutoLogin.next(false);
       }).catch((error) => {
         this.tempService.autoLoginError.next(error);
