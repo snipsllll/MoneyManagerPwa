@@ -30,7 +30,8 @@ const routes: Routes = [
   {path: 'spinning-fish', component: SpinningFishComponent},
   {path: 'auswertungen', component: AuswertungenComponent},
   {path: 'einstellungen', component: EinstellungenComponent},
-  {path: 'resetPassword', component: PasswortResetComponent}
+  {path: 'resetPassword', component: PasswortResetComponent},
+  {path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({
