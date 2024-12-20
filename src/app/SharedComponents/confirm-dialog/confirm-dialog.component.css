@@ -45,7 +45,7 @@
   align-items: center;
   padding: 5px;
   border-radius: 5px;
-  background-color: #e8e8e8;
+  background-color: #d5dbdf;
 }
 
 .confirm-dialog__cancel-button {
@@ -74,7 +74,7 @@
   box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
   padding: 20px;
   font-size: 18px;
-  background-color: #ffffff;
+  background-color: #ecf5ff;
   z-index: 10000;
   animation: fadeIn 0.3s ease-in-out;
 }
