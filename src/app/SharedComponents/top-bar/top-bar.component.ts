@@ -29,7 +29,7 @@ export class TopBarComponent implements OnInit {
 
   ut: UT = new UT();
 
-  constructor(private adminService: AdminService, public dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
+  constructor(protected adminService: AdminService, public dataProvider: DataProviderService, private router: Router, private dataService: DataService, public topbarService: TopbarService, public sideNavService: SideNavService) {
 
   }
 

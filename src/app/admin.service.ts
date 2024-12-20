@@ -4,12 +4,12 @@ import {FirestoreService} from "./firestore.service";
 import {AuthService} from "./auth.service";
 import {SavedLoginDataManagerService} from "./saved-login-data-manager.service";
 import {User} from 'firebase/auth';
-import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "./Services/DataService/data.service";
 import {FireData} from "./Models/Interfaces";
 import {UT} from "./Models/Classes/UT";
 import {DialogService} from "./Services/DialogService/dialog.service";
 import {TempService} from "./temp.service";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,7 @@ export class AdminService {
   loggedIn = new BehaviorSubject<boolean>(false);
   isInitialLoad: boolean = true;
   isDataLoading = new BehaviorSubject<boolean>(true);
+  isSomethingLoading = new BehaviorSubject<boolean>(false);
 
   utils = new UT();
 
@@ -41,6 +42,7 @@ export class AdminService {
   }
 
   async loadData() {
+    this.isSomethingLoading.next(true);
     this.firestoreService.getDataFromServer(this.getUid()).then(data => {
       if (data == null) {
         this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
@@ -49,6 +51,7 @@ export class AdminService {
             this.dataService.update(false, this.isInitialLoad);
             this.isInitialLoad = false;
             this.isDataLoading.next(false);
+            this.isSomethingLoading.next(false);
           });
         });
       } else {
@@ -56,12 +59,14 @@ export class AdminService {
         this.dataService.update(false, this.isInitialLoad);
         this.isInitialLoad = false;
         this.isDataLoading.next(false);
+        this.isSomethingLoading.next(false);
       }
     });
   }
 
   // Login-Methode gibt ein Promise zurück
   async login(email: string, password: string, loginDatenRunterladen?: boolean, redirectUrl?: string) {
+    this.isSomethingLoading.next(true);
     return this.authService.login(email, password)
       .then((userCredential) => {
         // User-Daten speichern
@@ -74,9 +79,11 @@ export class AdminService {
           this.saveLoginDataLocal(email, password);
 
         this.loadData();
+        this.isSomethingLoading.next(false);
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
+        this.isSomethingLoading.next(false);
         //console.error('Login fehlgeschlagen:', error);
         return Promise.reject(error); // Fehler weitergeben
       });
@@ -84,15 +91,18 @@ export class AdminService {
 
   // Logout-Methode gibt ein Promise zurück
   async logout(): Promise<void> {
+    this.isSomethingLoading.next(true);
     return this.authService.logout()
       .then(() => {
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
         this.dataService.userData.setUserDataFire(this.utils.getEmptyUserData());
         this.deleteLocalSavedLoginData();
-        this.router.navigate(['login'])
+        this.isSomethingLoading.next(false);
+        this.router.navigate(['login']);
       })
       .catch(error => {
+        this.isSomethingLoading.next(false);
         console.error('Fehler beim Logout:', error);
         throw error;
       });
@@ -100,6 +110,7 @@ export class AdminService {
 
   // Registrierung gibt ein Promise zurück
   async register(email: string, password: string) {
+    this.isSomethingLoading.next(true);
     return this.authService.register(email, password)
       .then((userCredential) => {
         this.router.navigate(['login']);
@@ -108,17 +119,22 @@ export class AdminService {
           email: email,
           password: password
         }
+        this.isSomethingLoading.next(false);
         return userCredential.user; // Rückgabe des Users
       })
       .catch((error) => {
+        this.isSomethingLoading.next(false);
         return Promise.reject(error); // Fehler weitergeben
       });
   }
 
   // Aktualisierung der gespeicherten Daten gibt ein Promise zurück
   async saveDataOnServer(fireData: FireData): Promise<void> {
-    return this.firestoreService.updateDataOnServer(fireData, this.getUid())
-      .catch(error => {
+    this.isSomethingLoading.next(true);
+    return this.firestoreService.updateDataOnServer(fireData, this.getUid()).then(() => {
+      this.isSomethingLoading.next(false);
+    }).catch(error => {
+      this.isSomethingLoading.next(false);
         console.error('Fehler bei der Aktualisierung der gespeicherten Daten:', error);
         throw error; // Fehler weiterwerfen
       });
@@ -126,11 +142,15 @@ export class AdminService {
 
   // Löschen der gespeicherten Daten gibt ein Promise zurück
   async deleteAllDataOnServer(): Promise<void> {
+    this.isSomethingLoading.next(true);
     return this.firestoreService.deleteDataOnServer(this.getUid())
       .then(() => {
-        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid());
+        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
+          this.isSomethingLoading.next(false);
+        });
       })
       .catch(error => {
+        this.isSomethingLoading.next(false);
         console.error('Fehler beim Löschen der gespeicherten Daten:', error);
         throw error; // Fehler weiterwerfen
       });
@@ -138,14 +158,18 @@ export class AdminService {
 
   // Löschen des Benutzerkontos gibt ein Promise zurück
   async deleteAccount(): Promise<void> {
+    this.isSomethingLoading.next(true);
     return this.authService.deleteAccount()
       .then(() => {
         return this.firestoreService.deleteAccountData(this.getUid()).then(() => {
           this.dataService.userData.deleteAllData();
-          this.logout();
+          this.logout().then(() => {
+            this.isSomethingLoading.next(false);
+          });
         })
       })
       .catch(error => {
+        this.isSomethingLoading.next(false);
         throw error; // Fehler weiterwerfen
       });
   }

@@ -58,6 +58,9 @@
       </div>
     </div>
   </div>
+  <div class="loader-wrapper" *ngIf="adminService.isSomethingLoading.getValue()">
+    <div class="loader"></div>
+  </div>
   <div>
     <app-side-nav></app-side-nav>
     <div class="side-nav-wrapper__background" *ngIf="topbarService.isSlidIn()" (click)="onMenuButtonClicked()">
