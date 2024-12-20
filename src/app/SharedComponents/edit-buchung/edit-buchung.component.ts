@@ -84,7 +84,6 @@ export class EditBuchungComponent implements OnInit {
       this.date = this.buchung()?.data.date.toISOString().slice(0, 10);
     })
     this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.oldBuchung!.data.date);
-    console.log(this.geplanteAusgabenKategorien)
     this.isGeplanteBuchungChecked = this.oldBuchung!.data.geplanteBuchung!;
     this.updateDate();
   }
@@ -100,6 +99,7 @@ export class EditBuchungComponent implements OnInit {
   onGeplanteBuchungChange(newValue: boolean) {
     this.buchung()!.data.geplanteBuchung = newValue;
     this.isGeplanteBuchungChecked = newValue;
+    this.buchung()!.data.buchungsKategorie = 0;
     this.updateSaveButton();
   }
 
@@ -284,10 +284,7 @@ export class EditBuchungComponent implements OnInit {
 
   protected getAvailableMoneyDay() {
     const x = this.ut.toFixedDown(this.availableMoney().availableForDayIst! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
-    console.log('x:', x)
-    const y = x && x < 0 ? -1 : x;
-    console.log(y)
-    return y;
+    return x && x < 0 ? -1 : x;
   }
 
   protected hasBetragChanged() {
