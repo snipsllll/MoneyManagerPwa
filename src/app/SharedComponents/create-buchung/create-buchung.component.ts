@@ -200,6 +200,7 @@ export class CreateBuchungComponent {
   }
 
   onGeplanteBuchungCheckboxChange() {
+    this.buchung.buchungsKategorie = 0;
     this.updateSaveButton();
   }
 
