@@ -297,3 +297,9 @@ hr {
   display: flex;
   justify-content: space-between;
 }
+
+.ce__budget-eintrag-planned-label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

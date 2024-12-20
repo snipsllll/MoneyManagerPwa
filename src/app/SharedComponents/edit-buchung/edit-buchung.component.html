@@ -112,7 +112,7 @@
   <div *ngIf="!availableMoneyCapped().noData; else noDayBudgetTop">
     <div class="create-eintrag__budget" *ngIf="buchung()!.data.buchungsKategorie; else keineKategorieAusgewaehlt">
       <div class="ce__budget-eintrag-planned">
-        <div>
+        <div class="ce__budget-eintrag-planned-label">
           Restgeld für
           <b>
             {{ availableMonayForGeplanteAusgabenKategorien().title }}
