@@ -27,7 +27,7 @@
           Datum:
         </div>
         <div class="create-eintrag__data">
-          {{buchung()!.data.date.toLocaleDateString()}}
+          {{getDate(buchung()!.data.date).toLocaleDateString()}}
         </div>
       </div>
       <div class="create-eintrag__uhrzeit-wrapper">

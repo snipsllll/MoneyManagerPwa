@@ -1,7 +1,8 @@
 import {Injectable, signal} from '@angular/core';
 import {UserData} from "../../Models/Classes/UserData";
-import {Day, IGeplanteAusgabenBuchung, Month, Week} from "../../Models/Interfaces";
+import {Day, IGeplanteAusgabenBuchung, Month, SaveDataUpdateInfos, SavedData, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,17 @@ export class DataService {
 
   userData = new UserData();
   updated = signal<number>(0);
+  doFireSave = new BehaviorSubject<SaveDataUpdateInfos | null>(null);
 
   constructor() {
-    this.update(false);
+    this.update(false, true);
   }
 
   triggerUpdated() {
     this.updated.set(this.updated() + 1);
   }
 
-  update(safeAfterUpdate?: boolean) {
+  update(safeAfterUpdate?: boolean, isInitial?: boolean) {
     //Wenn für den 'heutigen Tag (new Date())' noch kein Monat vorhanden ist, dann erstelle einen neuenn monat für den 'heutigen Tag'
     if (!this.checkIfMonthExistsForDay(new Date())) {
       this.createNewMonth(new Date());
@@ -31,6 +33,8 @@ export class DataService {
       this.updateBuchungenForMonth(month.startDate);
 
       this.updateGeplanteAusgabenForMonth(month.startDate);
+
+      this.updateGeplanteBuchungenForMonth(month.startDate);
 
       this.updateFixkostenForMonth(month.startDate);
 
@@ -50,7 +54,7 @@ export class DataService {
     });
 
     if (safeAfterUpdate === undefined || safeAfterUpdate)
-      this.save();
+      this.save(isInitial);
 
     this.sendUpdateToComponents();
   }
@@ -109,7 +113,8 @@ export class DataService {
       daysInMonth: daysInMonth,
       weeks: weeks,
       uebernommeneStandardFixkostenEintraege: this.userData.standardFixkostenEintraege ? this.userData.standardFixkostenEintraege : [],
-      specialFixkostenEintraege: []
+      specialFixkostenEintraege: [],
+      geplanteAusgaben: []
     };
 
     // Check if the month is completed or not
@@ -127,7 +132,7 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.geplanteAusgabenBuchungen.forEach(geplanteAusgabe => {
-      const geplanteAusgabenDateStr = geplanteAusgabe.data.date?.toLocaleDateString();
+      const geplanteAusgabenDateStr = new Date(geplanteAusgabe.data.date).toLocaleDateString();
       if (geplanteAusgabenDateStr) {
         if (!geplanteAusgabenMap.has(geplanteAusgabenDateStr)) {
           geplanteAusgabenMap.set(geplanteAusgabenDateStr, []);
@@ -156,7 +161,7 @@ export class DataService {
 
     // Daten einmal durchgehen und in der Map organisieren
     this.userData.buchungen.forEach(buchung => {
-      const buchungDateStr = buchung.data.date?.toLocaleDateString();
+      const buchungDateStr = new Date(buchung.data.date).toLocaleDateString();
       if (buchungDateStr) {
         if (!buchungenMap.has(buchungDateStr)) {
           buchungenMap.set(buchungDateStr, []);
@@ -171,6 +176,35 @@ export class DataService {
         const dayDateStr = day.date.toLocaleDateString();
         // Buchungen direkt aus der Map holen
         day.buchungen = buchungenMap.get(dayDateStr) || [];
+      });
+    });
+
+    this.setMonth(month);
+  }
+
+  private updateGeplanteBuchungenForMonth(date: Date) { //TODO testen
+    const month = this.getMonthByDate(date);
+
+    // Zuerst die Buchungen in eine Map umwandeln, wobei das Datum der Schlüssel ist
+    const buchungenMap = new Map<string, IGeplanteAusgabenBuchung[]>();
+
+    // Daten einmal durchgehen und in der Map organisieren
+    this.userData.geplanteAusgabenBuchungen.forEach(buchung => {
+      const buchungDateStr = new Date(buchung.data.date).toLocaleDateString();
+      if (buchungDateStr) {
+        if (!buchungenMap.has(buchungDateStr)) {
+          buchungenMap.set(buchungDateStr, []);
+        }
+        buchungenMap.get(buchungDateStr)!.push(buchung);
+      }
+    });
+
+    // Jetzt durch die Wochen und Tage des Monats gehen und Buchungen zuweisen
+    month.weeks?.forEach(week => {
+      week.days.forEach(day => {
+        const dayDateStr = day.date.toLocaleDateString();
+        // Buchungen direkt aus der Map holen
+        day.geplanteAusgabenBuchungen = buchungenMap.get(dayDateStr) || [];
       });
     });
 
@@ -197,7 +231,6 @@ export class DataService {
           //geänderte standardfixkosten anpassen
           const eintrag = month.uebernommeneStandardFixkostenEintraege?.find(eintragx => standardEintrag.id === eintragx.id)!
           if(eintrag.data.title !== standardEintrag.data.title || eintrag.data.betrag !== standardEintrag.data.betrag || eintrag.data.beschreibung !== standardEintrag.data.beschreibung) {
-            console.log(eintrag)
             month.uebernommeneStandardFixkostenEintraege![month.uebernommeneStandardFixkostenEintraege!.findIndex(eintragx => standardEintrag.id === eintragx.id)] = standardEintrag;
           }
         }
@@ -339,9 +372,9 @@ export class DataService {
     this.setMonth(month);
   }
 
-  private save() { //TODO testen
-    console.log(2)
-    this.userData.save();
+  private save(isInitial?: boolean) { //TODO testen
+    this.doFireSave.next({isInitialLoad: isInitial, fireData: this.userData.getFireData()});
+    //this.userData.save();
   }
 
   private sendUpdateToComponents() { //TODO testen

@@ -8,6 +8,7 @@ import {DataProviderService} from "../DataProviderService/data-provider.service"
 import {DataChangeService} from "../DataChangeService/data-change.service";
 import {AuswertungenDialogViewModel, IAuswertungsLayout} from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../DataService/data.service";
+import {NotificationPopupViewModel} from "../../Models/ViewModels/NotificationPopupViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,9 @@ export class DialogService {
 
   isAuswertungenDialogVisible = false;
   auswertungenDialogViewModel?: AuswertungenDialogViewModel;
+
+  isNotificationPopupVisible = false;
+  notificationPopupViewModel?: NotificationPopupViewModel;
 
   constructor(private dataService: DataService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
@@ -69,7 +73,7 @@ export class DialogService {
           this.dataChangeService.addBuchungsKategorie(element.name);
         });
         this.isBuchungsKategorienDialogVisible = false;
-        this.dataService.triggerUpdated();
+        this.dataService.update();
       }
     }
   }
@@ -86,6 +90,11 @@ export class DialogService {
         this.dataChangeService.editAuswertungsLayouts(elemente);
       }
     }
+  }
+
+  showNotificationPopup(notificationPopupViewModel: NotificationPopupViewModel) {
+    this.isNotificationPopupVisible = true;
+    this.notificationPopupViewModel = notificationPopupViewModel;
   }
 }
 

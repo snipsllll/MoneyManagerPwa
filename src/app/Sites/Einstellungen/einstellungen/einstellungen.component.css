@@ -4,6 +4,13 @@
   height: calc(100% - 70px);
 }
 
+.einstellungen__userdata-wrapper {
+  padding: 10px 10px 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .einstellungen__import-export-wrapper {
   display: flex;
   justify-content: space-between;
@@ -15,6 +22,14 @@
   justify-content: center;
   align-items: center;
   color: red;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.einstellungen__ausloggen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
   font-size: 20px;
 }
@@ -96,4 +111,34 @@
   font-size: 18px;
   color: #323232;
   margin-left: 7px;
+}
+
+.einstellungen__reset-pw-loading-gif-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.einstellungen__reset-pw-loading-gif {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 10px;
+}
+
+.einstellungen__import-loading-wrapper {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.29);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+}
+
+.einstellungen__import-loading-gif {
+  height: 100px;
+  width: 100px;
 }

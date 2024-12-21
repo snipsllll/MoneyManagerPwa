@@ -99,6 +99,7 @@ export class EditBuchungComponent implements OnInit {
   onGeplanteBuchungChange(newValue: boolean) {
     this.buchung()!.data.geplanteBuchung = newValue;
     this.isGeplanteBuchungChecked = newValue;
+    this.buchung()!.data.buchungsKategorie = 0;
     this.updateSaveButton();
   }
 
@@ -106,7 +107,7 @@ export class EditBuchungComponent implements OnInit {
     if (this.buchung()!.data.betrag !== 0 && this.buchung()!.data.betrag !== null) {
       if (this.isSaveButtonEnabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
-        if (!isBetragZuHoch || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
+        if (!(isBetragZuHoch && this.hasBetragChanged()) || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
           if(this.buchung()?.data.geplanteBuchung) {
             if(this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
@@ -122,7 +123,7 @@ export class EditBuchungComponent implements OnInit {
               this.dataChangeService.deleteGeplanteAusgabeBuchung(this.buchung()!.id)
             }
           }
-          this.router.navigate(['/']);
+          this.router.navigate(['home']);
         } else {
           if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -148,7 +149,7 @@ export class EditBuchungComponent implements OnInit {
                   }
                 }
                 this.dialogService.isConfirmDialogVisible = false;
-                this.router.navigate(['/']);
+                this.router.navigate(['home']);
               }
             }
             this.dialogService.showConfirmDialog(confirmDialogViewModel);
@@ -167,11 +168,16 @@ export class EditBuchungComponent implements OnInit {
 
   isBetragZuHoch() {
     if(this.buchung()?.data.buchungsKategorie == -1) {
-      return !this.availableMoneyCapped().noData && this.getRestGeplantAusgabenSumme();
+      if(this.availableMoneyCapped().noData) {
+        return false;
+      }
+      return this.getRestGeplantAusgabenSumme();
     } else {
-      return !this.availableMoneyCapped().noData && this.getAvailableMoneyDay()! < 0
+      if(this.availableMoneyCapped().noData) {
+        return false;
+      }
+      return this.getAvailableMoneyDay()! === -1
     }
-
   }
 
   getRestGeplantAusgabenSumme() {
@@ -198,10 +204,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onTimeChange(event: any) {
-    const [hours, minutes] = event.target.value.split(':');
-    const date = new Date();
-    date.setHours(+hours, +minutes);
-    this.buchung()!.data.time = date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+    this.buchung()!.data.time = event;
     this.updateSaveButton();
   }
 
@@ -234,21 +237,12 @@ export class EditBuchungComponent implements OnInit {
   }
 
   private hasBuchungChanged() {
-    console.log(2)
-    const x = !(this.buchung()!.data.geplanteBuchung === this.oldBuchung?.data.geplanteBuchung && this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && this.buchung()!.data.date.getDate() === this.oldBuchung.data.date.getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
-    console.log(x)
+    const x = !(this.buchung()!.data.geplanteBuchung === this.oldBuchung?.data.geplanteBuchung && this.buchung()!.data.buchungsKategorie === this.oldBuchung?.data.buchungsKategorie && this.buchung()!.data.betrag === this.oldBuchung?.data.betrag && this.buchung()!.data.title === this.oldBuchung?.data.title && this.buchung()!.data.beschreibung === this.oldBuchung?.data.beschreibung && new Date(this.buchung()!.data.date).getDate() === new Date(this.oldBuchung.data.date).getDate() && this.buchung()!.data.time === this.oldBuchung.data.time)
     return x;
   }
 
   private isSaveAble() {
-    console.log(1)
-    console.log(this.oldBuchung)
-    console.log(this.buchung())
-    console.log(this.buchung()?.data.betrag)
-
-    const x = (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged();
-    console.log(x)
-    return x;
+    return (this.buchung()?.data.betrag !== null && this.buchung()?.data.betrag !== 0) && this.hasBuchungChanged() && !(this.buchung()?.data.geplanteBuchung && this.buchung()?.data.buchungsKategorie === 0);
   }
 
   private executeExitAction() {
@@ -290,6 +284,10 @@ export class EditBuchungComponent implements OnInit {
 
   protected getAvailableMoneyDay() {
     const x = this.ut.toFixedDown(this.availableMoney().availableForDayIst! + this.oldBuchung?.data.betrag! - this.buchung()?.data.betrag!, 2);
-    return x && x > 0 ? x : 0;
+    return x && x < 0 ? -1 : x;
+  }
+
+  protected hasBetragChanged() {
+    return this.buchung()?.data.betrag !== this.oldBuchung?.data.betrag;
   }
 }
