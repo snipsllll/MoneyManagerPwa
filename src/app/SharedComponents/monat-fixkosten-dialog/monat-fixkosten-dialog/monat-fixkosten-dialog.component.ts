@@ -211,6 +211,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
 
   onDeleteClicked = (x: EditDialogData) => {
     this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
+    this.dataService.update(false);
   }
 
   onAusschliessenClicked = (eintragx: EditDialogData) => {
