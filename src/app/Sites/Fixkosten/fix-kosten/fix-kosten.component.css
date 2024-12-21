@@ -1,3 +1,9 @@
+.fixkosten__list-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 70px - 105px);
+}
+
 .fix-kosten__add-button {
   border-radius: 20px;
   position: fixed;
@@ -58,6 +64,7 @@
   justify-content: center;
   align-items: center;
   color: lightgrey;
+  flex-grow: 1;
 }
 
 .fixkosten__summe {
