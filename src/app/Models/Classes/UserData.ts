@@ -1,6 +1,6 @@
 import {
   Day,
- FireData,
+  FireData,
   FireMonth, IFireGeplanteAusgabenBuchung, IGeplanteAusgabe, IGeplanteAusgabenBuchung,
   ISchuldenEintrag,
   Month,
@@ -104,7 +104,7 @@ export class UserData {
 
   setUserDataFire(loadedData: any) {
     console.log('Die vom Server geladenen daten werden versucht in UserData zu speichern.')
-    if(loadedData == null) {
+    if (loadedData == null) {
       return;
     }
 
@@ -116,7 +116,7 @@ export class UserData {
   }
 
   setUserData(loadedData: any) {
-    if(loadedData == null) {
+    if (loadedData == null) {
       return;
     }
 
@@ -148,7 +148,7 @@ export class UserData {
   private checkForDbUpdates(data: any): SavedData {
     //return this.getLongTestData();
 
-    if(this.useEmptyData) {
+    if (this.useEmptyData) {
       return this.getEmptyTestData();
     }
 
@@ -290,7 +290,7 @@ export class UserData {
       schuldenEintraege: []
     };
 
-    for(let year = 2024; year < 2025; year++) {
+    for (let year = 2024; year < 2025; year++) {
       for (let month = 8; month < 12; month++) {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -455,7 +455,7 @@ export class UserData {
     sparEintraege = sparEintraege.filter(eintrag => eintrag.data.vonMonat !== true)
 
     // Umwandlung der wunschlistenEintraege
-    let wunschlistenEintraege =  !datax.wunschlistenEintraege ? [] :datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
+    let wunschlistenEintraege = !datax.wunschlistenEintraege ? [] : datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
       id: wunschlisteEintrag.id,
       data: {
         betrag: wunschlisteEintrag.betrag,
@@ -500,15 +500,15 @@ export class UserData {
     this.auswertungsLayouts = [];
     this.settings = {
       toHighBuchungenEnabled: true,
-        wunschlistenFilter: {
+      wunschlistenFilter: {
         selectedFilter: '',
-          gekaufteEintraegeAusblenden: false
+        gekaufteEintraegeAusblenden: false
       },
       tagesAnzeigeOption: TagesAnzeigeOptions.leer,
-        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+      topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
     }
-    this.geplanteAusgabenBuchungen = [],
-      this.schuldenEintraege = []
+    this.geplanteAusgabenBuchungen = [];
+    this.schuldenEintraege = [];
   }
 
   getSavedData(): SavedData {

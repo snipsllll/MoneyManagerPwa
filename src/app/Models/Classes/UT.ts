@@ -55,7 +55,8 @@ export class UT {
       standardFixkostenEintraege: [],
       savedMonths: [],
       geplanteAusgabenBuchungen: [],
-      dbVersion: currentDbVersion
+      dbVersion: currentDbVersion,
+      schuldenEintraege: []
     }
   }
 
