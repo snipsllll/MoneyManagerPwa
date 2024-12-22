@@ -23,3 +23,16 @@
 .home__add-button:hover {
   font-size: 40px;
 }
+
+.home__loading-gif-wrapper {
+  width: 100%;
+  height: calc(100% - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home__loading-gif {
+  height: 100px;
+  width: 100px;
+}

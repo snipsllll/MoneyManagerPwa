@@ -19,6 +19,9 @@
 }
 
 .top-bar__right {
+}
+
+.top-bar__budget {
   display: flex;
   justify-content: right;
   position: relative;
@@ -37,7 +40,23 @@
   box-shadow: black 1px 1px 2px;
 }
 
-.top-bar__budget {
+.top-bar__account-circle-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  margin-right: -10px;
+}
+
+.top-bar__account-circle-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.top-bar__account-circle-icon:active {
+  height: 38px;
+  width: 38px;
 }
 
 .top-bar__tage-left {
@@ -161,4 +180,51 @@
 .top-bar__budget-eintrag-data {
   height: 12px;
   line-height: 12px;
+}
+
+.loader-wrapper {
+  position: absolute;
+  width: 100vw;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.loader {
+  position: relative;
+  width: 100vw;  /* 100% der Viewport-Breite */
+  height: 3px;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.loader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;  /* Startet außerhalb des Containers */
+  width: 60%;
+  height: 100%;
+  background-color: #3498db;
+  animation: moveRight 1s linear infinite, moveLeft 0s linear 2.9s infinite;
+}
+
+@keyframes moveRight {
+  0% {
+    left: -100%;  /* Startet ganz links außerhalb der Anzeige */
+  }
+  100% {
+    left: 100%;  /* Bewegt sich nach ganz rechts */
+  }
+}
+
+@keyframes moveLeft {
+  0% {
+    left: 100%;  /* Startet nach der Animation von rechts */
+  }
+  100% {
+    left: -100%;  /* Bewegt sich sofort wieder nach links */
+  }
 }

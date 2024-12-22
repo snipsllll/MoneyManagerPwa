@@ -7,7 +7,7 @@
 .list-element__main {
   display: flex;
   align-items: center;
-  height: 25px;
+  height: 20px;
 }
 
 .list-element__main-left {
@@ -19,10 +19,16 @@
 
 .list-element__main-center {
   width: 270px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .list-element__main-center-top {
   font-size: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .list-element__main-center-bottom {
@@ -33,6 +39,10 @@
   max-width: 100%;
 }
 
+.list-element__main-right {
+  margin-left: auto;
+}
+
 .list-element__menu-button {
   padding: 10px;
   margin-bottom: 7px;
@@ -40,43 +50,53 @@
 }
 
 .list-element__menu-wrapper {
-  position: absolute;
-  z-index: 50;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 10px;
-  box-shadow: black 1px 1px 2px;
-  right: 0;
-  top: 40px;
-  margin-top: 5px;
+   position: absolute; /* Position relative to the parent container */
+   top: calc(100% - 11px); /* Aligns directly below the parent */
+   right: 0; /* Centers horizontally relative to the parent */
+   width: 120px;
+   z-index: 9999; /* Ensures visibility above other elements */
+   border-radius: 8px;
+   overflow: hidden;
+ }
+
+.list-element__menu-content {
+  z-index: 9999; /* Ensures visibility above other elements */
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Stack menu elements vertically */
+  background-color: #91bada;
 }
 
-.list-element__menu-eintrag {
+.list-element__menu-element-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  z-index: 20;
-  position: relative;
   flex-direction: column;
+}
+
+.list-element__menu-element {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .list-element__menu-dividing-line {
   margin: 0;
   border: none;
-  background-color: black;
-  height: 2px;
+  border-top: 1px solid #91a2cc;
+  height: 1px;
   width: 100%;
 }
 
 .list-element__menu-background {
-  height: 100%;
-  width: 100%;
+  position: fixed; /* Covers the entire viewport */
   top: 0;
   left: 0;
-  position: fixed;
-  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998; /* Slightly below the menu wrapper */
 }
+
 
 .green {
   color: green;
@@ -118,10 +138,9 @@
   background-color: #b1b4bc;
 }
 
-.grayed-out {
+.list-element__disabled {
   background-color: #e1e1e1;
   color: #888888;
-  border-radius: 10px;
 }
 
 .grayed-out-element {
@@ -134,4 +153,10 @@
   color: #333;
   font-size: 16px;
   word-break: break-word;
+}
+
+.list-element__menu-top {
+  background-color: #91bada;
+  height: 11px;
+  width: 100%;
 }

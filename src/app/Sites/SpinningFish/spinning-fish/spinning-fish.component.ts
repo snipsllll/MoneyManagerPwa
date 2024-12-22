@@ -11,6 +11,6 @@ export class SpinningFishComponent {
   }
 
   onFishClicked() {
-    this.router.navigate(['/']);
+    this.router.navigate(['home']);
   }
 }

@@ -1,17 +1,22 @@
 <app-top-bar></app-top-bar>
-<div  class="fixkosten__list" *ngIf="elements() && elements().length > 0; else keineEintraege">
-  <div *ngFor="let fixKostenEintrag of elements()">
-    <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+<div class="fixkosten__list-wrapper">
+  <div class="fixkosten__list" *ngIf="elements() && elements().length > 0; else keineEintraege">
+    <div *ngFor="let fixKostenEintrag of elements()">
+      <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
+    </div>
+    <div style="height: calc(100vh - 70px - 190px)"></div>
   </div>
-  <div style="height: calc(100vh - 70px - 190px)"></div>
 </div>
 <div class="fixkosten__summe-wrapper">
-  <div class="fixkosten__summe-label">
-    Fixkosten Summe:
+  <div class="fixkosten__summe">
+    <div class="fixkosten__summe-label">
+      Summe:
+    </div>
+    <div class="fixkosten__summe-data">
+      {{summe().toFixed(2)}}€
+    </div>
   </div>
-  <div class="fixkosten__summe-data">
-    <b>{{summe()}}</b>
-  </div>
+  <app-plus-button (click)="onPlusClicked()" [fixed]="false" class="fixkosten__add-button"></app-plus-button>
 </div>
 <ng-template #keineEintraege>
   <div class="keine-eintraege">
@@ -20,6 +25,4 @@
 </ng-template>
 
 
-<div class="fix-kosten__add-button" (click)="onPlusClicked()">
-  +
-</div>
+

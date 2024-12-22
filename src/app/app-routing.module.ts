@@ -11,9 +11,15 @@ import {WunschlisteComponent} from "./Sites/Wunschliste/wunschliste/wunschliste.
 import {SpinningFishComponent} from "./Sites/SpinningFish/spinning-fish/spinning-fish.component";
 import {EinstellungenComponent} from "./Sites/Einstellungen/einstellungen/einstellungen.component";
 import {AuswertungenComponent} from "./Sites/auswertungen/auswertungen.component";
+import {LoginComponent} from "./Sites/login/login.component";
+import {RegisterComponent} from "./Sites/register/register.component";
+import {PasswortResetComponent} from "./Sites/login/passwort-reset/passwort-reset.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: LoginComponent},
+  {path: 'login', redirectTo: ''},
+  {path: 'register', component: RegisterComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'buchungDetails/:buchungsId/:geplanteAusgabenBuchungsId', component: BuchungDetailsComponent},
   {path: 'editBuchung/:buchungsId/:geplanteAusgabenBuchungsId', component: EditBuchungComponent},
   {path: 'createBuchung', component: CreateBuchungComponent},
@@ -23,7 +29,9 @@ const routes: Routes = [
   {path: 'wunschliste', component: WunschlisteComponent},
   {path: 'spinning-fish', component: SpinningFishComponent},
   {path: 'auswertungen', component: AuswertungenComponent},
-  {path: 'einstellungen', component: EinstellungenComponent}
+  {path: 'einstellungen', component: EinstellungenComponent},
+  {path: 'resetPassword', component: PasswortResetComponent},
+  {path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({

@@ -8,30 +8,25 @@ import {DataProviderService} from "../../../Services/DataProviderService/data-pr
   templateUrl: './buchungen-list.component.html',
   styleUrl: './buchungen-list.component.css'
 })
-export class BuchungenListComponent  implements OnInit{
+export class BuchungenListComponent {
   date = new Date();
   isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     this.dataService.updated();
-    return this.orderByDateDesc(this.dataProvider.getAllDays());
+    return this.orderByDateDesc(this.dataProvider.getAllDaysWithBuchungen());
   })
 
   constructor(private dataProvider: DataProviderService, private dataService: DataService){
 
   }
 
-  ngOnInit() {
-    console.log(this.days())
-  }
-
   orderByDateDesc(array: Day[]) {
-    //TODO
     const rArray: Day[] = [];
     array.forEach(day => {
-      day.buchungen?.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+      day.buchungen?.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
       rArray.push(day);
     })
-    return rArray.sort((a, b) => b.date.getTime() - a.date.getTime())
+    return rArray.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
 
   getPresentAndPastDays() {
@@ -50,6 +45,18 @@ export class BuchungenListComponent  implements OnInit{
       const dayDate = day.date;
       return dayDate > today;  // Vergleiche direkt das Datum
     });
+  }
+
+  getAnzahlFutureBuchungen() {
+    const futureDays = this.getFutureDays();
+    let anzahlBuchungen = 0;
+    futureDays.forEach(futureDay => {
+      futureDay.buchungen?.forEach(buchung => {
+        anzahlBuchungen++;
+      })
+    })
+
+    return anzahlBuchungen;
   }
 
   setIsGeplantVisibleTrue() {

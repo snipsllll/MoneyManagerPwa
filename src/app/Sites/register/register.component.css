@@ -1,0 +1,154 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+}
+
+.register__logo-wrapper {
+  margin-top: 90px;
+}
+
+.register__logo {
+  height: 200px;
+  width: 200px;
+}
+
+.register__error-message {
+  display: flex;
+  width: 80%;
+  justify-content: left;
+  color: #ff0000;
+  font-size: 15px;
+  min-height: 25px;
+}
+
+.register__data-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  align-items: center;
+}
+
+.register__data-input-element-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+
+.register__data-input-label {
+  color: #404040;
+  font-size: 15px;
+}
+
+.register__data-input-element {
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  height: 50px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+  border-bottom: 2px solid black;
+  box-shadow: #4c586a 3px 1px 2px;
+  background-color: #f9faff;
+}
+
+.register__data-input-element:focus {
+  background-color: white;
+  outline: none;
+}
+
+.register__data-input-element-password {
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  height: 40px;
+  font-size: 20px;
+  border: none;
+  background-color: transparent;
+}
+
+.register__data-input-element-password:focus {
+  outline: none;
+}
+
+.register__eye {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+  margin-top: 3px;
+  color: gray;
+}
+
+.register__input-red {
+  background-color: #ffd1d1 !important;
+}
+
+.register__password-input-wrapper {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+  border-bottom: 2px solid black;
+  box-shadow: #4c586a 3px 1px 2px;
+  background-color: #f9faff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register__password-input-wrapper:focus {
+  background-color: white;
+  outline: none;
+}
+
+.register__buttons-wrapper {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register__button {
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 24px;
+  background-color: #7bc2fd;
+  height: 35px;
+  width: 150px;
+  margin-top: 5px;
+}
+
+.register__button:active {
+  background-color: #9cd5ff;
+}
+
+.register__back-text {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: underline;
+}
+
+.register__loading-gif {
+  width: 41px;
+  height: 41px;
+  margin-top: 40px;
+}
+
+.register__version {
+  display: flex;
+  flex-grow: 1;
+  align-items: end;
+  margin-bottom: 10px;
+  color: #919193;
+}

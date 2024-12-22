@@ -71,6 +71,7 @@ export class CreateBuchungComponent {
 
   onplannedKategorieChanged() {
     this.dateUpdated.set(this.dateUpdated() + 1);
+    this.updateSaveButton();
   }
 
   onSearchClicked() {
@@ -91,14 +92,21 @@ export class CreateBuchungComponent {
     this.buchung.buchungsKategorie = item.data.buchungsKategorie;
   }
 
+  private isBetragZuHoch() {
+    if(this.buchung && this.buchung.geplanteBuchung) {
+      return this.buchung!.betrag! > this.availableMonayForGeplanteAusgabenKategorien().restgeldBetrag;
+    }
+    return !this.availableMoneyCapped().noData && this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst && this.dataProvider.checkIfMonthExistsForDay(this.buchung.date) && this.dataProvider.getMonthByDate(this.buchung.date).totalBudget !== 0;
+  }
+
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst
+        let isBetragZuHoch = this.isBetragZuHoch();
 
         if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
-          this.router.navigate(['/']);
+          this.router.navigate(['home']);
         } else {
           if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -111,7 +119,7 @@ export class CreateBuchungComponent {
                 this.dataChangeService.addBuchung(this.buchung);
 
                 this.dialogService.isConfirmDialogVisible = false;
-                this.router.navigate(['/']);
+                this.router.navigate(['home']);
               }
             }
             this.dialogService.showConfirmDialog(confirmDialogViewModel);
@@ -128,8 +136,8 @@ export class CreateBuchungComponent {
   }
 
   onCancelClicked() {
-    if (this.isBuchungEmpty()) {
-      this.router.navigate(['/']);
+    if (this.hasBuchungChanges()) {
+      this.router.navigate(['home']);
       return;
     }
 
@@ -141,7 +149,7 @@ export class CreateBuchungComponent {
       },
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['home']);
       }
     }
 
@@ -149,8 +157,8 @@ export class CreateBuchungComponent {
   }
 
   onBackClicked() {
-    if (this.isBuchungEmpty()) {
-      this.router.navigate(['/']);
+    if (this.hasBuchungChanges()) {
+      this.router.navigate(['home']);
       return;
     }
     const confirmDialogViewModel: ConfirmDialogViewModel = {
@@ -161,7 +169,7 @@ export class CreateBuchungComponent {
       },
       onConfirmClicked: () => {
         this.dialogService.isConfirmDialogVisible = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['home']);
       }
     }
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
@@ -185,7 +193,7 @@ export class CreateBuchungComponent {
 
   onBetragChanged() {
     if (this.buchung.betrag !== null)
-      this.buchung.betrag = +(this.buchung.betrag!);
+      this.buchung.betrag = +(this.buchung.betrag!).toFixed(2);
 
     this.updateSaveButton();
   }
@@ -198,16 +206,25 @@ export class CreateBuchungComponent {
     this.updateSaveButton();
   }
 
-  onApzClicked() {
-    //this.buchung.apz = !this.buchung.apz;
+  onGeplanteBuchungCheckboxChange() {
+    this.buchung.buchungsKategorie = 0;
+    this.updateSaveButton();
   }
 
-  private isBuchungEmpty() {
-    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && this.buchung.date.getDate() === this.oldBuchung.date.getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === undefined)
+  private hasBuchungChanges() {
+    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && new Date(this.buchung.date).getDate() === new Date(this.oldBuchung.date).getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === 0)
   }
 
   private isSaveAble() {
-    return this.buchung.betrag === null || this.buchung.betrag === 0;
+    if(this.buchung.betrag === null || this.buchung.betrag === 0){
+      return false;
+    }
+
+    if(this.buchung.geplanteBuchung && this.buchung.buchungsKategorie === 0) {
+      return false;
+    }
+
+    return true;
   }
 
   private updateDate() {
@@ -215,7 +232,7 @@ export class CreateBuchungComponent {
   }
 
   private updateSaveButton() {
-    this.isSaveButtonDisabled.set(this.isSaveAble());
+    this.isSaveButtonDisabled.set(!this.isSaveAble());
   }
 
   private getNewEmptyBuchung(date: Date): IBuchungData {
@@ -225,7 +242,8 @@ export class CreateBuchungComponent {
       date: date,
       time: date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'}),
       buchungsKategorie: 0,
-      beschreibung: ''
+      beschreibung: '',
+      geplanteBuchung: false
     };
   }
 

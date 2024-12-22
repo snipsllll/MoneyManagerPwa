@@ -37,6 +37,7 @@ export class DataChangeService {
   }
 
   editBuchung(editedBuchung: IBuchung): void {
+    this.dataService.createNewMonthIfNecessary(editedBuchung.data.date);
     this.dataService.userData.buchungen[this.getIndexOfBuchungById(editedBuchung.id)] = editedBuchung;
     this.dataService.update();
   }
@@ -112,7 +113,6 @@ export class DataChangeService {
     month.geplanteAusgaben = [];
 
     elemente.forEach(element => {
-      console.log(element)
       month.geplanteAusgaben?.push({
         id: this.getNextFreeGeplanteAusgabeId(),
         data: {
@@ -253,14 +253,6 @@ export class DataChangeService {
 
   addBuchungsKategorie(name: string) {
     this.dataService.userData.addKategorie(name);
-  }
-
-  deleteBuchungsKategorie(id: number) {
-    this.dataService.userData.removeKategorie(id);
-  }
-
-  editBuchungsKategorie(id: number, name: string) {
-    this.dataService.userData.editKategorie(id, name);
   }
 
   deleteAllBuchungsKategorien() {

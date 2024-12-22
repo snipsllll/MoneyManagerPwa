@@ -45,7 +45,7 @@ export class SideNavComponent implements OnInit{
   }
 
   onHomeClicked(): void {
-    this.router.navigate(['']);
+    this.router.navigate(['home']);
     this.topbarService.isSlidIn.set(false);
     this.sideNavService.selectedElement = SideNavElements.home;
   }
