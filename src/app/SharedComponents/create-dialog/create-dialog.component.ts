@@ -21,10 +21,12 @@ export class CreateDialogComponent implements OnInit {
   ngOnInit() {
     this.eintrag = {
       betrag: undefined,
-      title: undefined,
-      beschreibung: undefined,
+      title: '',
+      beschreibung: '',
       vonHeuteAbziehen: false
     }
+
+    this.viewModel.isBetragAusgeblendet = this.viewModel.isBetragAusgeblendet ?? false;
   }
 
   onCancelClicked() {
@@ -50,7 +52,7 @@ export class CreateDialogComponent implements OnInit {
       this.showBetragWarnung.set(true);
       return;
     }
-    if(this.checkDarfSpeichern()) {
+    if(this.darfSpeichern()) {
       this.dialogService.isCreateDialogVisible = false;
       this.viewModel.onSaveClick(this.eintrag);
     }
@@ -72,7 +74,7 @@ export class CreateDialogComponent implements OnInit {
   }
 
   private checkDarfSpeichern() {
-    return this.checkHasChanged() && this.checkBetragValid()
+    return this.checkHasChanged() && (this.checkBetragValid());
   }
 
   private checkHasChanged() {
@@ -80,6 +82,6 @@ export class CreateDialogComponent implements OnInit {
   }
 
   private checkBetragValid() {
-    return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null);
+    return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null && this.eintrag.betrag !== undefined) || this.viewModel.isBetragAusgeblendet!;
   }
 }

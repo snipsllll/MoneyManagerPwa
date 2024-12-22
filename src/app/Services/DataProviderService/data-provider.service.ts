@@ -156,7 +156,7 @@ export class DataProviderService {
     return selectedDay;
   }
 
-  getAllDays() {
+  getAllDaysWithBuchungen() {
     const months: Month[] = this.dataService.userData.months;
     const days: Day[] = []
     months.forEach(month => {
@@ -197,7 +197,7 @@ export class DataProviderService {
     month.weeks?.forEach(week => {
       week.days.forEach(day => {
         if (!isDayReached) {
-          if (day.date.getDate() === dayDate.getDate()) {
+          if (new Date(day.date).getDate() === new Date(dayDate).getDate()) {
             isDayReached = true;
           }
 
@@ -206,7 +206,7 @@ export class DataProviderService {
             moneySpendOnDay += buchung.data.betrag!;
           })
 
-          notSpendMoney += x[day.date.toLocaleDateString()] - moneySpendOnDay;
+          notSpendMoney += x[new Date(day.date).toLocaleDateString()] - moneySpendOnDay;
           daysLeftOver--;
         }
       })
@@ -534,11 +534,11 @@ export class DataProviderService {
   }
 
   getGeplanteAusgabenBuchungForMonth(month: Month) {
-    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => eintrag.data.date.getMonth() === month.startDate.getMonth() && eintrag.data.date.getFullYear() === month.startDate.getFullYear())
+    return this.dataService.userData.geplanteAusgabenBuchungen.filter(eintrag => new Date(eintrag.data.date).getMonth() === new Date(month.startDate).getMonth() && new Date(eintrag.data.date).getFullYear() === new Date(month.startDate).getFullYear())
   }
 
   checkIfMonthExistsForDay(date: Date) {
-    return this.dataService.userData.months.findIndex(month => month.startDate.getMonth() === date.getMonth() && month.startDate.getFullYear() === date.getFullYear()) !== -1;
+    return this.dataService.userData.months.findIndex(month => new Date(month.startDate).getMonth() === date.getMonth() && new Date(month.startDate).getFullYear() === date.getFullYear()) !== -1;
   }
 
   isDayBeforeMonth(dayDate: Date, month: Month) {

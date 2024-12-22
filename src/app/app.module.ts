@@ -36,6 +36,23 @@ import { DiagramDetailsComponent } from "./SharedComponents/diagram-details/diag
 import { MmBarChartComponent } from './SharedComponents/mm-bar-chart/mm-bar-chart.component';
 import { SchuldenComponent } from './Sites/schulden/schulden.component';
 import { PlusButtonComponent } from './SharedComponents/plus-button/plus-button.component';
+import { LoginComponent } from './Sites/login/login.component';
+import { RegisterComponent } from './Sites/register/register.component';
+import {AngularFireModule} from "@angular/fire/compat";
+import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
+import { NotificationPopupComponent } from './SharedComponents/notification-popup/notification-popup.component';
+import { PasswortResetComponent } from './Sites/login/passwort-reset/passwort-reset.component';
+import { InfoBoxComponent } from './SharedComponents/info-box/info-box.component';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsIabaMBr-3DJD6dNPaWpuI_IWD-B5J7U",
+  authDomain: "ttt3-ca832.firebaseapp.com",
+  projectId: "ttt3-ca832",
+  storageBucket: "ttt3-ca832.firebasestorage.app",
+  messagingSenderId: "531026768134",
+  appId: "1:531026768134:web:54b164a6f7cb0731e52e87"
+};
 import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlung-dialog.component';
 
 @NgModule({
@@ -70,6 +87,12 @@ import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlun
         DiagramDetailsComponent,
         DiagramDetailsComponent,
         MmBarChartComponent,
+        PlusButtonComponent,
+        LoginComponent,
+        RegisterComponent,
+        NotificationPopupComponent,
+        PasswortResetComponent,
+        InfoBoxComponent,
         SchuldenComponent,
         PlusButtonComponent,
         ZahlungDialogComponent
@@ -83,7 +106,10 @@ import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlun
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         }),
-        FormsModule
+        FormsModule,
+        AngularFireModule.initializeApp(firebaseConfig), // Initialisiere Firebase
+        AngularFireAuthModule, // Authentifizierung Modul
+        AngularFirestoreModule, // Firebase Realtime Database Modul
     ],
   providers: [
     provideAnimationsAsync()

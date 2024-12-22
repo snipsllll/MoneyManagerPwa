@@ -3,6 +3,7 @@ import {ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel
 import {MenuItem} from "../../Models/Interfaces";
 import {Color} from "../../Models/Enums";
 import {UT} from "../../Models/Classes/UT";
+import {BehaviorSubject} from "rxjs";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 
 @Component({
@@ -21,6 +22,9 @@ export class ListElementComponent implements OnInit{
   menuItems?: MenuItem[];
   ut: UT = new UT();
 
+  showBoxMenu = new BehaviorSubject<boolean>(false);
+  boxMenuElemente: string[] = ['e1', 'e2', 'e3'];
+
   constructor() {
 
   }
@@ -34,7 +38,7 @@ export class ListElementComponent implements OnInit{
   }
 
   onMenuEintragClicked(menuItem: MenuItem) {
-    if(!menuItem.grayedOut){
+    if(!menuItem.disabled){
       this.isMenuVisible.set(false);
       if(menuItem.isEditButton) {
         this.onEditClicked.emit(this.viewModel);
@@ -49,6 +53,10 @@ export class ListElementComponent implements OnInit{
     } else if(this.viewModel.data.onEintragClicked) {
       this.viewModel.data.onEintragClicked(this.viewModel.data);
     }
+  }
+
+  onBoxClicked() {
+    this.showBoxMenu.next(true);
   }
 
   protected readonly Color = Color;

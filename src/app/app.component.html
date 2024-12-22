@@ -42,4 +42,10 @@
 
     </app-zahlung-dialog>
   }
+
+  @if (dialogService.isNotificationPopupVisible) {
+    <app-notification-popup [viewModel]="dialogService.notificationPopupViewModel!">
+
+    </app-notification-popup>
+  }
 </div>

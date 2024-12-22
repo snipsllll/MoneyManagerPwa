@@ -7,6 +7,7 @@ import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewM
 import {DataProviderService} from "../../Services/DataProviderService/data-provider.service";
 import {IBuchung} from "../../Models/NewInterfaces";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
+import {getDate} from "../../Models/functions";
 
 @Component({
   selector: 'app-buchung-details',
@@ -67,4 +68,6 @@ export class BuchungDetailsComponent implements OnInit{
     this.navigationService.param1 = buchungsId.toString();
     this.navigationService.param2 = geplanteAusgabenBuchungsId.toString();
   }
+
+  protected readonly getDate = getDate;
 }

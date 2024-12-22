@@ -17,7 +17,7 @@ export class NavigationService {
     let route = '';
     switch (this.previousRoute) {
       case Sites.home:
-        route = '/';
+        route = 'home';
         break;
       case Sites.budget:
         route = '/budget';

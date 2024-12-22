@@ -1,5 +1,5 @@
 import {
-  IBuchung,
+  IBuchung, IFireBuchung, IFireSparschweinEintrag,
   IFixkostenEintrag, IGeplanteAusgabenKategorie,
   IMonthFixkostenEintrag,
   ISparschweinEintrag,
@@ -7,7 +7,10 @@ import {
 } from "./NewInterfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "./Enums";
 import {IAuswertungsLayout} from "./Auswertungen-Interfaces";
+import {Timestamp} from "rxjs";
+import {Time} from "@angular/common";
 
+// Das Month-Interface bleibt unverändert, da es keine Abhängigkeit von Firestore hat
 export interface Month {
   totalBudget?: number;
   sparen?: number;
@@ -71,6 +74,19 @@ export interface SavedData {
   schuldenEintraege: ISchuldenEintrag[];
 }
 
+export interface FireData {
+  buchungen: IFireBuchung[];
+  buchungsKategorien: { id: number; name: string }[];
+  savedMonths: FireMonth[];
+  standardFixkostenEintraege: IFixkostenEintrag[];
+  sparEintraege: IFireSparschweinEintrag[];
+  wunschlistenEintraege: IWunschlistenEintrag[];
+  auswertungsLayouts: IAuswertungsLayout[];
+  settings: Settings;
+  dbVersion: number;
+  geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[];
+}
+
 export interface IGeplanteAusgabenBuchung {
   id: number;
   data: IGeplanteAusgabenBuchungData;
@@ -78,6 +94,20 @@ export interface IGeplanteAusgabenBuchung {
 
 export interface IGeplanteAusgabenBuchungData {
   date: Date;
+  time: string;
+  title: string;
+  betrag: number | null;
+  beschreibung?: string;
+  buchungsKategorie?: number;
+}
+
+export interface IFireGeplanteAusgabenBuchung {
+  id: number;
+  data: IFireGeplanteAusgabenBuchungData;
+}
+
+export interface IFireGeplanteAusgabenBuchungData {
+  date: any;
   time: string;
   title: string;
   betrag: number | null;
@@ -106,6 +136,21 @@ export interface SavedMonth {
   specialFixkostenEintraege?: IMonthFixkostenEintrag[];
 }
 
+export interface FireMonth {
+  // Hier bleibt der Timestamp-Typ erhalten, aber wir können ihn später in ein Date umwandeln
+  date: any;
+  totalBudget: number;
+  sparen: number;
+  geplanteAusgaben?: IGeplanteAusgabe[];
+  uebernommeneStandardFixkostenEintraege?: IMonthFixkostenEintrag[];
+  specialFixkostenEintraege?: IMonthFixkostenEintrag[];
+}
+
+export interface SaveDataUpdateInfos {
+  isInitialLoad?: boolean;
+  fireData: FireData;
+}
+
 export interface IGeplanteAusgabe {
   id: number;
   data: IGeplanteAusgabeData;
@@ -126,7 +171,7 @@ export interface IGeplanteAusgabeRestgeld {
 export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
-  grayedOut?: boolean;
+  disabled?: boolean;
   isEditButton?: boolean;
 }
 

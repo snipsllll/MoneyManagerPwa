@@ -1,39 +1,31 @@
-<div class="monat-fixkosten-dialog-wrapper">
-  <div class="floating-box monat-fixkosten-dialog">
-    <div class="monat-fixkosten-dialog__list-wrapper">
-      <div class="monat-fixkosten-dialog__list">
+<div class="bk-dialog-wrapper">
+  <div class="floating-box bk-dialog">
+    <div class="bk-dialog__list-wrapper">
+      <div class="bk-dialog__list">
         <div *ngIf="viewModel.elemente.length > 0; else keineEintraege">
           <div *ngFor="let element of viewModel.elemente">
             <app-list-element [viewModel]="getViewModel(element)"></app-list-element>
           </div>
-          <div style="height: calc(100vh - 70px - 190px)"></div>
         </div>
+        <div class="bk__spacer" *ngIf="viewModel.elemente.length > 0"></div>
       </div>
     </div>
-    <div class="monat-fixkosten-dialog__bottom-wrapper">
-      <div class="monat-fixkosten-dialog__summe-wrapper">
-
-      </div>
-      <div class="monat-fixkosten-dialog__add-button-wrapper">
-        <app-plus-button (click)="onPlusClicked()"></app-plus-button>
-      </div>
+    <div class="bk-dialog__add-button-wrapper">
+      <app-plus-button (click)="onPlusClicked()" [fixed]="false"></app-plus-button>
     </div>
-    <div class="monat-fixkosten-dialog__buttons-wrapper">
-      <div class="monat-fixkosten-dialog__button" (click)=onCancelClicked()>
+    <div class="bk-dialog__buttons-wrapper">
+      <div class="bk-dialog__button" (click)=onCancelClicked()>
         abbrechen
       </div>
-      <div class="monat-fixkosten-dialog__button" (click)="onSaveClicked()">
+      <div class="bk-dialog__button" (click)="onSaveClicked()" [class.bk-dialog__grayed-out]="!checkDarfSpeichern()">
         speichern
       </div>
     </div>
     <ng-template #keineEintraege>
-      <div class="monat-fixkosten-dialog__keine-eintraege">
+      <div class="bk-dialog__keine-eintraege">
         noch keine Einträge vorhanden
       </div>
     </ng-template>
-
-
   </div>
-
 </div>
 

@@ -5,22 +5,35 @@ import {DialogService} from "../../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
-import {SavedData} from "../../../Models/Interfaces";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../../../Models/Enums";
+import {Router} from "@angular/router";
+import {AdminService} from "../../../admin.service";
+import {UT} from "../../../Models/Classes/UT";
+import {NotificationPopupViewModel} from "../../../Models/ViewModels/NotificationPopupViewModel";
 
 @Component({
   selector: 'app-einstellungen',
   templateUrl: './einstellungen.component.html',
   styleUrl: './einstellungen.component.css'
 })
-export class EinstellungenComponent implements OnInit{
+export class EinstellungenComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput: any;
   isEnableToHighBuchungenChecked!: boolean;
   topBarAnzeigeOption!: string;
   tagesAnzeigeOption!: string;
+  utils = new UT();
+  email: string = '';
+  isResetPwLoading = false;
+  isResetInfoVisible = false;
+  isResetPwTextVisible = true;
+  resetPopupViewModel: NotificationPopupViewModel = {
+    text: 'Email wurde gesendet!',
+    duration: 7000
+  }
+  isLoading = false;
 
-  constructor(private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
   }
 
@@ -28,6 +41,7 @@ export class EinstellungenComponent implements OnInit{
     this.topbarService.title.set('EINSTELLUNGEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
+    this.email = this.adminService.loggedInUser.getValue()?.email ?? '';
   }
 
   update() {
@@ -39,18 +53,22 @@ export class EinstellungenComponent implements OnInit{
 
   onAlleDatenLoeschenClicked() {
     const confirmDialogViewModel: ConfirmDialogViewModel = {
-    title: 'Alle Daten löschen?',
-    message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
-    onConfirmClicked: () => {
-      this.dataService.userData.deleteAllData();
-      this.dataService.update();
-      this.update();
-      this.dialogService.isConfirmDialogVisible = false;
-    },
-    onCancelClicked: () => {
-      this.dialogService.isConfirmDialogVisible = false;
+      title: 'Alle Daten löschen?',
+      message: 'Bist du sicher, dass du alle Daten löschen möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
+      onConfirmClicked: () => {
+        this.isLoading = true;
+        this.adminService.deleteAllDataOnServer().then(() => {
+          this.dataService.userData.setUserData(this.utils.getEmptyUserData());
+          this.dataService.update();
+          this.update();
+          this.dialogService.isConfirmDialogVisible = false;
+          this.isLoading = false;
+        });
+      },
+      onCancelClicked: () => {
+        this.dialogService.isConfirmDialogVisible = false;
+      }
     }
-  }
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 
@@ -72,14 +90,20 @@ export class EinstellungenComponent implements OnInit{
     // Dateiinhalt wird geladen und in der Konsole angezeigt
     reader.onload = (e: any) => {
       const fileContent = e.target.result;
+      console.log(JSON.parse(fileContent))
       const confirmDialogViewModel: ConfirmDialogViewModel = {
         title: 'Daten importieren?',
         message: 'Bist du sicher, dass du diese Daten importieren möchtest? Nicht gespeicherte Daten können nicht wieder hergestellt werden!',
         onConfirmClicked: () => {
-          this.dataService.userData.save(JSON.parse(fileContent));
-          this.dataService.update();
-          this.update();
+          this.isLoading = true;
           this.dialogService.isConfirmDialogVisible = false;
+          this.dataService.userData.setUserData(JSON.parse(fileContent));
+          this.adminService.saveDataOnServer(this.dataService.userData.getFireData()).then(() => {
+            this.dataService.update();
+            this.update();
+            this.isLoading = false;
+          });
+
         },
         onCancelClicked: () => {
           this.dialogService.isConfirmDialogVisible = false;
@@ -97,7 +121,7 @@ export class EinstellungenComponent implements OnInit{
     const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
     // Erstelle ein Blob-Objekt mit dem Textinhalt und dem MIME-Typ
-    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const blob = new Blob([fileContent], {type: 'text/plain'});
 
     // Erstelle einen temporären Link zum Herunterladen der Datei
     const link = document.createElement('a');
@@ -118,7 +142,7 @@ export class EinstellungenComponent implements OnInit{
       const fileContent = JSON.stringify(this.dataService.userData.getSavedData());
 
       // Erstelle die Datei im ausgewählten Ordner
-      const fileHandle = await handle.getFileHandle('meineDaten.txt', { create: true });
+      const fileHandle = await handle.getFileHandle('meineDaten.txt', {create: true});
       const writableStream = await fileHandle.createWritable();
 
       // Schreibe den Inhalt in die Datei und schließe den Stream
@@ -232,5 +256,33 @@ export class EinstellungenComponent implements OnInit{
 
   onKatVerwaltenClicked() {
     this.dialogService.showBuchungsKategorienDialog();
+  }
+
+  onResetPwClicked() {
+    this.isResetPwLoading = true;
+    this.isResetPwTextVisible = false;
+    this.adminService.sendResetPasswordEmail().then(() => {
+      this.isResetPwLoading = false;
+      this.dialogService.showNotificationPopup(this.resetPopupViewModel);
+    }).catch((error) => {
+      console.log(error)
+      this.isResetPwLoading = false;
+      this.isResetPwTextVisible = true;
+    });
+  }
+
+  onAccountLoeschenClicked() {
+    const confirmDialogViewModel: ConfirmDialogViewModel = {
+      title: 'Account löschen?',
+      message: 'Bist du sicher, dass du deinen Account löschen möchtest? Es wird ALLES unwiederrufbar gelöscht!',
+      onConfirmClicked: () => {
+        this.dialogService.isConfirmDialogVisible = false;
+        this.adminService.deleteAccount();
+      },
+      onCancelClicked: () => {
+        this.dialogService.isConfirmDialogVisible = false;
+      }
+    }
+    this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
 }

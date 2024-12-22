@@ -12,6 +12,7 @@ import {
   ZahlungDialogViewModel
 } from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../DataService/data.service";
+import {NotificationPopupViewModel} from "../../Models/ViewModels/NotificationPopupViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,9 @@ export class DialogService {
 
   isAuswertungenDialogVisible = false;
   auswertungenDialogViewModel?: AuswertungenDialogViewModel;
+
+  isNotificationPopupVisible = false;
+  notificationPopupViewModel?: NotificationPopupViewModel;
 
   isZahlungDialogVisible = false;
   zahlungDialogViewModel?: ZahlungDialogViewModel;
@@ -81,7 +85,7 @@ export class DialogService {
           this.dataChangeService.addBuchungsKategorie(element.name);
         });
         this.isBuchungsKategorienDialogVisible = false;
-        this.dataService.triggerUpdated();
+        this.dataService.update();
       }
     }
   }
@@ -98,6 +102,11 @@ export class DialogService {
         this.dataChangeService.editAuswertungsLayouts(elemente);
       }
     }
+  }
+
+  showNotificationPopup(notificationPopupViewModel: NotificationPopupViewModel) {
+    this.isNotificationPopupVisible = true;
+    this.notificationPopupViewModel = notificationPopupViewModel;
   }
 }
 

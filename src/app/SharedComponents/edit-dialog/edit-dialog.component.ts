@@ -20,13 +20,15 @@ export class EditDialogComponent implements OnInit{
 
   ngOnInit() {
     this.oldEintrag = {
-      betrag: this.viewModel.data.betrag,
-      title: this.viewModel.data.title,
-      zusatz: this.viewModel.data.zusatz,
-      date: this.viewModel.data.date,
+      betrag: this.viewModel.data.betrag!,
+      title: this.viewModel.data.title ?? '',
+      zusatz: this.viewModel.data.zusatz ?? '',
+      date: this.viewModel.data.date!,
       id: this.viewModel.data.id,
-      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen
+      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen ?? false
     }
+
+    this.viewModel.isBetragAusgeblendet = this.viewModel.isBetragAusgeblendet ?? false;
   }
 
   onSaveClicked() {
@@ -78,7 +80,7 @@ export class EditDialogComponent implements OnInit{
   }
 
   private checkBetragValid() {
-    return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null);
+    return (this.viewModel.data.betrag !== 0 && this.viewModel.data.betrag !== null && this.viewModel.data.betrag !== undefined) || this.viewModel.isBetragAusgeblendet!;
   }
 
   private checkHasChanged() {

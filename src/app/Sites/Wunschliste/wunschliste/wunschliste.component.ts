@@ -147,7 +147,7 @@ export class WunschlisteComponent implements OnInit{
         {
           label: 'bearbeiten',
           onClick: this.onEditClicked,
-          grayedOut: eintrag.data.gekauft
+          disabled: eintrag.data.gekauft
         },
         {
           label: 'löschen',
@@ -156,7 +156,7 @@ export class WunschlisteComponent implements OnInit{
         {
           label: eintrag.data.gekauft ? 'zurücknehmen' : 'holen',
           onClick: eintrag.data.gekauft ? this.onZuruecknehmenClicked : this.onHolenClicked,
-          grayedOut: eintrag.data.gekauft ? false : !this.kannKaufen(eintrag)
+          disabled: eintrag.data.gekauft ? false : !this.kannKaufen(eintrag)
         }
       ]
     }

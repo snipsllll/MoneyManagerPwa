@@ -1,6 +1,7 @@
 import {
   Day,
-  IGeplanteAusgabenBuchung,
+ FireData,
+  FireMonth, IFireGeplanteAusgabenBuchung, IGeplanteAusgabe, IGeplanteAusgabenBuchung,
   ISchuldenEintrag,
   Month,
   SavedData,
@@ -8,8 +9,14 @@ import {
   Settings,
   Week
 } from "../Interfaces";
-import {FileEngine} from "../../Services/FileEngine/FileEnigne";
-import {IBuchung, IFixkostenEintrag, ISparschweinEintrag, IWunschlistenEintrag} from "../NewInterfaces";
+import {
+  IBuchung,
+  IFireBuchung,
+  IFireSparschweinEintrag,
+  IFixkostenEintrag, IGeplanteAusgabenKategorie,
+  ISparschweinEintrag,
+  IWunschlistenEintrag
+} from "../NewInterfaces";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 import {IAuswertungsLayout} from "../Auswertungen-Interfaces";
@@ -36,43 +43,83 @@ export class UserData {
     }
   };
 
-  private _fileEngine: FileEngine = new FileEngine(true);
-
   constructor() {
-    this.loadDataFromStorage();
+
   }
 
-  addKategorie(name: string): void {
-    const newId = this.buchungsKategorien.length
-      ? Math.max(...this.buchungsKategorien.map(k => k.id)) + 1
-      : 1; // Neue ID generieren
-    this.buchungsKategorien.push({id: newId, name});
-    this.save();
-  }
-
-  // Entfernt eine Kategorie anhand ihrer ID
-  removeKategorie(id: number): void {
-    this.buchungsKategorien = this.buchungsKategorien.filter(k => k.id !== id);
-    this.save();
-  }
-
-  // Bearbeitet eine bestehende Kategorie
-  editKategorie(id: number, newName: string): void {
-    const kategorie = this.buchungsKategorien.find(k => k.id === id);
-    if (kategorie) {
-      kategorie.name = newName;
+  transformToFireData(input: any): any {
+    if (input === null || input === undefined) {
+      return input;
     }
-    this.save();
+
+    if (input instanceof Date) {
+      return {milliseconds: 0, seconds: Math.floor(new Date(input).getTime() / 1000)};
+    }
+
+    if (Array.isArray(input)) {
+      return input.map(item => this.transformToFireData(item));
+    }
+
+    if (typeof input === 'object') {
+      const transformedObject: any = {};
+      for (const key of Object.keys(input)) {
+        transformedObject[key] = this.transformToFireData(input[key]);
+      }
+      return transformedObject;
+    }
+
+    // Return primitive values as they are
+    return input;
   }
 
-  // Gibt alle Kategorienamen als Array von Strings zurück
-  getKategorienNamen(): string[] {
-    return this.buchungsKategorien.map(k => k.name);
+  transformToSavedData(input: any): any {
+    if (input === null || input === undefined) {
+      return input;
+    }
+
+    // Konvertiere {milliseconds, seconds} zu einem Date-Objekt
+    if (typeof input === 'object' && 'seconds' in input) {
+      return new Date(input.seconds * 1000);
+    }
+
+    if (Array.isArray(input)) {
+      return input.map(item => this.transformToSavedData(item));
+    }
+
+    if (typeof input === 'object') {
+      const transformedObject: any = {};
+      for (const key of Object.keys(input)) {
+        transformedObject[key] = this.transformToSavedData(input[key]);
+      }
+      return transformedObject;
+    }
+
+    // Gib primitive Werte unverändert zurück
+    return input;
   }
 
-  loadDataFromStorage() {
-    let loadedData: any = this._fileEngine.load();
-    console.log(loadedData)
+  getFireData(): FireData {
+    return this.transformToFireData(this.getSavedData());
+  }
+
+  setUserDataFire(loadedData: any) {
+    console.log('Die vom Server geladenen daten werden versucht in UserData zu speichern.')
+    if(loadedData == null) {
+      return;
+    }
+
+    const x = this.transformToSavedData(loadedData);
+
+    console.log('Daten wurden erfolgreich zu savedData transformiert.');
+
+    this.setUserData(x)
+  }
+
+  setUserData(loadedData: any) {
+    if(loadedData == null) {
+      return;
+    }
+
     let savedData: SavedData = this.checkForDbUpdates(loadedData);
 
     this.buchungen = savedData.buchungen ?? [];
@@ -87,14 +134,15 @@ export class UserData {
     this.schuldenEintraege = savedData.schuldenEintraege ?? [];
   }
 
-  save(savedData?: SavedData) {
-    console.log(1)
-    if (savedData) {
-      this._fileEngine.save(this.checkForDbUpdates(savedData));
-      this.reload();
-    } else {
-      this._fileEngine.save(this.getSavedData());
-    }
+  addKategorie(name: string): void {
+    const newId = this.buchungsKategorien.length
+      ? Math.max(...this.buchungsKategorien.map(k => k.id)) + 1
+      : 1; // Neue ID generieren
+    this.buchungsKategorien.push({id: newId, name});
+  }
+
+  getKategorienNamen(): string[] {
+    return this.buchungsKategorien.map(k => k.name);
   }
 
   private checkForDbUpdates(data: any): SavedData {
@@ -126,7 +174,7 @@ export class UserData {
       currentData.dbVersion = currentDbVersion;
       return currentData as SavedData;
     } catch (e) {
-      console.log(e)
+
       return {
         buchungen: [],
         buchungsKategorien: [],
@@ -175,7 +223,7 @@ export class UserData {
     }
   }
 
-  getLongTestData() {
+  getLongTestData(): SavedData {
     const testSavedData: SavedData = {
       buchungen: [],
       buchungsKategorien: [
@@ -442,47 +490,25 @@ export class UserData {
     };
   }
 
-  private reload() {
-    let loadedData: any = this._fileEngine.load();
-    console.log(loadedData)
-
-    let savedData: SavedData = this.checkForDbUpdates(loadedData);
-
-    this.buchungen = savedData.buchungen;
-    this.buchungsKategorien = savedData.buchungsKategorien;
-    this.months = this.convertSavedMonthsToMonths(savedData.savedMonths);
-    this.standardFixkostenEintraege = savedData.standardFixkostenEintraege;
-    this.sparschweinEintraege = savedData.sparEintraege;
-    this.wunschlistenEintraege = savedData.wunschlistenEintraege;
-    this.auswertungsLayouts = savedData.auswertungsLayouts;
-    this.settings = savedData.settings;
-    this.geplanteAusgabenBuchungen = savedData.geplanteAusgabenBuchungen ?? [];
-    this.schuldenEintraege = savedData.schuldenEintraege ?? [];
-  }
-
   deleteAllData() {
-    this._fileEngine.save({
-      buchungen: [],
-      buchungsKategorien: [],
-      auswertungsLayouts: [],
-      settings: {
-        toHighBuchungenEnabled: true,
+    this.buchungen = [];
+    this.buchungsKategorien = [];
+    this.months = [];
+    this.standardFixkostenEintraege = [];
+    this.sparschweinEintraege = [];
+    this.wunschlistenEintraege = [];
+    this.auswertungsLayouts = [];
+    this.settings = {
+      toHighBuchungenEnabled: true,
         wunschlistenFilter: {
-          selectedFilter: '',
+        selectedFilter: '',
           gekaufteEintraegeAusblenden: false
-        },
-        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
-        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
       },
-      wunschlistenEintraege: [],
-      sparEintraege: [],
-      standardFixkostenEintraege: [],
-      savedMonths: [],
-      geplanteAusgabenBuchungen: [],
-      dbVersion: currentDbVersion,
-      schuldenEintraege: []
-    });
-    this.reload();
+      tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+    }
+    this.geplanteAusgabenBuchungen = [],
+      this.schuldenEintraege = []
   }
 
   getSavedData(): SavedData {
@@ -543,7 +569,70 @@ export class UserData {
     const months: Month[] = [];
 
     savedMonths.forEach(savedMonth => {
-      const date = savedMonth.date;
+      const date = new Date(savedMonth.date);
+      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
+      const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
+
+      const weeks: Week[] = [];
+
+      let weekStartDate = startDate;
+
+      while (weekStartDate <= endDate) {
+        // Calculate the end of the week, or the end of the month if it falls within this week
+        let weekEndDate: Date = this.getSunday(weekStartDate);
+        if (weekEndDate > endDate) {
+          weekEndDate = endDate; // Adjust to end of the month if the week goes past it
+        }
+
+        const daysInWeek = weekEndDate.getDate() - weekStartDate.getDate() + 1;
+        const days: Day[] = [];
+
+        // Populate days in the week
+        for (let d = weekStartDate.getDate(); d <= weekEndDate.getDate(); d++) {
+          const dateForDay = new Date(weekStartDate.getFullYear(), weekStartDate.getMonth(), d);
+          days.push({date: dateForDay});
+        }
+
+        // Push the week to weeks array
+        weeks.push({
+          startDate: new Date(weekStartDate),
+          endDate: new Date(weekEndDate),
+          daysInWeek: daysInWeek,
+          days: days
+        });
+
+        // Move to the next Monday
+        weekStartDate = this.getNextMonday(weekStartDate);
+      }
+
+      const abgeschlossen = !(this.isDayBeforeMonth(new Date(), startDate) ||
+        (startDate.getFullYear() === new Date().getFullYear() && startDate.getMonth() === new Date().getMonth()));
+
+      months.push(
+        {
+          totalBudget: savedMonth.totalBudget,
+          sparen: savedMonth.sparen,
+          startDate: startDate,
+          endDate: endDate,
+          daysInMonth: daysInMonth,
+          weeks: weeks,
+          monatAbgeschlossen: abgeschlossen,
+          uebernommeneStandardFixkostenEintraege: savedMonth.uebernommeneStandardFixkostenEintraege ?? [],
+          specialFixkostenEintraege: savedMonth.specialFixkostenEintraege ?? [],
+          geplanteAusgaben: savedMonth.geplanteAusgaben ?? []
+        }
+      )
+    })
+
+    return months;
+  }
+
+  private convertFireMonthsToMonths(savedMonths: FireMonth[]): Month[] {
+    const months: Month[] = [];
+
+    savedMonths.forEach(savedMonth => {
+      const date = new Date(savedMonth.date.seconds * 1000);
       const startDate: Date = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the month
       const daysInMonth: number = endDate.getDate() - startDate.getDate() + 1;
