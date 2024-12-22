@@ -170,7 +170,7 @@ export interface IGeplanteAusgabeRestgeld {
 export interface MenuItem {
   label: string;
   onClick: (input?: any) => void;
-  grayedOut?: boolean;
+  disabled?: boolean;
   isEditButton?: boolean;
 }
 

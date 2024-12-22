@@ -128,12 +128,12 @@ export class MonatFixkostenDialogComponent implements OnInit {
           {
             label: 'ausschließen',
             onClick: this.onAusschliessenClicked,
-            grayedOut: eintrag.data.isExcluded
+            disabled: eintrag.data.isExcluded
           },
           {
             label: 'einschließen',
             onClick: this.onEinschliessenClicked,
-            grayedOut: !eintrag.data.isExcluded
+            disabled: !eintrag.data.isExcluded
           }
         ]
         : [
