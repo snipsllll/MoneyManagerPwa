@@ -92,10 +92,17 @@ export class CreateBuchungComponent {
     this.buchung.buchungsKategorie = item.data.buchungsKategorie;
   }
 
+  private isBetragZuHoch() {
+    if(this.buchung && this.buchung.geplanteBuchung) {
+      return this.buchung!.betrag! > this.availableMonayForGeplanteAusgabenKategorien().restgeldBetrag;
+    }
+    return !this.availableMoneyCapped().noData && this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst && this.dataProvider.checkIfMonthExistsForDay(this.buchung.date) && this.dataProvider.getMonthByDate(this.buchung.date).totalBudget !== 0;
+  }
+
   onSaveClicked() {
     if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
-        let isBetragZuHoch = !this.availableMoneyCapped().noData && this.buchung.betrag! > this.availableMoneyCapped().availableForDayIst && this.dataProvider.checkIfMonthExistsForDay(this.buchung.date) && this.dataProvider.getMonthByDate(this.buchung.date).totalBudget !== 0;
+        let isBetragZuHoch = this.isBetragZuHoch();
 
         if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
           this.dataChangeService.addBuchung(this.buchung);
