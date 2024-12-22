@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
 export class PasswortResetComponent {
 
   errorMessage: string = '';
-  email: string = 'tuemmers.paypal@gmail.com';
+  email: string = '';
   isSaveButtonDisabled: boolean = true;
   wasEmailSend: boolean = false;
   isLoading = false;
