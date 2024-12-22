@@ -22,7 +22,7 @@ export class EditBuchungComponent implements OnInit {
   kategorien = computed<{ id: number, name: string }[]>(() => {
     this.dataService.updated();
     return this.dataProvider.getBuchungsKategorienMitEmpty();
-  }) ;
+  });
   isGeplanteBuchungChecked!: boolean;
 
   buchung = signal<IBuchung | undefined>(undefined);
@@ -89,7 +89,7 @@ export class EditBuchungComponent implements OnInit {
   }
 
   onBuchungsKategorieChanged(): void {
-    if(this.buchung()!.data.buchungsKategorie == -1) {
+    if (this.buchung()!.data.buchungsKategorie == -1) {
       this.dialogService.showBuchungsKategorienDialog();
       this.buchung()!.data.buchungsKategorie = 0;
     }
@@ -108,15 +108,15 @@ export class EditBuchungComponent implements OnInit {
       if (this.isSaveButtonEnabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
         if (!(isBetragZuHoch && this.hasBetragChanged()) || this.dataProvider.getMonthByDate(this.buchung()!.data.date).totalBudget! < 1) {
-          if(this.buchung()?.data.geplanteBuchung) {
-            if(this.oldBuchung?.data.geplanteBuchung) {
+          if (this.buchung()?.data.geplanteBuchung) {
+            if (this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
             } else {
               this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
               this.dataChangeService.deleteBuchung(this.buchung()!.id)
             }
           } else {
-            if(!this.oldBuchung?.data.geplanteBuchung) {
+            if (!this.oldBuchung?.data.geplanteBuchung) {
               this.dataChangeService.editBuchung(this.buchung()!)
             } else {
               this.dataChangeService.addBuchung(this.buchung()!.data!)
@@ -125,7 +125,7 @@ export class EditBuchungComponent implements OnInit {
           }
           this.router.navigate(['home']);
         } else {
-          if(this.dataProvider.getSettings().toHighBuchungenEnabled) {
+          if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
               title: 'Betrag ist zu hoch',
               message: `Der Betrag überschreitet dein Budget für ${this.buchung()!.data.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung()!.data.date.toLocaleDateString()}. Trotzdem fortfahren?`,
@@ -133,15 +133,15 @@ export class EditBuchungComponent implements OnInit {
                 this.dialogService.isConfirmDialogVisible = false;
               },
               onConfirmClicked: () => {
-                if(this.buchung()?.data.geplanteBuchung) {
-                  if(this.oldBuchung?.data.geplanteBuchung) {
+                if (this.buchung()?.data.geplanteBuchung) {
+                  if (this.oldBuchung?.data.geplanteBuchung) {
                     this.dataChangeService.editGeplanteAusgabeBuchung(this.buchung()!)
                   } else {
                     this.dataChangeService.addGeplanteAusgabeBuchung(this.buchung()!.data!)
                     this.dataChangeService.deleteBuchung(this.buchung()!.id)
                   }
                 } else {
-                  if(!this.oldBuchung?.data.geplanteBuchung) {
+                  if (!this.oldBuchung?.data.geplanteBuchung) {
                     this.dataChangeService.editBuchung(this.buchung()!)
                   } else {
                     this.dataChangeService.addBuchung(this.buchung()!.data!)
@@ -166,14 +166,14 @@ export class EditBuchungComponent implements OnInit {
     }
   }
 
-  isBetragZuHoch() {
-    if(this.buchung()?.data.buchungsKategorie == -1) {
-      if(this.availableMoneyCapped().noData) {
+  isBetragZuHochUngeplant() {
+    if (this.buchung()?.data.buchungsKategorie == -1) {
+      if (this.availableMoneyCapped().noData) {
         return false;
       }
       return this.getRestGeplantAusgabenSumme();
     } else {
-      if(this.availableMoneyCapped().noData) {
+      if (this.availableMoneyCapped().noData) {
         return false;
       }
       return this.getAvailableMoneyDay()! === -1
@@ -193,6 +193,13 @@ export class EditBuchungComponent implements OnInit {
 
   onCancelClicked() {
     this.executeExitAction();
+  }
+
+  private isBetragZuHoch() {
+    if (this.buchung() && this.oldBuchung && this.buchung()!.data.geplanteBuchung) {
+      return this.buchung!()!.data.betrag! > (this.availableMonayForGeplanteAusgabenKategorien().restgeldBetrag ?? 0) + (this.oldBuchung.data!.betrag ?? 0);
+    }
+    return this.isBetragZuHochUngeplant();
   }
 
   onDateChange() {
