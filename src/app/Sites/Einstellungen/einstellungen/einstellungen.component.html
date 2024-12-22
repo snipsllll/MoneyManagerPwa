@@ -1,6 +1,14 @@
 <app-top-bar></app-top-bar>
 
 <div class="einstellungen">
+  <div class="einstellungen__userdata-wrapper">
+    <div class="einstellungen__userdata-email-label">
+      angemeldet als:
+    </div>
+    <div class="einstellungen__userdata-email">
+      {{email}}
+    </div>
+  </div>
   <div class="einstellungen__import-export-wrapper">
     <div class="einstellungen__import-wrapper button" (click)="onFileButtonClick()">
       Daten importieren
@@ -51,10 +59,33 @@
     </div>
   </div>
 
+  <div class="einstellungen__ausloggen" (click)="onResetPwClicked()" *ngIf="isResetPwTextVisible; else resetPwLoading">
+    passwort zurück setzen
+  </div>
+
   <div class="einstellungen__alles-loeschen" (click)="onAlleDatenLoeschenClicked()">
     alle Daten löschen
   </div>
 
+  <div class="einstellungen__alles-loeschen" (click)="onAccountLoeschenClicked()">
+    account Löschen
+  </div>
 </div>
 
 <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+
+<ng-template #resetPwLoading>
+  <div class="einstellungen__reset-pw-loading-gif-wrapper" *ngIf="isResetPwLoading; else resetPwCheck">
+    <img src="assets/loading-gif.gif" class="einstellungen__reset-pw-loading-gif">
+  </div>
+</ng-template>
+
+<ng-template #resetPwCheck>
+  <div class="einstellungen__reset-pw-loading-gif-wrapper">
+    <img src="assets/check-green.png" class="einstellungen__reset-pw-loading-gif">
+  </div>
+</ng-template>
+
+<div class="einstellungen__import-loading-wrapper" *ngIf="isLoading">
+  <img src="assets/loading-gif.gif" class="einstellungen__import-loading-gif">
+</div>

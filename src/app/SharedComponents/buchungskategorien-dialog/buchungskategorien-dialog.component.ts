@@ -1,6 +1,4 @@
-import {Component, computed, Input} from '@angular/core';
-import {MonatFixkostenDialogViewModel} from "../../Models/ViewModels/MonatFixkostenDialogViewModel";
-import {IFixkostenEintrag, IFixkostenEintragData, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
+import {Component, Input, OnInit} from '@angular/core';
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {DataService} from "../../Services/DataService/data.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
@@ -8,20 +6,25 @@ import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModel
 import {ListElementData, ListElementSettings, ListElementViewModel} from "../../Models/ViewModels/ListElementViewModel";
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
 import {BuchungsKategorienDialogViewModel} from "../../Models/ViewModels/BuchungsKategorienDialogViewModel";
+import {UT} from "../../Models/Classes/UT";
 
 @Component({
   selector: 'app-buchungskategorien-dialog',
   templateUrl: './buchungskategorien-dialog.component.html',
   styleUrl: './buchungskategorien-dialog.component.css'
 })
-export class BuchungskategorienDialogComponent {
+export class BuchungskategorienDialogComponent implements OnInit {
   @Input() viewModel!: BuchungsKategorienDialogViewModel;
   newEintrag!: { id: number, name: string };
+  oldElements: { id: number, name: string }[] = [];
+  utils = new UT();
+  darfSpeichern = false;
 
   constructor(private dialogService: DialogService, public dataService: DataService) {
   }
 
   ngOnInit() {
+    this.oldElements = this.utils.clone(this.viewModel.elemente);
     this.newEintrag = {
       id: -1,
       name: ''
@@ -55,11 +58,22 @@ export class BuchungskategorienDialogComponent {
   }
 
   checkHasChanged() {
-    return true;
+    if(this.oldElements.length !== this.viewModel.elemente.length) {
+      return true;
+    }
+
+    let hasChanged = false;
+    this.viewModel.elemente.forEach(element => {
+      if(element != this.oldElements.find(eintrag => eintrag.id === element.id)) {
+        hasChanged = true;
+      }
+    })
+
+    return hasChanged;
   }
 
   checkDarfSpeichern() {
-    return true;
+    return this.checkHasChanged();
   }
 
   onPlusClicked() {

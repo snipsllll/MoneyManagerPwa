@@ -6,17 +6,17 @@
   <div class="list-element__main">
     <div class="list-element__main-left" (click)="onEintragClicked()" *ngIf="viewModel.data.betrag">
       @if(viewModel.settings.isDarker) {
-        <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b class="darker-text">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.isGrayedOut) {
-        <b class="grayed-out-element">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b class="grayed-out-element">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.red){
-        <b class="red">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b class="red">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.green){
-        <b class="green">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b class="green">{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else if(viewModel.settings.betragColor === Color.black){
-        <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       } @else {
-        <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
+      <b>{{ ut.toFixedDown(viewModel.data.betrag!, 2) }}€</b>
       }
     </div>
     <div class="list-element__main-center">
@@ -32,16 +32,20 @@
   </div>
 
   <div *ngIf="isExpanded" class="list-element__detailss">
-    {{ viewModel.data.zusatz ?? '-- keine Beschreibung --' }}
+    {{ viewModel.data.zusatz && viewModel.data.zusatz !== '' ? viewModel.data.zusatz : '-- keine Beschreibung --' }}
   </div>
 
-  <div *ngIf="isMenuVisible()" class="list-element__menu-wrapper">
-    <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
-    <div *ngFor="let menuItem of menuItems; let last = last">
-      <div class="list-element__menu-eintrag" [class.grayed-out]="menuItem.grayedOut ?? false" (click)="onMenuEintragClicked(menuItem)">
-        {{ menuItem.label }}
+  <div class="list-element__menu-wrapper" *ngIf="isMenuVisible()">
+    <div class="list-element__menu-content">
+      <div class="list-element__menu-top"></div>
+      <div class="list-element__menu-element-wrapper" *ngFor="let menuItem of menuItems">
+        <hr class="list-element__menu-dividing-line">
+        <div class="list-element__menu-element" [class.disabled]="menuItem.disabled ?? false"
+             (click)="onMenuEintragClicked(menuItem)">
+          {{ menuItem.label }}
+        </div>
       </div>
-      <hr *ngIf="!last" class="list-element__menu-dividing-line">
     </div>
+    <div class="list-element__menu-background" (click)="onMenuClicked()"></div>
   </div>
 </div>

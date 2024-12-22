@@ -18,7 +18,9 @@
   </div>
 
   @if (showMenu()) {
-    <div class="eintrag-listelem__menu">
+    <div class="eintrag-listelem__menu" [@menuAnimation]>
+      <div class="eintrag-listelem__menu-top"></div>
+      <hr>
       <div class="eintrag-listelem__edit-button all-centered eintrag-listelem__menu-item"
            (click)="onEditButtonClicked(buchung)">
         bearbeiten
@@ -29,8 +31,9 @@
         löschen
       </div>
     </div>
-    <div class="eintrag-listelem__menu-background" (click)="onMenuButtonClicked()">
+    <div class="eintrag-listelem__menu-background" (click)="onMenuButtonClicked()" [@backgroundAnimation]>
 
     </div>
   }
+
 </div>

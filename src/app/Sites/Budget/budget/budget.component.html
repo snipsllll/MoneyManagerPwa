@@ -11,116 +11,119 @@
       >
     </div>
   </div>
-  <div class="budget floating-box" *ngIf="dataProvider.checkIfMonthExistsForDay(getStartdateForSelectedMonth()) || !dataProvider.isDayBeforeMonth(getStartdateForSelectedMonth(), dataProvider.getMonthByDate(getTodayDate())); else noMonth">
-    <div class="budget__top">
-      <div class="budget__element-wrapper">
-        <div class="budget__element-label">
-          total Budget:
-        </div>
-        <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
-               [(ngModel)]="data().totalBudget" onfocus="this.select()">
-      </div>
-      <div class="budget__element-wrapper">
-        <div class="budget__element-label">
-          Sparen:
-        </div>
-        <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
-               [(ngModel)]="data().sparen" onfocus="this.select()">
-      </div>
-      <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
-        <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
-          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
-               *ngIf="!isFixkostenDetailsVisible() && data().fixKostenEintraege; else chevronDown">
-          <div class="budget__element-label-fixkosten-text">
-            mntl. Fix-Kosten:
+  <div class="budget-scroll-area">
+    <div class="budget floating-box" *ngIf="dataProvider.checkIfMonthExistsForDay(getStartdateForSelectedMonth()) || !dataProvider.isDayBeforeMonth(getStartdateForSelectedMonth(), dataProvider.getMonthByDate(getTodayDate())); else noMonth">
+      <div class="budget__top">
+        <div class="budget__element-wrapper">
+          <div class="budget__element-label">
+            total Budget:
           </div>
-          <!--<img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onFixkostenEditClicked()">-->
+          <input type="number" class="budget__element-input fb-input" (change)="onTotalBudgetChanged()"
+                 [(ngModel)]="data().totalBudget" onfocus="this.select()">
         </div>
-        <div class="budget__element-data">
-          {{ ut.toFixedDown(data().fixKostenSumme, 2) }}€ <img src="assets/lock-closed.png" class="lock-image" alt="locked"
-                                            *ngIf="data().fixKostenGesperrt">
-        </div>
-      </div>
-      <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isFixkostenDetailsVisible()"
-           *ngIf="isFixkostenDetailsVisible()">
-        <div *ngFor="let eintrag of data().fixKostenEintraege" class="budget__fixkosten-detail-wrapper">
-          <div class="budget__fixkosten-details-title">
-            - {{ eintrag.data.title }}
+        <div class="budget__element-wrapper">
+          <div class="budget__element-label">
+            Sparen:
           </div>
-          <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.data.betrag }}€
+          <input type="number" class="budget__element-input fb-input" (change)="onSparenChanged()"
+                 [(ngModel)]="data().sparen" onfocus="this.select()">
+        </div>
+        <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
+          <div class="budget__element-label-fixkosten" (click)="onFixKostenClicked()">
+            <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
+                 *ngIf="!isFixkostenDetailsVisible() && data().fixKostenEintraege; else chevronDown">
+            <div class="budget__element-label-fixkosten-text">
+              mntl. Fix-Kosten:
+            </div>
+            <!--<img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onFixkostenEditClicked()">-->
+          </div>
+          <div class="budget__element-data">
+            {{ ut.toFixedDown(data().fixKostenSumme, 2) }}€ <img src="assets/lock-closed.png" class="lock-image" alt="locked"
+                                                                 *ngIf="data().fixKostenGesperrt">
           </div>
         </div>
-      </div>
-      <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
-        <div class="budget__element-label-fixkosten" (click)="onGeplanteAusgabenClicked()">
-          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
-               *ngIf="!isgeplanteAusgabenDetailsVisible() && data().geplanteAusgaben && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else chevronDownGeplanteAusgaben">
-          <div class="budget__element-label-fixkosten-text">
-            geplante Ausgaben:
-          </div>
-          <img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onGeplanteAusgabenEditClicked()" alt="edit">
-        </div>
-        <div class="budget__element-data">
-          {{ data().geplanteAusgabenSumme }}€
-        </div>
-      </div>
-      <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isgeplanteAusgabenDetailsVisible()"
-           *ngIf="isgeplanteAusgabenDetailsVisible()">
-        <div *ngFor="let eintrag of data().geplanteAusgaben" class="budget__fixkosten-detail-wrapper">
-          <div class="budget__fixkosten-details-title">
-            - {{ eintrag.data.title }}
-          </div>
-          <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.data.betrag }}€
+        <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isFixkostenDetailsVisible()"
+             *ngIf="isFixkostenDetailsVisible()">
+          <div *ngFor="let eintrag of data().fixKostenEintraege" class="budget__fixkosten-detail-wrapper">
+            <div class="budget__fixkosten-details-title">
+              - {{ eintrag.data.title }}
+            </div>
+            <div class="budget__fixkosten-details-betrag">
+              {{ eintrag.data.betrag }}€
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <hr class="budget__hr">
-    <div class="budget-bottom">
-      <div class="budget__element-wrapper">
-        <div class="budget__element-label">
-          verfügbar für diesen Monat:
-        </div>
-        <div class="budget__element-data">
-          {{ ut.toFixedDown(data().budget, 2) }}€
-        </div>
-      </div>
-      <div class="budget__element-wrapper">
-        <div class="budget__element-label">
-          tägl. Budget:
-        </div>
-        <div class="budget__element-data">
-          {{ ut.toFixedDown(data().dayBudget!, 2) }}€
-        </div>
-      </div>
-      <hr class="budget__hr" *ngIf="data().geplanteAusgabenRestgeld !== undefined && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0">
-      <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
-        <div class="budget__element-label-fixkosten" (click)="onGeplanteAusgabenRestgeldClicked()">
-          <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
-               *ngIf="!isgeplanteAusgabenRestgeldDetailsVisible() && data().geplanteAusgaben && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else chevronDownGeplanteAusgaben">
-          <div class="budget__element-label-fixkosten-text">
-            geplante Ausgaben Restgeld:
+        <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
+          <div class="budget__element-label-fixkosten" (click)="onGeplanteAusgabenClicked()">
+            <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
+                 *ngIf="!isgeplanteAusgabenDetailsVisible() && data().geplanteAusgaben && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else chevronDownGeplanteAusgaben">
+            <div class="budget__element-label-fixkosten-text">
+              geplante Ausgaben:
+            </div>
+            <img class="budget__edit-fixkosten-icon" src="assets/edit.png" (click)="onGeplanteAusgabenEditClicked()" alt="edit">
+          </div>
+          <div class="budget__element-data">
+            {{ data().geplanteAusgabenSumme?.toFixed(2) }}€
           </div>
         </div>
-        <div class="budget__element-data">
-          {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
+        <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isgeplanteAusgabenDetailsVisible()"
+             *ngIf="isgeplanteAusgabenDetailsVisible()">
+          <div *ngFor="let eintrag of data().geplanteAusgaben" class="budget__fixkosten-detail-wrapper">
+            <div class="budget__fixkosten-details-title">
+              - {{ eintrag.data.title }}
+            </div>
+            <div class="budget__fixkosten-details-betrag">
+              {{ eintrag.data.betrag }}€
+            </div>
+          </div>
         </div>
       </div>
-      <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isgeplanteAusgabenRestgeldDetailsVisible()"
-           *ngIf="isgeplanteAusgabenRestgeldDetailsVisible()">
-        <div *ngFor="let eintrag of data().geplanteAusgabenKategorienRestgeld" class="budget__fixkosten-detail-wrapper">
-          <div class="budget__fixkosten-details-title">
-            - {{ eintrag.title }}
+      <hr class="budget__hr">
+      <div class="budget-bottom">
+        <div class="budget__element-wrapper">
+          <div class="budget__element-label">
+            verfügbar für diesen Monat:
           </div>
-          <div class="budget__fixkosten-details-betrag">
-            {{ eintrag.restgeldBetrag.toFixed(2).toString() !== "0.00" ? eintrag.restgeldBetrag.toFixed(2) : 0 }}€
+          <div class="budget__element-data">
+            {{ ut.toFixedDown(data().budget, 2) }}€
+          </div>
+        </div>
+        <div class="budget__element-wrapper">
+          <div class="budget__element-label">
+            tägl. Budget:
+          </div>
+          <div class="budget__element-data">
+            {{ ut.toFixedDown(data().dayBudget!, 2) }}€
+          </div>
+        </div>
+        <hr class="budget__hr" *ngIf="data().geplanteAusgabenRestgeld !== undefined && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0">
+        <div class="budget__element-wrapper-fixkosten" [class.grayed-out-text]="data().totalBudget <= 0">
+          <div class="budget__element-label-fixkosten" (click)="onGeplanteAusgabenRestgeldClicked()">
+            <img class="budget__fixkosten-chevron" src="assets/chevron-right.png" alt=">"
+                 *ngIf="!isgeplanteAusgabenRestgeldDetailsVisible() && data().geplanteAusgaben && data().geplanteAusgabenKategorienRestgeld && data().geplanteAusgabenKategorienRestgeld!.length > 0; else chevronDownGeplanteAusgaben">
+            <div class="budget__element-label-fixkosten-text">
+              geplante Ausgaben Restgeld:
+            </div>
+          </div>
+          <div class="budget__element-data">
+            {{ ut.toFixedDown(data().geplanteAusgabenRestgeld!, 2) }}€
+          </div>
+        </div>
+        <div class="budget__fixkosten-details-hidden" [class.budget__fixkosten-details]="isgeplanteAusgabenRestgeldDetailsVisible()"
+             *ngIf="isgeplanteAusgabenRestgeldDetailsVisible()">
+          <div *ngFor="let eintrag of data().geplanteAusgabenKategorienRestgeld" class="budget__fixkosten-detail-wrapper">
+            <div class="budget__fixkosten-details-title">
+              - {{ eintrag.title }}
+            </div>
+            <div class="budget__fixkosten-details-betrag">
+              {{ eintrag.restgeldBetrag.toFixed(2).toString() !== "0.00" ? eintrag.restgeldBetrag.toFixed(2) : 0 }}€
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 
   <ng-template #noMonth>
     <div class="no-month">

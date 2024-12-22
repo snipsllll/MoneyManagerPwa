@@ -1,7 +1,12 @@
 <div class="home">
   <app-top-bar></app-top-bar>
-  <app-buchungen-list></app-buchungen-list>
-  <div class="home__add-button" (click)="onPlusClicked()">
-    +
-  </div>
+  <app-buchungen-list *ngIf="!isDataLoading; else loading"></app-buchungen-list>
+  <app-plus-button (click)="onPlusClicked()"></app-plus-button>
 </div>
+
+<ng-template #loading>
+  <div class="home__loading-gif-wrapper">
+    <img src="assets/loading-gif.gif" class="home__loading-gif">
+  </div>
+
+</ng-template>

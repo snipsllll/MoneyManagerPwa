@@ -1,0 +1,131 @@
+.password-reset {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+}
+
+.password-reset__logo-wrapper {
+  margin-top: 90px;
+}
+
+.password-reset__logo {
+  height: 200px;
+  width: 200px;
+}
+
+.password-reset__before-email-send, .password-reset__after-email-send {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+}
+
+.password-reset__error-message {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  color: #ff0000;
+  font-size: 15px;
+  min-height: 25px;
+}
+
+.password-reset__data-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.password-reset__data-input-element-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+
+.password-reset__data-input-label {
+  color: #404040;
+  font-size: 15px;
+}
+
+.password-reset__data-input-element {
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  height: 50px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+  border-bottom: 2px solid black;
+  box-shadow: #4c586a 3px 1px 2px;
+  background-color: #f9faff;
+}
+
+.password-reset__data-input-element:focus {
+  background-color: white;
+  outline: none;
+}
+
+.password-reset__input-red {
+  background-color: #ffd1d1 !important;
+}
+
+.password-reset__info-box-wrapper {
+  width: 100%;
+  margin: 20px 0 110px 0;
+}
+
+.password-reset__info-box-wrapper-after-email-send {
+  width: 100%;
+  margin: 20px 0 150px 0;
+}
+
+.password-reset__buttons-wrapper {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.password-reset__button {
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 24px;
+  background-color: #7bc2fd;
+  height: 35px;
+  width: 200px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+.password-reset__button:active {
+  background-color: #9cd5ff;
+}
+
+.password-reset__back-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-decoration: underline;
+}
+
+.password-reset__loading-gif {
+  width: 41px;
+  height: 41px;
+  margin-bottom: 15px;
+}
+
+.password-reset__version {
+  display: flex;
+  flex-grow: 1;
+  align-items: end;
+  margin-bottom: 10px;
+  color: #919193;
+}

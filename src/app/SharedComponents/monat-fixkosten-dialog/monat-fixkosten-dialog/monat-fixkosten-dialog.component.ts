@@ -46,6 +46,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
     }
 
     this.oldElements = this.utils.clone(this.viewModel.elemente);
+    console.log(this.viewModel)
   }
 
   onCancelClicked() {
@@ -79,24 +80,26 @@ export class MonatFixkostenDialogComponent implements OnInit {
       return true;
     }
 
+    let hasChanged = false;
+
     for (let i = 0; i < this.viewModel.elemente.length; i++) {
       if(this.oldElements[i].data.title !== this.viewModel.elemente[i].data.title)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.beschreibung !== this.viewModel.elemente[i].data.beschreibung)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.betrag !== this.viewModel.elemente[i].data.betrag)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.isExcluded !== this.viewModel.elemente[i].data.isExcluded)
-        return true;
+        hasChanged = true;
       if(this.oldElements[i].data.isStandardFixkostenEintrag !== this.viewModel.elemente[i].data.isStandardFixkostenEintrag)
-        return true;
+        hasChanged = true;
     }
 
-    return false;
+    return hasChanged;
   }
 
   checkDarfSpeichern() {
-    return true;
+    return this.checkHasChanged();
   }
 
   onPlusClicked() {
@@ -125,12 +128,12 @@ export class MonatFixkostenDialogComponent implements OnInit {
           {
             label: 'ausschließen',
             onClick: this.onAusschliessenClicked,
-            grayedOut: eintrag.data.isExcluded
+            disabled: eintrag.data.isExcluded
           },
           {
             label: 'einschließen',
             onClick: this.onEinschliessenClicked,
-            grayedOut: !eintrag.data.isExcluded
+            disabled: !eintrag.data.isExcluded
           }
         ]
         : [
@@ -207,18 +210,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
   }
 
   onDeleteClicked = (x: EditDialogData) => {
-    const confirmDialogViewModel: ConfirmDialogViewModel = {
-      title: 'Eintrag Löschen?',
-      message: 'Wollen Sie den Eintrag wirklich löschen? Der Eintrag Kann nicht wieder hergestellt werden!',
-      onConfirmClicked: () => {
-        this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
-        this.dataService.update()
-      },
-      onCancelClicked: () => {
-      }
-    }
-
-    this.dialogService.showConfirmDialog(confirmDialogViewModel)
+    this.viewModel.elemente.splice(this.viewModel.elemente.findIndex(eintrag => eintrag.id === x.id), 1);
+    this.dataService.update(false);
   }
 
   onAusschliessenClicked = (eintragx: EditDialogData) => {
