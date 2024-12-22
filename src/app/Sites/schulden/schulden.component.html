@@ -1,5 +1,27 @@
 <app-top-bar></app-top-bar>
-<div class="schulden">
-  <app-list-element [viewModel]="getListElemViewModelForSchuldenEintrag(schuldenEintrag)"  *ngFor="let schuldenEintrag of schuldenEintraege"></app-list-element>
+<div class="schulden-wrapper">
+  <div class="schulden" *ngIf="elements().length > 0; else keineEintraege">
+    <app-list-element [viewModel]="getListElemViewModelForSchuldenEintrag(schuldenEintrag)"
+                      *ngFor="let schuldenEintrag of elements()"></app-list-element>
+  </div>
+  <div class="schulden__spacer"></div>
+
+  <div class="schulden__summe-wrapper">
+    <div class="schulden__summe">
+      <div class="schulden__summe-label">
+        Summe:
+      </div>
+      <div class="schulden__summe-data">
+        {{summe.toFixed(2)}}€
+      </div>
+    </div>
+    <app-plus-button (click)="onPlusClicked()" [fixed]="false" class="schulden__add-button"></app-plus-button>
+  </div>
 </div>
-<app-plus-button (click)="onPlusClicked()"></app-plus-button>
+
+
+<ng-template #keineEintraege>
+  <div class="keine-eintraege">
+    noch keine Einträge vorhanden
+  </div>
+</ng-template>

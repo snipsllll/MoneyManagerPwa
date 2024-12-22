@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, computed, OnInit} from '@angular/core';
 import {TopbarService} from "../../Services/TopBarService/topbar.service";
 import {DataChangeService} from "../../Services/DataChangeService/data-change.service";
 import {ISchuldenEintrag, ISchuldenEintragData} from "../../Models/Interfaces";
@@ -10,6 +10,7 @@ import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditD
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../Models/NewInterfaces";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
+import {DataService} from "../../Services/DataService/data.service";
 
 @Component({
   selector: 'app-schulden',
@@ -17,18 +18,21 @@ import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
   styleUrl: './schulden.component.css'
 })
 export class SchuldenComponent implements OnInit{
+  elements = computed(() => {
+    this.dataService.updated();
+    const x = this.dataService.userData.schuldenEintraege;
+    this.updateSchulden(x);
+    return x;
+  })
+  summe = 0;
 
-  schuldenEintraege: ISchuldenEintrag[] = [];
-
-  constructor(private topbarService: TopbarService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService, public dialogService: DialogService) {
+  constructor(private dataService: DataService, private topbarService: TopbarService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService, public dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.topbarService.title.set('SCHULDEN');
     this.topbarService.dropDownSlidIn.set(false);
     this.topbarService.isDropDownDisabled = true;
-
-    this.schuldenEintraege = this.dataProvider.getAlleSchuldenEintraege();
   }
 
   onPlusClicked() {
@@ -112,6 +116,16 @@ export class SchuldenComponent implements OnInit{
   }
 
   onZahlungDialogSaveClicked = (data: ListElementData) => {
+    console.log(data)
+    const newSchuldenEintrag: ISchuldenEintrag = {
+      id: data.id!,
+      data: {
+        betrag: data.betrag!,
+        title: data.title!,
+        beschreibung: data.zusatz ?? ''
+      }
+    }
+    this.dataChangeService.editSchuldenEintrag(newSchuldenEintrag)
     this.dialogService.isZahlungDialogVisible = false;
   }
 
@@ -163,6 +177,12 @@ export class SchuldenComponent implements OnInit{
 
   onCreateCancelClicked = () => {
 
+  }
+  private updateSchulden(eintraege: ISchuldenEintrag[]) {
+    this.summe = 0;
+    eintraege.forEach(eintrag => {
+      this.summe += eintrag.data.betrag;
+    })
   }
 
 }

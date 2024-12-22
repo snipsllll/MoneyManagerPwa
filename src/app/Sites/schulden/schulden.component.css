@@ -1,0 +1,60 @@
+.schulden__summe-wrapper {
+  height: 105px;
+  width: 100%;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  background-color: #77afd1;
+}
+
+.schulden__summe-label {
+  flex-grow: 1;
+  font-weight: bold;
+}
+
+.schulden__summe-data {
+  width: fit-content;
+  font-weight: bold;
+}
+
+.schulden__add-button {
+  padding: 15px;
+}
+
+.schulden__spacer {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.keine-eintraege {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: lightgrey;
+  flex-grow: 1;
+}
+
+.schulden__summe {
+  background-color: #c5dff8;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: calc(60% - 40px);
+  padding: 20px;
+  border-radius: 10px;
+  margin-left: 20px;
+  border: 2px solid #4f82b3;
+}
+
+.schulden-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 70px);
+}
+
+.schulden__add-button {
+  padding: 15px;
+}
