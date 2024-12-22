@@ -3,7 +3,7 @@ import {Router} from "@angular/router";
 import {AdminService} from "../../admin.service";
 import {versionName} from "../../Models/Classes/versionName";
 import {TempService} from "../../temp.service";
-import { Location } from '@angular/common';
+import {Location} from '@angular/common';
 import {UT} from "../../Models/Classes/UT";
 
 @Component({
@@ -11,7 +11,7 @@ import {UT} from "../../Models/Classes/UT";
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   email?: string;
   pw?: string;
@@ -23,21 +23,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMessage?: string = '';
 
   isLoading = false;
-  private sub: any;
   private utils = new UT();
 
   constructor(private location: Location, private tempService: TempService, private adminService: AdminService, private router: Router) {
   }
 
   ngOnInit() {
-    this.sub = this.location.subscribe((event) => {
-      // Zurück-Taste gedrückt
-      if (this.router.url === '/') {
-        this.location.forward(); // Verhindert Zurück-Navigation
-      }
-    });
-
-    if(this.tempService.dataUsedForRegister) {
+    if (this.tempService.dataUsedForRegister) {
       this.email = this.tempService.dataUsedForRegister.email;
       this.pw = this.tempService.dataUsedForRegister.password;
       this.tempService.dataUsedForRegister = undefined;
@@ -50,13 +42,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.tempService.autoLoginError.subscribe(autoLoginError => {
       this.errorMessage = autoLoginError.message ?? '';
     })
-  }
-
-  ngOnDestroy() {
-    // Abonnement beenden
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
   }
 
   onLoginClicked() {
