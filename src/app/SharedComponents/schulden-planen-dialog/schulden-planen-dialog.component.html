@@ -1,0 +1,49 @@
+<div class="schulden-planen-dialog-wrapper">
+  <div class="floating-box schulden-planen-dialog">
+    <div class="schulden-planen-dialog__top">
+      <div class="schulden-planen-dialog__top-label">
+        {{viewModel.schuldentitle}}
+      </div>
+      <div class="schulden-planen-dialog__top-betrag">
+        {{viewModel.schuldenbetrag}}€
+      </div>
+    </div>
+    <div class="schulden-planen-dialog__list-wrapper">
+      <div class="schulden-planen-dialog__list">
+        <div *ngIf="viewModel.schuldenPlanEintraege.length > 0; else keineEintraege">
+          <div *ngFor="let eintrag of viewModel.schuldenPlanEintraege">
+            <app-list-element [viewModel]="getViewModel(eintrag)"></app-list-element>
+          </div>
+          <div style="height: calc(100vh - 70px - 190px)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="schulden-planen-dialog__bottom-wrapper">
+      <div class="schulden-planen-dialog__summe-wrapper">
+        <div class="schulden-planen-dialog__summe-label">
+          noch offen:
+        </div>
+        <div class="schulden-planen-dialog__summe-data">
+          <b>{{ summe().toFixed(2) }}€</b>
+        </div>
+      </div>
+      <div class="schulden-planen-dialog__add-button-wrapper">
+        <app-plus-button (click)="onPlusClicked()" [fixed]="false"></app-plus-button>
+      </div>
+    </div>
+    <div class="schulden-planen-dialog__buttons-wrapper">
+      <div class="schulden-planen-dialog__button" (click)=onCancelClicked()>
+        abbrechen
+      </div>
+      <div class="schulden-planen-dialog__button" [class.schulden-planen-dialog__grayed-out]="!this.checkDarfSpeichern()" (click)="onSaveClicked()">
+        speichern
+      </div>
+    </div>
+    <ng-template #keineEintraege>
+      <div class="schulden-planen-dialog__keine-eintraege">
+        noch keine Einträge vorhanden
+      </div>
+    </ng-template>
+  </div>
+</div>
+

@@ -13,6 +13,7 @@ import {
 } from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../DataService/data.service";
 import {NotificationPopupViewModel} from "../../Models/ViewModels/NotificationPopupViewModel";
+import {SchuldenPlanenDialogViewModel} from "../../Models/ViewModels/SchuldenPlanenDialogViewModel";
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,9 @@ export class DialogService {
 
   isZahlungDialogVisible = false;
   zahlungDialogViewModel?: ZahlungDialogViewModel;
+
+  isSchuldenPlananDialogVisible = false;
+  schuldenPlanenDialogViewModel?: SchuldenPlanenDialogViewModel;
 
   constructor(private dataService: DataService, private dataChangeService: DataChangeService, private dataProvider: DataProviderService) {
   }
@@ -107,6 +111,11 @@ export class DialogService {
   showNotificationPopup(notificationPopupViewModel: NotificationPopupViewModel) {
     this.isNotificationPopupVisible = true;
     this.notificationPopupViewModel = notificationPopupViewModel;
+  }
+
+  showSchuldenPlanenDialog(viewModel: SchuldenPlanenDialogViewModel) {
+    this.isSchuldenPlananDialogVisible = true;
+    this.schuldenPlanenDialogViewModel = viewModel;
   }
 }
 

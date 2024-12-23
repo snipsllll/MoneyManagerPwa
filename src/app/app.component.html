@@ -48,4 +48,10 @@
 
     </app-notification-popup>
   }
+
+  @if (dialogService.isSchuldenPlananDialogVisible) {
+    <app-schulden-planen-dialog [viewModel]="dialogService.schuldenPlanenDialogViewModel!">
+
+    </app-schulden-planen-dialog>
+  }
 </div>

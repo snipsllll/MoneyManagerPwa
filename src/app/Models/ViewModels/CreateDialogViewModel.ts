@@ -11,4 +11,5 @@ export interface CreateDialogEintrag {
   betrag?: number;
   beschreibung?: string;
   vonHeuteAbziehen?: boolean;
+  date?: Date;
 }

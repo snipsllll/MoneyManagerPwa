@@ -54,6 +54,7 @@ const firebaseConfig = {
   appId: "1:531026768134:web:54b164a6f7cb0731e52e87"
 };
 import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlung-dialog.component';
+import { SchuldenPlanenDialogComponent } from './SharedComponents/schulden-planen-dialog/schulden-planen-dialog.component';
 
 @NgModule({
     declarations: [
@@ -95,7 +96,8 @@ import { ZahlungDialogComponent } from './SharedComponents/zahlung-dialog/zahlun
         InfoBoxComponent,
         SchuldenComponent,
         PlusButtonComponent,
-        ZahlungDialogComponent
+        ZahlungDialogComponent,
+        SchuldenPlanenDialogComponent
     ],
     imports: [
         BrowserModule,

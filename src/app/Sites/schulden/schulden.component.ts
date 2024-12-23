@@ -10,6 +10,7 @@ import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditD
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../../Services/DataService/data.service";
+import {SchuldenPlanenDialogViewModel} from "../../Models/ViewModels/SchuldenPlanenDialogViewModel";
 
 @Component({
   selector: 'app-schulden',
@@ -101,6 +102,23 @@ export class SchuldenComponent implements OnInit{
   }
 
   onSchuldenEintragPlanClicked = (data: ListElementData) => {
+    const schuldenPlanenDialogViewModel: SchuldenPlanenDialogViewModel = {
+      schuldenPlanEintraege: [
+        {
+          id: 1,
+          data: {
+            betrag: 12,
+            monatStartDate: new Date()
+          }
+        }
+      ],
+      onAbortClicked: () => {},
+      onSaveClicked: schuldenPlanEintraege => {},
+      schuldenbetrag: 123,
+      schuldentitle: 'hidsafasssssssssssssssssssssssssssssss'
+    }
+
+    this.dialogService.showSchuldenPlanenDialog(schuldenPlanenDialogViewModel);
     console.log('plan clicked', data)
   }
 
