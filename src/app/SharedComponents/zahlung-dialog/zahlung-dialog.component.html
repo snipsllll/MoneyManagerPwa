@@ -24,7 +24,7 @@
       <div class="zahlung-dialog__cancel-button zahlung-dialog__button" (click)="onAbortClicked()">
         abbrechen
       </div>
-      <div class="zahlung-dialog__confirm-button zahlung-dialog__button" (click)="onSaveClicked()">
+      <div class="zahlung-dialog__confirm-button zahlung-dialog__button" [class.disabled]="!isSaveAble.getValue()" (click)="onSaveClicked()">
         speichern
       </div>
     </div>

@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-zahlung-dialog',
@@ -8,19 +9,27 @@ import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
 })
 export class ZahlungDialogComponent {
 
-  @Input() viewModel?: ZahlungDialogViewModel;
+  @Input() viewModel!: ZahlungDialogViewModel;
   vollerBetrag: boolean = false;
+  isSaveAble = new BehaviorSubject<boolean>(false);
 
   onAbortClicked() {
     this.viewModel?.onSaveClicked(this.viewModel!.eintrag)
   }
 
   onSaveClicked() {
-    this.viewModel?.onSaveClicked(this.viewModel!.eintrag)
+    if(this.isSaveAble.getValue())
+      this.viewModel?.onSaveClicked(this.viewModel!.eintrag)
   }
 
   onEingegebenerBetragChanged() {
+    this.viewModel.eingegebenerBetrag = this.viewModel.eingegebenerBetrag! < this.viewModel.zuZahlenderBetrag! ? this.viewModel.eingegebenerBetrag! : this.viewModel.zuZahlenderBetrag;
     this.viewModel!.eintrag.betrag = this.viewModel!.zuZahlenderBetrag! - (this.viewModel!.eingegebenerBetrag ?? 0);
+    this.updateIsSaveAble()
+  }
+
+  updateIsSaveAble() {
+    this.isSaveAble.next(this.viewModel.eingegebenerBetrag! > 0);
   }
 
 }
