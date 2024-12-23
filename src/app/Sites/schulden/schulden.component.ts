@@ -7,7 +7,6 @@ import {ListElementData, ListElementViewModel} from "../../Models/ViewModels/Lis
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
-import {IFixkostenEintrag, IFixkostenEintragData} from "../../Models/NewInterfaces";
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {ZahlungDialogViewModel} from "../../Models/Auswertungen-Interfaces";
 import {DataService} from "../../Services/DataService/data.service";
@@ -111,11 +110,13 @@ export class SchuldenComponent implements OnInit{
       onSaveClicked: this.onZahlungDialogSaveClicked,
       eintrag: data
     }
+    console.log(data)
 
     this.dialogService.showZahlungDialog(zahlungsDialogViewModel);
   }
 
   onZahlungDialogSaveClicked = (data: ListElementData) => {
+    console.log(123123)
     console.log(data)
     const newSchuldenEintrag: ISchuldenEintrag = {
       id: data.id!,
@@ -125,6 +126,7 @@ export class SchuldenComponent implements OnInit{
         beschreibung: data.zusatz ?? ''
       }
     }
+    console.log(newSchuldenEintrag)
     this.dataChangeService.editSchuldenEintrag(newSchuldenEintrag)
     this.dialogService.isZahlungDialogVisible = false;
   }

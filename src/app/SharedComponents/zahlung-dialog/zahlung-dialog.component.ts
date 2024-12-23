@@ -12,11 +12,15 @@ export class ZahlungDialogComponent {
   vollerBetrag: boolean = false;
 
   onAbortClicked() {
-    this.viewModel?.onSaveClicked(this.viewModel?.eintrag)
+    this.viewModel?.onSaveClicked(this.viewModel!.eintrag)
   }
 
   onSaveClicked() {
-    this.viewModel?.onSaveClicked(this.viewModel?.eintrag)
+    this.viewModel?.onSaveClicked(this.viewModel!.eintrag)
+  }
+
+  onEingegebenerBetragChanged() {
+    this.viewModel!.eintrag.betrag = this.viewModel!.zuZahlenderBetrag! - (this.viewModel!.eingegebenerBetrag ?? 0);
   }
 
 }
