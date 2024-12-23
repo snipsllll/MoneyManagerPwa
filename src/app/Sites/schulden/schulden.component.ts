@@ -21,7 +21,8 @@ export class SchuldenComponent implements OnInit{
     this.dataService.updated();
     const x = this.dataService.userData.schuldenEintraege;
     this.updateSchulden(x);
-    return x;
+    const y = x.filter(eintrag => eintrag.data.betrag > 0).concat(x.filter(eintrag => eintrag.data.betrag === 0));
+    return y;
   })
   summe = 0;
 
@@ -75,7 +76,8 @@ export class SchuldenComponent implements OnInit{
       },
       settings: {
         doMenuExist: true,
-        doDetailsExist: false
+        doDetailsExist: false,
+        isGrayedOut: schuldenEintrag.data.betrag === 0
       }
     }
   }
@@ -110,14 +112,11 @@ export class SchuldenComponent implements OnInit{
       onSaveClicked: this.onZahlungDialogSaveClicked,
       eintrag: data
     }
-    console.log(data)
 
     this.dialogService.showZahlungDialog(zahlungsDialogViewModel);
   }
 
   onZahlungDialogSaveClicked = (data: ListElementData) => {
-    console.log(123123)
-    console.log(data)
     const newSchuldenEintrag: ISchuldenEintrag = {
       id: data.id!,
       data: {
@@ -126,7 +125,6 @@ export class SchuldenComponent implements OnInit{
         beschreibung: data.zusatz ?? ''
       }
     }
-    console.log(newSchuldenEintrag)
     this.dataChangeService.editSchuldenEintrag(newSchuldenEintrag)
     this.dialogService.isZahlungDialogVisible = false;
   }

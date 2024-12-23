@@ -23,14 +23,13 @@ export class ListElementComponent implements OnInit{
   ut: UT = new UT();
 
   showBoxMenu = new BehaviorSubject<boolean>(false);
-  boxMenuElemente: string[] = ['e1', 'e2', 'e3'];
 
   constructor() {
-
   }
 
   ngOnInit() {
     this.menuItems = this.viewModel.data.menuItems;
+    console.log(this.viewModel)
   }
 
   onMenuClicked() {
