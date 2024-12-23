@@ -85,7 +85,7 @@ export class SchuldenPlanenDialogComponent {
     for (let i = 0; i < this.viewModel.schuldenPlanEintraege.length; i++) {
       if(this.oldElements[i].data.betrag !== this.viewModel.schuldenPlanEintraege[i].data.betrag)
         hasChanged = true;
-      if(this.dataProvider.getMonthByDate(this.viewModel.schuldenPlanEintraege[i].data.monatStartDate) !== undefined && this.oldElements[i].data.monatStartDate !== this.viewModel.schuldenPlanEintraege[i].data.monatStartDate)
+      if(this.oldElements[i].data.monatStartDate.toLocaleDateString() !== this.viewModel.schuldenPlanEintraege[i].data.monatStartDate.toLocaleDateString())
         hasChanged = true;
     }
 

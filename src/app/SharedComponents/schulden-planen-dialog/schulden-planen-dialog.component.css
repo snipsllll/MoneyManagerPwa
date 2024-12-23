@@ -9,10 +9,10 @@
 
 .schulden-planen-dialog {
   position: relative;
-  top: 120px;
+  top: 60px;
   left: 20px;
   padding: 15px 10px 10px 10px;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 150px);
   width: calc(100vw - 60px);
   margin: 0;
   display: flex;
@@ -123,12 +123,12 @@
   padding: 5px 10px 15px 10px;
   wídth: calc(100% - 20px);
   align-items: center;
-  font-size: 30px;
+  font-size: 20px;
 }
 
 .schulden-planen-dialog__top-label {
   margin-right: 20px;
-  max-width: 70%;
+  flex-grow: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

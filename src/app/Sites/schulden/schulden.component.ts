@@ -112,10 +112,10 @@ export class SchuldenComponent implements OnInit{
           }
         }
       ],
-      onAbortClicked: () => {},
-      onSaveClicked: schuldenPlanEintraege => {},
-      schuldenbetrag: 123,
-      schuldentitle: 'hidsafasssssssssssssssssssssssssssssss'
+      onAbortClicked: () => {this.dialogService.isSchuldenPlananDialogVisible = false},
+      onSaveClicked: schuldenPlanEintraege => {this.dialogService.isSchuldenPlananDialogVisible = false},
+      schuldenbetrag: data.betrag!,
+      schuldentitle: data.title
     }
 
     this.dialogService.showSchuldenPlanenDialog(schuldenPlanenDialogViewModel);
