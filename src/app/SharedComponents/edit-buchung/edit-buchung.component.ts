@@ -205,6 +205,7 @@ export class EditBuchungComponent implements OnInit {
   onDateChange() {
     if (this.date)
       this.buchung()!.data.date = new Date(this.date);
+    this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.buchung()!.data.date);
 
     this.updateDate();
     this.updateSaveButton();

@@ -179,6 +179,8 @@ export class CreateBuchungComponent {
     if (this.selectedDate)
       this.buchung!.date = new Date(this.selectedDate);
 
+    this.geplanteAusgabenKategorien = this.dataProvider.getGeplanteAusgabenKategorienForMonth(this.buchung.date);
+
     this.updateDate();
     this.updateSaveButton();
   }
