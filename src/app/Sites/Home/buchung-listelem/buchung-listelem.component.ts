@@ -63,4 +63,12 @@ export class BuchungListelemComponent implements OnInit{
     };
     this.dialogService.showConfirmDialog(confirmDialogViewModel);
   }
+
+  getBuchungBetrag(): string {
+    const betrag = this.ut.toFixedDown(this.buchung.data.betrag!, 2);
+    if(betrag! < 0) {
+      return `+${(betrag ?? 0) * (-1)}€`
+    }
+    return `-${betrag?.toString()}€` ?? 'kein Betrag';
+  }
 }

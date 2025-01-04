@@ -26,7 +26,7 @@ export class BuchungenListDayComponent implements OnInit{
 
   alleDayBuchungen = computed(() => {
     this.dataService.updated()
-    return (this.day.geplanteAusgabenBuchungen ?? []).concat(this.day.buchungen ?? [])
+    return this.sortBuchungen((this.day.geplanteAusgabenBuchungen ?? []).concat(this.day.buchungen ?? []))
   });
 
   ut: UT = new UT();
@@ -74,6 +74,23 @@ export class BuchungenListDayComponent implements OnInit{
         break;
     }
     return 0;
+  }
+  private sortBuchungen(buchungen: IBuchung[]) {
+    const sortedBuchungen: IBuchung[] = [];
+
+    buchungen.forEach(buchung => {
+      if(buchung.data.betrag! < 0) {
+        sortedBuchungen.push(buchung);
+      }
+    })
+
+    buchungen.forEach(buchung => {
+      if(buchung.data.betrag! >= 0) {
+        sortedBuchungen.push(buchung);
+      }
+    })
+
+    return sortedBuchungen;
   }
 
   protected readonly TagesAnzeigeOptions = TagesAnzeigeOptions;

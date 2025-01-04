@@ -17,6 +17,7 @@ export class CreateBuchungComponent {
   buchung!: IBuchungData;
   oldBuchung!: IBuchungData;
   buchungen: IBuchung[] = []; //für Searchbox
+  isEinnahme = false;
 
   selectedDate?: string;
   showBetragWarning = false;
@@ -100,18 +101,19 @@ export class CreateBuchungComponent {
   }
 
   onSaveClicked() {
-    if (this.buchung.betrag !== 0 && this.buchung.betrag !== null) {
+    const buchung = this.getToSaveBuchung();
+    if (buchung.betrag !== 0 && buchung.betrag !== null) {
       if (!this.isSaveButtonDisabled()) {
         let isBetragZuHoch = this.isBetragZuHoch();
 
-        if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(this.buchung!.date) || this.dataProvider.getMonthByDate(this.buchung!.date).totalBudget! < 1) {
-          this.dataChangeService.addBuchung(this.buchung);
+        if (!isBetragZuHoch || !this.dataProvider.getMonthByDate(buchung!.date) || this.dataProvider.getMonthByDate(buchung!.date).totalBudget! < 1) {
+          this.dataChangeService.addBuchung(buchung);
           this.router.navigate(['home']);
         } else {
           if (this.dataProvider.getSettings().toHighBuchungenEnabled) {
             const confirmDialogViewModel: ConfirmDialogViewModel = {
               title: 'Betrag ist zu hoch',
-              message: `Der Betrag überschreitet dein Budget für ${this.buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + this.buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
+              message: `Der Betrag überschreitet dein Budget für ${buchung!.date.toLocaleDateString() === new Date().toLocaleDateString() ? 'heute' : 'den ' + buchung!.date.toLocaleDateString()}. Trotzdem fortfahren?`,
               onCancelClicked: () => {
                 this.dialogService.isConfirmDialogVisible = false;
               },
@@ -213,8 +215,12 @@ export class CreateBuchungComponent {
     this.updateSaveButton();
   }
 
+  onIsEinnahmeCheckboxChange() {
+    this.updateSaveButton();
+  }
+
   private hasBuchungChanges() {
-    return ((this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && new Date(this.buchung.date).getDate() === new Date(this.oldBuchung.date).getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === 0)
+    return (this.isEinnahme === false && (this.buchung.betrag === null || this.buchung.betrag === 0) && this.buchung.title === '' && this.buchung.beschreibung === '' && new Date(this.buchung.date).getDate() === new Date(this.oldBuchung.date).getDate() && this.buchung.time === this.oldBuchung.time && this.buchung.buchungsKategorie === 0)
   }
 
   private isSaveAble() {
@@ -247,6 +253,14 @@ export class CreateBuchungComponent {
       beschreibung: '',
       geplanteBuchung: false
     };
+  }
+
+  getToSaveBuchung() {
+    const buchung = this.buchung;
+    if(this.isEinnahme) {
+      buchung.betrag = (buchung.betrag ?? 0) * (-1);
+    }
+    return buchung;
   }
 
   protected isAvailableMoneyValid() {
