@@ -1,7 +1,7 @@
 <div class="eintrag-listelem" [class.first]="first" [class.last]="last">
   <div class="eintrag-listelem__menu-button__left" (click)="onBuchungClicked(buchung)">
     <div class="eintrag-listelem__betrag all-centered" [class.gray-text]="buchung.data.buchungsKategorie == -1">
-      <b>-{{ ut.toFixedDown(buchung.data.betrag!, 2) }}€</b>
+      <b>{{ getBuchungBetrag() }}</b>
     </div>
     <div class="a">
       <div class="eintrag-listelem__title all-centered">
