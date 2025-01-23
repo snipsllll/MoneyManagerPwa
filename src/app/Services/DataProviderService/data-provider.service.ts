@@ -496,7 +496,9 @@ export class DataProviderService {
       week.days.forEach(day => {
         day.geplanteAusgabenBuchungen?.forEach(geplanteBuchung => {
           let index = geplanteAusgaben.findIndex(eintrag => eintrag.id! ==  +(geplanteBuchung.data.buchungsKategorie!));
-          geplanteAusgaben[index].restgeldBetrag -= geplanteBuchung.data.betrag ?? 0;
+          if(geplanteAusgaben[index] !== undefined) {
+            geplanteAusgaben[index].restgeldBetrag -= geplanteBuchung.data.betrag ?? 0;
+          }
         })
       })
     })
