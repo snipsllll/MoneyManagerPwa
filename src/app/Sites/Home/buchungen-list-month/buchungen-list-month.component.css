@@ -3,14 +3,13 @@
   margin-top: 8px;
   padding: 10px;
   overflow: hidden; /* Begrenze Inhalte, die animiert werden */
-  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animation für Höhe und Transparenz */
+  transition: max-height 0.15s ease-in-out; /* Animation für Höhe und Transparenz */
   max-height: 25px; /*Eingeklappter Zustand */
   user-select: none;
 }
 
 .buchungen-list-month.expanded {
-  max-height: 1000px;  /*Genug Platz für den gesamten Inhalt */
-  opacity: 1; /* Sichtbar */
+  max-height: 5000px;  /*Genug Platz für den gesamten Inhalt */
   user-select: none;
 }
 

@@ -1,4 +1,4 @@
-import {Component, computed, OnInit, signal} from '@angular/core';
+import {Component, computed, signal} from '@angular/core';
 import {Day} from "../../../Models/Interfaces";
 import {DataService} from "../../../Services/DataService/data.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
@@ -11,7 +11,6 @@ import {IBuchungenlistMonth} from "../../../Models/NewInterfaces";
 })
 export class BuchungenListComponent {
   date = new Date();
-  isGeplantVisible = signal<boolean>(false);
   days = computed(() => {
     this.dataService.updated();
     return this.orderByDateDesc(this.dataProvider.getAllDaysWithBuchungen());
@@ -44,7 +43,6 @@ export class BuchungenListComponent {
       .filter(day => new Date(day.date).getTime() <= Date.now()) // Filtere Tage in der Zukunft
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .reduce((acc: IBuchungenlistMonth[], day) => {
-        const monthKey = new Date(new Date(day.date).getFullYear(), new Date(day.date).getMonth(), 1).toISOString().slice(0, 7); // Ensure the correct month
         const monthName = new Date(day.date).toLocaleString('default', { month: 'long', year: 'numeric' }); // Get readable month name
         const monthIndex = acc.findIndex(group => group.monthName === monthName);
         if (monthIndex > -1) {
@@ -74,18 +72,6 @@ export class BuchungenListComponent {
     });
   }
 
-  getAnzahlFutureBuchungen() {
-    const futureDays = this.getFutureDays();
-    let anzahlBuchungen = 0;
-    futureDays.forEach(futureDay => {
-      futureDay.buchungen?.forEach(buchung => {
-        anzahlBuchungen++;
-      })
-    })
-
-    return anzahlBuchungen;
-  }
-
   getMonthForGeplant() {
     const geplantMonth: IBuchungenlistMonth = {
       monthName: 'Geplant',
@@ -95,17 +81,5 @@ export class BuchungenListComponent {
     }
 
     return geplantMonth
-  }
-
-  setIsGeplantVisibleTrue() {
-    this.isGeplantVisible.set(true);
-  }
-
-  setIsGeplantVisibleFalse() {
-    this.isGeplantVisible.set(false);
-  }
-
-  toggleIsGeplantVisible() {
-    this.isGeplantVisible.set(!this.isGeplantVisible());
   }
 }
