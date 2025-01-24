@@ -41,6 +41,7 @@ export class BuchungenListComponent {
         day.buchungen?.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
         return day;
       })
+      .filter(day => new Date(day.date).getTime() <= Date.now()) // Filtere Tage in der Zukunft
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .reduce((acc: IBuchungenlistMonth[], day) => {
         const monthKey = new Date(new Date(day.date).getFullYear(), new Date(day.date).getMonth(), 1).toISOString().slice(0, 7); // Ensure the correct month
@@ -49,7 +50,7 @@ export class BuchungenListComponent {
         if (monthIndex > -1) {
           acc[monthIndex].days.push(day);
         } else {
-          acc.push({ monthName, days: [day], isVisible: true });
+          acc.push({ monthName, days: [day], isVisible: true, isGeplantMonth: false });
         }
         return acc;
       }, []);
@@ -89,7 +90,8 @@ export class BuchungenListComponent {
     const geplantMonth: IBuchungenlistMonth = {
       monthName: 'Geplant',
       days: this.getFutureDays(),
-      isVisible: false
+      isVisible: false,
+      isGeplantMonth: true
     }
 
     return geplantMonth

@@ -1,5 +1,8 @@
-import {Component, Input, OnInit, signal} from '@angular/core';
+import {Component, computed, Input, OnInit, signal} from '@angular/core';
 import {IBuchungenlistMonth} from "../../../Models/NewInterfaces";
+import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
+import {DataService} from "../../../Services/DataService/data.service";
+import {UT} from "../../../Models/Classes/UT";
 
 @Component({
   selector: 'app-buchungen-list-month',
@@ -8,10 +11,15 @@ import {IBuchungenlistMonth} from "../../../Models/NewInterfaces";
 })
 export class BuchungenListMonthComponent implements OnInit {
   @Input() month!: IBuchungenlistMonth;
+  ut: UT = new UT();
 
   isMonthVisible = signal<boolean>(false);
+  monthBudget = computed(() => {
+    this.dataService.updated();
+    return this.dataProvider.getBudgetInfosForMonth(this.month.days[0].date)?.istBudget;
+  })
 
-  constructor() {
+  constructor(private dataService: DataService, private dataProvider: DataProviderService) {
 
   }
 
