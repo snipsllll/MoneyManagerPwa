@@ -2,12 +2,21 @@
   margin-bottom: 10px;
   margin-top: 8px;
   padding: 10px;
+  overflow: hidden; /* Begrenze Inhalte, die animiert werden */
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animation für Höhe und Transparenz */
+  max-height: 25px; /*Eingeklappter Zustand */
+  user-select: none;
 }
 
-.buchungen-list-month__top {
-  display: flex;
-  align-items: center;
-  width: 100%;
+.buchungen-list-month.expanded {
+  max-height: 1000px;  /*Genug Platz für den gesamten Inhalt */
+  opacity: 1; /* Sichtbar */
+  user-select: none;
+}
+
+.buchungen-list-month.collapsed {
+  max-height: 25px; /* Keine Höhe, um eingeklappt zu sein */
+  user-select: none;
 }
 
 .buchungen-list-month__top-visible {
@@ -15,26 +24,29 @@
   align-items: center;
   width: 100%;
   margin-bottom: 10px;
-}
-
-.buchungen-list-month__month-name {
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.buchungen-list-month__month-details-hidden {
-  margin-top: 8px;
-  margin-bottom: 10px !important;
-  padding: 10px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
+  cursor: pointer; /* Zeigt, dass das klickbar ist */
+  user-select: none;
 }
 
 .buchungen-list-month__arrow {
   width: 25px;
   height: 25px;
   margin-left: -5px;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-in-out; /* Pfeil-Animation */
+}
+
+.buchungen-list-month.expanded .buchungen-list-month__arrow {
+  transform: rotate(0deg); /* Pfeil zeigt nach unten */
+}
+
+.buchungen-list-month.collapsed .buchungen-list-month__arrow {
+  transform: rotate(-90deg); /* Pfeil zeigt nach rechts */
+}
+
+.buchungen-list-month__month-name {
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .buchungen-list-month__top-budget {

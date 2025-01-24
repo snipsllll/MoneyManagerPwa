@@ -1,28 +1,16 @@
-@if (isMonthVisible()) {
-  <div class="buchungen-list-month light-floating-box">
-    <div class="buchungen-list-month__top-visible" (click)="toggleIsMonthVisible()">
-      <img src="assets/chevron-down.png" class="buchungen-list-month__arrow">
-      <div class="buchungen-list-month__month-name">
-        {{ month.monthName }}
-      </div>
-      <div class="buchungen-list-month__top-budget" [ngStyle]="+(ut.toFixedDown(monthBudget(), 2))! < 0 ? {'color': 'red'} : {'color': 'green'}" *ngIf="!month.isGeplantMonth">
-        {{ut.toFixedDown(monthBudget(), 2)!}}€
-      </div>
+<div class="buchungen-list-month light-floating-box" [class.expanded]="isMonthVisible()" [class.collapsed]="!isMonthVisible()">
+  <div class="buchungen-list-month__top-visible" (click)="toggleIsMonthVisible()">
+    <img src="assets/chevron-down.png" class="buchungen-list-month__arrow">
+    <div class="buchungen-list-month__month-name">
+      {{ month.monthName }}
     </div>
-    <app-buchungen-list-day *ngFor="let day of month.days" [day]="day">
-
-    </app-buchungen-list-day>
-  </div>
-} @else {
-  <div class="buchungen-list-month__month-details-hidden light-floating-box">
-    <div class="buchungen-list-month__top" (click)="toggleIsMonthVisible()">
-      <img src="assets/chevron-right.png" class="buchungen-list-month__arrow">
-      <div class="buchungen-list-month__month-name">
-        {{ month.monthName }}
-      </div>
-      <div class="buchungen-list-month__top-budget" [ngStyle]="+(ut.toFixedDown(monthBudget(), 2))! < 0 ? {'color': 'red'} : {'color': 'green'}" *ngIf="!month.isGeplantMonth">
-        {{ut.toFixedDown(monthBudget(), 2)!}}€
-      </div>
+    <div class="buchungen-list-month__top-budget"
+         [ngStyle]="+(ut.toFixedDown(monthBudget(), 2))! < 0 ? {'color': 'red'} : {'color': 'green'}"
+         *ngIf="!month.isGeplantMonth">
+      {{ ut.toFixedDown(monthBudget(), 2)! }}€
     </div>
   </div>
-}
+  <div class="buchungen-list-month__content">
+    <app-buchungen-list-day *ngFor="let day of month.days" [day]="day"></app-buchungen-list-day>
+  </div>
+</div>
