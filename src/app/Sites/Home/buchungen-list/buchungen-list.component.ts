@@ -49,7 +49,7 @@ export class BuchungenListComponent {
         if (monthIndex > -1) {
           acc[monthIndex].days.push(day);
         } else {
-          acc.push({ monthName, days: [day] });
+          acc.push({ monthName, days: [day], isVisible: true });
         }
         return acc;
       }, []);
@@ -88,7 +88,8 @@ export class BuchungenListComponent {
   getMonthForGeplant() {
     const geplantMonth: IBuchungenlistMonth = {
       monthName: 'Geplant',
-      days: this.getFutureDays()
+      days: this.getFutureDays(),
+      isVisible: false
     }
 
     return geplantMonth

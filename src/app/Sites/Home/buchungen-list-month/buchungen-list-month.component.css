@@ -1,9 +1,32 @@
 .buchungen-list-month {
   margin-bottom: 30px;
+  margin-top: 8px;
+  padding: 10px;
+}
+
+.buchungen-list-month__top {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .buchungen-list-month__month-name {
-  margin-top: 8px;
   font-weight: bold;
   font-size: 20px;
+}
+
+.buchungen-list-month__month-details-hidden {
+  margin-top: 8px;
+  margin-bottom: 10px !important;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.buchungen-list-month__arrow {
+  width: 25px;
+  height: 25px;
+  margin-left: -5px;
 }

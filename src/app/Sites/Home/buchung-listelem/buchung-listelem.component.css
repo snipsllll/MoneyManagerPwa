@@ -44,6 +44,8 @@
   height: 30px;
   cursor: pointer;
   user-select: none;
+  position: relative;
+  z-index: 40;
 }
 
 .eintrag-listelem__menu {
@@ -51,7 +53,7 @@
    width: 110px;
    background-color: #91bada;
    bottom: -81px;
-   z-index: 100;
+   z-index: 200;
    right: 0;
    border-bottom-left-radius: 12px;
    border-bottom-right-radius: 12px;

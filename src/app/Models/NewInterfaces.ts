@@ -130,4 +130,5 @@ export interface IGeplanteAusgabenKategorie {
 export interface IBuchungenlistMonth {
   monthName: string;
   days: Day[];
+  isVisible: boolean;
 }

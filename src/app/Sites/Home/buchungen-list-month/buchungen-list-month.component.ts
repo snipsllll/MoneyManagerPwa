@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Day} from "../../../Models/Interfaces";
+import {Component, Input, OnInit, signal} from '@angular/core';
 import {IBuchungenlistMonth} from "../../../Models/NewInterfaces";
 
 @Component({
@@ -10,20 +9,26 @@ import {IBuchungenlistMonth} from "../../../Models/NewInterfaces";
 export class BuchungenListMonthComponent implements OnInit {
   @Input() month!: IBuchungenlistMonth;
 
+  isMonthVisible = signal<boolean>(false);
+
   constructor() {
 
   }
 
   ngOnInit() {
     console.log(this.month)
+    this.isMonthVisible.set(this.month.isVisible);
   }
 
-  getPresentAndPastDays() {
-    const today = new Date();  // Hol das heutige Datum
+  toggleIsMonthVisible() {
+    this.isMonthVisible.set(!this.isMonthVisible());
+  }
 
-    return this.month.days.filter(day => {
-      const dayDate = day.date;
-      return dayDate <= today;  // Vergleiche direkt das Datum
-    });
+  onShowMonthClicked() {
+    this.isMonthVisible.set(true);
+  }
+
+  onHideMonthClicked() {
+    this.isMonthVisible.set(false);
   }
 }
