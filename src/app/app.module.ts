@@ -43,6 +43,7 @@ import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
 import { NotificationPopupComponent } from './SharedComponents/notification-popup/notification-popup.component';
 import { PasswortResetComponent } from './Sites/login/passwort-reset/passwort-reset.component';
 import { InfoBoxComponent } from './SharedComponents/info-box/info-box.component';
+import { BuchungenListMonthComponent } from './Sites/Home/buchungen-list-month/buchungen-list-month.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsIabaMBr-3DJD6dNPaWpuI_IWD-B5J7U",
@@ -90,7 +91,8 @@ const firebaseConfig = {
         RegisterComponent,
         NotificationPopupComponent,
         PasswortResetComponent,
-        InfoBoxComponent
+        InfoBoxComponent,
+        BuchungenListMonthComponent
     ],
     imports: [
         BrowserModule,

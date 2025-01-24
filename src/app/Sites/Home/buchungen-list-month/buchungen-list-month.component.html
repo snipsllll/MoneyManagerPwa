@@ -1,0 +1,8 @@
+<div class="buchungen-list-month light-floating-box">
+  <div class="buchungen-list-month__month-name">
+    {{ month.monthName }}
+  </div>
+  <app-buchungen-list-day *ngFor="let day of month.days" [day]="day">
+
+  </app-buchungen-list-day>
+</div>

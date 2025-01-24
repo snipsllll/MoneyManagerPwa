@@ -1,12 +1,11 @@
 .eintraege-list {
   height: calc(100vh - 70px); /* gesamte Ansichtshöhe */
-  width: calc(100% - 20px);
-  padding: 0 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
   overflow-y: auto; /* 'scroll' zu 'auto' ändern */
+  overflow-x: visible;
 }
 
 .eintraege-list__lists {
@@ -18,10 +17,13 @@
 
 .eintraege-list__list,
 .eintraege-list__geplant-list {
-  width: calc(100% - 20px);
-  padding: 0 10px;
   display: flex;
   flex-direction: column;
+  padding: 0 10px;
+}
+
+.eintraege-list__geplant-list-box {
+  margin-bottom: 30px;
 }
 
 .eintraege-list__list {

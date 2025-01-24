@@ -1,4 +1,5 @@
 import {Months} from "./Enums";
+import {Day} from "./Interfaces";
 
 export interface IMonth {
   month: Months;
@@ -124,4 +125,9 @@ export interface IGeplanteAusgabenKategorie {
   id: number;
   title: string;
   betrag: number;
+}
+
+export interface IBuchungenlistMonth {
+  monthName: string;
+  days: Day[];
 }

@@ -1,0 +1,9 @@
+.buchungen-list-month {
+  margin-bottom: 30px;
+}
+
+.buchungen-list-month__month-name {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 20px;
+}

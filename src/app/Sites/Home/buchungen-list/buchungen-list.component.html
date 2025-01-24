@@ -4,25 +4,32 @@
   @if (days().length > 0) {
     <div class="eintraege-list__lists">
       <div class="eintraege-list__geplant-text" *ngIf="getAnzahlFutureBuchungen() > 0">
-        <img src="assets/chevron-right.png" class="eintraege-list__geplant-img" *ngIf="!isGeplantVisible()" (click)="setIsGeplantVisibleTrue()">
-        <img src="assets/chevron-down.png" class="eintraege-list__geplant-img" *ngIf="isGeplantVisible()" (click)="setIsGeplantVisibleFalse()">
-        <div  class="eintraege-list__geplant-label" (click)="toggleIsGeplantVisible()">
-          geplant ({{ getAnzahlFutureBuchungen()}})
+        <img src="assets/chevron-right.png" class="eintraege-list__geplant-img" *ngIf="!isGeplantVisible()"
+             (click)="setIsGeplantVisibleTrue()">
+        <img src="assets/chevron-down.png" class="eintraege-list__geplant-img" *ngIf="isGeplantVisible()"
+             (click)="setIsGeplantVisibleFalse()">
+        <div class="eintraege-list__geplant-label" (click)="toggleIsGeplantVisible()">
+          geplant ({{ getAnzahlFutureBuchungen() }})
         </div>
       </div>
       <div class="eintraege-list__geplant-list" *ngIf="getFutureDays().length > 0">
-        @if(isGeplantVisible()) {
-          <app-buchungen-list-day *ngFor="let day of getFutureDays()" [day]="day">
+        @if (isGeplantVisible()) {
+          <app-buchungen-list-month [month]="getMonthForGeplant()">
 
-          </app-buchungen-list-day>
-          <hr class="hr-geplant">
+          </app-buchungen-list-month>
+          <!--<div class="eintraege-list__geplant-list-box light-floating-box">
+           <app-buchungen-list-day *ngFor="let day of getFutureDays()" [day]="day">
+
+           </app-buchungen-list-day>
+         </div>
+        <hr class="hr-geplant">-->
         }
       </div>
 
       <div class="eintraege-list__list" *ngIf="getPresentAndPastDays().length > 0">
-        <app-buchungen-list-day *ngFor="let day of getPresentAndPastDays()" [day]="day">
+        <app-buchungen-list-month *ngFor="let month of months()" [month]="month">
 
-        </app-buchungen-list-day>
+        </app-buchungen-list-month>
         <div style="height: calc(100vh - 70px - 92px)"></div>
       </div>
     </div>
