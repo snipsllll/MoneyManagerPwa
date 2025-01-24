@@ -5,7 +5,7 @@
       {{ month.monthName }}
     </div>
     <div class="buchungen-list-month__top-budget"
-         [ngStyle]="+(ut.toFixedDown(monthBudget(), 2))! < 0 ? {'color': 'red'} : {'color': 'green'}"
+         [ngStyle]="+(ut.toFixedDown(monthBudget(), 2))! < 0 ? {'color': '#da0000'} : {'color': 'green'}"
          *ngIf="!month.isGeplantMonth">
       {{ ut.toFixedDown(monthBudget(), 2)! }}€
     </div>
