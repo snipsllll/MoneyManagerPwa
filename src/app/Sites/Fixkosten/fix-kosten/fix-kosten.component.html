@@ -1,15 +1,15 @@
 <app-top-bar></app-top-bar>
 <div class="fixkosten__period-select">
-  <div class="fixkosten__period-element" [ngClass]="selectedPeriod === FixkostenPeriods.Month ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onMonthClicked()">
+  <div class="fixkosten__period-element" [ngClass]="selectedPeriod() === FixkostenPeriods.Month ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onMonthClicked()">
     Monat
   </div>
-  <div class="fixkosten__period-element" [ngClass]="selectedPeriod === FixkostenPeriods.Year ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onYearClicked()">
+  <div class="fixkosten__period-element" [ngClass]="selectedPeriod() === FixkostenPeriods.Year ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onYearClicked()">
     Jahr
   </div>
 </div>
 <div class="fixkosten__list-wrapper">
   <div class="fixkosten__list" *ngIf="elements() && elements().length > 0; else keineEintraege">
-    <div *ngFor="let fixKostenEintrag of elements()">
+    <div *ngFor="let fixKostenEintrag of selectedElements()">
       <app-list-element [viewModel]="getViewModel(fixKostenEintrag)"></app-list-element>
     </div>
     <div style="height: calc(100vh - 70px - 190px)"></div>

@@ -123,33 +123,37 @@ export class DbUpdateMM {
     };
   }
 
-  private AddPeriodeToFixkosten(data: any) {
+  private AddPeriodeToFixkosten(data: any): any {
     try {
-      if (!data || !data.standardFixkostenEintraege) {
-        throw new Error('Input data is undefined or null.');
+      // Validate input data
+      if (!data || !Array.isArray(data.standardFixkostenEintraege)) {
+        throw new Error('Input data is undefined, null, or invalid!');
       }
 
-      let standardFixkosten: IFixkostenEintrag[] = data.standardFixkostenEintraege.map((fixkosteneintrag: any) => ({
-        id: fixkosteneintrag.id,
+      // Transform standardFixkostenEintraege, safely accessing nested properties
+      let updatedFixkostenEintraege = data.standardFixkostenEintraege.map((fixkosteneintrag: any) => ({
+        id: fixkosteneintrag.id || null,
         data: {
-          betrag: fixkosteneintrag.data.betrag,
-          title: fixkosteneintrag.data.title,
-          beschreibung: fixkosteneintrag.data.beschreibung,
-          period: FixkostenPeriods.Month
+          betrag: fixkosteneintrag?.data?.betrag || 0,
+          title: fixkosteneintrag?.data?.title || '',
+          beschreibung: fixkosteneintrag?.data?.beschreibung || '',
+          period: FixkostenPeriods.Month // Assign default period
         }
       }));
 
-      const {fixKosten: _, ...rest} = data;
+      // Exclude standardFixkostenEintraege from the rest of the data
+      const { standardFixkostenEintraege: _, ...rest } = data;
 
+      // Return the updated structure
       return {
-        standardFixkostenEintraege: standardFixkosten,
-        dbVersion: 4,
+        standardFixkostenEintraege: updatedFixkostenEintraege,
         ...rest
       };
     } catch (e) {
-      console.log(e)
+      // Log the error with more context
+      console.error('Error in AddPeriodeToFixkosten!', e);
+      return null; // Return null or an appropriate fallback value
     }
-
   }
 
   private convertToVersion1(datax: any): any {
@@ -250,27 +254,4 @@ export class DbUpdateMM {
       ...rest
     };
   }
-
-  testMethode() {
-    let object: ITestObject = {
-      zahl: 1,
-      text: 'baum'
-    }
-
-    console.log(object); //soll dann 1 und baum sein;
-
-    this.dieZuErstellendeMethode(object);
-
-    console.log(object); //soll dann andere werte haben
-  }
-
-  dieZuErstellendeMethode(object: ITestObject) {
-    object.zahl = 2;
-    object.text = 'apfel';
-  }
-}
-
-export interface ITestObject {
-  zahl: number;
-  text: string;
 }

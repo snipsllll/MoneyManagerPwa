@@ -20,7 +20,7 @@ export class DataUpdateService {
    *
    * @param data must be in format of savedData!
    */
-  getDbUpdatedSavedData(data: any): SavedData {
+  getDbUpdatedSavedData(data: any): any {
     console.log("...checking for DbUpdates");
     let savedDataAfterUpdate = this.dbUpdateMM.checkForUpdates(data);
     console.log("Successfully checked for DbUpdates.");

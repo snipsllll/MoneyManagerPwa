@@ -14,7 +14,6 @@ import {DataChangeService} from "../../../Services/DataChangeService/data-change
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
 import {FixkostenPeriods} from "../../../Models/Enums";
-import {DbUpdateMM, ITestObject} from "../../../Models/Classes/DbUpdateMM";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -36,9 +35,12 @@ export class FixKostenComponent  implements OnInit{
     }
     return summe;
   })
-  selectedElement = signal<number>(-1);
+  selectedPeriod = signal<FixkostenPeriods>(FixkostenPeriods.Month);
+  selectedElements = computed(() => {
+    this.selectedPeriod();
+    return this.elements().filter(element => element.data.period === this.selectedPeriod());
+  });
   newFixKostenEintrag!: IFixkostenEintragData;
-  selectedPeriod: FixkostenPeriods = FixkostenPeriods.Month;
 
   constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
   }
@@ -51,18 +53,16 @@ export class FixKostenComponent  implements OnInit{
       title: '',
       betrag: 0,
       beschreibung: '',
-      period: this.selectedPeriod
+      period: this.selectedPeriod()
     }
   }
 
   onMonthClicked() {
-    this.selectedPeriod = FixkostenPeriods.Month;
-    this.updateElements();
+    this.selectedPeriod.set(FixkostenPeriods.Month);
   }
 
   onYearClicked() {
-    this.selectedPeriod = FixkostenPeriods.Year;
-    this.updateElements();
+    this.selectedPeriod.set(FixkostenPeriods.Year);
   }
 
   onPlusClicked() {
@@ -107,14 +107,14 @@ export class FixKostenComponent  implements OnInit{
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       beschreibung: eintrag.beschreibung,
-      period: this.selectedPeriod
+      period: this.selectedPeriod()
     }
     this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
       beschreibung: '',
-      period: this.selectedPeriod
+      period: this.selectedPeriod()
     }
   }
 
@@ -156,7 +156,7 @@ export class FixKostenComponent  implements OnInit{
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         beschreibung: eintrag.zusatz,
-        period: this.selectedPeriod
+        period: this.selectedPeriod()
       }
     }
 
@@ -164,21 +164,6 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onEditCancelClicked = () => {}
-
-  private updateElements() {
-    let x: DbUpdateMM = new DbUpdateMM();
-
-    let object: ITestObject = {
-      zahl: 1,
-      text: 'baum'
-    }
-
-    console.log(object); //soll dann 1 und baum sein;
-
-    x.dieZuErstellendeMethode(object);
-
-    console.log(object); //soll dann andere werte haben
-  }
 
   protected readonly FixkostenPeriods = FixkostenPeriods;
 }
