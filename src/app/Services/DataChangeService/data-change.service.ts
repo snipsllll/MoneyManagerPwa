@@ -13,6 +13,7 @@ import {
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
 import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData} from "../../Models/Interfaces";
+import {FixkostenPeriods} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -142,14 +143,18 @@ export class DataChangeService {
             data: {
               title: element.data.title,
               beschreibung: element.data.beschreibung,
-              betrag: element.data.betrag
+              betrag: element.data.betrag,
+              period: FixkostenPeriods.Month
             }
           })
         } else {
           let x: IFixkostenEintrag = {
             id: this.getNextFreeFixkostenEintragId(),
             data: {
-              ...element.data
+              period: element.data.period,
+              beschreibung: element.data.beschreibung,
+              betrag: element.data.betrag,
+              title: element.data.title
             }
           }
           month.uebernommeneStandardFixkostenEintraege!.push(x)
@@ -158,7 +163,10 @@ export class DataChangeService {
         let x: IFixkostenEintrag = {
           id: this.getNextFreeFixkostenEintragId(),
           data: {
-            ...element.data
+            period: element.data.period,
+            beschreibung: element.data.beschreibung,
+            betrag: element.data.betrag,
+            title: element.data.title
           }
         }
         month.specialFixkostenEintraege!.push(x);

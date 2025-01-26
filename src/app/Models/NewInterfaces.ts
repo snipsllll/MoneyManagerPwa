@@ -1,5 +1,6 @@
-import {Months} from "./Enums";
-import {Day} from "./Interfaces";
+import {FixkostenPeriods, Months, TopBarBudgetOptions} from "./Enums";
+import {Day, IGeplanteAusgabenBuchung, Month, Settings} from "./Interfaces";
+import {IAuswertungsLayout} from "./Auswertungen-Interfaces";
 
 export interface IMonth {
   month: Months;
@@ -53,6 +54,7 @@ export interface IFixkostenEintrag {
 export interface IMonthFixkostenEintragData {
   title: string;
   betrag: number;
+  period: FixkostenPeriods;
   beschreibung?: string;
   isExcluded?: boolean;
   isStandardFixkostenEintrag?: boolean;
@@ -61,6 +63,7 @@ export interface IMonthFixkostenEintragData {
 export interface IFixkostenEintragData {
   title: string;
   betrag: number;
+  period: FixkostenPeriods;
   beschreibung?: string;
 }
 
@@ -132,4 +135,16 @@ export interface IBuchungenlistMonth {
   days: Day[];
   isVisible: boolean;
   isGeplantMonth: boolean;
+}
+
+export interface IUserData {
+  buchungen: IBuchung[];
+  buchungsKategorien: { id: number; name: string }[];
+  months: Month[];
+  standardFixkostenEintraege: IFixkostenEintrag[];
+  sparschweinEintraege: ISparschweinEintrag[];
+  wunschlistenEintraege: IWunschlistenEintrag[];
+  auswertungsLayouts: IAuswertungsLayout[];
+  geplanteAusgabenBuchungen: IGeplanteAusgabenBuchung[];
+  settings: Settings;
 }

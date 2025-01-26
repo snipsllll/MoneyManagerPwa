@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 import {AdminService} from "../../../admin.service";
 import {UT} from "../../../Models/Classes/UT";
 import {NotificationPopupViewModel} from "../../../Models/ViewModels/NotificationPopupViewModel";
+import {DataUpdateService} from "../../../Services/DataUpdateService/data-update.service";
 
 @Component({
   selector: 'app-einstellungen',
@@ -33,7 +34,7 @@ export class EinstellungenComponent implements OnInit {
   }
   isLoading = false;
 
-  constructor(private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
+  constructor(private dataUpdateService: DataUpdateService, private adminService: AdminService, private router: Router, private dataProvider: DataProviderService, private dataChangeService: DataChangeService, private topbarService: TopbarService, private dataService: DataService, private dialogService: DialogService) {
     this.update();
   }
 
@@ -58,7 +59,7 @@ export class EinstellungenComponent implements OnInit {
       onConfirmClicked: () => {
         this.isLoading = true;
         this.adminService.deleteAllDataOnServer().then(() => {
-          this.dataService.userData.setUserData(this.utils.getEmptyUserData());
+          this.dataUpdateService.deleteUserDataLocally();
           this.dataService.update();
           this.update();
           this.dialogService.isConfirmDialogVisible = false;
@@ -97,7 +98,7 @@ export class EinstellungenComponent implements OnInit {
         onConfirmClicked: () => {
           this.isLoading = true;
           this.dialogService.isConfirmDialogVisible = false;
-          this.dataService.userData.setUserData(JSON.parse(fileContent));
+          this.dataUpdateService.saveSavedDataInUserData(JSON.parse(fileContent));
           this.adminService.saveDataOnServer(this.dataService.userData.getFireData()).then(() => {
             this.dataService.update();
             this.update();

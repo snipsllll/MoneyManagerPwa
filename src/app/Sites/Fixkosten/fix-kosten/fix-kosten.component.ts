@@ -14,6 +14,7 @@ import {DataChangeService} from "../../../Services/DataChangeService/data-change
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
 import {FixkostenPeriods} from "../../../Models/Enums";
+import {DbUpdateMM, ITestObject} from "../../../Models/Classes/DbUpdateMM";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -49,7 +50,8 @@ export class FixKostenComponent  implements OnInit{
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      beschreibung: '',
+      period: this.selectedPeriod
     }
   }
 
@@ -104,13 +106,15 @@ export class FixKostenComponent  implements OnInit{
     const newFixkostenEintrag: IFixkostenEintragData = {
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
-      beschreibung: eintrag.beschreibung
+      beschreibung: eintrag.beschreibung,
+      period: this.selectedPeriod
     }
     this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      beschreibung: '',
+      period: this.selectedPeriod
     }
   }
 
@@ -151,7 +155,8 @@ export class FixKostenComponent  implements OnInit{
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
-        beschreibung: eintrag.zusatz
+        beschreibung: eintrag.zusatz,
+        period: this.selectedPeriod
       }
     }
 
@@ -161,7 +166,18 @@ export class FixKostenComponent  implements OnInit{
   onEditCancelClicked = () => {}
 
   private updateElements() {
+    let x: DbUpdateMM = new DbUpdateMM();
 
+    let object: ITestObject = {
+      zahl: 1,
+      text: 'baum'
+    }
+
+    console.log(object); //soll dann 1 und baum sein;
+
+    x.dieZuErstellendeMethode(object);
+
+    console.log(object); //soll dann andere werte haben
   }
 
   protected readonly FixkostenPeriods = FixkostenPeriods;

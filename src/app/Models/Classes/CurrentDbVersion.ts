@@ -1,1 +1,1 @@
-export const currentDbVersion: number = 3;
+export const currentDbVersion: number = 4;

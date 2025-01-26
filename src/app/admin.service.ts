@@ -10,6 +10,7 @@ import {UT} from "./Models/Classes/UT";
 import {DialogService} from "./Services/DialogService/dialog.service";
 import {TempService} from "./temp.service";
 import {Router} from "@angular/router";
+import {DataUpdateService} from "./Services/DataUpdateService/data-update.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +25,12 @@ export class AdminService {
 
   utils = new UT();
 
-  constructor(private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
+  constructor(private dataUpdateService: DataUpdateService, private tempService: TempService, private dialogService: DialogService, private dataService: DataService, private router: Router, private firestoreService: FirestoreService, private authService: AuthService, private fileManager: SavedLoginDataManagerService) {
     this.tryStartupLogin();
 
     this.dataService.doFireSave.subscribe(data => {
       if (data && data.fireData && !data.isInitialLoad) {
+        console.log(2)
         this.saveDataOnServer(data.fireData);
       }
 
@@ -47,7 +49,7 @@ export class AdminService {
       if (data == null) {
         this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
           this.firestoreService.getDataFromServer(this.getUid()).then(dataAfterCreating => {
-            this.dataService.userData.setUserDataFire(dataAfterCreating);
+            this.dataUpdateService.saveFireDataInUserData(dataAfterCreating);
             this.dataService.update(false, this.isInitialLoad);
             this.isInitialLoad = false;
             this.isDataLoading.next(false);
@@ -55,7 +57,7 @@ export class AdminService {
           });
         });
       } else {
-        this.dataService.userData.setUserDataFire(data);
+        this.dataUpdateService.saveFireDataInUserData(data);
         this.dataService.update(false, this.isInitialLoad);
         this.isInitialLoad = false;
         this.isDataLoading.next(false);
@@ -96,7 +98,7 @@ export class AdminService {
       .then(() => {
         this.loggedInUser.next(null);
         this.loggedIn.next(false);
-        this.dataService.userData.setUserDataFire(this.utils.getEmptyUserData());
+        this.dataUpdateService.deleteUserDataLocally();
         this.deleteLocalSavedLoginData();
         this.isSomethingLoading.next(false);
         this.router.navigate(['login']);
@@ -145,9 +147,7 @@ export class AdminService {
     this.isSomethingLoading.next(true);
     return this.firestoreService.deleteDataOnServer(this.getUid())
       .then(() => {
-        this.firestoreService.addSavedDataIfNoSavedDataExists(this.getUid()).then(() => {
-          this.isSomethingLoading.next(false);
-        });
+        this.isSomethingLoading.next(false);
       })
       .catch(error => {
         this.isSomethingLoading.next(false);
@@ -162,7 +162,7 @@ export class AdminService {
     return this.authService.deleteAccount()
       .then(() => {
         return this.firestoreService.deleteAccountData(this.getUid()).then(() => {
-          this.dataService.userData.deleteAllData();
+          this.dataUpdateService.deleteUserDataLocally();
           this.logout().then(() => {
             this.isSomethingLoading.next(false);
           });

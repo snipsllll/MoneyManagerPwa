@@ -16,6 +16,7 @@ export class FirestoreService {
 
   // Hinzufügen von Daten
   private async saveDataOnServer(dataToAdd: SavedData, uid?: string): Promise<void> {
+    console.log("...saving data on server")
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -23,14 +24,15 @@ export class FirestoreService {
     const collectionRef = this.firestore.collection(`users/${uid}/savedData`);
     try {
       await collectionRef.add(dataToAdd);
-      console.log('Daten wurden auf Server gespeichert!');
+      console.log('Successfully saved data on server.');
     } catch (error) {
-      console.error('Fehler beim Speichern der Daten auf dem Server', error);
+      console.error('Error while saving data on server:', error);
     }
   }
 
   // Löschen von Daten
   async deleteDataOnServer(uid?: string): Promise<void> {
+    console.log("...deleting data on server.")
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -39,21 +41,21 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        console.warn(`Kein Daten auf dem Server für Benutzer mit uid=${uid} gefunden.`);
+        console.warn(`No data for user with uid=${uid} found!`);
         return;
       }
       const docSnap = querySnapshot.docs[0];
       await docSnap.ref.delete();
-      console.log(`Daten wurden auf dem Server gelöscht!`);
+      console.log(`Successfully deleted data on server.`);
     } catch (error) {
-      console.error(`Fehler beim Löschen aller Daten auf dem Server`, error);
+      console.error(`Error while deleting data on server!`, error);
       throw error;
     }
   }
 
   // Bearbeiten von gespeicherten Daten
   async updateDataOnServer(updatedData: Partial<FireData>, uid?: string): Promise<void> {
-    console.log(updatedData)
+    console.log("...updating data on server")
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -62,23 +64,24 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const emptySavedData: SavedData = this.utils.getEmptyUserData();
+        const emptySavedData: SavedData = this.utils.getEmptySavedData();
         await this.saveDataOnServer(emptySavedData, uid);
-        console.warn(`Keine Dokumente in der Collection 'savedData' für Benutzer mit uid=${uid} gefunden. Neues savedData wurde erstellt.`);
+        console.warn(`No document in collection 'savedData' for user with uid=${uid} was found! New savedData was created!`);
         return;
       }
       const docSnap = querySnapshot.docs[0];
       const documentRef = docSnap.ref;
       await documentRef.update(updatedData);
-      console.log(`Daten wurde erfolgreich auf dem Server aktualisiert.`);
+      console.log(`Successfully updated data on server.`);
     } catch (error) {
-      console.error(`Fehler beim Aktualisieren der Daten auf dem Server:`, error);
+      console.error(`Error while updating data on server!`, error);
       throw error;
     }
   }
 
   // Abrufen von gespeicherten Daten
   async getDataFromServer(uid?: string): Promise<SavedData | null> {
+    console.log("...downloading fireData")
     if (!uid) {
       throw new Error('User ID (uid) is required.');
     }
@@ -87,14 +90,14 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        console.warn(`Daten konnten nicht vom Server geladen werden. Keine Daten für Benutzer mit uid=${uid} auf dem Server gefunden.`);
+        console.warn(`No entries for user with uid=${uid} was found on server! Creating new SavedData!`);
         return null;
       }
       const docSnap = querySnapshot.docs[0];
-      console.log('Daten wurden erfolgreich von Server heruntergeladen.')
+      console.log('Successfully downloaded fireData.')
       return docSnap.data() as SavedData;
     } catch (error) {
-      console.error(`Fehler beim Abrufen der Daten für Benutzer mit uid=${uid} vom Server:`, error);
+      console.error(`Error while downloading userdata for user with uid: ${uid} from server!`, error);
       throw error;
     }
   }
@@ -113,9 +116,9 @@ export class FirestoreService {
         await docSnap.ref.delete();
       }
       await userDocRef.delete();
-      console.log(`Alle Daten von Benutzer ${uid} wurde vom Server gelöscht.`);
+      console.log(`Successfully deleted all data for user with uid: ${uid} on server.`);
     } catch (error) {
-      console.error(`Fehler beim Löschen des Accounts von Benutzer mit uid=${uid}:`, error);
+      console.error(`Error while deleting all data for user with uid=${uid}:`, error);
       throw error;
     }
   }
@@ -130,14 +133,14 @@ export class FirestoreService {
     try {
       const querySnapshot = await lastValueFrom(collectionRef.get());
       if (querySnapshot.empty) {
-        const newDoc = this.utils.getEmptyUserData();
+        const newDoc = this.utils.getEmptySavedData();
         await collectionRef.add(newDoc);
-        console.log(`Neuer Datensatz für Benutzer mit uid=${uid} wurde erstellt.`);
+        console.log(`Successfully created new dataset for user with uid=${uid}.`);
       } else {
-        console.log(`Benutzer mit uid=${uid} hat bereits Einträge.`);
+        console.log(`User with uid=${uid} already has entries.`);
       }
     } catch (error) {
-      console.error(`Fehler beim Abrufen der gespeicherten Daten: ${error}`);
+      console.error("Error while loading data from server!", error);
       throw error;
     }
   }

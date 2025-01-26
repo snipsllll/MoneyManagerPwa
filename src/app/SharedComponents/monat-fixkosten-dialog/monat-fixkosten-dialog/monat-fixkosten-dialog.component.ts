@@ -12,6 +12,7 @@ import {EditDialogData, EditDialogViewModel} from "../../../Models/ViewModels/Ed
 import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogViewModel";
 import {MonatFixkostenDialogViewModel} from "../../../Models/ViewModels/MonatFixkostenDialogViewModel";
 import {UT} from "../../../Models/Classes/UT";
+import {FixkostenPeriods} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-monat-fixkosten-dialog',
@@ -42,7 +43,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      beschreibung: '',
+      period: FixkostenPeriods.Month
     }
 
     this.oldElements = this.utils.clone(this.viewModel.elemente);
@@ -161,6 +163,7 @@ export class MonatFixkostenDialogComponent implements OnInit {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
         beschreibung: eintrag.beschreibung,
+        period: FixkostenPeriods.Month,
         isExcluded: false,
         isStandardFixkostenEintrag: false
       }
@@ -169,7 +172,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
-      beschreibung: ''
+      beschreibung: '',
+      period: FixkostenPeriods.Month
     }
     this.dataService.update()
   }
@@ -230,7 +234,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
       data: {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
-        beschreibung: eintrag.zusatz
+        beschreibung: eintrag.zusatz,
+        period: FixkostenPeriods.Month
       }
     }
 

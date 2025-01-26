@@ -24,7 +24,6 @@ export class BuchungenListMonthComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.month)
     this.isMonthVisible.set(this.month.isVisible);
   }
 

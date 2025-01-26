@@ -1,6 +1,7 @@
 import {TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
 import {currentDbVersion} from "./CurrentDbVersion";
 import {SavedData} from "../Interfaces";
+import {IUserData} from "../NewInterfaces";
 
 export class UT {
   public toFixedDown(number?: number, decimals?: number): number | undefined {
@@ -36,7 +37,7 @@ export class UT {
     });
   }
 
-  getEmptyUserData(): SavedData {
+  getEmptySavedData(): SavedData {
     return {
       buchungen: [],
       buchungsKategorien: [],
@@ -56,6 +57,28 @@ export class UT {
       savedMonths: [],
       geplanteAusgabenBuchungen: [],
       dbVersion: currentDbVersion
+    }
+  }
+
+  getEmptyUserData(): IUserData {
+    return {
+      buchungen: [],
+      buchungsKategorien: [],
+      months: [],
+      standardFixkostenEintraege: [],
+      sparschweinEintraege: [],
+      wunschlistenEintraege: [],
+      auswertungsLayouts: [],
+      geplanteAusgabenBuchungen: [],
+      settings: {
+        toHighBuchungenEnabled: true,
+        wunschlistenFilter: {
+          selectedFilter: '',
+          gekaufteEintraegeAusblenden: false
+        },
+        tagesAnzeigeOption: TagesAnzeigeOptions.leer,
+        topBarAnzeigeEinstellung: TopBarBudgetOptions.leer
+      }
     }
   }
 

@@ -3,6 +3,7 @@ import {UserData} from "../../Models/Classes/UserData";
 import {Day, IGeplanteAusgabenBuchung, Month, SaveDataUpdateInfos, SavedData, Week} from "../../Models/Interfaces";
 import {IBuchung, IMonthFixkostenEintrag} from "../../Models/NewInterfaces";
 import {BehaviorSubject} from "rxjs";
+import {FixkostenPeriods} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -222,6 +223,7 @@ export class DataService {
             data: {
               betrag: standardEintrag.data.betrag,
               title: standardEintrag.data.title,
+              period: FixkostenPeriods.Month,
               beschreibung: standardEintrag.data.beschreibung,
               isStandardFixkostenEintrag: true,
               isExcluded: false
@@ -374,7 +376,6 @@ export class DataService {
 
   private save(isInitial?: boolean) { //TODO testen
     this.doFireSave.next({isInitialLoad: isInitial, fireData: this.userData.getFireData()});
-    //this.userData.save();
   }
 
   private sendUpdateToComponents() { //TODO testen
