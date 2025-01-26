@@ -13,6 +13,7 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
+import {FixkostenPeriods} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -36,6 +37,7 @@ export class FixKostenComponent  implements OnInit{
   })
   selectedElement = signal<number>(-1);
   newFixKostenEintrag!: IFixkostenEintragData;
+  selectedPeriod: FixkostenPeriods = FixkostenPeriods.Month;
 
   constructor(private dataChangeService: DataChangeService, private dataProvider: DataProviderService, private dialogService: DialogService, private topbarService: TopbarService, public dataService: DataService) {
   }
@@ -49,6 +51,16 @@ export class FixKostenComponent  implements OnInit{
       betrag: 0,
       beschreibung: ''
     }
+  }
+
+  onMonthClicked() {
+    this.selectedPeriod = FixkostenPeriods.Month;
+    this.updateElements();
+  }
+
+  onYearClicked() {
+    this.selectedPeriod = FixkostenPeriods.Year;
+    this.updateElements();
   }
 
   onPlusClicked() {
@@ -147,4 +159,10 @@ export class FixKostenComponent  implements OnInit{
   }
 
   onEditCancelClicked = () => {}
+
+  private updateElements() {
+
+  }
+
+  protected readonly FixkostenPeriods = FixkostenPeriods;
 }

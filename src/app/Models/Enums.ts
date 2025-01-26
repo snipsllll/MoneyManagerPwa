@@ -84,3 +84,8 @@ export enum HorizontalelinieOptions {
   'daySollBudget',
   'zahl'
 }
+
+export enum FixkostenPeriods {
+  Month,
+  Year
+}
