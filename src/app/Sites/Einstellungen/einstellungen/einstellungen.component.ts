@@ -26,7 +26,6 @@ export class EinstellungenComponent implements OnInit {
   utils = new UT();
   email: string = '';
   isResetPwLoading = false;
-  isResetInfoVisible = false;
   isResetPwTextVisible = true;
   resetPopupViewModel: NotificationPopupViewModel = {
     text: 'Email wurde gesendet!',

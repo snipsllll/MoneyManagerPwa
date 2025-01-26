@@ -9,7 +9,7 @@ export class DataConverter {
 
   convertFireDataToSavedData(data: any): any {
     console.log("...converting fireData into savedData");
-    if(!this.isInputDataValid(data))
+    if (!this.isInputDataValid(data))
       return;
 
     let convertedSavedData = this.convertFireDataToSavedDataRekursive(data);
@@ -21,7 +21,7 @@ export class DataConverter {
   convertSavedDataToUserData(data: any): IUserData {
     console.log("...converting savedData into userData");
 
-    if(!this.isInputDataValid(data)){
+    if (!this.isInputDataValid(data)) {
       throw new Error("Provided data was null or undefined!")
     }
 
@@ -35,6 +35,7 @@ export class DataConverter {
     userData.auswertungsLayouts = data.auswertungsLayouts ?? [];
     userData.settings = data.settings ?? this.getDefaultSettings();
     userData.geplanteAusgabenBuchungen = data.geplanteAusgabenBuchungen ?? [];
+    userData.standardFixkostenEintraege = data.standardFixkostenEintraege ?? [];
 
     console.log("Successfully converted savedData into userData");
     return userData;
@@ -43,9 +44,8 @@ export class DataConverter {
   convertUserDataToSavedData(data: any): any {
     console.log("...converting userData into savedData");
 
-    if(!this.isInputDataValid(data))
+    if (!this.isInputDataValid(data))
       return;
-
 
 
     console.log("Successfully converted userData into savedData");
@@ -55,7 +55,7 @@ export class DataConverter {
   convertSavedDataToFireData(data: any): any {
     console.log("...converting savedData into fireData");
 
-    if(!this.isInputDataValid(data))
+    if (!this.isInputDataValid(data))
       return;
 
     let convertedFireData = this.convertSavedDataToFireDataRekursive(data);
@@ -117,12 +117,12 @@ export class DataConverter {
   }
 
   private isInputDataValid(inputData: any): boolean {
-    if(inputData === null) {
+    if (inputData === null) {
       console.error("inputData is null!");
       return false;
     }
 
-    if(inputData === undefined) {
+    if (inputData === undefined) {
       console.error("inputData is undefined!");
       return false;
     }
@@ -192,7 +192,6 @@ export class DataConverter {
 
     return months;
   }
-
 
 
   private getSunday(inputDate: Date): Date {

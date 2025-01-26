@@ -28,7 +28,7 @@ export class UserData {
   }
 
   setUserData(userData: IUserData) {
-    if(!userData) {
+    if (!userData) {
       throw new Error("Error while setting userData. inputted userData isn`t allowd to be null or undefined!")
     }
 
@@ -40,6 +40,7 @@ export class UserData {
     this.auswertungsLayouts = userData.auswertungsLayouts ?? [];
     this.settings = userData.settings ?? this.getDefaultSettings();
     this.geplanteAusgabenBuchungen = userData.geplanteAusgabenBuchungen ?? [];
+    this.standardFixkostenEintraege = userData.standardFixkostenEintraege ?? [];
   }
 
   transformToFireData(input: any): any {
@@ -174,7 +175,7 @@ export class UserData {
       ]
     };
 
-    for(let year = 2024; year < 2025; year++) {
+    for (let year = 2024; year < 2025; year++) {
       for (let month = 8; month < 12; month++) {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -262,13 +263,13 @@ export class UserData {
   }
 
   private initzializeUserData() {
-    this.buchungen =  [];
-    this.buchungsKategorien =  [];
-    this.months =  [];
-    this.sparschweinEintraege =  [];
-    this.wunschlistenEintraege =  [];
-    this.auswertungsLayouts =  [];
-    this.settings =  this.getDefaultSettings();
-    this.geplanteAusgabenBuchungen =  [];
+    this.buchungen = [];
+    this.buchungsKategorien = [];
+    this.months = [];
+    this.sparschweinEintraege = [];
+    this.wunschlistenEintraege = [];
+    this.auswertungsLayouts = [];
+    this.settings = this.getDefaultSettings();
+    this.geplanteAusgabenBuchungen = [];
   }
 }

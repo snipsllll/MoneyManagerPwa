@@ -1,6 +1,7 @@
 import {currentDbVersion} from "./CurrentDbVersion";
 import {SavedData} from "../Interfaces";
 import {FixkostenPeriods, TagesAnzeigeOptions, TopBarBudgetOptions} from "../Enums";
+import {IFixkostenEintrag} from "../NewInterfaces";
 
 export class DbUpdateMM {
 
@@ -25,7 +26,7 @@ export class DbUpdateMM {
       }
 
       if (currentData.dbVersion < 4) {
-        currentData = this.ConvertFixkosten(currentData);
+        currentData = this.AddPeriodeToFixkosten(currentData);
       }
 
       currentData.dbVersion = currentDbVersion;
@@ -122,14 +123,13 @@ export class DbUpdateMM {
     };
   }
 
-  private ConvertFixkosten(data: any) {
-    console.log("periode wird zu standardfixkosten hinzugefügt. Mthodenaufruf gestartet mit data = ", data)
+  private AddPeriodeToFixkosten(data: any) {
     try {
       if (!data || !data.standardFixkostenEintraege) {
         throw new Error('Input data is undefined or null.');
       }
 
-      let standardFixkosten = data.standardFixkostenEintraege.map((fixkosteneintrag: any) => ({
+      let standardFixkosten: IFixkostenEintrag[] = data.standardFixkostenEintraege.map((fixkosteneintrag: any) => ({
         id: fixkosteneintrag.id,
         data: {
           betrag: fixkosteneintrag.data.betrag,
@@ -142,7 +142,7 @@ export class DbUpdateMM {
       const {fixKosten: _, ...rest} = data;
 
       return {
-        standardFixkosten,
+        standardFixkostenEintraege: standardFixkosten,
         dbVersion: 4,
         ...rest
       };
@@ -216,7 +216,7 @@ export class DbUpdateMM {
     sparEintraege = sparEintraege.filter(eintrag => eintrag.data.vonMonat !== true)
 
     // Umwandlung der wunschlistenEintraege
-    let wunschlistenEintraege =  !datax.wunschlistenEintraege ? [] :datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
+    let wunschlistenEintraege = !datax.wunschlistenEintraege ? [] : datax.wunschlistenEintraege.map((wunschlisteEintrag: any) => ({
       id: wunschlisteEintrag.id,
       data: {
         betrag: wunschlisteEintrag.betrag,

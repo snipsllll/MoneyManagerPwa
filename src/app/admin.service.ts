@@ -30,7 +30,6 @@ export class AdminService {
 
     this.dataService.doFireSave.subscribe(data => {
       if (data && data.fireData && !data.isInitialLoad) {
-        console.log(2)
         this.saveDataOnServer(data.fireData);
       }
 
@@ -137,9 +136,9 @@ export class AdminService {
       this.isSomethingLoading.next(false);
     }).catch(error => {
       this.isSomethingLoading.next(false);
-        console.error('Fehler bei der Aktualisierung der gespeicherten Daten:', error);
-        throw error; // Fehler weiterwerfen
-      });
+      console.error('Fehler bei der Aktualisierung der gespeicherten Daten:', error);
+      throw error; // Fehler weiterwerfen
+    });
   }
 
   // Löschen der gespeicherten Daten gibt ein Promise zurück
@@ -188,7 +187,7 @@ export class AdminService {
       };
       this.tempService.isTryingAutoLogin.next(true);
       let redirectUrl = this.router.url;
-      if(redirectUrl === '/') {
+      if (redirectUrl === '/') {
         redirectUrl = 'home';
       }
       this.login(savedLoginData.email, savedLoginData.password, false, redirectUrl).then(() => {
