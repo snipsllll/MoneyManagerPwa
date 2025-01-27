@@ -1,7 +1,7 @@
 .fixkosten__list-wrapper {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 70px - 105px);
+  height: 100%;
 }
 
 .fixkosten__period-select {
@@ -64,6 +64,10 @@
   display: flex;
   align-items: center;
   background-color: #77afd1;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #405e70;
 }
 
 .fixkosten__summe-label {

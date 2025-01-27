@@ -37,6 +37,7 @@ export class FixKostenComponent  implements OnInit{
   })
   selectedPeriod = signal<FixkostenPeriods>(FixkostenPeriods.Month);
   selectedElements = computed(() => {
+    this.dataService.updated();
     this.selectedPeriod();
     return this.elements().filter(element => element.data.period === this.selectedPeriod());
   });
