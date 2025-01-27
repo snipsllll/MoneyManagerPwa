@@ -69,7 +69,8 @@ export class FixKostenComponent  implements OnInit{
   onPlusClicked() {
     const createDialogViewModel: CreateDialogViewModel = {
       onSaveClick: this.onCreateSaveClicked,
-      onCancelClick: this.onCreateCancelClicked
+      onCancelClick: this.onCreateCancelClicked,
+      isPeriodVisible: true
     }
     this.dialogService.showCreateDialog(createDialogViewModel);
   }
@@ -108,7 +109,7 @@ export class FixKostenComponent  implements OnInit{
       betrag: eintrag.betrag ?? 0,
       title: eintrag.title ?? 'kein Titel',
       beschreibung: eintrag.beschreibung,
-      period: this.selectedPeriod()
+      period: eintrag.period ?? FixkostenPeriods.Month,
     }
     this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {

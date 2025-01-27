@@ -2,6 +2,7 @@ import {Component, Input, OnInit, signal} from '@angular/core';
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
+import {FixkostenPeriods} from "../../Models/Enums";
 
 @Component({
   selector: 'app-create-dialog',
@@ -14,6 +15,7 @@ export class CreateDialogComponent implements OnInit {
   showBetragWarnung = signal<boolean>(false);
   darfSpeichern = signal<boolean>(false);
   eintrag!: CreateDialogEintrag;
+  selectedPeriod = "Monatlich";
 
   constructor(private dialogService: DialogService) {
   }
@@ -71,6 +73,17 @@ export class CreateDialogComponent implements OnInit {
 
   onVonHeuteAbziehenClicked() {
     this.eintrag.vonHeuteAbziehen = !this.eintrag.vonHeuteAbziehen;
+  }
+
+  onPeriodChanged() {
+    switch (this.selectedPeriod) {
+      case 'Monatlich':
+        this.eintrag.period = FixkostenPeriods.Month;
+        break;
+      case 'Jährlich':
+        this.eintrag.period = FixkostenPeriods.Year;
+        break;
+    }
   }
 
   private checkDarfSpeichern() {

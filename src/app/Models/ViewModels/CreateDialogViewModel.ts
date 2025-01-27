@@ -1,9 +1,12 @@
+import {FixkostenPeriods} from "../Enums";
+
 export interface CreateDialogViewModel {
   onSaveClick: (createDialogEintrag: CreateDialogEintrag) => void;
   onCancelClick: () => void;
   istVonHeuteAbzeihenVisible?: boolean;
   isBetragAusgeblendet?: boolean;
   isBeschreibungAusgeblendet?: boolean;
+  isPeriodVisible?: boolean;
 }
 
 export interface CreateDialogEintrag {
@@ -11,4 +14,5 @@ export interface CreateDialogEintrag {
   betrag?: number;
   beschreibung?: string;
   vonHeuteAbziehen?: boolean;
+  period?: FixkostenPeriods;
 }

@@ -18,6 +18,21 @@
             </div>
           </div>
         </div>
+        <div class="create-dialog__period" *ngIf="viewModel.isPeriodVisible">
+          <div class="create-dialog__label">
+            Periode:
+          </div>
+          <div class="create-dialog__period-input-wrapper">
+            <select class="create-dialog__data create-dialog__period-input"  [(ngModel)]="selectedPeriod" (change)="onPeriodChanged()">
+              <option>
+                Monatlich
+              </option>
+              <option>
+                Jährlich
+              </option>
+            </select>
+          </div>
+        </div>
         <div class="create-dialog__von-heute-abziehen" *ngIf="viewModel.istVonHeuteAbzeihenVisible">
           <div class="create-dialog__checkbox-input-wrapper">
             <input type="checkbox" [(ngModel)]="eintrag.vonHeuteAbziehen" class="create-dialog__data create-dialog__checkbox-input" placeholder="0.00" (change)="onValueChanged()">
