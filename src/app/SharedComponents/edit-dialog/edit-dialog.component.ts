@@ -2,6 +2,7 @@ import {Component, Input, OnInit, signal} from '@angular/core';
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
+import {FixkostenPeriods} from "../../Models/Enums";
 
 @Component({
   selector: 'app-edit-dialog',
@@ -14,6 +15,7 @@ export class EditDialogComponent implements OnInit{
   showBetragWarnung = signal<boolean>(false);
   darfSpeichern = signal<boolean>(false);
   oldEintrag!: EditDialogData;
+  selectedPeriod!: string;
 
   constructor(private dialogService: DialogService) {
   }
@@ -25,10 +27,40 @@ export class EditDialogComponent implements OnInit{
       zusatz: this.viewModel.data.zusatz ?? '',
       date: this.viewModel.data.date!,
       id: this.viewModel.data.id,
-      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen ?? false
+      vonHeuteAbziehen: this.viewModel.data.vonHeuteAbziehen ?? false,
+      period: this.viewModel.data.period ?? FixkostenPeriods.Month
     }
 
+    this.selectedPeriod = this.convertEnumPeriodToStringPeriod(this.viewModel.data.period);
+
     this.viewModel.isBetragAusgeblendet = this.viewModel.isBetragAusgeblendet ?? false;
+  }
+
+  onPeriodChanged() {
+    this.viewModel.data.period = this.convertStringPeriodToEnumPeriod(this.selectedPeriod);
+    this.onValueChanged();
+  }
+
+  convertEnumPeriodToStringPeriod(enumValue?: FixkostenPeriods): string {
+    switch (enumValue) {
+      case FixkostenPeriods.Month:
+        return "Monatlich";
+      case FixkostenPeriods.Year:
+        return "Jährlich";
+      default:
+        return "Monatlich";
+    }
+  }
+
+  convertStringPeriodToEnumPeriod(stringValue: string): FixkostenPeriods {
+    switch (stringValue) {
+      case 'Monatlich':
+        return FixkostenPeriods.Month;
+      case 'Jährlich':
+        return FixkostenPeriods.Year;
+      default:
+        return FixkostenPeriods.Month
+    }
   }
 
   onSaveClicked() {
@@ -84,6 +116,6 @@ export class EditDialogComponent implements OnInit{
   }
 
   private checkHasChanged() {
-    return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
+    return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.period !== this.viewModel.data.period || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
   }
 }

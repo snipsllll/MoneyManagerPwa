@@ -1,3 +1,5 @@
+import {FixkostenPeriods} from "../Enums";
+
 export interface EditDialogViewModel {
   data: EditDialogData;
   onSaveClick: (editDialogData: EditDialogData) => void;
@@ -5,6 +7,7 @@ export interface EditDialogViewModel {
   istVonHeuteAbzeihenVisible?: boolean;
   isBetragAusgeblendet?: boolean;
   isZusatzAusgeblendet?: boolean;
+  isPeriodVisible?: boolean;
 }
 
 export interface EditDialogData {
@@ -15,4 +18,5 @@ export interface EditDialogData {
   date?: Date;
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;
+  period?: FixkostenPeriods;
 }

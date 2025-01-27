@@ -86,6 +86,7 @@ export class FixKostenComponent  implements OnInit{
       betrag: eintrag.data.betrag,
       title: eintrag.data.title,
       zusatz: eintrag.data.beschreibung,
+      period: eintrag.data.period,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -130,10 +131,12 @@ export class FixKostenComponent  implements OnInit{
         betrag: eintrag.betrag,
         title: eintrag.title,
         zusatz: eintrag.zusatz,
-        id: eintrag.id!
+        id: eintrag.id!,
+        period: eintrag.period
       },
       onSaveClick: this.onEditSaveClicked,
-      onCancelClick: this.onEditCancelClicked
+      onCancelClick: this.onEditCancelClicked,
+      isPeriodVisible: true
     }
     this.dialogService.showEditDialog(editDialogViewModel);
   }
@@ -158,7 +161,7 @@ export class FixKostenComponent  implements OnInit{
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'ohne Titel',
         beschreibung: eintrag.zusatz,
-        period: this.selectedPeriod()
+        period: eintrag.period ?? FixkostenPeriods.Month,
       }
     }
 
