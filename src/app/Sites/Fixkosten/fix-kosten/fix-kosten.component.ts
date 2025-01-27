@@ -13,7 +13,7 @@ import {ConfirmDialogViewModel} from "../../../Models/ViewModels/ConfirmDialogVi
 import {DataChangeService} from "../../../Services/DataChangeService/data-change.service";
 import {DataProviderService} from "../../../Services/DataProviderService/data-provider.service";
 import {IFixkostenEintrag, IFixkostenEintragData} from "../../../Models/NewInterfaces";
-import {FixkostenPeriods} from "../../../Models/Enums";
+import {AbrechnungsMonate, FixkostenPeriods} from "../../../Models/Enums";
 
 @Component({
   selector: 'app-fix-kosten',
@@ -28,8 +28,8 @@ export class FixKostenComponent  implements OnInit{
   summe = computed(() => {
     this.dataService.updated();
     let summe = 0;
-    if(this.elements()) {
-      this.elements().forEach(element => {
+    if(this.selectedElements()) {
+      this.selectedElements().forEach(element => {
         summe += element.data.betrag;
       })
     }
@@ -54,7 +54,8 @@ export class FixKostenComponent  implements OnInit{
       title: '',
       betrag: 0,
       beschreibung: '',
-      period: this.selectedPeriod()
+      period: this.selectedPeriod(),
+      abrechnungsmonat: AbrechnungsMonate.Leer
     }
   }
 
@@ -84,9 +85,10 @@ export class FixKostenComponent  implements OnInit{
     const data: ListElementData = {
       id: eintrag.id,
       betrag: eintrag.data.betrag,
-      title: eintrag.data.title,
+      title: eintrag.data.title + (eintrag.data.period === FixkostenPeriods.Year ? "(" + eintrag.data.abrechnungsmonat + ")" : ""),
       zusatz: eintrag.data.beschreibung,
       period: eintrag.data.period,
+      abrechnungsmonat: eintrag.data.abrechnungsmonat,
       menuItems: [
         {
           label: 'bearbeiten',
@@ -111,13 +113,15 @@ export class FixKostenComponent  implements OnInit{
       title: eintrag.title ?? 'kein Titel',
       beschreibung: eintrag.beschreibung,
       period: eintrag.period ?? FixkostenPeriods.Month,
+      abrechnungsmonat: eintrag.selectedAbrechnungsmonat ?? AbrechnungsMonate.Leer
     }
     this.dataChangeService.addFixkostenEintrag(newFixkostenEintrag);
     this.newFixKostenEintrag = {
       title: '',
       betrag: 0,
       beschreibung: '',
-      period: this.selectedPeriod()
+      period: this.selectedPeriod(),
+      abrechnungsmonat: AbrechnungsMonate.Leer
     }
   }
 
@@ -132,7 +136,8 @@ export class FixKostenComponent  implements OnInit{
         title: eintrag.title,
         zusatz: eintrag.zusatz,
         id: eintrag.id!,
-        period: eintrag.period
+        period: eintrag.period,
+        abrechnungsmonat: AbrechnungsMonate.Leer
       },
       onSaveClick: this.onEditSaveClicked,
       onCancelClick: this.onEditCancelClicked,
@@ -162,6 +167,7 @@ export class FixKostenComponent  implements OnInit{
         title: eintrag.title ?? 'ohne Titel',
         beschreibung: eintrag.zusatz,
         period: eintrag.period ?? FixkostenPeriods.Month,
+        abrechnungsmonat: eintrag.abrechnungsmonat
       }
     }
 

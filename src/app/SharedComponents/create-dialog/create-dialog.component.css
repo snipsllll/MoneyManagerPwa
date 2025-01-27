@@ -61,7 +61,7 @@
   margin-top: 5px;
 }
 
-.create-dialog__betrag, .create-dialog__period {
+.create-dialog__betrag, .create-dialog__period, .create-dialog__abrechnungsmonat {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -126,7 +126,7 @@ hr {
   color: #939393 !important;
 }
 
-.create-dialog__betrag-input-wrapper, .create-dialog__period-input-wrapper {
+.create-dialog__betrag-input-wrapper, .create-dialog__period-input-wrapper, .create-dialog__abrechnungsmonat-input-wrapper {
   display: flex;
   align-items: center;
 }
@@ -136,18 +136,18 @@ hr {
   margin-left: 5px;
 }
 
-.create-dialog__betrag-input, .create-dialog__period-input {
+.create-dialog__betrag-input, .create-dialog__period-input, .create-dialog__abrechnungsmonat-input {
   width: 115px;
   text-align: end;
   padding-right: 5px;
   font-size: 18px;
 }
 
-.create-dialog__period {
+.create-dialog__period, .create-dialog__abrechnungsmonat {
   margin-top: 10px;
 }
 
-.create-dialog__period-input {
+.create-dialog__period-input, .create-dialog__abrechnungsmonat-input {
   margin-right: 15px;
   width: 126px !important;
   padding: 1px 0 !important;

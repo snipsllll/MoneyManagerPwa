@@ -1,5 +1,5 @@
 import {MenuItem} from "../Interfaces";
-import {Color, FixkostenPeriods} from "../Enums";
+import {Color, FixkostenPeriods, AbrechnungsMonate} from "../Enums";
 
 export interface ListElementViewModel{
   data: ListElementData;
@@ -21,6 +21,7 @@ export interface ListElementData {
   isStandardFixkostenEintrag?: boolean;
   isExcluded?: boolean;
   period?: FixkostenPeriods;
+  abrechnungsmonat?: AbrechnungsMonate;
 }
 
 export interface ListElementSettings {

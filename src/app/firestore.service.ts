@@ -55,6 +55,7 @@ export class FirestoreService {
 
   // Bearbeiten von gespeicherten Daten
   async updateDataOnServer(updatedData: Partial<FireData>, uid?: string): Promise<void> {
+    console.log(updatedData)
     console.log("...updating data on server")
     if (!uid) {
       throw new Error('User ID (uid) is required.');

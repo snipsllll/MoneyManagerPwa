@@ -1,7 +1,7 @@
 export enum Months {
   Januar,
   Februar,
-  Maerz,
+  März,
   April,
   Mai,
   Juni,
@@ -9,8 +9,24 @@ export enum Months {
   August,
   September,
   Oktober,
-  Novermber,
+  November,
   Dezember
+}
+
+export enum AbrechnungsMonate {
+  Januar = "Januar",
+  Februar = "Februar",
+  März = "März",
+  April = "April",
+  Mai = "Mai",
+  Juni = "Juni",
+  Juli = "Juli",
+  August = "August",
+  September = "September",
+  Oktober = "Oktober",
+  November = "November",
+  Dezember = "Dezember",
+  Leer = ""
 }
 
 export enum SideNavElements {

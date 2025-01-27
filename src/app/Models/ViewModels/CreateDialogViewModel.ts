@@ -1,4 +1,4 @@
-import {FixkostenPeriods} from "../Enums";
+import {FixkostenPeriods, AbrechnungsMonate} from "../Enums";
 
 export interface CreateDialogViewModel {
   onSaveClick: (createDialogEintrag: CreateDialogEintrag) => void;
@@ -15,4 +15,5 @@ export interface CreateDialogEintrag {
   beschreibung?: string;
   vonHeuteAbziehen?: boolean;
   period?: FixkostenPeriods;
+  selectedAbrechnungsmonat?: AbrechnungsMonate;
 }

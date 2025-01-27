@@ -2,7 +2,7 @@ import {Component, Input, OnInit, signal} from '@angular/core';
 import {CreateDialogEintrag, CreateDialogViewModel} from "../../Models/ViewModels/CreateDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
-import {FixkostenPeriods} from "../../Models/Enums";
+import {FixkostenPeriods, Months, AbrechnungsMonate} from "../../Models/Enums";
 
 @Component({
   selector: 'app-create-dialog',
@@ -16,6 +16,8 @@ export class CreateDialogComponent implements OnInit {
   darfSpeichern = signal<boolean>(false);
   eintrag!: CreateDialogEintrag;
   selectedPeriod = "Monatlich";
+  selectedAbrechnungsmonat: string = "";
+  months: string[] = Object.values(AbrechnungsMonate); // Extract values from the enum
 
   constructor(private dialogService: DialogService) {
   }
@@ -86,15 +88,28 @@ export class CreateDialogComponent implements OnInit {
     }
   }
 
+  onAbrechnungsmonatChanged() {
+    const enumValue = Object.values(AbrechnungsMonate).find(month => month === this.selectedAbrechnungsmonat);
+
+    if (enumValue) {
+      this.eintrag.selectedAbrechnungsmonat = enumValue; // Set the enum value
+    } else {
+      console.error('Selected month does not match any enum value');
+    }
+    this.onValueChanged();
+  }
+
   private checkDarfSpeichern() {
     return this.checkHasChanged() && (this.checkBetragValid());
   }
 
-  private checkHasChanged() {
+  private checkHasChanged() { //TODO ergänzen um beide
     return !((this.eintrag.title === undefined || this.eintrag.title === '') && (this.eintrag.beschreibung === undefined || this.eintrag.beschreibung === '') && (this.eintrag.betrag === undefined || this.eintrag.betrag === 0));
   }
 
   private checkBetragValid() {
     return (this.eintrag.betrag !== 0 && this.eintrag.betrag !== null && this.eintrag.betrag !== undefined) || this.viewModel.isBetragAusgeblendet!;
   }
+
+  protected readonly Months = Months;
 }

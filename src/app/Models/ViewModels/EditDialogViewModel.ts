@@ -1,4 +1,4 @@
-import {FixkostenPeriods} from "../Enums";
+import {FixkostenPeriods, AbrechnungsMonate} from "../Enums";
 
 export interface EditDialogViewModel {
   data: EditDialogData;
@@ -19,4 +19,5 @@ export interface EditDialogData {
   erstelltAm?: Date;
   vonHeuteAbziehen?: boolean;
   period?: FixkostenPeriods;
+  abrechnungsmonat?: AbrechnungsMonate;
 }

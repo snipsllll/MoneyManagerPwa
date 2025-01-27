@@ -33,6 +33,18 @@
             </select>
           </div>
         </div>
+        <div class="create-dialog__abrechnungsmonat" *ngIf="selectedPeriod === 'Jährlich'">
+          <div class="create-dialog__label">
+            Abrechnungsmonat:
+          </div>
+          <div class="create-dialog__abrechnungsmonat-input-wrapper">
+            <select class="create-dialog__data create-dialog__abrechnungsmonat-input"  [(ngModel)]="selectedAbrechnungsmonat" (change)="onAbrechnungsmonatChanged()">
+              <option *ngFor="let month of months" [value]="month">
+                {{ month }}
+              </option>
+            </select>
+          </div>
+        </div>
         <div class="create-dialog__von-heute-abziehen" *ngIf="viewModel.istVonHeuteAbzeihenVisible">
           <div class="create-dialog__checkbox-input-wrapper">
             <input type="checkbox" [(ngModel)]="eintrag.vonHeuteAbziehen" class="create-dialog__data create-dialog__checkbox-input" placeholder="0.00" (change)="onValueChanged()">

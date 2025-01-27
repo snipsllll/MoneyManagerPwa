@@ -1,4 +1,4 @@
-import {FixkostenPeriods, Months, TopBarBudgetOptions} from "./Enums";
+import {FixkostenPeriods, Months, AbrechnungsMonate, TopBarBudgetOptions} from "./Enums";
 import {Day, IGeplanteAusgabenBuchung, Month, Settings} from "./Interfaces";
 import {IAuswertungsLayout} from "./Auswertungen-Interfaces";
 
@@ -65,6 +65,7 @@ export interface IFixkostenEintragData {
   betrag: number;
   period: FixkostenPeriods;
   beschreibung?: string;
+  abrechnungsmonat?: AbrechnungsMonate;
 }
 
 export interface IWunschlistenEintrag {
