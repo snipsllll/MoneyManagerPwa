@@ -163,7 +163,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
         betrag: eintrag.betrag ?? 0,
         title: eintrag.title ?? 'kein Titel',
         beschreibung: eintrag.beschreibung,
-        period: FixkostenPeriods.Month,
+        period: eintrag.period ?? FixkostenPeriods.Year,
+        abrechnungsmonat: eintrag.selectedAbrechnungsmonat,
         isExcluded: false,
         isStandardFixkostenEintrag: false
       }
@@ -173,7 +174,8 @@ export class MonatFixkostenDialogComponent implements OnInit {
       title: '',
       betrag: 0,
       beschreibung: '',
-      period: FixkostenPeriods.Month
+      period: FixkostenPeriods.Month,
+      abrechnungsmonat: eintrag.selectedAbrechnungsmonat
     }
     this.dataService.update()
   }

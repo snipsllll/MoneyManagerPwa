@@ -55,6 +55,7 @@ export interface IMonthFixkostenEintragData {
   title: string;
   betrag: number;
   period: FixkostenPeriods;
+  abrechnungsmonat?: AbrechnungsMonate;
   beschreibung?: string;
   isExcluded?: boolean;
   isStandardFixkostenEintrag?: boolean;

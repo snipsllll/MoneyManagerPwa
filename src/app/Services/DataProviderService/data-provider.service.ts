@@ -17,6 +17,7 @@ import {
 } from "../../Models/Interfaces";
 import {UT} from "../../Models/Classes/UT";
 import {IAuswertungsLayout, IDiagrammData} from "../../Models/Auswertungen-Interfaces";
+import {AbrechnungsMonate, FixkostenPeriods} from "../../Models/Enums";
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,7 @@ export class DataProviderService {
 
   getFixkostenEintraegeForMonth(date: Date, onlyIncluded?: boolean) {
     const month = this.getMonthByDate(date);
+    console.log(month)
 
     const a: IMonthFixkostenEintrag[] = (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
       return {
@@ -82,7 +84,10 @@ export class DataProviderService {
     if (onlyIncluded) {
       alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);
     }
+    console.log(alleEintraege);
+    alleEintraege = alleEintraege.filter(eintrag => eintrag.data.period === FixkostenPeriods.Month || (eintrag.data.period === FixkostenPeriods.Year && eintrag.data.abrechnungsmonat === this.getAbrechnungsmonatStringForMonthByDate(date) ));
 
+    console.log(alleEintraege);
     return alleEintraege;
   }
 
@@ -751,5 +756,38 @@ export class DataProviderService {
         return 7;
     }
     return -1;
+  }
+
+
+
+  private getAbrechnungsmonatStringForMonthByDate(date: Date): string {
+    switch(date.getMonth()) {
+      case 0:
+        return "Januar";
+      case 1:
+        return "Februar";
+      case 2:
+        return "März";
+      case 3:
+        return "April";
+      case 4:
+        return "Mai";
+      case 5:
+        return "Juni";
+      case 6:
+        return "Juli";
+      case 7:
+        return "August";
+      case 8:
+        return "September";
+      case 9:
+        return "Oktober";
+      case 10:
+        return "November";
+      case 11:
+        return "Dezember";
+      default:
+        return "Leer";
+    }
   }
 }

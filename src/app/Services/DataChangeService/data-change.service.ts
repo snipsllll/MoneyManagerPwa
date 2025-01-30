@@ -12,8 +12,9 @@ import {
 } from "../../Models/NewInterfaces";
 import {DataService} from "../DataService/data.service";
 import {IAuswertungsLayout, IAuswertungsLayoutData} from "../../Models/Auswertungen-Interfaces";
-import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData} from "../../Models/Interfaces";
-import {FixkostenPeriods} from "../../Models/Enums";
+import {IGeplanteAusgabe, IGeplanteAusgabenBuchung, IGeplanteAusgabenBuchungData, Month} from "../../Models/Interfaces";
+import {AbrechnungsMonate, FixkostenPeriods} from "../../Models/Enums";
+import {entriesIn} from "lodash";
 
 @Injectable({
   providedIn: 'root'
@@ -144,7 +145,8 @@ export class DataChangeService {
               title: element.data.title,
               beschreibung: element.data.beschreibung,
               betrag: element.data.betrag,
-              period: FixkostenPeriods.Month
+              period: element.data.period,
+              abrechnungsmonat: this.getAbrechnungsmonatForMonth(month)
             }
           })
         } else {
@@ -154,7 +156,8 @@ export class DataChangeService {
               period: element.data.period,
               beschreibung: element.data.beschreibung,
               betrag: element.data.betrag,
-              title: element.data.title
+              title: element.data.title,
+              abrechnungsmonat: this.getAbrechnungsmonatForMonth(month)
             }
           }
           month.uebernommeneStandardFixkostenEintraege!.push(x)
@@ -166,7 +169,8 @@ export class DataChangeService {
             period: element.data.period,
             beschreibung: element.data.beschreibung,
             betrag: element.data.betrag,
-            title: element.data.title
+            title: element.data.title,
+            abrechnungsmonat: this.getAbrechnungsmonatForMonth(month)
           }
         }
         month.specialFixkostenEintraege!.push(x);
@@ -414,5 +418,36 @@ export class DataChangeService {
       eintraege = eintraege.concat(month.geplanteAusgaben ? month.geplanteAusgaben : []);
     })
     return eintraege;
+  }
+
+  private getAbrechnungsmonatForMonth(month: Month): AbrechnungsMonate {
+    switch(month.startDate.getMonth()) {
+      case 0:
+        return AbrechnungsMonate.Januar;
+      case 1:
+        return AbrechnungsMonate.Februar;
+      case 2:
+        return AbrechnungsMonate.März;
+      case 3:
+        return AbrechnungsMonate.April;
+      case 4:
+        return AbrechnungsMonate.Mai;
+      case 5:
+        return AbrechnungsMonate.Juni;
+      case 6:
+        return AbrechnungsMonate.Juli;
+      case 7:
+        return AbrechnungsMonate.August;
+      case 8:
+        return AbrechnungsMonate.September;
+      case 9:
+        return AbrechnungsMonate.Oktober;
+      case 10:
+        return AbrechnungsMonate.November;
+      case 11:
+        return AbrechnungsMonate.Dezember;
+      default:
+        return AbrechnungsMonate.Leer;
+    }
   }
 }
