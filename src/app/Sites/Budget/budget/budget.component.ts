@@ -27,14 +27,25 @@ export class BudgetComponent  implements OnInit{
   isgeplanteAusgabenDetailsVisible = signal<boolean>(false);
   isgeplanteAusgabenRestgeldDetailsVisible = signal<boolean>(false);
 
-  data = signal<BudgetInfosForMonth>({
-    budget: 0,
-    dayBudget: 0,
-    istBudget: 0,
-    totalBudget: 0,
-    sparen: 0,
-    fixKostenSumme: 0
-  });
+  updateData = signal<number>(0);
+
+  data = computed(() => {
+    this.updateData();
+    this.dataService.updated();
+    return this.dataProvider.getBudgetInfosForMonth(this.getDateForSelectedMonth()) ?? {
+      budget: 0,
+      dayBudget: 0,
+      istBudget: 0,
+      totalBudget: 0,
+      sparen: 0,
+      fixKostenSumme: this.dataProvider.getFixkostenSummeForMonth({
+        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
+      }),
+      geplanteAusgabenSumme: this.dataProvider.getGeplanteAusgabenSummeForMonth({
+        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
+      })
+    }
+  })
 
   selectedMonth = computed(() =>{
     switch(this.selectedMonthIndex()){
@@ -183,18 +194,6 @@ export class BudgetComponent  implements OnInit{
   }
 
   private update() {
-    this.data.set(this.dataProvider.getBudgetInfosForMonth(this.getDateForSelectedMonth()) ?? {
-      budget: 0,
-      dayBudget: 0,
-      istBudget: 0,
-      totalBudget: 0,
-      sparen: 0,
-      fixKostenSumme: this.dataProvider.getFixkostenSummeForMonth({
-        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
-      }),
-      geplanteAusgabenSumme: this.dataProvider.getGeplanteAusgabenSummeForMonth({
-        startDate: new Date(this.selectedYear(), this.selectedMonthIndex())
-      })
-    });
+    this.updateData.set(this.updateData() + 1);
   }
 }
