@@ -39,6 +39,7 @@ export class FixKostenComponent  implements OnInit{
   selectedElements = computed(() => {
     this.dataService.updated();
     this.selectedPeriod();
+    console.log(this.elements().filter(element => element.data.period === this.selectedPeriod()))
     return this.elements().filter(element => element.data.period === this.selectedPeriod());
   });
   newFixKostenEintrag!: IFixkostenEintragData;
@@ -85,7 +86,8 @@ export class FixKostenComponent  implements OnInit{
     const data: ListElementData = {
       id: eintrag.id,
       betrag: eintrag.data.betrag,
-      title: eintrag.data.title + (eintrag.data.period === FixkostenPeriods.Year ? "(" + eintrag.data.abrechnungsmonat + ")" : ""),
+      title: eintrag.data.title,
+      titlezusatz: (eintrag.data.period === FixkostenPeriods.Year ? eintrag.data.abrechnungsmonat  : undefined),
       zusatz: eintrag.data.beschreibung,
       period: eintrag.data.period,
       abrechnungsmonat: eintrag.data.abrechnungsmonat,
@@ -137,7 +139,7 @@ export class FixKostenComponent  implements OnInit{
         zusatz: eintrag.zusatz,
         id: eintrag.id!,
         period: eintrag.period,
-        abrechnungsmonat: AbrechnungsMonate.Leer
+        abrechnungsmonat: eintrag.abrechnungsmonat
       },
       onSaveClick: this.onEditSaveClicked,
       onCancelClick: this.onEditCancelClicked,

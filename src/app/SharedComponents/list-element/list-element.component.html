@@ -21,7 +21,7 @@
     </div>
     <div class="list-element__main-center">
       <div class="list-element__main-center-top" (click)="onEintragClicked()">
-        <b> {{ viewModel.data.title + (viewModel.data.isStandardFixkostenEintrag ? '  (Standard)' : '')}} </b>
+        <b> {{ viewModel.data.title + (viewModel.data.isStandardFixkostenEintrag ? '  (Standard)' : '')}} {{viewModel.data.titlezusatz ? "(" + viewModel.data.titlezusatz + ")" : ""}} </b>
       </div>
     </div>
     <div class="list-element__main-right">

@@ -158,19 +158,19 @@ hr {
   scale: 1.3;
 }
 
-.edit-dialog__period {
+.edit-dialog__period, .edit-dialog__abrechnungsmonat {
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.edit-dialog__period-input-wrapper {
+.edit-dialog__period-input-wrapper, .edit-dialog__abrechnungsmonat-input-wrapper {
   display: flex;
   align-items: center;
 }
 
-.edit-dialog__period-input {
+.edit-dialog__period-input, .edit-dialog__abrechnungsmonat-input {
   text-align: end;
   font-size: 18px;
   margin-right: 15px;

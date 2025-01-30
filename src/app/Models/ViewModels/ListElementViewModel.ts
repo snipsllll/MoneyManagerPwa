@@ -10,6 +10,7 @@ export interface ListElementData {
   betrag?: number,
   title: string,
   zusatz?: string,
+  titlezusatz?: string,
   details?: string,
   menuItems?: MenuItem[];
   detailsVisible?: boolean;

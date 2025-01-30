@@ -2,7 +2,7 @@ import {Component, Input, OnInit, signal} from '@angular/core';
 import {EditDialogData, EditDialogViewModel} from "../../Models/ViewModels/EditDialogViewModel";
 import {ConfirmDialogViewModel} from "../../Models/ViewModels/ConfirmDialogViewModel";
 import {DialogService} from "../../Services/DialogService/dialog.service";
-import {FixkostenPeriods} from "../../Models/Enums";
+import {AbrechnungsMonate, FixkostenPeriods} from "../../Models/Enums";
 
 @Component({
   selector: 'app-edit-dialog',
@@ -16,6 +16,8 @@ export class EditDialogComponent implements OnInit{
   darfSpeichern = signal<boolean>(false);
   oldEintrag!: EditDialogData;
   selectedPeriod!: string;
+  selectedAbrechnungsmonat: string = "";
+  months: string[] = Object.values(AbrechnungsMonate); // Extract values from the enum
 
   constructor(private dialogService: DialogService) {
   }
@@ -32,12 +34,33 @@ export class EditDialogComponent implements OnInit{
     }
 
     this.selectedPeriod = this.convertEnumPeriodToStringPeriod(this.viewModel.data.period);
+    const key = this.viewModel.data.abrechnungsmonat as keyof typeof AbrechnungsMonate | undefined;
+    console.log(this.viewModel.data.abrechnungsmonat)
+
+    if (key !== undefined && key in AbrechnungsMonate !== undefined) {
+      this.selectedAbrechnungsmonat = AbrechnungsMonate[key]; // String-Wert aus dem Enum
+    } else {
+      console.error('Ungültiger period-Wert:', this.viewModel.data.period);
+    }
+    //const key: keyof typeof AbrechnungsMonate = this.viewModel.data.period; // Key des Enums
+    //this.selectedAbrechnungsmonat = AbrechnungsMonate[key]; // String-Wert aus dem Enum
 
     this.viewModel.isBetragAusgeblendet = this.viewModel.isBetragAusgeblendet ?? false;
   }
 
   onPeriodChanged() {
     this.viewModel.data.period = this.convertStringPeriodToEnumPeriod(this.selectedPeriod);
+    this.onValueChanged();
+  }
+
+  onAbrechnungsmonatChanged() {
+    const enumValue = Object.values(AbrechnungsMonate).find(month => month === this.selectedAbrechnungsmonat);
+
+    if (enumValue) {
+      this.viewModel.data.abrechnungsmonat = enumValue; // Set the enum value
+    } else {
+      console.error('Selected month does not match any enum value');
+    }
     this.onValueChanged();
   }
 
@@ -116,6 +139,6 @@ export class EditDialogComponent implements OnInit{
   }
 
   private checkHasChanged() {
-    return (this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.period !== this.viewModel.data.period || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
+    return (this.oldEintrag.abrechnungsmonat !== this.viewModel.data.abrechnungsmonat || this.oldEintrag.title !== this.viewModel.data.title || this.oldEintrag.period !== this.viewModel.data.period || this.oldEintrag.betrag !== this.viewModel.data.betrag || this.oldEintrag.zusatz !== this.viewModel.data.zusatz)
   }
 }
