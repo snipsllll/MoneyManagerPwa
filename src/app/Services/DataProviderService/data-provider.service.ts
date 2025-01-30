@@ -57,7 +57,6 @@ export class DataProviderService {
 
   getFixkostenEintraegeForMonth(date: Date, onlyIncluded?: boolean) {
     const month = this.getMonthByDate(date);
-    console.log(month)
 
     const a: IMonthFixkostenEintrag[] = (month && month.specialFixkostenEintraege ? month.specialFixkostenEintraege : []).map((eintrag): IMonthFixkostenEintrag => {
       return {
@@ -84,10 +83,8 @@ export class DataProviderService {
     if (onlyIncluded) {
       alleEintraege = alleEintraege.filter(eintrag => eintrag.data.isExcluded !== true);
     }
-    console.log(alleEintraege);
-    alleEintraege = alleEintraege.filter(eintrag => eintrag.data.period === FixkostenPeriods.Month || (eintrag.data.period === FixkostenPeriods.Year && eintrag.data.abrechnungsmonat === this.getAbrechnungsmonatStringForMonthByDate(date) ));
 
-    console.log(alleEintraege);
+    alleEintraege = alleEintraege.filter(eintrag => eintrag.data.period === FixkostenPeriods.Month || (eintrag.data.period === FixkostenPeriods.Year && eintrag.data.abrechnungsmonat === this.getAbrechnungsmonatStringForMonthByDate(date) ));
     return alleEintraege;
   }
 

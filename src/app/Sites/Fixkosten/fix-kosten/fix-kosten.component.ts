@@ -39,7 +39,6 @@ export class FixKostenComponent  implements OnInit{
   selectedElements = computed(() => {
     this.dataService.updated();
     this.selectedPeriod();
-    console.log(this.elements().filter(element => element.data.period === this.selectedPeriod()))
     return this.elements().filter(element => element.data.period === this.selectedPeriod());
   });
   newFixKostenEintrag!: IFixkostenEintragData;

@@ -1,10 +1,10 @@
 <app-top-bar></app-top-bar>
 <div class="fixkosten__period-select">
   <div class="fixkosten__period-element" [ngClass]="selectedPeriod() === FixkostenPeriods.Month ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onMonthClicked()">
-    Monat
+    pro Monat
   </div>
   <div class="fixkosten__period-element" [ngClass]="selectedPeriod() === FixkostenPeriods.Year ? 'fixkosten__priod-element-selected' : 'fixkosten__priod-element-unselected' " (click)="onYearClicked()">
-    Jahr
+    pro Jahr
   </div>
 </div>
 <div class="fixkosten__list-wrapper">

@@ -35,7 +35,6 @@ export class EditDialogComponent implements OnInit{
 
     this.selectedPeriod = this.convertEnumPeriodToStringPeriod(this.viewModel.data.period);
     const key = this.viewModel.data.abrechnungsmonat as keyof typeof AbrechnungsMonate | undefined;
-    console.log(this.viewModel.data.abrechnungsmonat)
 
     if (key !== undefined && key in AbrechnungsMonate !== undefined) {
       this.selectedAbrechnungsmonat = AbrechnungsMonate[key]; // String-Wert aus dem Enum
