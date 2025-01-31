@@ -223,8 +223,9 @@ export class DataService {
             data: {
               betrag: standardEintrag.data.betrag,
               title: standardEintrag.data.title,
-              period: FixkostenPeriods.Month,
+              period: standardEintrag.data.period,
               beschreibung: standardEintrag.data.beschreibung,
+              abrechnungsmonat: standardEintrag.data.abrechnungsmonat,
               isStandardFixkostenEintrag: true,
               isExcluded: false
             }
