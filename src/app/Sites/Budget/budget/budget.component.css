@@ -13,13 +13,14 @@
   display: flex;
   width: calc(100% - 20px);
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
 }
 
 .budget__hr {
   border: none;
   height: 2px;
   background-color: #404040;
+  margin: 10px 0 0 0;
 }
 
 .budget__month-select {
@@ -88,7 +89,7 @@
   display: flex;
   width: calc(100% - 6px);
   justify-content: space-between;
-  padding: 10px 10px 10px 0;
+  padding: 10px 10px 0 0;
   margin-left: -4px;
 }
 
@@ -107,7 +108,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 10px 0 5px;
+  color: #515151;
+  font-size: 16px;
+  height: 20px;
 }
 
 .darker-text {
@@ -128,4 +132,8 @@
   white-space: nowrap;
   overflow: hidden;
   width: 85%;
+}
+
+.budget__element-data {
+  font-weight: 500;
 }
